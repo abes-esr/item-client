@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
 import LoginComponent from '@/components/login.vue'
 import RcrComponent from '@/components/rcr.vue'
 
@@ -11,21 +10,13 @@ const router = new Router({
     {
       path: '/',
       redirect: {
-        name: 'hello'
+        name: 'rcr'
       }
     },
     {
       path: '/rcr',
       name: 'rcr',
       component: RcrComponent,
-      meta: {
-        requiresAuth: true
-      }
-    },
-    {
-      path: '/hello',
-      name: 'hello',
-      component: HelloWorld,
       meta: {
         requiresAuth: true
       }
