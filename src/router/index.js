@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import LoginComponent from '@/components/login.vue'
 import RcrComponent from '@/components/rcr.vue'
+import uploadComponent from '@/components/fileUpload.vue'
 
 Vue.use(Router)
 
@@ -22,11 +23,19 @@ const router = new Router({
       }
     },
     {
+      path: '/upload',
+      name: 'upload',
+      component: uploadComponent,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
       path: '/login',
       name: 'login',
       component: LoginComponent,
       beforeEnter: (to, from, next) => {
-        if(sessionStorage.getItem('jwt') !== null){
+        if (sessionStorage.getItem('jwt') !== null) {
           next({
             path: '/'
           })
