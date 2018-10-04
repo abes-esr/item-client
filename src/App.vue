@@ -1,5 +1,5 @@
 <template>
-  <v-app id="inspire">
+  <v-app id="inspire" :dark="isDark">
     <v-navigation-drawer v-model="drawer" fixed app>
       <v-toolbar flat class="transparent" v-if="authenticated">
         <v-list class="pa-0">
@@ -39,6 +39,9 @@
             <v-list-tile-title>Nous contacter</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
+        <v-list-tile>
+          <v-switch label="Mode nuit" v-model="isDark"></v-switch>
+        </v-list-tile>
       </v-list>
     </v-navigation-drawer>
     <v-toolbar color="indigo" dark fixed app>
@@ -67,7 +70,8 @@
       return {
         authenticated: false,
         drawer: true,
-        username: ""
+        username: "",
+        isDark: false
       };
     },
     mounted() {
@@ -95,4 +99,11 @@
 </script>
 
 <style>
+  .container {
+    max-width: 100%;
+    padding: 0;
+  }
+  .layout {
+    padding: 10px;
+  }
 </style>
