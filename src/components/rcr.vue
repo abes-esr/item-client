@@ -58,7 +58,9 @@
             item = {
               rcr: this.json[key].library.rcr,
               name:
-                this.json[key].library.rcr + " - " + this.json[key].library.shortname
+                this.json[key].library.rcr +
+                " - " +
+                this.json[key].library.shortname
             };
             this.listRcr.push(item);
           }
@@ -79,7 +81,8 @@
         axios({
           method: "GET",
           url:
-            "http://localhost:8080/creerdemande?rcr=" +
+            process.env.ROOT_API +
+            "creerdemande?rcr=" +
             this.selected +
             "&userNum=" +
             sessionStorage.getItem("usernum")
