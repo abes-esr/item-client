@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import ProfilComponent from '@/components/profil.vue'
 import LoginComponent from '@/components/login.vue'
 import RcrComponent from '@/components/rcr.vue'
 import uploadComponent from '@/components/fileUpload.vue'
@@ -42,6 +43,14 @@ const router = new Router({
         } else {
           next()
         }
+      }
+    },
+    {
+      path: '/profil',
+      name: 'profil',
+      component: ProfilComponent,
+      meta: {
+        requiresAuth: true
       }
     }
   ],
