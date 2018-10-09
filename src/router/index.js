@@ -4,6 +4,8 @@ import LoginComponent from '@/components/login.vue'
 import RcrComponent from '@/components/rcr.vue'
 import uploadComponent from '@/components/fileUpload.vue'
 import TableauComponent from '@/components/tableau.vue'
+import ProfilComponent from '@/components/profil.vue'
+
 
 Vue.use(Router)
 
@@ -52,6 +54,14 @@ const router = new Router({
       meta: {
         requiresAuth: true
       }
+    },
+    {
+      path: '/profil',
+      name: 'profil',
+      component: ProfilComponent,
+      meta: {
+        requiresAuth: true
+      }
     }
   ],
   mode: 'history'
@@ -71,5 +81,3 @@ router.beforeEach((to, from, next) => {
     next()
   }
 })
-
-export default router
