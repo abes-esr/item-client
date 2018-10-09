@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import LoginComponent from '@/components/login.vue'
 import RcrComponent from '@/components/rcr.vue'
 import uploadComponent from '@/components/fileUpload.vue'
+import TableauComponent from '@/components/tableau.vue'
 
 Vue.use(Router)
 
@@ -11,7 +12,7 @@ const router = new Router({
     {
       path: '/',
       redirect: {
-        name: 'rcr'
+        name: 'tab'
       }
     },
     {
@@ -42,6 +43,14 @@ const router = new Router({
         } else {
           next()
         }
+      }
+    },
+    {
+      path: '/tab',
+      name: 'tab',
+      component: TableauComponent,
+      meta: {
+        requiresAuth: true
       }
     }
   ],

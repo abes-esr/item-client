@@ -56,7 +56,7 @@
             this.authenticated = true;
 
             if (sessionStorage.getItem("jwt") !== null) {
-              this.$router.replace({ name: "rcr" });
+              this.$router.replace({ name: "tab" });
             }
           } else {
             this.alert = true;
