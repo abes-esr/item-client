@@ -17,7 +17,7 @@
           <v-btn color="info" :disabled="!active" v-on:click="selectRCR()">Valider</v-btn>
         </v-card-actions>
       </v-card>
-      <br/>
+      <br />
       <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span>
       </v-alert>
     </v-flex>
@@ -49,7 +49,7 @@
     mounted() {
       axios({
         method: "GET",
-        url: "https://www.idref.fr/services/iln2rcr/5&format=text/json"
+        url: "https://www.idref.fr/services/iln2rcr/" + sessionStorage.getItem("iln") +"&format=text/json"
       }).then(
         result => {
           this.json = result.data.sudoc.query.result;
@@ -79,6 +79,7 @@
         this.active = false;
         this.show = true;
         axios({
+          headers: { Authorization: sessionStorage.getItem("jwt") },
           method: "GET",
           url:
             process.env.ROOT_API +
@@ -101,7 +102,6 @@
               "Impossible de créer la demande.Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.";
             this.alert = true;
             this.alertType = "error";
-            console.error(error);
             this.show = false;
             this.active = true;
           }

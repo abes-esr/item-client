@@ -7,9 +7,9 @@
             <v-list-tile-avatar>
               <img src="https://randomuser.me/api/portraits/men/85.jpg">
             </v-list-tile-avatar>
-              <v-list-tile-content>
-                <v-list-tile-title>Bienvenue {{ username }}</v-list-tile-title>
-              </v-list-tile-content>
+            <v-list-tile-content>
+              <v-list-tile-title>Bienvenue {{ username }}</v-list-tile-title>
+            </v-list-tile-content>
           </v-list-tile>
         </v-list>
       </v-toolbar>
@@ -23,7 +23,7 @@
             <v-list-tile-title>Accueil</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile href="/profil">
+        <v-list-tile v-if="authenticated" href="/profil">
           <v-list-tile-action>
             <v-icon>face</v-icon>
           </v-list-tile-action>
@@ -98,8 +98,8 @@
       },
       logout() {
         this.authenticated = false;
-        sessionStorage.removeItem("jwt");
-        sessionStorage.removeItem("user");
+        sessionStorage.clear();
+
         this.$router.push({ name: "login" });
       }
     }

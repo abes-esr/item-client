@@ -65,6 +65,7 @@
         axios
           .post(process.env.ROOT_API + "uploadDemande", formData, {
             headers: {
+              Authorization: sessionStorage.getItem("jwt"),
               "Content-Type": "multipart/form-data"
             }
           })

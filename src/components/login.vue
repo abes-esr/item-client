@@ -18,7 +18,7 @@
         </v-card-actions>
       </v-card>
       <v-alert :value="alert" type="error" transition="scale-transition">
-        Utilisateur ou mot de passe incorrect.
+        {{ alertMessage }}
       </v-alert>
     </v-flex>
   </v-layout>
@@ -35,11 +35,8 @@
           username: "",
           password: ""
         },
-        mockAccount: {
-          username: "test",
-          password: "test"
-        },
-        alert: false
+        alert: false,
+        alertMessage: "Nom d'utilisateur ou mot de passe incorrect"
       };
     },
     methods: {
@@ -55,8 +52,13 @@
               result => {
                 this.$emit("authenticated", true);
                 sessionStorage.setItem("user", this.input.username);
-                sessionStorage.setItem("jwt", result.data.accessToken);
-                sessionStorage.setItem("usernum", "29884");
+                sessionStorage.setItem("username", result.data.shortName);
+                sessionStorage.setItem(
+                  "jwt",
+                  "Bearer " + result.data.accessToken
+                );
+                sessionStorage.setItem("usernum", result.data.userNum);
+                sessionStorage.setItem("iln", result.data.iln);
                 this.authenticated = true;
 
                 if (sessionStorage.getItem("jwt") !== null) {
@@ -64,10 +66,19 @@
                 }
               },
               error => {
+                console.log(error.response.status);
+                if (error.response.status == 401) {
+                  this.alertMessage =
+                    "Nom d'utilisateur ou mot de passe incorrect";
+                } else {
+                  this.alertMessage =
+                    "Service indisponible, veuillez réessayer ultérieurement. Si le problème persiste, merci de nous contacter.";
+                }
                 this.alert = true;
               }
             );
         } else {
+          this.alertMessage = "Nom d'utilisateur ou mot de passe incorrect";
           this.alert = true;
         }
       }
