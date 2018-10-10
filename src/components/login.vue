@@ -25,6 +25,7 @@
 </template>
 
 <script>
+  import axios from "axios";
   export default {
     name: "Login",
     data() {
@@ -45,10 +46,20 @@
       login() {
         alert = false;
         if (this.input.username !== "" && this.input.password !== "") {
-          if (
-            this.input.username === this.mockAccount.username &&
-            this.input.password === this.mockAccount.password
-          ) {
+          axios
+            .post(
+              process.env.ROOT_API + "signin/"
+            )
+            .then(
+              result => {
+                console.log(result);
+              },
+              error => {
+                console.log(error);
+              }
+            );
+
+          if (false) {
             this.$emit("authenticated", true);
             sessionStorage.setItem("user", this.input.username);
             sessionStorage.setItem("jwt", this.input.username);

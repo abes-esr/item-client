@@ -6,7 +6,6 @@ import uploadComponent from '@/components/fileUpload.vue'
 import TableauComponent from '@/components/tableau.vue'
 import ProfilComponent from '@/components/profil.vue'
 
-
 Vue.use(Router)
 
 const router = new Router({
@@ -81,3 +80,5 @@ router.beforeEach((to, from, next) => {
     next()
   }
 })
+
+export default router
