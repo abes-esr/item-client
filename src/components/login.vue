@@ -47,31 +47,26 @@
         alert = false;
         if (this.input.username !== "" && this.input.password !== "") {
           axios
-            .post(
-              process.env.ROOT_API + "signin/"
-            )
+            .post(process.env.ROOT_API + "signin", {
+              username: this.input.username,
+              password: this.input.password
+            })
             .then(
               result => {
-                console.log(result);
+                this.$emit("authenticated", true);
+                sessionStorage.setItem("user", this.input.username);
+                sessionStorage.setItem("jwt", result.data.accessToken);
+                sessionStorage.setItem("usernum", "29884");
+                this.authenticated = true;
+
+                if (sessionStorage.getItem("jwt") !== null) {
+                  this.$router.replace({ name: "tab" });
+                }
               },
               error => {
-                console.log(error);
+                this.alert = true;
               }
             );
-
-          if (false) {
-            this.$emit("authenticated", true);
-            sessionStorage.setItem("user", this.input.username);
-            sessionStorage.setItem("jwt", this.input.username);
-            sessionStorage.setItem("usernum", "29884");
-            this.authenticated = true;
-
-            if (sessionStorage.getItem("jwt") !== null) {
-              this.$router.replace({ name: "tab" });
-            }
-          } else {
-            this.alert = true;
-          }
         } else {
           this.alert = true;
         }
