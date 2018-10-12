@@ -94,7 +94,7 @@
               "creerdemande?rcr=" +
               this.selected +
               "&userNum=" +
-              this.user.usernum
+              this.user.userNum
           }).then(
             result => {
               sessionStorage.setItem("dem", result.data.numDemande);

@@ -42,7 +42,7 @@ const router = new Router({
         let user = JSON.parse(sessionStorage.getItem('user'));
         if (user !== null && user.jwt !== null) {
           next({
-            path: '/'
+            path: from.fullPath
           })
         } else {
           next()
