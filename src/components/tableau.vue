@@ -51,8 +51,12 @@
       };
     },
     mounted() {
+      if (sessionStorage.getItem("email")==null) {
+            testMail(this.$router);
+        }
       this.user = JSON.parse(sessionStorage.getItem("user"));
       if (this.user !== null && this.user.jwt !== null) {
+
         axios({
           headers: { Authorization: this.user.jwt },
           method: "GET",
@@ -80,4 +84,27 @@
       }
     }
   };
+
+  function testMail(router){
+      axios({
+            headers: { Authorization: sessionStorage.getItem("jwt") },
+            method: "GET",
+            url: process.env.ROOT_API + "utilisateurs/" + sessionStorage.getItem("usernum")
+          }).then(
+                result => {
+                  if (result.data === null) {
+                      router.replace({ name: "profil" });
+                  } 
+                  else {
+                    sessionStorage.setItem("email", result.data.email);
+                  }                                              
+                },
+                error => {
+                  console.log(error);                
+                  this.alertMessage =
+                    "Service indisponible, veuillez réessayer ultérieurement. Si le problème persiste, merci de nous contacter.";              
+                  this.alert = true;
+                }
+              );
+    }
 </script>
