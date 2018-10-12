@@ -61,6 +61,7 @@
                 this.authUser.jwt = "Bearer " + result.data.accessToken;
                 this.authUser.userNum = result.data.userNum;
                 this.authUser.iln = result.data.iln;
+                this.authUser.role = result.data.role;
                 sessionStorage.setItem("user", JSON.stringify(this.authUser));
 
                 if (this.authUser.jwt !== null) {
