@@ -21,7 +21,8 @@ const router = new Router({
       name: 'rcr',
       component: RcrComponent,
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        userOnly: true
       }
     },
     {
@@ -29,7 +30,8 @@ const router = new Router({
       name: 'upload',
       component: uploadComponent,
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        userOnly: true
       }
     },
     {
@@ -40,7 +42,7 @@ const router = new Router({
         let user = JSON.parse(sessionStorage.getItem('user'));
         if (user !== null && user.jwt !== null) {
           next({
-            path: '/'
+            path: from.fullPath
           })
         } else {
           next()
@@ -68,15 +70,21 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
+  let user = JSON.parse(sessionStorage.getItem('user'));
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    let user = JSON.parse(sessionStorage.getItem('user'));
     if (user == null || user.jwt == null) {
       next({
         path: '/login',
         params: { nextUrl: to.fullPath }
       })
     } else {
-      next()
+      if (to.matched.some(record => record.meta.userOnly) && user.role == "ADMIN") {
+        next({
+          path: '/',
+        })
+      } else {
+        next()
+      }
     }
   } else {
     next()

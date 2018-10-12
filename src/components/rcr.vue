@@ -54,7 +54,7 @@
           method: "GET",
           url:
             "https://www.idref.fr/services/iln2rcr/" +
-            user.iln +
+            this.user.iln +
             "&format=text/json"
         }).then(
           result => {
@@ -94,7 +94,7 @@
               "creerdemande?rcr=" +
               this.selected +
               "&userNum=" +
-              this.user.usernum
+              this.user.userNum
           }).then(
             result => {
               sessionStorage.setItem("dem", result.data.numDemande);
