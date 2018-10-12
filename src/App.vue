@@ -31,20 +31,43 @@
             <v-list-tile-title>Profil</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
+        <v-list-group v-if="authenticated" prepend-icon="description" no-action>
+            <v-list-tile slot="activator">
+              <v-list-tile-content>
+                <v-list-tile-title>Documentation</v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile href="#">              
+              <v-list-tile-content>
+                <v-list-tile-title>Manuel utilisateur</v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile href="http://documentation.abes.fr/sudoc/formats/loc/index.htm#TOP" target="_blank">              
+              <v-list-tile-content>
+                <v-list-tile-title>Description des exemplaires</v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile href="http://documentation.abes.fr/sudoc/formats/loc/index2.htm#TOP" target="_blank">              
+              <v-list-tile-content>
+                <v-list-tile-title>Données locales</v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+        </v-list-group>        
+        <v-list-tile href="https://stp.abes.fr/" target="_blank">
+          <v-list-tile-action>
+            <v-icon>help</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Assistance (STP)</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-divider v-if="authenticated"></v-divider>
         <v-list-tile v-if="authenticated" @click="logout()">
           <v-list-tile-action>
             <v-icon>block</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>Déconnexion</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-        <v-list-tile href="https://stp.abes.fr/">
-          <v-list-tile-action>
-            <v-icon>email</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Nous contacter</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
         <v-list-tile>
