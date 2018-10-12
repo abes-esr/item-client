@@ -8,7 +8,12 @@
         </v-toolbar>
         <v-card-text>
           <v-form>
-            Votre adresse e-mail est obligatoire pour utiliser l'application :
+            <span v-if="emailSaved==null">          
+                Votre adresse e-mail est obligatoire pour utiliser l'application :
+            </span>
+            <span v-else>          
+                Votre adresse e-mail actuelle est : {{emailSaved}}
+            </span>
             <v-text-field prepend-icon="email" type="email" name="email1" v-model="input.email1" placeholder="Adresse e-mail" required />
             Confirmer votre adresse e-mail : 
             <v-text-field prepend-icon="email" type="email" name="email2" v-model="input.email2" placeholder="Confirmer votre adresse e-mail" required />
@@ -27,12 +32,14 @@
 </template>
 
 <script>
+  import axios from "axios";
   export default {
     name: "Profil",
     data() {
       return {
+        emailSaved:sessionStorage.getItem("email"),
         input: {
-          email1: "",
+          email1:"",
           email2:""
         },
         alert: false
@@ -47,9 +54,27 @@
             &&
             validateEmail(this.input.email1)
           ) {
-            //TODO : maj Email User
-            //this.$emit("authenticated", true); 
-            this.$router.replace({ name: "rcr" });            
+            axios({
+                  headers: { Authorization: sessionStorage.getItem("jwt") },
+                  method: "PUT",
+                  url: process.env.ROOT_API + "utilisateurs/" + sessionStorage.getItem("usernum"),
+                  data:
+                  {
+                    email: this.input.email1,
+                    numUser: sessionStorage.getItem("usernum")                  
+                  }
+                }).then(
+                      result => {                        
+                        sessionStorage.setItem("email", result.data.email);                        
+                        this.$router.replace({ name: "tab" });                                                                    
+                      },
+                      error => {
+                        console.log(error);                
+                        this.alertMessage =
+                          "Service indisponible, veuillez réessayer ultérieurement. Si le problème persiste, merci de nous contacter.";              
+                        this.alert = true;
+                      }
+                    );          
           } else {
             this.alert = true;
           }
