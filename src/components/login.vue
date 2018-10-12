@@ -33,9 +33,9 @@
         input: {
           authenticated: false,
           username: "",
-          password: "",
-          authUser: ""
+          password: ""
         },
+        authUser: {},
         alert: false,
         alertMessage: "Nom d'utilisateur ou mot de passe incorrect"
       };
@@ -53,6 +53,8 @@
               result => {
                 this.$emit("authenticated", true);
                 this.authenticated = true;
+
+                console.log(this.authUser);
 
                 this.authUser.user = this.input.username;
                 this.authUser.username = result.data.shortName;

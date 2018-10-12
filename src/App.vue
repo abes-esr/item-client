@@ -100,7 +100,7 @@
         authenticated: false,
         drawer: true,
         username: "",
-        user: "",
+        user: {},
         isDark: false
       };
     },

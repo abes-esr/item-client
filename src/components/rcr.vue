@@ -43,7 +43,7 @@
         alertMessage: "Erreur.",
         alertType: "error",
         show: false,
-        user: "",
+        user: {},
         label: "Initialisation de la demande en cours..."
       };
     },
