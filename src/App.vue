@@ -37,7 +37,7 @@
                 <v-list-tile-title>Documentation</v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
-            <v-list-tile href="#">              
+            <v-list-tile href="http://documentation.abes.fr/aidecolodus/index.html#ManuelColodus_1" target="_blank">              
               <v-list-tile-content>
                 <v-list-tile-title>Manuel utilisateur</v-list-tile-title>
               </v-list-tile-content>
