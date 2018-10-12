@@ -37,7 +37,8 @@ const router = new Router({
       name: 'login',
       component: LoginComponent,
       beforeEnter: (to, from, next) => {
-        if (sessionStorage.getItem('jwt') !== null) {
+        let user = JSON.parse(sessionStorage.getItem('user'));
+        if (user !== null && user.jwt !== null) {
           next({
             path: '/'
           })
@@ -68,7 +69,8 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (sessionStorage.getItem('jwt') == null) {
+    let user = JSON.parse(sessionStorage.getItem('user'));
+    if (user == null || user.jwt == null) {
       next({
         path: '/login',
         params: { nextUrl: to.fullPath }

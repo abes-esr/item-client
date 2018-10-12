@@ -43,69 +43,78 @@
         alertMessage: "Erreur.",
         alertType: "error",
         show: false,
+        user: "",
         label: "Initialisation de la demande en cours..."
       };
     },
     mounted() {
-      axios({
-        method: "GET",
-        url: "https://www.idref.fr/services/iln2rcr/" + sessionStorage.getItem("iln") +"&format=text/json"
-      }).then(
-        result => {
-          this.json = result.data.sudoc.query.result;
-          let item;
-          for (let key in this.json) {
-            item = {
-              rcr: this.json[key].library.rcr,
-              name:
-                this.json[key].library.rcr +
-                " - " +
-                this.json[key].library.shortname
-            };
-            this.listRcr.push(item);
-          }
-        },
-        error => {
-          this.alertMessage =
-            "Impossible de récupérer la liste des RCR. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.";
-          this.alert = true;
-          this.alertType = "error";
-          console.error(error);
-        }
-      );
-    },
-    methods: {
-      selectRCR() {
-        this.active = false;
-        this.show = true;
+      this.user = JSON.parse(sessionStorage.getItem("user"));
+      if (this.user !== null && this.user.jwt !== null) {
         axios({
-          headers: { Authorization: sessionStorage.getItem("jwt") },
           method: "GET",
           url:
-            process.env.ROOT_API +
-            "creerdemande?rcr=" +
-            this.selected +
-            "&userNum=" +
-            sessionStorage.getItem("usernum")
+            "https://www.idref.fr/services/iln2rcr/" +
+            user.iln +
+            "&format=text/json"
         }).then(
           result => {
-            sessionStorage.setItem("dem", result.data.numDemande);
-            this.alertMessage = "Demande initialisée.";
-            this.alert = true;
-            this.alertType = "success";
-            this.$router.replace({ name: "upload" });
-            this.show = false;
-            this.active = true;
+            this.json = result.data.sudoc.query.result;
+            let item;
+            for (let key in this.json) {
+              item = {
+                rcr: this.json[key].library.rcr,
+                name:
+                  this.json[key].library.rcr +
+                  " - " +
+                  this.json[key].library.shortname
+              };
+              this.listRcr.push(item);
+            }
           },
           error => {
             this.alertMessage =
-              "Impossible de créer la demande.Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.";
+              "Impossible de récupérer la liste des RCR. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.";
             this.alert = true;
             this.alertType = "error";
-            this.show = false;
-            this.active = true;
+            console.error(error);
           }
         );
+      }
+    },
+    methods: {
+      selectRCR() {
+        if (this.user !== null && this.user.jwt !== null) {
+          this.active = false;
+          this.show = true;
+          axios({
+            headers: { Authorization: this.user.jwt },
+            method: "GET",
+            url:
+              process.env.ROOT_API +
+              "creerdemande?rcr=" +
+              this.selected +
+              "&userNum=" +
+              this.user.usernum
+          }).then(
+            result => {
+              sessionStorage.setItem("dem", result.data.numDemande);
+              this.alertMessage = "Demande initialisée.";
+              this.alert = true;
+              this.alertType = "success";
+              this.$router.replace({ name: "upload" });
+              this.show = false;
+              this.active = true;
+            },
+            error => {
+              this.alertMessage =
+                "Impossible de créer la demande.Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.";
+              this.alert = true;
+              this.alertType = "error";
+              this.show = false;
+              this.active = true;
+            }
+          );
+        }
       }
     }
   };

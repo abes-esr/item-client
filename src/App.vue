@@ -4,9 +4,6 @@
       <v-toolbar flat class="transparent" v-if="authenticated">
         <v-list class="pa-0">
           <v-list-tile avatar>
-            <v-list-tile-avatar>
-              <img src="https://randomuser.me/api/portraits/men/85.jpg">
-            </v-list-tile-avatar>
             <v-list-tile-content>
               <v-list-tile-title>Bienvenue {{ username }}</v-list-tile-title>
             </v-list-tile-content>
@@ -79,17 +76,19 @@
         authenticated: false,
         drawer: true,
         username: "",
+        user: "",
         isDark: false
       };
     },
     mounted() {
-      if (sessionStorage.getItem("jwt") !== null) {
+      this.user = JSON.parse(sessionStorage.getItem("user"));
+      if (this.user !== null && this.user.jwt !== null) {
         this.authenticated = true;
       }
       if (!this.authenticated) {
         this.$router.replace({ name: "login" });
       } else {
-        this.username = sessionStorage.getItem("user");
+        this.username = this.user.username;
       }
     },
     methods: {

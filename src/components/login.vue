@@ -33,7 +33,8 @@
         input: {
           authenticated: false,
           username: "",
-          password: ""
+          password: "",
+          authUser: ""
         },
         alert: false,
         alertMessage: "Nom d'utilisateur ou mot de passe incorrect"
@@ -51,17 +52,16 @@
             .then(
               result => {
                 this.$emit("authenticated", true);
-                sessionStorage.setItem("user", this.input.username);
-                sessionStorage.setItem("username", result.data.shortName);
-                sessionStorage.setItem(
-                  "jwt",
-                  "Bearer " + result.data.accessToken
-                );
-                sessionStorage.setItem("usernum", result.data.userNum);
-                sessionStorage.setItem("iln", result.data.iln);
                 this.authenticated = true;
 
-                if (sessionStorage.getItem("jwt") !== null) {
+                this.authUser.user = this.input.username;
+                this.authUser.username = result.data.shortName;
+                this.authUser.jwt = "Bearer " + result.data.accessToken;
+                this.authUser.userNum = result.data.userNum;
+                this.authUser.iln = result.data.iln;
+                sessionStorage.setItem("user", JSON.stringify(this.authUser));
+
+                if (this.authUser.jwt !== null) {
                   this.$router.replace({ name: "tab" });
                 }
               },
