@@ -51,10 +51,10 @@
       };
     },
     mounted() {
-      if (sessionStorage.getItem("email") == null) {
-        this.testMail(this.$router);
-      }
       this.user = JSON.parse(sessionStorage.getItem("user"));
+      if (sessionStorage.getItem("email") == null) {
+        this.testMail();
+      }
       if (this.user !== null && this.user.jwt !== null) {
         axios({
           headers: { Authorization: this.user.jwt },
@@ -83,15 +83,15 @@
       }
     },
     methods: {
-      testMail(router) {
+      testMail() {
         axios({
           headers: { Authorization: this.user.jwt },
           method: "GET",
-          url: process.env.ROOT_API + "utilisateurs/" + this.user.usernum
+          url: process.env.ROOT_API + "utilisateurs/" + this.user.userNum
         }).then(
           result => {
             if (result.data === null) {
-              router.replace({ name: "profil" });
+              this.$router.replace({ name: "profil" });
             } else {
               sessionStorage.setItem("email", result.data.email);
             }
