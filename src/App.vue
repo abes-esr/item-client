@@ -12,7 +12,7 @@
       </v-toolbar>
       <v-list dense>
         <v-divider v-if="authenticated"></v-divider>
-        <v-list-tile href="/">
+        <v-list-tile v-on:click="$router.replace({ name: 'tab' })">
           <v-list-tile-action>
             <v-icon>home</v-icon>
           </v-list-tile-action>
@@ -20,7 +20,7 @@
             <v-list-tile-title>Accueil</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile v-if="authenticated" href="/profil">
+        <v-list-tile v-if="authenticated" v-on:click="$router.replace({ name: 'profil' })">
           <v-list-tile-action>
             <v-icon>face</v-icon>
           </v-list-tile-action>
