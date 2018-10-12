@@ -54,6 +54,7 @@
     </v-navigation-drawer>
     <v-toolbar color="indigo" dark fixed app>
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+      <img src="/static/logo.png" width="38px" height="38px">
       <v-toolbar-title>Kopya</v-toolbar-title>
     </v-toolbar>
     <v-content>
