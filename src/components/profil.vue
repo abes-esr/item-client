@@ -8,11 +8,11 @@
         </v-toolbar>
         <v-card-text>
           <v-form>
-            <span v-if="emailSaved==null">          
+            <span v-if="user.email==null">          
                 Votre adresse e-mail est obligatoire pour utiliser l'application :
             </span>
             <span v-else>          
-                Votre adresse e-mail actuelle est : {{emailSaved}}
+                Votre adresse e-mail actuelle est : {{user.email}}
             </span>
             <v-text-field prepend-icon="email" type="email" name="email1" v-model="input.email1" placeholder="Adresse e-mail" required />
             Confirmer votre adresse e-mail : 
@@ -37,13 +37,16 @@
     name: "Profil",
     data() {
       return {
-        emailSaved:sessionStorage.getItem("email"),
         input: {
           email1:"",
           email2:""
         },
-        alert: false
+        alert: false,
+        user: {}
       };
+    },
+    mounted() {
+      this.user = JSON.parse(sessionStorage.getItem("user"));
     },
     methods: {
       majProfil() {
@@ -55,21 +58,21 @@
             validateEmail(this.input.email1)
           ) {
             axios({
-                  headers: { Authorization: sessionStorage.getItem("jwt") },
+                  headers: { Authorization: this.user.jwt },
                   method: "PUT",
-                  url: process.env.ROOT_API + "utilisateurs/" + sessionStorage.getItem("usernum"),
+                  url: process.env.ROOT_API + "utilisateurs/" + this.user.userNum,
                   data:
                   {
                     email: this.input.email1,
-                    numUser: sessionStorage.getItem("usernum")                  
+                    numUser: this.user.userNum                 
                   }
                 }).then(
                       result => {                        
-                        sessionStorage.setItem("email", result.data.email);                        
+                        this.user.email=result.data.email;
+                        sessionStorage.setItem("user", JSON.stringify(this.user));                        
                         this.$router.replace({ name: "tab" });                                                                    
                       },
-                      error => {
-                        console.log(error);                
+                      error => {               
                         this.alertMessage =
                           "Service indisponible, veuillez réessayer ultérieurement. Si le problème persiste, merci de nous contacter.";              
                         this.alert = true;
