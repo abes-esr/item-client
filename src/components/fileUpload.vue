@@ -14,8 +14,10 @@
               <input type="file" accept=".csv" ref="fileInput" @change="checkFile(); checkCSV()" class="input-file">
               <p v-if="!fichierPresent">
                 Faites glisser votre fichier<br> ou cliquez ici pour le rechercher
-            </p>
-            <p v-else><v-icon>file_copy</v-icon> Fichier : {{ $refs.fileInput.files[0].name }}</p>
+              </p>
+              <p v-else>
+                <v-icon>file_copy</v-icon> Fichier : {{ $refs.fileInput.files[0].name }}
+              </p>
             </div>
           </form>
         </v-card-text>
@@ -24,7 +26,7 @@
           <v-btn color="info" :disabled="!fichierPresent" v-on:click="uploadFile()">Envoyer</v-btn>
         </v-card-actions>
       </v-card>
-      <br/>
+      <br />
       <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span>
       </v-alert>
     </v-flex>
@@ -57,15 +59,16 @@
         this.show = true;
         this.fichierPresent = false;
         this.file = this.$refs.fileInput.files[0];
-        console.log(this.file);
         let formData = new FormData();
         formData.append("file", this.file);
         formData.append("numDemande", sessionStorage.getItem("dem"));
 
-        axios
+        let user = JSON.parse(sessionStorage.getItem("user"));
+        if(user !== null && user.jwt !== null){
+            axios
           .post(process.env.ROOT_API + "uploadDemande", formData, {
             headers: {
-              Authorization: sessionStorage.getItem("jwt"),
+              Authorization: user.jwt,
               "Content-Type": "multipart/form-data"
             }
           })
@@ -85,6 +88,15 @@
               this.show = false;
             }
           );
+        } else {
+          this.alertMessage =
+                "Une erreur est survenue. Essayez de vous déconnecter puis reconnecter. <br /> Si le problème persiste merci de nous contacter.";
+              this.alertType = "error";
+              this.alert = true;
+              this.show = false;
+        }
+
+        
       },
       checkFile() {
         if (this.$refs.fileInput.files[0].size > 0) {
@@ -95,13 +107,12 @@
       },
       checkCSV() {
         this.alert = false;
-        if(!this.$refs.fileInput.files[0].name.includes(".csv")){
-            this.alertMessage =
-                "Le fichier doit être au format CSV.";
-              this.alertType = "error";
-              this.alert = true;
-              this.fichierPresent = false;
-              this.$refs.fileInput.files = null
+        if (!this.$refs.fileInput.files[0].name.includes(".csv")) {
+          this.alertMessage = "Le fichier doit être au format CSV.";
+          this.alertType = "error";
+          this.alert = true;
+          this.fichierPresent = false;
+          this.$refs.fileInput.files = null;
         }
       }
     }
@@ -132,5 +143,7 @@
     height: 200px;
     position: absolute;
     cursor: pointer;
+    top: 0;
+    left: 0;
   }
 </style>
