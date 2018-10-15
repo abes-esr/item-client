@@ -1,11 +1,13 @@
 <template>
   <v-app id="inspire" :dark="isDark">
     <v-navigation-drawer v-model="drawer" fixed app>
-      <v-toolbar flat class="transparent" v-if="authenticated">
-        <v-list class="pa-0">
-          <v-list-tile avatar>
+      <v-toolbar flat class="transparent mb-4" v-if="authenticated">
+        <v-list three-line>
+          <v-list-tile>
             <v-list-tile-content>
               <v-list-tile-title>Bienvenue {{ username }}</v-list-tile-title>
+              <v-list-tile-sub-title v-if="!isAdmin">Vous êtes habilité à intervenir sur les exemplaires des RCR de l'ILN {{ user.iln }}</v-list-tile-sub-title>
+              <v-list-tile-sub-title v-else>Vous disposez des permissions admnistrateur.</v-list-tile-sub-title>
             </v-list-tile-content>
           </v-list-tile>
         </v-list>
@@ -26,6 +28,14 @@
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>Profil</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile v-if="!isAdmin" v-on:click="$router.replace({ name: 'rcr' })">
+          <v-list-tile-action>
+            <v-icon>add</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Créer une demande</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
         <v-list-group v-if="authenticated" prepend-icon="description" no-action>
@@ -95,13 +105,18 @@
         drawer: true,
         username: "",
         user: {},
-        isDark: false
+        isDark: false,
+        isAdmin: false
       };
     },
     mounted() {
+      this.user.iln = "";
       this.user = JSON.parse(sessionStorage.getItem("user"));
       if (this.user !== null && this.user.jwt !== null) {
         this.authenticated = true;
+        if (this.user.role == "ADMIN") {
+          this.isAdmin = true;
+        }
       }
       if (!this.authenticated) {
         this.$router.replace({ name: "login" });
