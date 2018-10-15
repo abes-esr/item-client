@@ -78,12 +78,18 @@ router.beforeEach((to, from, next) => {
         params: { nextUrl: to.fullPath }
       })
     } else {
-      if (to.matched.some(record => record.meta.userOnly) && user.role == "ADMIN") {
+      if (to.matched.some(record => record.meta.userOnly) && user.role != "USER" && to.path != "/tab") {
         next({
-          path: '/',
+          path: '/tab',
         })
       } else {
-        next()
+        if (user.email == null && user.role != "ADMIN" && to.path != "/profil") {
+          next({
+              path: '/profil'
+            })
+        } else {
+          next()
+        }
       }
     }
   } else {
