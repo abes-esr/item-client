@@ -1,6 +1,12 @@
 <template>
   <v-container>
-    <v-card color="purple">Test</v-card>
+    <v-card>
+      <v-btn fab dark color="indigo" v-on:click="$router.replace({ name: 'rcr' })">
+        <v-icon dark>add</v-icon>
+      </v-btn>
+      <v-btn large outline color="indigo" v-on:click="$router.replace({ name: 'rcr' })">Créer une nouvelle demande</v-btn>
+
+    </v-card>
     <br />
     <v-card>
       <v-card-title>
@@ -104,8 +110,8 @@
             if (result.data === null) {
               router.replace({ name: "profil" });
             } else {
-              this.user.email=result.data.email;
-              sessionStorage.setItem("user", JSON.stringify(this.user));              
+              this.user.email = result.data.email;
+              sessionStorage.setItem("user", JSON.stringify(this.user));
             }
           },
           error => {

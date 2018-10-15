@@ -8,8 +8,8 @@
         </v-toolbar>
         <v-card-text>
           <v-form>
-            <v-text-field prepend-icon="person" type="text" name="username" v-model="input.username" placeholder="Nom utilisateur" required />
-            <v-text-field prepend-icon="lock" type="password" name="password" v-model="input.password" placeholder="Mot de passe" required />
+            <v-text-field prepend-icon="person" type="text" name="username" v-model="input.username" placeholder="Nom utilisateur" :rules="[rules.required]" />
+            <v-text-field prepend-icon="lock" type="password" name="password" v-model="input.password" placeholder="Mot de passe" :rules="[rules.required]" />
           </v-form>
         </v-card-text>
         <v-card-actions>
@@ -37,7 +37,10 @@
         },
         authUser: {},
         alert: false,
-        alertMessage: "Nom d'utilisateur ou mot de passe incorrect"
+        alertMessage: "Nom d'utilisateur ou mot de passe incorrect",
+        rules: {
+          required: value => !!value || "Champ obligatoire."
+        }
       };
     },
     methods: {
