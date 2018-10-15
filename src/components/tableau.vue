@@ -59,10 +59,6 @@
     mounted() {
       this.user = JSON.parse(sessionStorage.getItem("user"));
 
-      if (sessionStorage.getItem("email") == null) {
-        this.testMail(this.$router);
-      }
-
       if (this.user !== null && this.user.jwt !== null) {
         let url = "";
         if (this.user.role == "ADMIN") {
@@ -95,30 +91,6 @@
             this.alert = true;
             this.alertType = "error";
             console.error(error);
-          }
-        );
-      }
-    },
-    methods: {
-      testMail(router) {
-        axios({
-          headers: { Authorization: this.user.jwt },
-          method: "GET",
-          url: process.env.ROOT_API + "utilisateurs/" + this.user.userNum
-        }).then(
-          result => {
-            if (result.data === null) {
-              router.replace({ name: "profil" });
-            } else {
-              this.user.email = result.data.email;
-              sessionStorage.setItem("user", JSON.stringify(this.user));
-            }
-          },
-          error => {
-            console.log(error);
-            this.alertMessage =
-              "Service indisponible, veuillez réessayer ultérieurement. Si le problème persiste, merci de nous contacter.";
-            this.alert = true;
           }
         );
       }
