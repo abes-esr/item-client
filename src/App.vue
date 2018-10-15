@@ -22,7 +22,7 @@
             <v-list-tile-title>Accueil</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile v-if="authenticated" v-on:click="$router.replace({ name: 'profil' })">
+        <v-list-tile v-if="authenticated && !isAdmin" v-on:click="$router.replace({ name: 'profil' })">
           <v-list-tile-action>
             <v-icon>face</v-icon>
           </v-list-tile-action>
@@ -30,7 +30,7 @@
             <v-list-tile-title>Profil</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile v-if="!isAdmin" v-on:click="$router.replace({ name: 'rcr' })">
+        <v-list-tile v-if="authenticated && !isAdmin" v-on:click="$router.replace({ name: 'rcr' })">
           <v-list-tile-action>
             <v-icon>add</v-icon>
           </v-list-tile-action>
@@ -111,17 +111,19 @@
     },
     mounted() {
       this.user.iln = "";
-      this.user = JSON.parse(sessionStorage.getItem("user"));
-      if (this.user !== null && this.user.jwt !== null) {
-        this.authenticated = true;
-        if (this.user.role == "ADMIN") {
-          this.isAdmin = true;
+      if (sessionStorage.getItem("user")!=null){
+        this.user = JSON.parse(sessionStorage.getItem("user"));
+        if (this.user !== null && this.user.jwt !== null) {
+          this.authenticated = true;
+          if (this.user.role == "ADMIN") {
+            this.isAdmin = true;
+          }
         }
-      }
-      if (!this.authenticated) {
-        this.$router.replace({ name: "login" });
-      } else {
-        this.username = this.user.username;
+        if (!this.authenticated) {
+          this.$router.replace({ name: "login" });
+        } else {
+          this.username = this.user.username;
+        }
       }
     },
     methods: {
