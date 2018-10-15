@@ -58,10 +58,19 @@
       }
 
       if (this.user !== null && this.user.jwt !== null) {
+        let url = "";
+        if (this.user.role == "ADMIN") {
+          url = process.env.ROOT_API + "demandes";
+        } else {
+          url =
+            process.env.ROOT_API +
+            "chercherDemandes?userNum=" +
+            this.user.userNum;
+        }
         axios({
           headers: { Authorization: this.user.jwt },
           method: "GET",
-          url: process.env.ROOT_API + "demandes"
+          url: url
         }).then(
           result => {
             for (let key in result.data) {
