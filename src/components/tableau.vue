@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-card>
+    <v-card v-if="user.role != 'ADMIN'">
       <v-btn fab dark color="indigo" v-on:click="$router.replace({ name: 'rcr' })">
         <v-icon dark>add</v-icon>
       </v-btn>
