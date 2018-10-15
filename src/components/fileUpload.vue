@@ -1,5 +1,6 @@
 <template>
-  <v-layout align-start justify-center>
+<v-container fluid fill-height>
+  <v-layout align-center justify-center>
     <loading :show="show" :label="label">
     </loading>
     <v-flex md7>
@@ -31,6 +32,7 @@
       </v-alert>
     </v-flex>
   </v-layout>
+</v-container>
 </template>
 
 <script>

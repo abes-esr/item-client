@@ -1,27 +1,33 @@
 <template>
-  <v-layout align-start justify-center>
-    <loading :show="show" :label="label">
-    </loading>
-    <v-flex md7>
-      <v-card class="elevation-12">
-        <v-toolbar dark color="primary">
-          <v-toolbar-title>Séléction du RCR</v-toolbar-title>
-          <v-spacer></v-spacer>
-        </v-toolbar>
-        <v-card-text>
-          <v-select v-model="selected" :items="listRcr" item-value="rcr" item-text="name" label="Séléctionnez votre RCR" @change="active = true;">
-          </v-select>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="info" :disabled="!active" v-on:click="selectRCR()">Valider</v-btn>
-        </v-card-actions>
-      </v-card>
-      <br />
-      <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span>
-      </v-alert>
-    </v-flex>
-  </v-layout>
+  <v-container fluid fill-height>
+    <v-layout justify-center align-center>
+      <loading :show="show" :label="label">
+      </loading>
+      <v-flex md7>
+        <v-card class="elevation-12">
+          <v-toolbar dark color="primary">
+            <v-toolbar-title>Séléction du RCR</v-toolbar-title>
+            <v-spacer></v-spacer>
+          </v-toolbar>
+          <v-card-text>
+            <v-flex xs6>
+              <v-text-field v-model="search" append-icon="search" label="Rechercher dans les RCR" single-line hide-details></v-text-field>
+            </v-flex>
+            <br />
+            <v-select v-model="selected" :items="filteredData" item-value="rcr" item-text="name" label="Séléctionnez votre RCR dans la liste" no-data-text="Aucun RCR correspondant." @change="active = true;">
+            </v-select>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="info" :disabled="!active" v-on:click="selectRCR()">Valider</v-btn>
+          </v-card-actions>
+        </v-card>
+        <br />
+        <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span>
+        </v-alert>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
@@ -44,7 +50,8 @@
         alertType: "error",
         show: false,
         user: {},
-        label: "Initialisation de la demande en cours..."
+        label: "Initialisation de la demande en cours...",
+        search: ""
       };
     },
     mounted() {
@@ -115,6 +122,21 @@
             }
           );
         }
+      }
+    },
+    computed: {
+      filteredData() {
+        let filteredRCR = this.listRcr;
+        return filteredRCR.filter(filteredRCR => {
+          if (
+            filteredRCR.rcr.toLowerCase().includes(this.search.toLowerCase()) ||
+            filteredRCR.name.toLowerCase().includes(this.search.toLowerCase())
+          ) {
+            return true;
+          } else {
+            return false;
+          }
+        });
       }
     }
   };

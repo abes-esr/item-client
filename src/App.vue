@@ -29,27 +29,27 @@
           </v-list-tile-content>
         </v-list-tile>
         <v-list-group v-if="authenticated" prepend-icon="description" no-action>
-            <v-list-tile slot="activator">
-              <v-list-tile-content>
-                <v-list-tile-title>Documentation</v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-            <v-list-tile href="http://documentation.abes.fr/aidecolodus/index.html#ManuelColodus_1" target="_blank">              
-              <v-list-tile-content>
-                <v-list-tile-title>Manuel utilisateur</v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-            <v-list-tile href="http://documentation.abes.fr/sudoc/formats/loc/index.htm#TOP" target="_blank">              
-              <v-list-tile-content>
-                <v-list-tile-title>Description des exemplaires</v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-            <v-list-tile href="http://documentation.abes.fr/sudoc/formats/loc/index2.htm#TOP" target="_blank">              
-              <v-list-tile-content>
-                <v-list-tile-title>Données locales</v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-        </v-list-group>        
+          <v-list-tile slot="activator">
+            <v-list-tile-content>
+              <v-list-tile-title>Documentation</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+          <v-list-tile href="http://documentation.abes.fr/aidecolodus/index.html#ManuelColodus_1" target="_blank">
+            <v-list-tile-content>
+              <v-list-tile-title>Manuel utilisateur</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+          <v-list-tile href="http://documentation.abes.fr/sudoc/formats/loc/index.htm#TOP" target="_blank">
+            <v-list-tile-content>
+              <v-list-tile-title>Description des exemplaires</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+          <v-list-tile href="http://documentation.abes.fr/sudoc/formats/loc/index2.htm#TOP" target="_blank">
+            <v-list-tile-content>
+              <v-list-tile-title>Données locales</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </v-list-group>
         <v-list-tile href="https://stp.abes.fr/" target="_blank">
           <v-list-tile-action>
             <v-icon>help</v-icon>
@@ -78,13 +78,7 @@
       <v-toolbar-title>Kopya</v-toolbar-title>
     </v-toolbar>
     <v-content>
-      <v-container fluid fill-height>
-        <v-layout justify-center align-center>
-          <v-flex text-xs-center>
-            <router-view @authenticated="setAuthenticated" />
-          </v-flex>
-        </v-layout>
-      </v-container>
+      <router-view @authenticated="setAuthenticated" />
     </v-content>
     <v-footer color="indigo" app>
       <span class="white--text">&copy; ABES - 2019</span>
