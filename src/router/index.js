@@ -5,6 +5,11 @@ import RcrComponent from '@/components/rcr.vue'
 import uploadComponent from '@/components/fileUpload.vue'
 import TableauComponent from '@/components/tableau.vue'
 import ProfilComponent from '@/components/profil.vue'
+import AboutComponent from '@/components/footer/about.vue'
+import CGUComponent from '@/components/footer/cgu.vue'
+import DonneesComponent from '@/components/footer/donnees.vue'
+import MentionsComponent from '@/components/footer/mentions.vue'
+
 
 Vue.use(Router)
 
@@ -64,6 +69,26 @@ const router = new Router({
       meta: {
         requiresAuth: true
       }
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: AboutComponent,
+    },
+    {
+      path: '/cgu',
+      name: 'cgu',
+      component: CGUComponent,
+    },
+    {
+      path: '/donnees',
+      name: 'donnees',
+      component: DonneesComponent,
+    },
+    {
+      path: '/mentions',
+      name: 'mentions',
+      component: MentionsComponent,
     }
   ],
   mode: 'history'

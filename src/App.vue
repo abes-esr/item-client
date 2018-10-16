@@ -88,11 +88,48 @@
       <v-toolbar-title>Kopya</v-toolbar-title>
     </v-toolbar>
     <v-content>
-      <router-view @authenticated="setAuthenticated" @logout="logout" />
+      <router-view @authenticated="setAuthenticated" @logout="logoutExpired" />
     </v-content>
-    <v-footer color="indigo" app>
-      <span class="white--text">&copy; ABES - 2019</span>
+    <v-footer height="auto" color="indigo">
+      <v-layout justify-center row wrap>
+        <v-btn color="white" flat round @click="$router.replace({ name: 'about' })">
+          A Propos
+        </v-btn>
+        <v-btn color="white" flat round @click="$router.replace({ name: 'donnees' })">
+          Données Personnelles
+        </v-btn>
+        <v-btn color="white" flat round @click="$router.replace({ name: 'mentions' })">
+          Mentions Légales
+        </v-btn>
+        <v-btn color="white" flat round @click="$router.replace({ name: 'cgu' })">
+          Conditions Générales d'Utilisation (CGU)
+        </v-btn>
+        <v-flex indigo lighten-1 py-2 text-xs-center white--text xs12>
+          &copy;2019 — <strong><a href="http://abes.fr/">ABES</a></strong>
+        </v-flex>
+      </v-layout>
     </v-footer>
+
+    <!-- POP UP SESSION EXPIREE -->
+    <v-dialog v-model="dialog" width="500">
+      <v-card>
+        <v-card-title class="headline grey lighten-2" primary-title>
+          Déconnexion
+        </v-card-title>
+
+        <v-card-text>
+          Vous avez été déconnecté car votre session a expiré. <br />Vous pouvez dès maintenant vous reconnecter et reprendre votre activité.
+        </v-card-text>
+
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" flat @click="dialog = false">
+            OK
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
@@ -105,7 +142,8 @@
         drawer: true,
         user: {},
         isDark: false,
-        isAdmin: false
+        isAdmin: false,
+        dialog: false
       };
     },
     mounted() {
@@ -123,6 +161,10 @@
         this.isAdmin = false;
 
         this.$router.push({ name: "login" });
+      },
+      logoutExpired() {
+        this.dialog = true;
+        this.logout();
       },
       getUserData() {
         if (sessionStorage.getItem("user") != null) {
@@ -146,5 +188,12 @@
   }
   .layout {
     padding: 10px;
+  }
+  footer .layout{
+    padding: 0;
+  }
+  footer a{
+    text-decoration: none;
+    color: white;
   }
 </style>
