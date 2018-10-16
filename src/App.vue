@@ -5,7 +5,7 @@
         <v-list three-line>
           <v-list-tile>
             <v-list-tile-content>
-              <v-list-tile-title>Bienvenue {{ username }}</v-list-tile-title>
+              <v-list-tile-title>Bienvenue {{ user.username }}</v-list-tile-title>
               <v-list-tile-sub-title v-if="!isAdmin">Vous êtes habilité à intervenir sur les exemplaires des RCR de l'ILN {{ user.iln }}</v-list-tile-sub-title>
               <v-list-tile-sub-title v-else>Vous disposez des permissions admnistrateur.</v-list-tile-sub-title>
             </v-list-tile-content>
@@ -88,7 +88,7 @@
       <v-toolbar-title>Kopya</v-toolbar-title>
     </v-toolbar>
     <v-content>
-      <router-view @authenticated="setAuthenticated" />
+      <router-view @authenticated="setAuthenticated" @logout="logout" />
     </v-content>
     <v-footer color="indigo" app>
       <span class="white--text">&copy; ABES - 2019</span>
@@ -103,38 +103,37 @@
       return {
         authenticated: false,
         drawer: true,
-        username: "",
         user: {},
         isDark: false,
         isAdmin: false
       };
     },
     mounted() {
-      this.user.iln = "";
-      if (sessionStorage.getItem("user")!=null){
-        this.user = JSON.parse(sessionStorage.getItem("user"));
-        if (this.user !== null && this.user.jwt !== null) {
-          this.authenticated = true;
-          if (this.user.role == "ADMIN") {
-            this.isAdmin = true;
-          }
-        }
-        if (!this.authenticated) {
-          this.$router.replace({ name: "login" });
-        } else {
-          this.username = this.user.username;
-        }
-      }
+      this.getUserData();
     },
     methods: {
       setAuthenticated(status) {
         this.authenticated = status;
+        this.getUserData();
       },
       logout() {
         this.authenticated = false;
         sessionStorage.clear();
+        this.user = {};
+        this.isAdmin = false;
 
         this.$router.push({ name: "login" });
+      },
+      getUserData() {
+        if (sessionStorage.getItem("user") != null) {
+          this.user = JSON.parse(sessionStorage.getItem("user"));
+          if (this.user !== null && this.user.jwt !== null) {
+            this.authenticated = true;
+            if (this.user.role == "ADMIN") {
+              this.isAdmin = true;
+            }
+          }
+        }
       }
     }
   };

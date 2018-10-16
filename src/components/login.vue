@@ -57,11 +57,6 @@
             })
             .then(
               result => {
-                this.$emit("authenticated", true);
-                this.authenticated = true;
-
-                console.log(this.authUser);
-
                 this.authUser.user = this.input.username;
                 this.authUser.username = result.data.shortName;
                 this.authUser.jwt = "Bearer " + result.data.accessToken;
@@ -69,6 +64,9 @@
                 this.authUser.iln = result.data.iln;
                 this.authUser.role = result.data.role;
                 sessionStorage.setItem("user", JSON.stringify(this.authUser));
+                
+                this.$emit("authenticated", true);
+                this.authenticated = true;
 
                 if (this.authUser.jwt !== null) { 
                   if (this.authUser.role!="ADMIN"){                                                                                  

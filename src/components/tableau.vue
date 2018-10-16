@@ -89,11 +89,14 @@
             }
           },
           error => {
-            this.alertMessage =
-              "Impossible de récupérer la liste des demandes. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.";
-            this.alert = true;
-            this.alertType = "error";
-            console.error(error);
+            if (error.response.status == 401) {
+              this.$emit("logout");
+            } else {
+              this.alertMessage =
+                "Impossible de récupérer la liste des demandes. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.";
+              this.alert = true;
+              this.alertType = "error";
+            }
           }
         );
       }

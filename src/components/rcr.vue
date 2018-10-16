@@ -11,7 +11,7 @@
           </v-toolbar>
           <v-card-text>
             <v-flex xs6>
-              <v-text-field v-model="search" append-icon="search" label="Rechercher dans les RCR" single-line hide-details></v-text-field>
+              <v-text-field v-model="search" append-icon="search" label="Rechercher dans les RCR" single-line hide-details solo></v-text-field>
             </v-flex>
             <br />
             <v-select v-model="selected" :items="filteredData" item-value="rcr" item-text="name" label="Séléctionnez votre RCR dans la liste" no-data-text="Aucun RCR correspondant." @change="active = true;">
@@ -113,12 +113,16 @@
               this.active = true;
             },
             error => {
-              this.alertMessage =
-                "Impossible de créer la demande.Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.";
-              this.alert = true;
-              this.alertType = "error";
-              this.show = false;
-              this.active = true;
+              if (error.response.status == 401) {
+                this.$emit("logout");
+              } else {
+                this.alertMessage =
+                  "Impossible de créer la demande.Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.";
+                this.alert = true;
+                this.alertType = "error";
+                this.show = false;
+                this.active = true;
+              }
             }
           );
         }
