@@ -68,13 +68,8 @@
                 this.$emit("authenticated", true);
                 this.authenticated = true;
 
-                if (this.authUser.jwt !== null) { 
-                  if (this.authUser.role!="ADMIN"){                                                                                  
-                    this.getMail();                 
-                  }
-                  else {   
-                    this.$router.replace({ name: "tab" });
-                  }
+                if (this.authUser.jwt !== null) {                                                                                                    
+                    this.getMail();                                   
                 }
               },
               error => {
