@@ -20,6 +20,7 @@
               <td class="text-xs-left">{{ props.item.date }}</td>
               <td class="text-xs-left">{{ props.item.rcr }}</td>
               <td class="text-xs-left">{{ props.item.num }}</td>
+              <td class="text-xs-left">{{ props.item.traitement }}</td>
               <td class="text-xs-left">{{ props.item.statut }}</td>
               <td class="text-xs-left">{{ props.item.resultat }}</td>
             </template>
@@ -50,6 +51,7 @@
           { text: "Date Création", value: "date" },
           { text: "RCR", value: "rcr" },
           { text: "Numéro", value: "num" },
+          { text: "Traitement", value: "traitement" },
           { text: "Statut", value: "statut" },
           { text: "Résultat", value: "resultat" }
         ],
@@ -79,23 +81,30 @@
         }).then(
           result => {
             for (let key in result.data) {
+              //pour éviter les erreurs si null
+              if(result.data[key].traitement == null || result.data[key].traitement == undefined){
+                result.data[key].traitement = {};
+                result.data[key].traitement.libelle = "Non défini";
+              }
+
               this.items.push({
                 date: result.data[key].dateModification,
                 rcr: result.data[key].rcr,
                 num: result.data[key].numDemande,
+                traitement: result.data[key].traitement.libelle,
                 statut: result.data[key].etatDemande.libelle,
                 resultat: "??"
               });
             }
           },
           error => {
+            this.alertMessage =
+              "Impossible de récupérer la liste des demandes. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.";
+            this.alert = true;
+            this.alertType = "error";
+
             if (error.response.status == 401) {
               this.$emit("logout");
-            } else {
-              this.alertMessage =
-                "Impossible de récupérer la liste des demandes. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.";
-              this.alert = true;
-              this.alertType = "error";
             }
           }
         );

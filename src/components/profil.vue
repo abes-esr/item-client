@@ -82,12 +82,11 @@
               this.$router.replace({ name: "tab" });
             },
             error => {
+              this.alertMessage =
+                "Service indisponible, veuillez réessayer ultérieurement. Si le problème persiste, merci de nous contacter.";
+              this.alert = true;
               if (error.response.status == 401) {
                 this.$emit("logout");
-              } else {
-                this.alertMessage =
-                  "Service indisponible, veuillez réessayer ultérieurement. Si le problème persiste, merci de nous contacter.";
-                this.alert = true;
               }
             }
           );

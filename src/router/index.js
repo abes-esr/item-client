@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import LoginComponent from '@/components/login.vue'
 import RcrComponent from '@/components/rcr.vue'
 import uploadComponent from '@/components/fileUpload.vue'
+import traitementComponent from '@/components/selectTraitement.vue'
 import TableauComponent from '@/components/tableau.vue'
 import ProfilComponent from '@/components/profil.vue'
 import AboutComponent from '@/components/footer/about.vue'
@@ -34,6 +35,15 @@ const router = new Router({
       path: '/upload',
       name: 'upload',
       component: uploadComponent,
+      meta: {
+        requiresAuth: true,
+        userOnly: true
+      }
+    },
+    {
+      path: '/traitement',
+      name: 'traitement',
+      component: traitementComponent,
       meta: {
         requiresAuth: true,
         userOnly: true

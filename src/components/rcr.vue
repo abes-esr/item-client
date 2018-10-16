@@ -108,20 +108,20 @@
               this.alertMessage = "Demande initialisée.";
               this.alert = true;
               this.alertType = "success";
-              this.$router.replace({ name: "upload" });
               this.show = false;
               this.active = true;
+              this.$router.replace({ name: "upload" });
             },
             error => {
+              this.alertMessage =
+                "Impossible de créer la demande.Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.";
+              this.alert = true;
+              this.alertType = "error";
+              this.show = false;
+              this.active = true;
+
               if (error.response.status == 401) {
                 this.$emit("logout");
-              } else {
-                this.alertMessage =
-                  "Impossible de créer la demande.Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.";
-                this.alert = true;
-                this.alertType = "error";
-                this.show = false;
-                this.active = true;
               }
             }
           );

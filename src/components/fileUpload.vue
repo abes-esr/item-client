@@ -12,7 +12,7 @@
           <v-card-text>
             <form enctype="multipart/form-data">
               <div class="dropbox">
-                <input type="file" accept=".csv" ref="fileInput" @change="checkFile(); checkCSV()" class="input-file">
+                <input type="file" accept=".csv" ref="fileInput" @change="checkFile(); checkCSV();" class="input-file">
                 <p v-if="!fichierPresent">
                   Faites glisser votre fichier<br> ou cliquez ici pour le rechercher
                 </p>
@@ -80,16 +80,21 @@
                 this.alertType = "success";
                 this.alert = true;
                 this.show = false;
+                this.$router.replace({ name: "traitement" });
               },
               error => {
+                this.alertMessage =
+                  "Une erreur est survenue lors de l'envoi du fichier. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.";
+                this.alertType = "error";
+                this.alert = true;
+                this.show = false;
+
+                if (error.response.status == 400) {
+                  this.alertMessage = error.response.data.message;
+                }
+
                 if (error.response.status == 401) {
                   this.$emit("logout");
-                } else {
-                  this.alertMessage =
-                    "Une erreur est survenue lors de l'envoi du fichier. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.";
-                  this.alertType = "error";
-                  this.alert = true;
-                  this.show = false;
                 }
               }
             );

@@ -71,7 +71,7 @@
         <v-divider v-if="authenticated"></v-divider>
         <v-list-tile v-if="authenticated" @click="logout()">
           <v-list-tile-action>
-            <v-icon>block</v-icon>
+            <v-icon>power_settings_new</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>Déconnexion</v-list-tile-title>
