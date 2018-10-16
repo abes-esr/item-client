@@ -62,7 +62,8 @@
     methods: {
       majProfil() {
         alert = false;
-
+        
+        //TODO : supprimer nbtentatives dans le PUT !!
         if (
           this.$refs.form.validate() &&
           this.input.email1 == this.input.email2
@@ -73,7 +74,8 @@
             url: process.env.ROOT_API + "utilisateurs/" + this.user.userNum,
             data: {
               email: this.input.email1,
-              numUser: this.user.userNum
+              numUser: this.user.userNum,
+              nbtentatives:0
             }
           }).then(
             result => {
