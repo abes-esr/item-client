@@ -8,7 +8,7 @@ switch (confEnv) {
     env = 'development';
     break;
   case 'test':
-    env = 'development';
+    env = 'test';
     break;
   case 'prod':
     env = 'production'
