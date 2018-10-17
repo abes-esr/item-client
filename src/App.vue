@@ -183,8 +183,8 @@
 
 <style>
   .container {
-    max-width: 100%;
-    padding: 0;
+    max-width: 100% !important;
+    padding: 0 !important;
   }
   .layout {
     padding: 10px;

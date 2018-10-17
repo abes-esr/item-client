@@ -10,6 +10,7 @@ import AboutComponent from '@/components/footer/about.vue'
 import CGUComponent from '@/components/footer/cgu.vue'
 import DonneesComponent from '@/components/footer/donnees.vue'
 import MentionsComponent from '@/components/footer/mentions.vue'
+import NotFoundComponent from '@/components/errors/notFound.vue'
 
 
 Vue.use(Router)
@@ -99,6 +100,9 @@ const router = new Router({
       path: '/mentions',
       name: 'mentions',
       component: MentionsComponent,
+    },
+    {
+      path: '*', component: NotFoundComponent
     }
   ],
   mode: 'history'
@@ -120,8 +124,8 @@ router.beforeEach((to, from, next) => {
       } else {
         if (user.email == null && to.path != "/profil") {
           next({
-              path: '/profil'
-            })
+            path: '/profil'
+          })
         } else {
           next()
         }
