@@ -56,6 +56,9 @@
         }
       };
     },
+    mounted() {
+       this.user = JSON.parse(sessionStorage.getItem("user"));
+    },
     methods: {
       majProfil() {
         alert = false;
