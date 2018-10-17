@@ -8,7 +8,9 @@
     "dev": "webpack-dev-server --inline --progress --port 3000 --config build/webpack.dev.conf.js",
     "start": "npm run dev",
     "lint": "eslint --ext .js,.vue src",
-    "build": "node build/build.js"
+    "build": "node build/build.js prod",
+    "build-dev": "node build/build.js dev",
+    "build-test": "node build/build.js test"
   },
   "dependencies": {
     "axios": "^0.18.0",

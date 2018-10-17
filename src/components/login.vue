@@ -1,29 +1,29 @@
 <template>
-<v-container fluid fill-height>
-  <v-layout align-center justify-center>
-    <v-flex md7>
-      <v-card class="elevation-12">
-        <v-toolbar dark color="primary">
-          <v-toolbar-title>Connexion</v-toolbar-title>
-          <v-spacer></v-spacer>
-        </v-toolbar>
-        <v-card-text>
-          <v-form>
-            <v-text-field prepend-icon="person" type="text" name="username" v-model="input.username" placeholder="Nom utilisateur" :rules="[rules.required]" />
-            <v-text-field prepend-icon="lock" type="password" name="password" v-model="input.password" placeholder="Mot de passe" :rules="[rules.required]" />
-          </v-form>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="info" v-on:click="login()">Login</v-btn>
-        </v-card-actions>
-      </v-card>
-      <v-alert :value="alert" type="error" transition="scale-transition">
-        {{ alertMessage }}
-      </v-alert>
-    </v-flex>
-  </v-layout>
-</v-container>
+  <v-container fluid fill-height>
+    <v-layout align-center justify-center>
+      <v-flex md7>
+        <v-card class="elevation-12">
+          <v-toolbar dark color="primary">
+            <v-toolbar-title>Connexion</v-toolbar-title>
+            <v-spacer></v-spacer>
+          </v-toolbar>
+          <v-card-text>
+            <v-form>
+              <v-text-field prepend-icon="person" type="text" name="username" v-model="input.username" placeholder="Nom utilisateur" :rules="[rules.required]" />
+              <v-text-field prepend-icon="lock" type="password" name="password" v-model="input.password" placeholder="Mot de passe" :rules="[rules.required]" />
+            </v-form>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="info" v-on:click="login()">Login</v-btn>
+          </v-card-actions>
+        </v-card>
+        <v-alert :value="alert" type="error" transition="scale-transition">
+          {{ alertMessage }}
+        </v-alert>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
@@ -38,7 +38,7 @@
           password: ""
         },
         authUser: {},
-        user : {},
+        user: {},
         alert: false,
         alertMessage: "Nom d'utilisateur ou mot de passe incorrect",
         rules: {
@@ -64,12 +64,11 @@
                 this.authUser.iln = result.data.iln;
                 this.authUser.role = result.data.role;
                 sessionStorage.setItem("user", JSON.stringify(this.authUser));
-                
-                this.$emit("authenticated", true);
-                this.authenticated = true;
 
-                if (this.authUser.jwt !== null) {                                                                                                    
-                    this.getMail();                                   
+                if (result.data.accessToken !== null) {
+                  this.$emit("authenticated", true);
+                  this.authenticated = true;
+                  this.getMail();
                 }
               },
               error => {

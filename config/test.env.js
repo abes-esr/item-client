@@ -3,6 +3,6 @@ const merge = require('webpack-merge')
 const prodEnv = require('./prod.env')
 
 module.exports = merge(prodEnv, {
-  NODE_ENV: '"development"',
-  ROOT_API: '"https://kopya-dev.sudoc.fr/api/"'
+  NODE_ENV: '"test"',
+  ROOT_API: '"https://kopya-test.sudoc.fr/api/"'
 })

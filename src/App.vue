@@ -189,10 +189,10 @@
   .layout {
     padding: 10px;
   }
-  footer .layout{
+  footer .layout {
     padding: 0;
   }
-  footer a{
+  footer a {
     text-decoration: none;
     color: white;
   }

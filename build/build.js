@@ -1,7 +1,22 @@
 'use strict'
 require('./check-versions')()
 
-process.env.NODE_ENV = 'production'
+const confEnv = process.argv[2]
+let env = ''
+switch (confEnv) {
+  case 'dev':
+    env = 'development';
+    break;
+  case 'test':
+    env = 'development';
+    break;
+  case 'prod':
+    env = 'production'
+    break;
+}
+
+process.env.NODE_ENV = env
+process.env.confEnv = confEnv
 
 const ora = require('ora')
 const rm = require('rimraf')
@@ -11,7 +26,7 @@ const webpack = require('webpack')
 const config = require('../config')
 const webpackConfig = require('./webpack.prod.conf')
 
-const spinner = ora('building for production...')
+const spinner = ora('building for ' + env + '...')
 spinner.start()
 
 rm(path.join(config.build.assetsRoot, config.build.assetsSubDirectory), err => {
