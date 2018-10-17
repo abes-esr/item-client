@@ -16,9 +16,9 @@
               <span v-else>
                 Votre adresse e-mail actuelle est : {{user.email}}
               </span>
-              <v-text-field prepend-icon="email" type="email" name="email1" v-model="input.email1" placeholder="Adresse e-mail" :rules="[rules.required, rules.email]" />
+              <v-text-field prepend-icon="email" type="email" name="email1" v-model="input.email1" placeholder="Adresse e-mail" :rules="[rules.required, rules.email]" @keyup.enter="majProfil()" />
               Confirmer votre adresse e-mail :
-              <v-text-field prepend-icon="email" type="email" name="email2" v-model="input.email2" placeholder="Confirmer votre adresse e-mail" :rules="[rules.required, rules.email]" />
+              <v-text-field prepend-icon="email" type="email" name="email2" v-model="input.email2" placeholder="Confirmer votre adresse e-mail" :rules="[rules.required, rules.email]" @keyup.enter="majProfil()" />
             </v-form>
           </v-card-text>
           <v-card-actions>
@@ -55,15 +55,6 @@
           }
         }
       };
-    },
-    mounted() {
-      this.user = JSON.parse(sessionStorage.getItem("user"));
-      let self = this;
-      window.addEventListener('keyup', function (event) {
-        if (event.keyCode === 13) {
-            self.majProfil()
-        }
-      });
     },
     methods: {
       majProfil() {

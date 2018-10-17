@@ -9,8 +9,8 @@
         </v-toolbar>
         <v-card-text>
           <v-form ref="form">
-            <v-text-field prepend-icon="person" type="text" name="username" v-model="input.username" placeholder="Nom utilisateur" :rules="[rules.required]" />
-            <v-text-field prepend-icon="lock" type="password" name="password" v-model="input.password" placeholder="Mot de passe" :rules="[rules.required]" />
+            <v-text-field prepend-icon="person" type="text" name="username" v-model="input.username" placeholder="Nom utilisateur" :rules="[rules.required]" @keyup.enter="login()" />
+            <v-text-field prepend-icon="lock" type="password" name="password" v-model="input.password" placeholder="Mot de passe" :rules="[rules.required]" @keyup.enter="login()" />
           </v-form>
         </v-card-text>
         <v-card-actions>
@@ -45,14 +45,6 @@
           required: value => !!value || "Champ obligatoire."
         }
       };
-    },
-    mounted() {      
-      let self = this;
-      window.addEventListener('keyup', function (event) {
-        if (event.keyCode === 13) {
-            self.login()
-        }
-      });
     },
     methods: {
       login() {
