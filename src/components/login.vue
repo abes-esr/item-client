@@ -8,7 +8,7 @@
           <v-spacer></v-spacer>
         </v-toolbar>
         <v-card-text>
-          <v-form>
+          <v-form ref="form">
             <v-text-field prepend-icon="person" type="text" name="username" v-model="input.username" placeholder="Nom utilisateur" :rules="[rules.required]" />
             <v-text-field prepend-icon="lock" type="password" name="password" v-model="input.password" placeholder="Mot de passe" :rules="[rules.required]" />
           </v-form>
@@ -46,10 +46,18 @@
         }
       };
     },
+    mounted() {      
+      let self = this;
+      window.addEventListener('keyup', function (event) {
+        if (event.keyCode === 13) {
+            self.login()
+        }
+      });
+    },
     methods: {
       login() {
         alert = false;
-        if (this.input.username !== "" && this.input.password !== "") {
+        if (this.$refs.form.validate() && this.input.username !== "" && this.input.password !== "") {
           axios
             .post(process.env.ROOT_API + "signin", {
               username: this.input.username,
