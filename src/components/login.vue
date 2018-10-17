@@ -1,29 +1,29 @@
 <template>
-  <v-container fluid fill-height>
-    <v-layout align-center justify-center>
-      <v-flex md7>
-        <v-card class="elevation-12">
-          <v-toolbar dark color="primary">
-            <v-toolbar-title>Connexion</v-toolbar-title>
-            <v-spacer></v-spacer>
-          </v-toolbar>
-          <v-card-text>
-            <v-form>
-              <v-text-field prepend-icon="person" type="text" name="username" v-model="input.username" placeholder="Nom utilisateur" :rules="[rules.required]" />
-              <v-text-field prepend-icon="lock" type="password" name="password" v-model="input.password" placeholder="Mot de passe" :rules="[rules.required]" />
-            </v-form>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="info" v-on:click="login()">Login</v-btn>
-          </v-card-actions>
-        </v-card>
-        <v-alert :value="alert" type="error" transition="scale-transition">
-          {{ alertMessage }}
-        </v-alert>
-      </v-flex>
-    </v-layout>
-  </v-container>
+<v-container fluid fill-height>
+  <v-layout align-center justify-center>
+    <v-flex md7>
+      <v-card class="elevation-12">
+        <v-toolbar dark color="primary">
+          <v-toolbar-title>Connexion</v-toolbar-title>
+          <v-spacer></v-spacer>
+        </v-toolbar>
+        <v-card-text>
+          <v-form ref="form">
+            <v-text-field prepend-icon="person" type="text" name="username" v-model="input.username" placeholder="Nom utilisateur" :rules="[rules.required]" />
+            <v-text-field prepend-icon="lock" type="password" name="password" v-model="input.password" placeholder="Mot de passe" :rules="[rules.required]" />
+          </v-form>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="info" v-on:click="login()">Login</v-btn>
+        </v-card-actions>
+      </v-card>
+      <v-alert :value="alert" type="error" transition="scale-transition">
+        {{ alertMessage }}
+      </v-alert>
+    </v-flex>
+  </v-layout>
+</v-container>
 </template>
 
 <script>
@@ -46,10 +46,18 @@
         }
       };
     },
+    mounted() {      
+      let self = this;
+      window.addEventListener('keyup', function (event) {
+        if (event.keyCode === 13) {
+            self.login()
+        }
+      });
+    },
     methods: {
       login() {
         alert = false;
-        if (this.input.username !== "" && this.input.password !== "") {
+        if (this.$refs.form.validate() && this.input.username !== "" && this.input.password !== "") {
           axios
             .post(process.env.ROOT_API + "signin", {
               username: this.input.username,

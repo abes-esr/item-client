@@ -58,6 +58,12 @@
     },
     mounted() {
       this.user = JSON.parse(sessionStorage.getItem("user"));
+      let self = this;
+      window.addEventListener('keyup', function (event) {
+        if (event.keyCode === 13) {
+            self.majProfil()
+        }
+      });
     },
     methods: {
       majProfil() {
