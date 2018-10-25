@@ -14,6 +14,9 @@
       </v-toolbar>
       <v-list dense>
         <v-divider v-if="authenticated"></v-divider>
+        <v-list-tile>
+          <v-switch label="Mode nuit" v-model="isDark"></v-switch>
+        </v-list-tile>
         <v-list-tile v-on:click="$router.replace({ name: 'tab' })">
           <v-list-tile-action>
             <v-icon>home</v-icon>
@@ -76,10 +79,7 @@
           <v-list-tile-content>
             <v-list-tile-title>Déconnexion</v-list-tile-title>
           </v-list-tile-content>
-        </v-list-tile>
-        <v-list-tile>
-          <v-switch label="Mode nuit" v-model="isDark"></v-switch>
-        </v-list-tile>
+        </v-list-tile>        
       </v-list>
     </v-navigation-drawer>
     <v-toolbar color="indigo" dark fixed app>
