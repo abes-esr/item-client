@@ -122,7 +122,7 @@ router.beforeEach((to, from, next) => {
           path: '/tab',
         })
       } else {
-        if (user.email == null && to.path != "/profil") {
+        if (user.email == null && to.path != "/profil" && user.role != "ADMIN") {
           next({
             path: '/profil'
           })

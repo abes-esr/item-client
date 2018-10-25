@@ -68,8 +68,14 @@
                 if (result.data.accessToken !== null) {
                   this.$emit("authenticated", true);
                   this.authenticated = true;
-                  this.getMail();
-                }
+
+                  if (this.authUser.role == "ADMIN"){
+                      this.$router.replace({ name: "tab" });
+                  }
+                  else {
+                      this.getMail();
+                  }
+                }                                
               },
               error => {
                 console.log(error.response.status);
