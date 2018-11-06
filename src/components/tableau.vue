@@ -13,9 +13,52 @@
           <v-card-title>
             Mes demandes
             <v-spacer></v-spacer>
-            <v-text-field v-model="search" append-icon="search" label="Rechercher" single-line hide-details></v-text-field>
+            <v-combobox
+              v-model="selectedColumns"
+              :items="headers"
+              label="Colonnes de recherche sélectionnées"
+              multiple
+              :return-object="false"
+              hide-details
+            ></v-combobox>
+            <v-spacer></v-spacer>
+            <v-text-field v-model="search" append-icon="search" label="Rechercher" single-line hide-details clearable v-on:keyup="computedItems('search')"></v-text-field>
           </v-card-title>
-          <v-data-table :headers="headers" :items="items" rows-per-page-text="Lignes par page" no-data-text="Aucune demande" :search="search" class="elevation-1" :rows-per-page-items='[10,25, {"text":"Toutes","value":-1}]'>
+          <v-data-table :headers="headers" :items="computedItems('guess')" rows-per-page-text="Lignes par page" :pagination.sync="pagination"  no-data-text="Aucune demande" class="elevation-1" :rows-per-page-items='[10,25, {"text":"Toutes","value":-1}]'>            
+            <template slot="headers" slot-scope="props">
+              
+              <tr>        
+                <th
+                  v-for="header in props.headers"
+                  :key="header.text"
+                  :class="['column sortable', pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']"
+                  @click="changeSort(header.value)"
+                >
+                  <v-icon small>arrow_upward</v-icon>
+                  {{ header.text }}
+                </th>
+              </tr> 
+              <tr>
+                <th>
+                  <v-text-field v-model="searchDate" append-icon="search" single-line hide-details clearable v-on:keyup="computedItems('date')"></v-text-field>
+                </th>
+                <th>
+                  <v-text-field v-model="searchRCR" append-icon="search" single-line hide-details clearable v-on:keyup="computedItems('rcr')"></v-text-field>
+                </th>
+                <th>
+                  <v-text-field v-model="searchNum" append-icon="search" single-line hide-details clearable v-on:keyup="computedItems('num')"></v-text-field>
+                </th>
+                <th>
+                  <v-text-field v-model="searchTraitement" append-icon="search" single-line hide-details clearable v-on:keyup="computedItems('traitement')"></v-text-field>
+                </th>
+                <th>
+                  <v-text-field v-model="searchStatut" append-icon="search" single-line hide-details clearable v-on:keyup="computedItems('statut')"></v-text-field>
+                </th>
+                <th>
+                  <v-text-field v-model="searchResultat" append-icon="search" single-line hide-details clearable v-on:keyup="computedItems('resultat')"></v-text-field>
+                </th>
+              </tr>     
+            </template>            
             <template slot="items" slot-scope="props">
               <td class="text-xs-left">{{ props.item.date }}</td>
               <td class="text-xs-left">{{ props.item.rcr }}</td>
@@ -23,7 +66,7 @@
               <td class="text-xs-left">{{ props.item.traitement }}</td>
               <td class="text-xs-left">{{ props.item.statut }}</td>
               <td class="text-xs-left">{{ props.item.resultat }}</td>
-            </template>
+            </template>          
             <template slot="pageText" slot-scope="props">
               Lignes {{ props.pageStart }} - {{ props.pageStop }} de {{ props.itemsLength }}
             </template>
@@ -46,11 +89,22 @@
     name: "tableauComponent",
     data() {
       return {
+        pagination: {
+          sortBy: 'name'
+        },
         search: "",
+        selectedColumns: ["date","rcr","num","traitement","statut","resultat"],
+        searchDate: "",
+        searchRCR: "",
+        searchNum: "",
+        searchTraitement: "",
+        searchStatut: "",
+        searchResultat: "",
+        typeSearch: "search",
         headers: [
           { text: "Date Création", value: "date" },
           { text: "RCR", value: "rcr" },
-          { text: "Numéro de demande", value: "num" },
+          { text: "Numéro", value: "num" },
           { text: "Traitement", value: "traitement" },
           { text: "Statut", value: "statut" },
           { text: "Résultat", value: "resultat" }
@@ -109,6 +163,65 @@
           }
         );
       }
+    },
+    methods: {
+        computedItems(type){
+            //Si appeller pr peupler le tableau  
+            if (type != 'guess'){
+              this.typeSearch = type;  
+            }
+            
+            //Si recherche sur une colonne spécifique 
+            if (this.typeSearch != 'search'){
+              this.search="";                            
+              return this.items.filter(
+                                      (currentValue,index,arr) => {                                                                                                                                                                                                                      
+                                        if (
+                                             (currentValue["date"].toString().toLowerCase().indexOf(this.searchDate) > -1 || this.searchDate == null)
+                                          && (currentValue["rcr"].toString().toLowerCase().indexOf(this.searchRCR) > -1 || this.searchRCR == null)
+                                          && (currentValue["num"].toString().toLowerCase().indexOf(this.searchNum) > -1 || this.searchNum == null)
+                                          && (currentValue["traitement"].toString().toLowerCase().indexOf(this.searchTraitement) > -1 || this.searchTraitement == null)
+                                          && (currentValue["statut"].toString().toLowerCase().indexOf(this.searchStatut) > -1 || this.searchStatut == null)
+                                          && (currentValue["resultat"].toString().toLowerCase().indexOf(this.searchResultat) > -1 || this.searchResultat == null)
+                                        ){
+                                          return true;                                             
+                                        }                                            
+                                      }
+                                    );
+
+            } //Recherche sur une ou plusieurs colonnes
+            else {           
+              this.searchDate = "";
+              this.searchRCR = "";
+              this.searchNum = "";
+              this.searchTraitement = "";
+              this.searchStatut = "";
+              this.searchResultat = "";     
+              return this.items.filter(
+                                      (currentValue,index,arr) => {   
+                                        if (this.selectedColumns.length==0 || this.search == null) {
+                                         return true;
+                                        }
+                                        else {       
+                                          for (var i=0;i<this.selectedColumns.length;i++){                                                                                          
+                                            if (currentValue[this.selectedColumns[i]].toString().toLowerCase().indexOf(this.search) > -1){
+                                              return true;                                             
+                                            }                                                                                    
+                                          }   
+                                          return false;                                                                                                        
+                                        }
+                                      }
+                                    );
+            }
+        },
+        changeSort (column) {
+          if (this.pagination.sortBy === column) {
+            this.pagination.descending = !this.pagination.descending
+          } else {
+            this.pagination.sortBy = column
+            this.pagination.descending = false
+          }
+        }
     }
   };
 </script>
