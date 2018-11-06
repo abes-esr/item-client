@@ -10,12 +10,8 @@
             <v-spacer></v-spacer>
           </v-toolbar>
           <v-card-text>
-            <v-flex xs6>
-              <v-text-field v-model="search" append-icon="search" label="Rechercher dans les RCR" single-line hide-details solo></v-text-field>
-            </v-flex>
-            <br />
-            <v-select v-model="selected" :items="filteredData" item-value="rcr" item-text="name" label="Séléctionnez votre RCR dans la liste" no-data-text="Aucun RCR correspondant." @change="active = true;">
-            </v-select>
+            <v-autocomplete :filter="searchRCR" v-model="selected" :items="listRcr" item-value="rcr" item-text="name" label="Séléctionnez votre RCR dans la liste" no-data-text="Aucun RCR correspondant." hint="Entrez le début du RCR de l'éblissement ou une partie du nom pour rechercher" persistent-hint @change="checkActive()">
+            </v-autocomplete>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
@@ -51,7 +47,7 @@
         show: false,
         user: {},
         label: "Initialisation de la demande en cours...",
-        search: ""
+        isEditing: false
       };
     },
     mounted() {
@@ -73,7 +69,8 @@
                 name:
                   this.json[key].library.rcr +
                   " - " +
-                  this.json[key].library.shortname
+                  this.json[key].library.shortname,
+                  shortname: this.json[key].library.shortname
               };
               this.listRcr.push(item);
             }
@@ -126,21 +123,17 @@
             }
           );
         }
-      }
-    },
-    computed: {
-      filteredData() {
-        let filteredRCR = this.listRcr;
-        return filteredRCR.filter(filteredRCR => {
-          if (
-            filteredRCR.rcr.toLowerCase().includes(this.search.toLowerCase()) ||
-            filteredRCR.name.toLowerCase().includes(this.search.toLowerCase())
-          ) {
-            return true;
-          } else {
-            return false;
-          }
-        });
+      },
+      searchRCR(item, queryText, itemText) {
+        console.log(item)
+        return item.rcr.startsWith(queryText) || item.shortname.toLowerCase().includes(queryText.toLowerCase()) ;
+      },
+      checkActive () {
+        if(this.selected !== null && this.selected !== ""){
+          this.active = true;
+        } else {
+          this.active = false;
+        }
       }
     }
   };

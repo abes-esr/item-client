@@ -50,7 +50,7 @@
         headers: [
           { text: "Date Création", value: "date" },
           { text: "RCR", value: "rcr" },
-          { text: "Numéro", value: "num" },
+          { text: "Numéro de demande", value: "num" },
           { text: "Traitement", value: "traitement" },
           { text: "Statut", value: "statut" },
           { text: "Résultat", value: "resultat" }

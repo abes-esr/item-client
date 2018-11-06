@@ -115,8 +115,8 @@
       },
       checkCSV() {
         this.alert = false;
-        if (!this.$refs.fileInput.files[0].name.includes(".csv")) {
-          this.alertMessage = "Le fichier doit être au format CSV.";
+        if (!this.$refs.fileInput.files[0].name.includes(".txt")) {
+          this.alertMessage = "Le fichier doit être au format txt.";
           this.alertType = "error";
           this.alert = true;
           this.fichierPresent = false;
