@@ -29,7 +29,6 @@ const router = new Router({
       component: RcrComponent,
       meta: {
         requiresAuth: true,
-        userOnly: true
       }
     },
     {
@@ -38,7 +37,6 @@ const router = new Router({
       component: uploadComponent,
       meta: {
         requiresAuth: true,
-        userOnly: true
       }
     },
     {
@@ -47,7 +45,6 @@ const router = new Router({
       component: traitementComponent,
       meta: {
         requiresAuth: true,
-        userOnly: true
       }
     },
     {
@@ -117,18 +114,12 @@ router.beforeEach((to, from, next) => {
         params: { nextUrl: to.fullPath }
       })
     } else {
-      if (to.matched.some(record => record.meta.userOnly) && user.role != "USER" && to.path != "/tab") {
+      if (user.email == null && to.path != "/profil" && user.role != "ADMIN") {
         next({
-          path: '/tab',
+          path: '/profil'
         })
       } else {
-        if (user.email == null && to.path != "/profil" && user.role != "ADMIN") {
-          next({
-            path: '/profil'
-          })
-        } else {
-          next()
-        }
+        next()
       }
     }
   } else {

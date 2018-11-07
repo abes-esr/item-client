@@ -4,7 +4,7 @@
       <loading :show="show" :label="label">
       </loading>
       <v-flex md7>
-        <v-card class="elevation-12">
+        <v-card v-if="showForm" class="elevation-12">
           <v-toolbar dark color="primary">
             <v-toolbar-title>Envoi de votre fichier</v-toolbar-title>
             <v-spacer></v-spacer>
@@ -12,7 +12,7 @@
           <v-card-text>
             <form enctype="multipart/form-data">
               <div class="dropbox">
-                <input type="file" accept=".csv" ref="fileInput" @change="checkFile(); checkCSV();" class="input-file">
+                <input type="file" accept=".txt" ref="fileInput" @change="checkFile(); checkCSV();" class="input-file">
                 <p v-if="!fichierPresent">
                   Faites glisser votre fichier<br> ou cliquez ici pour le rechercher
                 </p>
@@ -25,6 +25,19 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="info" :disabled="!fichierPresent" v-on:click="uploadFile()">Envoyer</v-btn>
+          </v-card-actions>
+        </v-card>
+        <v-card v-if="!showForm" class="elevation-12">
+          <v-toolbar dark color="primary">
+            <v-toolbar-title>Récupération du fichier enrichi</v-toolbar-title>
+            <v-spacer></v-spacer>
+          </v-toolbar>
+          <v-card-text>
+            <a :href="fileLink">{{ fileLink }}</a>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="info" v-on:click="$router.replace({ name: 'traitement' })">Suivant</v-btn>
           </v-card-actions>
         </v-card>
         <br />
@@ -47,12 +60,15 @@
     data() {
       return {
         file: "",
+        fileLink: "",
         fichierPresent: false,
+        showForm: true,
         alert: false,
         alertMessage: "Erreur.",
         alertType: "error",
         show: false,
-        label: "Envoi en cours..."
+        label: "Envoi en cours...",
+        user: {}
       };
     },
     mounted() {},
@@ -65,12 +81,12 @@
         formData.append("file", this.file);
         formData.append("numDemande", sessionStorage.getItem("dem"));
 
-        let user = JSON.parse(sessionStorage.getItem("user"));
-        if (user !== null && user.jwt !== null) {
+        this.user = JSON.parse(sessionStorage.getItem("user"));
+        if (this.user !== null && this.user.jwt !== null) {
           axios
             .post(process.env.ROOT_API + "uploadDemande", formData, {
               headers: {
-                Authorization: user.jwt,
+                Authorization: this.user.jwt,
                 "Content-Type": "multipart/form-data"
               }
             })
@@ -80,7 +96,8 @@
                 this.alertType = "success";
                 this.alert = true;
                 this.show = false;
-                this.$router.replace({ name: "traitement" });
+                this.showForm = false;
+                this.getFileResult();
               },
               error => {
                 this.alertMessage =
@@ -122,6 +139,31 @@
           this.fichierPresent = false;
           this.$refs.fileInput.files = null;
         }
+      },
+      getFileResult() {
+        axios
+          .get(process.env.ROOT_API + "files/fichier_apresws_" + sessionStorage.getItem("dem") + ".csv?id=" + sessionStorage.getItem("dem"), {
+            headers: {
+              Authorization: this.user.jwt,
+              "Content-Type": "multipart/form-data"
+            }
+          })
+          .then(
+            result => {
+              console.log(result.data);
+            },
+            error => {
+              this.alertMessage =
+                "Une erreur est survenue lors de la récupération du fichier complété. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.";
+              this.alertType = "error";
+              this.alert = true;
+              this.show = false;
+
+              if (error.response.status == 401) {
+                this.$emit("logout");
+              }
+            }
+          );
       }
     }
   };

@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-layout justify-center align-center>
       <v-flex text-xs-center>
-        <v-card v-if="user.role != 'ADMIN'">
+        <v-card>
           <v-btn fab dark color="indigo" v-on:click="$router.replace({ name: 'rcr' })">
             <v-icon dark>add</v-icon>
           </v-btn>
@@ -18,6 +18,7 @@
           <v-data-table :headers="headers" :items="items" rows-per-page-text="Lignes par page" no-data-text="Aucune demande" :search="search" class="elevation-1" :rows-per-page-items='[10,25, {"text":"Toutes","value":-1}]'>
             <template slot="items" slot-scope="props">
               <td class="text-xs-left">{{ props.item.date }}</td>
+              <td :v-if="user.role == 'ADMIN'" class="text-xs-left">{{ props.item.iln }}</td>
               <td class="text-xs-left">{{ props.item.rcr }}</td>
               <td class="text-xs-left">{{ props.item.num }}</td>
               <td class="text-xs-left">{{ props.item.traitement }}</td>
@@ -47,14 +48,7 @@
     data() {
       return {
         search: "",
-        headers: [
-          { text: "Date Création", value: "date" },
-          { text: "RCR", value: "rcr" },
-          { text: "Numéro de demande", value: "num" },
-          { text: "Traitement", value: "traitement" },
-          { text: "Statut", value: "statut" },
-          { text: "Résultat", value: "resultat" }
-        ],
+        headers: [],
         items: [],
         alert: false,
         alertMessage: "",
@@ -63,6 +57,8 @@
     },
     mounted() {
       this.user = JSON.parse(sessionStorage.getItem("user"));
+
+      this.initHeader();
 
       if (this.user !== null && this.user.jwt !== null) {
         let url = "";
@@ -82,14 +78,18 @@
           result => {
             for (let key in result.data) {
               //pour éviter les erreurs si null
-              if(result.data[key].traitement == null || result.data[key].traitement == undefined){
+              if (
+                result.data[key].traitement == null ||
+                result.data[key].traitement == undefined
+              ) {
                 result.data[key].traitement = {};
                 result.data[key].traitement.libelle = "Non défini";
               }
 
               this.items.push({
                 date: result.data[key].dateModification,
-                rcr: result.data[key].rcr,
+                rcr: result.data[key].rcr + " - " + result.data[key].shortname,
+                iln: result.data[key].iln,
                 num: result.data[key].numDemande,
                 traitement: result.data[key].traitement.libelle,
                 statut: result.data[key].etatDemande.libelle,
@@ -108,6 +108,30 @@
             }
           }
         );
+      }
+    },
+    methods: {
+      initHeader() {
+        if (this.user.role == "ADMIN") {
+          this.headers = [
+            { text: "Date Création", value: "date" },
+            { text: "ILN", value: "iln" },
+            { text: "RCR", value: "rcr" },
+            { text: "Numéro de demande", value: "num" },
+            { text: "Traitement", value: "traitement" },
+            { text: "Statut", value: "statut" },
+            { text: "Résultat", value: "resultat" }
+          ];
+        } else {
+          this.headers = [
+            { text: "Date Création", value: "date" },
+            { text: "RCR", value: "rcr" },
+            { text: "Numéro de demande", value: "num" },
+            { text: "Traitement", value: "traitement" },
+            { text: "Statut", value: "statut" },
+            { text: "Résultat", value: "resultat" }
+          ];
+        }
       }
     }
   };

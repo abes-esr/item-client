@@ -1,29 +1,29 @@
 <template>
-<v-container fluid fill-height>
-  <v-layout align-center justify-center>
-    <v-flex md7>
-      <v-card class="elevation-12">
-        <v-toolbar dark color="primary">
-          <v-toolbar-title>Connexion</v-toolbar-title>
-          <v-spacer></v-spacer>
-        </v-toolbar>
-        <v-card-text>
-          <v-form ref="form">
-            <v-text-field prepend-icon="person" type="text" name="username" v-model="input.username" placeholder="Nom utilisateur" :rules="[rules.required]" @keyup.enter="login()" />
-            <v-text-field prepend-icon="lock" type="password" name="password" v-model="input.password" placeholder="Mot de passe" :rules="[rules.required]" @keyup.enter="login()" />
-          </v-form>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="info" v-on:click="login()">Login</v-btn>
-        </v-card-actions>
-      </v-card>
-      <v-alert :value="alert" type="error" transition="scale-transition">
-        {{ alertMessage }}
-      </v-alert>
-    </v-flex>
-  </v-layout>
-</v-container>
+  <v-container fluid fill-height>
+    <v-layout align-center justify-center>
+      <v-flex md7>
+        <v-card class="elevation-12">
+          <v-toolbar dark color="primary">
+            <v-toolbar-title>Connexion</v-toolbar-title>
+            <v-spacer></v-spacer>
+          </v-toolbar>
+          <v-card-text>
+            <v-form ref="form">
+              <v-text-field prepend-icon="person" type="text" name="username" v-model="input.username" placeholder="Nom utilisateur" :rules="[rules.required]" @keyup.enter="login()" />
+              <v-text-field prepend-icon="lock" type="password" name="password" v-model="input.password" placeholder="Mot de passe" :rules="[rules.required]" @keyup.enter="login()" />
+            </v-form>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="info" :loading="loading" :disabled="loading" v-on:click="login()">Login</v-btn>
+          </v-card-actions>
+        </v-card>
+        <v-alert :value="alert" type="error" transition="scale-transition">
+          {{ alertMessage }}
+        </v-alert>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
@@ -41,6 +41,7 @@
         user: {},
         alert: false,
         alertMessage: "Nom d'utilisateur ou mot de passe incorrect",
+        loading: false,
         rules: {
           required: value => !!value || "Champ obligatoire."
         }
@@ -49,7 +50,12 @@
     methods: {
       login() {
         alert = false;
-        if (this.$refs.form.validate() && this.input.username !== "" && this.input.password !== "") {
+        if (
+          this.$refs.form.validate() &&
+          this.input.username !== "" &&
+          this.input.password !== ""
+        ) {
+          this.loading = true;
           axios
             .post(process.env.ROOT_API + "signin", {
               username: this.input.username,
@@ -65,20 +71,21 @@
                 this.authUser.role = result.data.role;
                 sessionStorage.setItem("user", JSON.stringify(this.authUser));
 
+                this.loading = false;
+
                 if (result.data.accessToken !== null) {
                   this.$emit("authenticated", true);
                   this.authenticated = true;
 
-                  if (this.authUser.role == "ADMIN"){
-                      this.$router.replace({ name: "tab" });
+                  if (this.authUser.role == "ADMIN") {
+                    this.$router.replace({ name: "tab" });
+                  } else {
+                    this.getMail();
                   }
-                  else {
-                      this.getMail();
-                  }
-                }                                
+                }
               },
               error => {
-                console.log(error.response.status);
+                this.loading = false;
                 if (error.response.status == 401) {
                   this.alertMessage =
                     "Nom d'utilisateur ou mot de passe incorrect";
