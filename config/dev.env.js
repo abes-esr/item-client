@@ -4,6 +4,5 @@ const prodEnv = require('./prod.env')
 
 module.exports = merge(prodEnv, {
   NODE_ENV: '"development"',
-  //ROOT_API: '"https://kopya-dev.sudoc.fr/api/"'
-  ROOT_API: '"http://localhost:8080/"'
+  ROOT_API: '"https://kopya-dev.sudoc.fr/api/"'
 })
