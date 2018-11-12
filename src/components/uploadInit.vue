@@ -115,7 +115,6 @@
           )
           .then(
             result => {
-              this.alert = false;
               this.loading = false;
               var blob = new Blob([result.data], { type: "application/csv" });
               this.fileLink = window.URL.createObjectURL(blob);

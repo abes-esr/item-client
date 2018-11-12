@@ -10,7 +10,7 @@
             <v-card-text>
                 <form enctype="multipart/form-data">
                     <div class="dropbox">
-                        <input type="file" accept=".txt" ref="fileInput" @change="checkFile(); checkFormat();" class="input-file">
+                        <input type="file" :accept="format" ref="fileInput" @change="checkFile(); checkFormat();" class="input-file">
                         <p v-if="!fichierPresent">
                             Faites glisser votre fichier<br> ou cliquez ici pour le rechercher
                         </p>

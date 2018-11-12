@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import LoginComponent from '@/components/login.vue'
 import RcrComponent from '@/components/rcr.vue'
-import uploadComponent from '@/components/fileUpload.vue'
+import uploadComponent from '@/components/uploadInit.vue'
 import traitementComponent from '@/components/selectTraitement.vue'
 import TableauComponent from '@/components/tableau.vue'
 import ProfilComponent from '@/components/profil.vue'
@@ -11,6 +11,8 @@ import CGUComponent from '@/components/footer/cgu.vue'
 import DonneesComponent from '@/components/footer/donnees.vue'
 import MentionsComponent from '@/components/footer/mentions.vue'
 import NotFoundComponent from '@/components/errors/notFound.vue'
+import uploadFinalComponent from '@/components/uploadFinal.vue'
+import simulationComponent from '@/components/simulation.vue'
 
 
 Vue.use(Router)
@@ -35,6 +37,14 @@ const router = new Router({
       path: '/upload',
       name: 'upload',
       component: uploadComponent,
+      meta: {
+        requiresAuth: true,
+      }
+    },
+    {
+      path: '/uploadFinal',
+      name: 'uploadFinal',
+      component: uploadFinalComponent,
       meta: {
         requiresAuth: true,
       }
@@ -74,6 +84,14 @@ const router = new Router({
       path: '/profil',
       name: 'profil',
       component: ProfilComponent,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/simulation',
+      name: 'simulation',
+      component: simulationComponent,
       meta: {
         requiresAuth: true
       }
