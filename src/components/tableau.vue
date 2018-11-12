@@ -26,6 +26,9 @@
               <tr>
                 <th>
                   <v-text-field v-model="searchDate" append-icon="search" single-line hide-details clearable v-on:keyup="computedItems('date')"></v-text-field>
+                </th>                
+                <th v-if="user.role == 'ADMIN'">
+                  <v-text-field v-model="searchILN" append-icon="search" single-line hide-details clearable v-on:keyup="computedItems('iln')"></v-text-field>
                 </th>
                 <th>
                   <v-text-field v-model="searchRCR" append-icon="search" single-line hide-details clearable v-on:keyup="computedItems('rcr')"></v-text-field>
@@ -46,7 +49,7 @@
             </template>
             <template slot="items" slot-scope="props">
               <td class="text-xs-left">{{ props.item.date }}</td>
-              <td :v-if="user.role == 'ADMIN'" class="text-xs-left">{{ props.item.iln }}</td>
+              <td v-if="user.role == 'ADMIN'" class="text-xs-left">{{ props.item.iln }}</td>
               <td class="text-xs-left">{{ props.item.rcr }}</td>
               <td class="text-xs-left">{{ props.item.num }}</td>
               <td class="text-xs-left">{{ props.item.traitement }}</td>
@@ -79,15 +82,9 @@
           sortBy: "name"
         },
         search: "",
-        selectedColumns: [
-          "date",
-          "rcr",
-          "num",
-          "traitement",
-          "statut",
-          "resultat"
-        ],
+        selectedColumns: [],
         searchDate: "",
+        searchILN: "",
         searchRCR: "",
         searchNum: "",
         searchTraitement: "",
@@ -104,7 +101,7 @@
     mounted() {
       this.user = JSON.parse(sessionStorage.getItem("user"));
 
-      this.initHeader();
+      this.initHeader();      
 
       if (this.user !== null && this.user.jwt !== null) {
         let url = "";
@@ -116,6 +113,7 @@
             "chercherDemandes?userNum=" +
             this.user.userNum;
         }
+        
         axios({
           headers: { Authorization: this.user.jwt },
           method: "GET",
@@ -167,7 +165,7 @@
             { text: "Traitement", value: "traitement" },
             { text: "Statut", value: "statut" },
             { text: "Résultat", value: "resultat" }
-          ];
+          ];          
         } else {
           this.headers = [
             { text: "Date Création", value: "date" },
@@ -177,6 +175,10 @@
             { text: "Statut", value: "statut" },
             { text: "Résultat", value: "resultat" }
           ];
+        }
+        
+        for (var i=0;i<this.headers.length;i++) {
+          this.selectedColumns[i]=this.headers[i].value;  
         }
       },
       computedItems(type) {
@@ -195,6 +197,11 @@
                 .toLowerCase()
                 .indexOf(this.searchDate) > -1 ||
                 this.searchDate == null) &&
+               (currentValue["iln"]
+                .toString()
+                .toLowerCase()
+                .indexOf(this.searchILN) > -1 ||
+                this.searchRCR == null) &&  
               (currentValue["rcr"]
                 .toString()
                 .toLowerCase()
@@ -227,6 +234,7 @@
         } //Recherche sur une ou plusieurs colonnes
         else {
           this.searchDate = "";
+          this.searchILN = "";
           this.searchRCR = "";
           this.searchNum = "";
           this.searchTraitement = "";
