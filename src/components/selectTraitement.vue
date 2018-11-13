@@ -44,6 +44,7 @@
     },
     mounted() {
       this.getListTraitements();
+      //TODO : Verifier si getItem("dem") est défini, sinon => Retour au départ. Check état demande via mixin, si mauvais état => retour départ
     },
     methods: {
       getListTraitements() {

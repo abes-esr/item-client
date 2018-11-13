@@ -10,7 +10,7 @@
           </v-toolbar>
           <v-card-text>
             <v-flex align-center justify-center fill-height class="text-xs-center">
-              <v-btn outline large color="indigo" ref="fileLink" :href="fileLink" :download="blobName">Télécharger le fichier enrichi <v-icon right dark>cloud_download</v-icon>
+              <v-btn outline large color="indigo" ref="fileLinkBtn" :href="fileLink" :download="blobName">Télécharger le fichier enrichi <v-icon right dark>cloud_download</v-icon>
               </v-btn>
             </v-flex>
           </v-card-text>
@@ -48,6 +48,9 @@
         loading: false,
         user: {}
       };
+    },
+    mounted(){
+      //TODO : Verifier si getItem("dem") est défini, sinon => Retour au départ. Check état demande via mixin, si mauvais état => retour départ
     },
     methods: {
       uploadFile: function(file) {
@@ -118,8 +121,7 @@
               this.loading = false;
               var blob = new Blob([result.data], { type: "application/csv" });
               this.fileLink = window.URL.createObjectURL(blob);
-              console.log(this.$refs.fileLink.click());
-              this.$refs.fileLink.click();
+              this.$refs.fileLinkBtn.click();
             },
             error => {
               this.alertMessage =

@@ -79,7 +79,7 @@
           <v-list-tile-content>
             <v-list-tile-title>Déconnexion</v-list-tile-title>
           </v-list-tile-content>
-        </v-list-tile>        
+        </v-list-tile>
       </v-list>
     </v-navigation-drawer>
     <v-toolbar color="indigo" dark fixed app>
@@ -148,6 +148,24 @@
     },
     mounted() {
       this.getUserData();
+      let cookieScript = document.createElement("script");
+      cookieScript.setAttribute(
+        "src",
+        "https://outils.abes.fr/cookie-banner/bandeau.js"
+      );
+      cookieScript.setAttribute(
+        "id",
+        "cookie-banner-script"
+      );
+      cookieScript.setAttribute(
+        "data-cookie-banner-style",
+        "z-index: 10000; background-color: black; position: absolute; width: 100%; top: 0; padding: 0.5%; color: white; font-family: Roboto,sans-serif;"
+      );
+      cookieScript.setAttribute(
+        "data-cookie-banner-url",
+        "/donnees"
+      );
+      document.head.appendChild(cookieScript);
     },
     methods: {
       setAuthenticated(status) {

@@ -3,9 +3,13 @@
     <v-layout justify-center align-center>
       <v-flex text-xs-center>
         <v-card>
-          <v-btn large block color="primary" v-on:click="$router.replace({ name: 'rcr' })"><v-icon>add</v-icon>&nbsp; Créer une nouvelle demande</v-btn>
+          <v-btn large block color="primary" v-on:click="$router.replace({ name: 'rcr' })">
+            <v-icon>add</v-icon>&nbsp; Créer une nouvelle demande
+          </v-btn>
         </v-card>
         <br />
+        <v-alert :value="alert" type="error" dismissible transition="scale-transition"><span v-html="alertMessage"></span>
+        </v-alert>
         <v-card>
           <v-card-title>
             Mes demandes
@@ -26,7 +30,7 @@
               <tr>
                 <th>
                   <v-text-field v-model="searchDate" append-icon="search" single-line hide-details clearable v-on:keyup="computedItems('date')"></v-text-field>
-                </th>                
+                </th>
                 <th v-if="user.role == 'ADMIN'">
                   <v-text-field v-model="searchILN" append-icon="search" single-line hide-details clearable v-on:keyup="computedItems('iln')"></v-text-field>
                 </th>
@@ -54,7 +58,21 @@
               <td class="text-xs-left">{{ props.item.num }}</td>
               <td class="text-xs-left">{{ props.item.traitement }}</td>
               <td class="text-xs-left">{{ props.item.statut }}</td>
-              <td class="text-xs-left">{{ props.item.resultat }}</td>
+              <td class="text-xs-left">
+                <v-menu offset-y>
+                  <v-btn slot="activator" color="info" small>
+                    <v-icon>cloud_download</v-icon>
+                  </v-btn>
+                  <v-list>
+                    <v-list-tile @click="downloadFile(props.item.num, 'epn')">
+                      <v-list-tile-title>Télécharger le fichier PPN/EPN</v-list-tile-title>
+                    </v-list-tile>
+                    <v-list-tile @click="downloadFile(props.item.num, 'result')">
+                      <v-list-tile-title>Télécharger le fichier résultat</v-list-tile-title>
+                    </v-list-tile>
+                  </v-list>
+                </v-menu>
+              </td>
             </template>
             <template slot="pageText" slot-scope="props">
               Lignes {{ props.pageStart }} - {{ props.pageStop }} de {{ props.itemsLength }}
@@ -63,10 +81,34 @@
               Votre recherche sur "{{ search }}" ne donne aucun résultat.
             </v-alert>
           </v-data-table>
-          <v-alert :value="alert" type="error" transition="scale-transition"><span v-html="alertMessage"></span>
-          </v-alert>
         </v-card>
       </v-flex>
+      <v-dialog v-model="dialog" width="500">
+        <v-card>
+          <v-card-title class="headline grey lighten-2" primary-title>
+            Téléchargement du fichier
+          </v-card-title>
+          <v-card-text>
+            <div v-if="fileReady">
+              Votre fichier est en cours de téléchargement, veuillez patienter.
+              <v-progress-linear :indeterminate="true"></v-progress-linear>
+            </div>
+            <div v-if="!fileReady">
+              <v-flex align-center justify-center fill-height class="text-xs-center">
+                <v-btn outline large color="indigo" ref="fileLinkBtn" :href="fileLink" :download="blobName">Télécharger le fichier <v-icon right dark>cloud_download</v-icon>
+                </v-btn>
+              </v-flex>
+            </div>
+          </v-card-text>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" flat @click="dialog = false">
+              Fermer
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-layout>
   </v-container>
 </template>
@@ -95,13 +137,17 @@
         items: [],
         alert: false,
         alertMessage: "",
-        user: {}
+        user: {},
+        fileLink: "",
+        blobName: "demande.csv",
+        dialog: false,
+        fileReady: false
       };
     },
     mounted() {
       this.user = JSON.parse(sessionStorage.getItem("user"));
 
-      this.initHeader();      
+      this.initHeader();
 
       if (this.user !== null && this.user.jwt !== null) {
         let url = "";
@@ -113,7 +159,7 @@
             "chercherDemandes?userNum=" +
             this.user.userNum;
         }
-        
+
         axios({
           headers: { Authorization: this.user.jwt },
           method: "GET",
@@ -136,8 +182,7 @@
                 iln: result.data[key].iln,
                 num: result.data[key].numDemande,
                 traitement: result.data[key].traitement.libelle,
-                statut: result.data[key].etatDemande.libelle,
-                resultat: "??"
+                statut: result.data[key].etatDemande.libelle
               });
             }
           },
@@ -153,8 +198,46 @@
           }
         );
       }
+
+      //Tri par défaut sur les numéros demandes
+      this.changeSort("num");
+      this.pagination.descending = true;
     },
     methods: {
+      downloadFile(numDem, type) {
+        this.fileReady = false;
+        this.dialog = true;
+        if (type == "epn") {
+          var filename = "fichier_apresws_" + numDem + ".csv?id=" + numDem;
+        } else {
+          var filename = "??";
+        }
+        if (this.user !== null && this.user.jwt !== null) {
+          return axios({
+            headers: { Authorization: this.user.jwt },
+            method: "GET",
+            url: process.env.ROOT_API + "files/" + filename
+          }).then(
+            result => {
+              var blob = new Blob([result.data], { type: "application/csv" });
+              this.fileLink = window.URL.createObjectURL(blob);
+              this.$refs.fileLinkBtn.click();
+              this.fileReady = true;
+            },
+            error => {
+              this.fileReady = false;
+              this.dialog = false;
+              this.alertMessage =
+                "Impossible de récupérer votre fichier. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.";
+              this.alert = true;
+              this.alertType = "error";
+              if (error.response.status == 401) {
+                this.$emit("logout");
+              }
+            }
+          );
+        }
+      },
       initHeader() {
         if (this.user.role == "ADMIN") {
           this.headers = [
@@ -165,7 +248,7 @@
             { text: "Traitement", value: "traitement" },
             { text: "Statut", value: "statut" },
             { text: "Résultat", value: "resultat" }
-          ];          
+          ];
         } else {
           this.headers = [
             { text: "Date Création", value: "date" },
@@ -176,9 +259,9 @@
             { text: "Résultat", value: "resultat" }
           ];
         }
-        
-        for (var i=0;i<this.headers.length;i++) {
-          this.selectedColumns[i]=this.headers[i].value;  
+
+        for (var i = 0; i < this.headers.length; i++) {
+          this.selectedColumns[i] = this.headers[i].value;
         }
       },
       computedItems(type) {
@@ -197,11 +280,11 @@
                 .toLowerCase()
                 .indexOf(this.searchDate) > -1 ||
                 this.searchDate == null) &&
-               (currentValue["iln"]
+              (currentValue["iln"]
                 .toString()
                 .toLowerCase()
                 .indexOf(this.searchILN) > -1 ||
-                this.searchRCR == null) &&  
+                this.searchRCR == null) &&
               (currentValue["rcr"]
                 .toString()
                 .toLowerCase()
