@@ -30,9 +30,6 @@
         user: {}
       };
     },
-    mounted() {
-      //TODO : Verifier si getItem("dem") est défini, sinon => Retour au départ. Check état demande via mixin, si mauvais état => retour départ
-    },
     methods: {
       uploadFile: function(file) {
         this.loading = true;
@@ -56,6 +53,7 @@
                 this.alertType = "success";
                 this.alert = true;
                 this.loading = false;
+                this.$router.replace({ name: 'simulation' });
               },
               error => {
                 this.alertMessage =

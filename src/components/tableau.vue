@@ -59,19 +59,20 @@
               <td class="text-xs-left">{{ props.item.traitement }}</td>
               <td class="text-xs-left">{{ props.item.statut }}</td>
               <td class="text-xs-left">
-                <v-menu offset-y>
+                <v-menu offset-y v-if="props.item.codeStatut >= 2">
                   <v-btn slot="activator" color="info" small>
                     <v-icon>cloud_download</v-icon>
                   </v-btn>
-                  <v-list>
+                  <v-list v-if="props.item.codeStatut >= 2">
                     <v-list-tile @click="downloadFile(props.item.num, 'epn')">
                       <v-list-tile-title>Télécharger le fichier PPN/EPN</v-list-tile-title>
                     </v-list-tile>
-                    <v-list-tile @click="downloadFile(props.item.num, 'result')">
+                    <v-list-tile @click="downloadFile(props.item.num, 'result')" v-if="props.item.codeStatut >= 6">
                       <v-list-tile-title>Télécharger le fichier résultat</v-list-tile-title>
                     </v-list-tile>
                   </v-list>
                 </v-menu>
+                <span v-if="props.item.codeStatut == 1">Aucun fichier</span>
               </td>
             </template>
             <template slot="pageText" slot-scope="props">
@@ -182,7 +183,8 @@
                 iln: result.data[key].iln,
                 num: result.data[key].numDemande,
                 traitement: result.data[key].traitement.libelle,
-                statut: result.data[key].etatDemande.libelle
+                statut: result.data[key].etatDemande.libelle,
+                codeStatut: result.data[key].etatDemande.numEtat
               });
             }
           },

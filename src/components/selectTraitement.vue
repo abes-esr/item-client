@@ -13,8 +13,7 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn v-if="!demandeCompletee" color="info" :disabled="!active" v-on:click="selectTraitement()">Valider</v-btn>
-            <v-btn v-if="demandeCompletee" color="info" v-on:click="$router.replace({ name: 'uploadFinal' })">Suivant</v-btn>
+            <v-btn color="info" :disabled="!active" v-on:click="selectTraitement()">Valider</v-btn>
           </v-card-actions>
         </v-card>
         <br />
@@ -38,13 +37,11 @@
         alert: false,
         alertMessage: "Erreur.",
         alertType: "error",
-        user: {},
-        demandeCompletee: false
+        user: {}
       };
     },
     mounted() {
       this.getListTraitements();
-      //TODO : Verifier si getItem("dem") est défini, sinon => Retour au départ. Check état demande via mixin, si mauvais état => retour départ
     },
     methods: {
       getListTraitements() {
@@ -110,7 +107,7 @@
             this.alertMessage = "Demande mise à jour.";
             this.alert = true;
             this.alertType = "success";
-            this.demandeCompletee = true;
+            this.$router.replace({ name: "uploadFinal" });
           },
           error => {
             this.alertMessage =

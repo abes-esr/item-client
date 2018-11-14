@@ -5,12 +5,12 @@
         <upload v-if="showForm" :loading="loading" format=".txt" v-on:upload="uploadFile"></upload>
         <v-card v-if="!showForm" class="elevation-12">
           <v-toolbar dark color="primary">
-            <v-toolbar-title>Récupération du fichier enrichi</v-toolbar-title>
+            <v-toolbar-title>Récupération du fichier de correspondances</v-toolbar-title>
             <v-spacer></v-spacer>
           </v-toolbar>
           <v-card-text>
             <v-flex align-center justify-center fill-height class="text-xs-center">
-              <v-btn outline large color="indigo" ref="fileLinkBtn" :href="fileLink" :download="blobName">Télécharger le fichier enrichi <v-icon right dark>cloud_download</v-icon>
+              <v-btn outline large color="indigo" ref="fileLinkBtn" :href="fileLink" :download="blobName">Télécharger le fichier de correspondances PPN/EPN <v-icon right dark>cloud_download</v-icon>
               </v-btn>
             </v-flex>
           </v-card-text>
@@ -48,9 +48,6 @@
         loading: false,
         user: {}
       };
-    },
-    mounted(){
-      //TODO : Verifier si getItem("dem") est défini, sinon => Retour au départ. Check état demande via mixin, si mauvais état => retour départ
     },
     methods: {
       uploadFile: function(file) {

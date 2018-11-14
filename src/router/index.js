@@ -16,6 +16,7 @@ import simulationComponent from '@/components/simulation.vue'
 
 
 Vue.use(Router)
+import axios from "axios";
 
 const router = new Router({
   routes: [
@@ -139,6 +140,52 @@ router.beforeEach((to, from, next) => {
       } else {
         next()
       }
+    }
+  } else {
+    next()
+  }
+
+  //ROUTEGUARD SELON ETAT DEMANDE
+
+  let numDem = sessionStorage.getItem('dem');
+  if (["/upload", "/uploadFinal", "/traitement", "/simulation"].includes(to.path)) {
+    if (numDem == undefined) {
+      next({ path: "/" })
+    } else {
+      axios({
+        headers: { Authorization: user.jwt },
+        method: "GET",
+        url:
+          process.env.ROOT_API + "demandes/" + numDem
+      }).then(
+        result => {
+          switch (result.data.etatDemande.numEtat) {
+            case 1:
+              next({ path: "/upload" })
+              break;
+            case 2:
+              if (result.data.traitement != null) {
+                next({ path: "/uploadFinal" })
+              } else {
+                next({ path: "/traitement" })
+              }
+              break;
+            case 3:
+              next({ path: "/simulation" })
+              break;
+            default:
+              next({ path: "/tab" })
+              break;
+          }
+        },
+        error => {
+          if (error.response.status == 401) {
+            this.$emit("logout");
+          } else {
+            next({ path: "/" })
+          }
+        }
+      )
     }
   } else {
     next()
