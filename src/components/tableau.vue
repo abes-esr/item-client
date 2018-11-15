@@ -52,13 +52,12 @@
               </tr>
             </template>
             <template slot="items" slot-scope="props">
-              <tr @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)">
-                <td class="text-xs-left">{{ props.item.date }}</td>
-                <td v-if="user.role == 'ADMIN'" class="text-xs-left">{{ props.item.iln }}</td>
-                <td class="text-xs-left">{{ props.item.rcr }}</td>
-                <td class="text-xs-left">{{ props.item.num }}</td>
-                <td class="text-xs-left">{{ props.item.traitement }}</td>
-                <td class="text-xs-left">{{ props.item.statut }}</td>
+                <td class="text-xs-left" @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)">{{ props.item.date }}</td>
+                <td v-if="user.role == 'ADMIN'" class="text-xs-left" @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)">{{ props.item.iln }}</td>
+                <td class="text-xs-left" @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)">{{ props.item.rcr }}</td>
+                <td class="text-xs-left" @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)">{{ props.item.num }}</td>
+                <td class="text-xs-left" @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)">{{ props.item.traitement }}</td>
+                <td class="text-xs-left" @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)">{{ props.item.statut }}</td>
                 <td class="text-xs-left">
                   <v-menu offset-y v-if="props.item.codeStatut >= 2">
                     <v-btn slot="activator" color="info" small>
@@ -73,9 +72,12 @@
                       </v-list-tile>
                     </v-list>
                   </v-menu>
-                  <span v-if="props.item.codeStatut == 1">Aucun fichier</span>
+                  <span v-if="props.item.codeStatut == 1">
+                    <v-btn slot="activator" color="info" small disabled>
+                      <v-icon>cloud_download</v-icon>
+                    </v-btn>
+                  </span>
                 </td>
-              </tr>
             </template>
             <template slot="pageText" slot-scope="props">
               Lignes {{ props.pageStart }} - {{ props.pageStop }} de {{ props.itemsLength }}
@@ -380,5 +382,7 @@
 </script>
 
 <style scoped>
-td { cursor: pointer; }
+  td {
+    cursor: pointer;
+  }
 </style>
