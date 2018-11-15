@@ -222,7 +222,6 @@ A99 59133626X0
             "Vous êtes déjà sur la première notice de votre demande, il n'y a pas de notice précedente.";
           this.alertType = "info";
         }
-        console.log(this.noticeEnCours);
       }
     }
   };
