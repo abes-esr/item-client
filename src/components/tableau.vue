@@ -47,7 +47,7 @@
                   <v-text-field v-model="searchStatut" append-icon="search" single-line hide-details clearable v-on:keyup="computedItems('statut')"></v-text-field>
                 </th>
                 <th>
-                  <v-text-field v-model="searchResultat" append-icon="search" single-line hide-details clearable v-on:keyup="computedItems('resultat')"></v-text-field>
+                  <v-text-field v-model="searchCodeStatut" append-icon="search" single-line hide-details clearable v-on:keyup="computedItems('resultat')"></v-text-field>
                 </th>
               </tr>
             </template>
@@ -135,7 +135,7 @@
         searchNum: "",
         searchTraitement: "",
         searchStatut: "",
-        searchResultat: "",
+        searchCodeStatut: "",
         typeSearch: "search",
         headers: [],
         items: [],
@@ -272,7 +272,7 @@
             { text: "Numéro de demande", value: "num" },
             { text: "Traitement", value: "traitement" },
             { text: "Statut", value: "statut" },
-            { text: "Résultat", value: "resultat" }
+            { text: "Résultat", value: "codeStatut" }
           ];
         } else {
           this.headers = [
@@ -281,7 +281,7 @@
             { text: "Numéro de demande", value: "num" },
             { text: "Traitement", value: "traitement" },
             { text: "Statut", value: "statut" },
-            { text: "Résultat", value: "resultat" }
+            { text: "Résultat", value: "codeStatut" }
           ];
         }
 
@@ -330,11 +330,11 @@
                 .toLowerCase()
                 .indexOf(this.searchStatut) > -1 ||
                 this.searchStatut == null) &&
-              (currentValue["resultat"]
+              (currentValue["codeStatut"]
                 .toString()
                 .toLowerCase()
-                .indexOf(this.searchResultat) > -1 ||
-                this.searchResultat == null)
+                .indexOf(this.searchCodeStatut) > -1 ||
+                this.searchCodeStatut == null)
             ) {
               return true;
             }
@@ -347,7 +347,7 @@
           this.searchNum = "";
           this.searchTraitement = "";
           this.searchStatut = "";
-          this.searchResultat = "";
+          this.searchCodeStatut = "";
           return this.items.filter((currentValue, index, arr) => {
             if (this.selectedColumns.length == 0 || this.search == null) {
               return true;
