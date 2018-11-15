@@ -17,7 +17,7 @@
         <v-list-tile>
           <v-switch label="Mode nuit" v-model="isDark"></v-switch>
         </v-list-tile>
-        <v-list-tile v-on:click="$router.replace({ name: 'tab' })">
+        <v-list-tile v-on:click="$router.push({ name: 'tab' })">
           <v-list-tile-action>
             <v-icon>home</v-icon>
           </v-list-tile-action>
@@ -25,7 +25,7 @@
             <v-list-tile-title>Accueil</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile v-if="authenticated && !isAdmin" v-on:click="$router.replace({ name: 'profil' })">
+        <v-list-tile v-if="authenticated && !isAdmin" v-on:click="$router.push({ name: 'profil' })">
           <v-list-tile-action>
             <v-icon>face</v-icon>
           </v-list-tile-action>
@@ -33,7 +33,7 @@
             <v-list-tile-title>Profil</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile v-if="authenticated" v-on:click="$router.replace({ name: 'rcr' })">
+        <v-list-tile v-if="authenticated" v-on:click="$router.push({ name: 'rcr' })">
           <v-list-tile-action>
             <v-icon>add</v-icon>
           </v-list-tile-action>
@@ -92,16 +92,16 @@
     </v-content>
     <v-footer height="auto" color="indigo">
       <v-layout justify-center row wrap>
-        <v-btn color="white" flat round @click="$router.replace({ name: 'about' })">
+        <v-btn color="white" flat round @click="$router.push({ name: 'about' })">
           A Propos
         </v-btn>
-        <v-btn color="white" flat round @click="$router.replace({ name: 'donnees' })">
+        <v-btn color="white" flat round @click="$router.push({ name: 'donnees' })">
           Données Personnelles
         </v-btn>
-        <v-btn color="white" flat round @click="$router.replace({ name: 'mentions' })">
+        <v-btn color="white" flat round @click="$router.push({ name: 'mentions' })">
           Mentions Légales
         </v-btn>
-        <v-btn color="white" flat round @click="$router.replace({ name: 'cgu' })">
+        <v-btn color="white" flat round @click="$router.push({ name: 'cgu' })">
           Conditions Générales d'Utilisation (CGU)
         </v-btn>
         <v-flex indigo lighten-1 py-2 text-xs-center white--text xs12>

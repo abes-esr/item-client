@@ -3,7 +3,7 @@
     <v-layout justify-center align-center>
       <v-flex text-xs-center>
         <v-card>
-          <v-btn large block color="primary" v-on:click="$router.replace({ name: 'rcr' })">
+          <v-btn large block color="primary" v-on:click="$router.push({ name: 'rcr' })">
             <v-icon>add</v-icon>&nbsp; Créer une nouvelle demande
           </v-btn>
         </v-card>
@@ -52,28 +52,30 @@
               </tr>
             </template>
             <template slot="items" slot-scope="props">
-              <td class="text-xs-left">{{ props.item.date }}</td>
-              <td v-if="user.role == 'ADMIN'" class="text-xs-left">{{ props.item.iln }}</td>
-              <td class="text-xs-left">{{ props.item.rcr }}</td>
-              <td class="text-xs-left">{{ props.item.num }}</td>
-              <td class="text-xs-left">{{ props.item.traitement }}</td>
-              <td class="text-xs-left">{{ props.item.statut }}</td>
-              <td class="text-xs-left">
-                <v-menu offset-y v-if="props.item.codeStatut >= 2">
-                  <v-btn slot="activator" color="info" small>
-                    <v-icon>cloud_download</v-icon>
-                  </v-btn>
-                  <v-list v-if="props.item.codeStatut >= 2">
-                    <v-list-tile @click="downloadFile(props.item.num, 'epn')">
-                      <v-list-tile-title>Télécharger le fichier PPN/EPN</v-list-tile-title>
-                    </v-list-tile>
-                    <v-list-tile @click="downloadFile(props.item.num, 'result')" v-if="props.item.codeStatut >= 6">
-                      <v-list-tile-title>Télécharger le fichier résultat</v-list-tile-title>
-                    </v-list-tile>
-                  </v-list>
-                </v-menu>
-                <span v-if="props.item.codeStatut == 1">Aucun fichier</span>
-              </td>
+              <tr @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)">
+                <td class="text-xs-left">{{ props.item.date }}</td>
+                <td v-if="user.role == 'ADMIN'" class="text-xs-left">{{ props.item.iln }}</td>
+                <td class="text-xs-left">{{ props.item.rcr }}</td>
+                <td class="text-xs-left">{{ props.item.num }}</td>
+                <td class="text-xs-left">{{ props.item.traitement }}</td>
+                <td class="text-xs-left">{{ props.item.statut }}</td>
+                <td class="text-xs-left">
+                  <v-menu offset-y v-if="props.item.codeStatut >= 2">
+                    <v-btn slot="activator" color="info" small>
+                      <v-icon>cloud_download</v-icon>
+                    </v-btn>
+                    <v-list v-if="props.item.codeStatut >= 2">
+                      <v-list-tile @click="downloadFile(props.item.num, 'epn')">
+                        <v-list-tile-title>Télécharger le fichier PPN/EPN</v-list-tile-title>
+                      </v-list-tile>
+                      <v-list-tile @click="downloadFile(props.item.num, 'result')" v-if="props.item.codeStatut >= 6">
+                        <v-list-tile-title>Télécharger le fichier résultat</v-list-tile-title>
+                      </v-list-tile>
+                    </v-list>
+                  </v-menu>
+                  <span v-if="props.item.codeStatut == 1">Aucun fichier</span>
+                </td>
+              </tr>
             </template>
             <template slot="pageText" slot-scope="props">
               Lignes {{ props.pageStart }} - {{ props.pageStop }} de {{ props.itemsLength }}
@@ -116,6 +118,7 @@
 
 <script>
   import axios from "axios";
+  import loading from "vue-full-loading";
 
   export default {
     name: "tableauComponent",
@@ -240,6 +243,26 @@
           );
         }
       },
+      clickRow(numDem, codeStatut, traitement) {
+        sessionStorage.setItem("dem", numDem);
+        switch (codeStatut) {
+          case 1:
+            this.$router.push("upload");
+            break;
+          case 2:
+            if (traitement !== "Non défini") {
+              this.$router.push("uploadFinal");
+            } else {
+              this.$router.push("traitement");
+            }
+            break;
+          case 3:
+            this.$router.push("simulation");
+            break;
+          default:
+            break;
+        }
+      },
       initHeader() {
         if (this.user.role == "ADMIN") {
           this.headers = [
@@ -355,3 +378,7 @@
     }
   };
 </script>
+
+<style scoped>
+td { cursor: pointer; }
+</style>
