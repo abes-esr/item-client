@@ -14,7 +14,7 @@
           <v-card-title>
             Mes demandes
             <v-spacer></v-spacer>
-            <v-combobox v-model="selectedColumns" :items="headers" label="Colonnes de recherche sélectionnées" multiple :return-object="false" hide-details></v-combobox>
+            <v-combobox v-model="selectedColumns" :items="searchCombo" label="Colonnes de recherche sélectionnées" multiple :return-object="false" hide-details></v-combobox>
             <v-spacer></v-spacer>
             <v-text-field v-model="search" append-icon="search" label="Rechercher" single-line hide-details clearable v-on:keyup="computedItems('search')"></v-text-field>
           </v-card-title>
@@ -47,7 +47,35 @@
                   <v-text-field v-model="searchStatut" append-icon="search" single-line hide-details clearable v-on:keyup="computedItems('statut')"></v-text-field>
                 </th>
                 <th>
-                  <v-text-field v-model="searchCodeStatut" append-icon="search" single-line hide-details clearable v-on:keyup="computedItems('resultat')"></v-text-field>
+                  <v-combobox v-model="searchCodeStatut" :items="listCodeStatut" single-line hide-details clearable multiple chips hide-selected v-on:change="computedItems('codeStatut')">
+                    <template slot="item" slot-scope="data">                      
+                      <span v-if="data.item == 1">
+                       <v-btn slot="activator" color="info" small disabled>
+                        <v-icon>cloud_download</v-icon>
+                      </v-btn>
+                      </span>
+                      <span v-if="data.item >= 2">
+                       <v-btn slot="activator" color="info" small>
+                        <v-icon>cloud_download</v-icon>
+                      </v-btn>
+                      </span>
+                    </template>
+                    <template
+                      slot="selection"
+                      slot-scope="{ item, parent, selected }"
+                    >
+                      <v-chip class="v-chip--select-multi">
+                        <span v-if="item == 1">                      
+                          <v-icon slot="activator" color="info" small disabled>cloud_download</v-icon>   
+                          <v-icon small @click="parent.selectItem(item)">close</v-icon>                   
+                        </span>
+                        <span v-if="item >= 2">
+                          <v-icon slot="activator" color="info" small >cloud_download</v-icon>
+                          <v-icon small  @click="parent.selectItem(item)">close</v-icon>
+                        </span>
+                      </v-chip>
+                    </template>
+                  </v-combobox>
                 </th>
               </tr>
             </template>
@@ -137,8 +165,10 @@
         searchNum: "",
         searchTraitement: "",
         searchStatut: "",
-        searchCodeStatut: "",
+        searchCodeStatut: ["1","2"],
+        listCodeStatut:["1","2"],
         typeSearch: "search",
+        searchCombo: [],
         headers: [],
         items: [],
         alert: false,
@@ -287,8 +317,10 @@
           ];
         }
 
-        for (var i = 0; i < this.headers.length; i++) {
-          this.selectedColumns[i] = this.headers[i].value;
+        this.searchCombo = Object.assign([], this.headers); 
+        this.searchCombo.splice(this.searchCombo.length-1,1);
+        for (var i = 0; i < this.searchCombo.length; i++) {
+          this.selectedColumns[i] = this.searchCombo[i].value;
         }
       },
       computedItems(type) {
@@ -299,7 +331,7 @@
 
         //Si recherche sur une colonne spécifique
         if (this.typeSearch != "search") {
-          this.search = "";
+          this.search = "";          
           return this.items.filter((currentValue, index, arr) => {
             if (
               (currentValue["date"]
@@ -332,15 +364,12 @@
                 .toLowerCase()
                 .indexOf(this.searchStatut) > -1 ||
                 this.searchStatut == null) &&
-              (currentValue["codeStatut"]
-                .toString()
-                .toLowerCase()
-                .indexOf(this.searchCodeStatut) > -1 ||
-                this.searchCodeStatut == null)
-            ) {
+              (this.searchCodeStatut.toString().indexOf(currentValue["codeStatut"])  > -1 ||
+                this.searchCodeStatut.toString() == "")
+            ) {              
               return true;
             }
-          });
+          });          
         } //Recherche sur une ou plusieurs colonnes
         else {
           this.searchDate = "";
