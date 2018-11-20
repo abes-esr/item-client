@@ -1,6 +1,6 @@
 # kopya-ui
 
-> Front-end Kopya
+> Front-end Kopya.
 
 ## Build Setup
 
