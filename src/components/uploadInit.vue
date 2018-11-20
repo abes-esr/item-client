@@ -102,7 +102,7 @@
         axios
           .get(
             process.env.ROOT_API +
-              "files/fichier_apresws_" +
+              "files/fichier_prepare_" +
               sessionStorage.getItem("dem") +
               ".csv?id=" +
               sessionStorage.getItem("dem"),

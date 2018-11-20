@@ -52,25 +52,7 @@
                           <span class="headline --text">Avant</span>
                           <div>
                             <pre>
-930 ##$b341720001$jg##$b341720001$jg##$b341720001$jg##$b341720001$jg##$b341720001$jg##$b341720001$jg##$b341720001$jg##$b341720001$jg##$b341720001$jg##$b341720001$jg##$b341720001$jg##$b341720001$jg##$b341720001$jg##$b341720001$jg##$b341720001$jg
-A97 25-04-18 11:50:11.000
-A98 341720001:25-04-18
-A99 591185806
-
-930 ##$b341720001$jg
-A97 25-04-18 11:50:22.000
-A98 341720001:25-04-18
-A99 591185814
-
-930 ##$b341720001$jg
-A97 25-04-18 14:23:12.000
-A98 341720001:25-04-18
-A99 591185822
-
-930 ##$b341720001$jg
-A97 12-09-18 16:45:26.000
-A98 341720001:12-09-18
-A99 59133626X0
+                              {{ noticeAvant }}
                             </pre>
                           </div>
                         </v-flex>
@@ -109,35 +91,7 @@ A99 59133626X0
                           <span class="headline --text">Après</span>
                           <div>
                             <pre>
-930 ##$b341720001$jg
-A97 25-04-18 11:50:11.000
-A98 341720001:25-04-18
-A99 591185806
-
-930 ##$b341720001$jg
-A97 25-04-18 11:50:22.000
-A98 341720001:25-04-18
-A99 591185814
-
-930 ##$b341720001$jg
-A97 25-04-18 14:23:12.000
-A98 341720001:25-04-18
-A99 591185822
-
-930 ##$b341720001$jg
-A97 12-09-18 16:45:26.000
-A98 341720001:12-09-18
-A99 59133626X0
-
-930 ##$b341720001$jg
-A97 12-09-18 16:45:26.000
-A98 341720001:12-09-18
-A99 59133626X0
-
-930 ##$b341720001$jg
-A97 12-09-18 16:45:26.000
-A98 341720001:12-09-18
-A99 59133626X0
+                              {{ noticeApres }}
                             </pre>
                           </div>
                         </v-flex>
@@ -163,7 +117,7 @@ A99 59133626X0
     },
     data() {
       return {
-        noticeEnCours: 1,
+        noticeEnCours: 0,
         loading: false,
         demande: {
           traitement: {
@@ -173,7 +127,9 @@ A99 59133626X0
         alertMessage: "Erreur.",
         alertType: "error",
         alert: false,
-        user: {}
+        user: {},
+        noticeAvant: "Notice en cours de chargement...",
+        noticeApres: "Notice en cours de chargement..."
       };
     },
     mounted() {
@@ -191,35 +147,69 @@ A99 59133626X0
         }).then(
           result => {
             this.demande = result.data;
+            this.getSimulation();
           },
           error => {
+            this.loading = false;
+            this.alert = true;
+            this.alertType = "error";
+            this.alertMessage =
+              "Impossible de récupérer la notice pour la simulation. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.";
             if (error.response.status == 401) {
               this.$emit("logout");
-            } else {
+            } else if (error.response.status == 401) {
               this.alert = true;
-              this.alertType = "error";
+              this.alertType = "info";
               this.alertMessage =
-                "Impossible de récupérer la notice pour la simulation. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.";
+                "Vous êtes à la dernière notice de votre demande, impossible d'aller plus loin.";
+              this.noticeEnCours--;
             }
           }
         );
-        this.loading = false;
       },
       getSimulation() {
         this.alert = false;
+        this.loading = true;
+
+        axios({
+          headers: { Authorization: this.user.jwt },
+          method: "GET",
+          url:
+            process.env.ROOT_API +
+            "simulerLigne?numDemande=" +
+            this.demande.numDemande +
+            "&numLigne=" +
+            this.noticeEnCours
+        }).then(
+          result => {
+            this.noticeAvant = result.data[0];
+            this.noticeApres = result.data[1];
+            this.loading = false;
+          },
+          error => {
+            this.loading = false;
+            this.alert = true;
+            this.alertType = "error";
+            this.alertMessage =
+              "Impossible de récupérer la notice pour la simulation. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.";
+            if (error.response.status == 401) {
+              this.$emit("logout");
+            }
+          }
+        );
       },
       getNextSimu() {
         this.noticeEnCours++;
         this.getSimulation();
       },
       getPreviousSimu() {
-        if (this.noticeEnCours > 1) {
+        if (this.noticeEnCours > 0) {
           this.noticeEnCours--;
           this.getSimulation();
         } else {
           this.alert = true;
           this.alertMessage =
-            "Vous êtes déjà sur la première notice de votre demande, il n'y a pas de notice précedente.";
+            "Vous êtes sur la première notice de votre demande, il n'y a pas de notice précedente.";
           this.alertType = "info";
         }
       }
@@ -238,10 +228,6 @@ A99 59133626X0
   }
   .v-card {
     width: 100%;
-  }
-  #validButton {
-    position: absolute;
-    bottom: 20px;
   }
   #demInfos {
     margin-bottom: 10px;

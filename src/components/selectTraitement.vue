@@ -1,6 +1,7 @@
 <template>
   <v-container fluid fill-height>
     <v-layout justify-center align-center>
+      <loading :show="loading" label="Chargement en cours..."></loading>
       <v-flex md7>
         <v-card class="elevation-12">
           <v-toolbar dark color="primary">
@@ -26,8 +27,12 @@
 
 <script>
   import axios from "axios";
+  import loading from "vue-full-loading";
 
   export default {
+    components: {
+      loading
+    },
     data() {
       return {
         json: "",
@@ -37,7 +42,8 @@
         alert: false,
         alertMessage: "Erreur.",
         alertType: "error",
-        user: {}
+        user: {},
+        loading: false
       };
     },
     mounted() {
@@ -45,6 +51,7 @@
     },
     methods: {
       getListTraitements() {
+        this.loading = true;
         this.user = JSON.parse(sessionStorage.getItem("user"));
         if (this.user !== null && this.user.jwt !== null) {
           axios({
@@ -66,11 +73,13 @@
             }
           );
         }
+        this.loading = false;
       },
       selectTraitement() {
         this.active = false;
         this.alert = false;
         let demande = {};
+        this.loading = true;
 
         if (this.user !== null && this.user.jwt !== null) {
           axios({
@@ -83,6 +92,7 @@
               demande = result.data;
               demande.traitement = this.selected;
               this.updateDemande(demande);
+              this.loading = false;
             },
             error => {
               this.alertMessage =
@@ -97,6 +107,7 @@
         }
       },
       updateDemande(demande) {
+        this.loading = true;
         axios({
           headers: { Authorization: this.user.jwt },
           method: "PUT",
@@ -107,6 +118,7 @@
             this.alertMessage = "Demande mise à jour.";
             this.alert = true;
             this.alertType = "success";
+            this.loading = false;
             this.$router.replace({ name: "uploadFinal" });
           },
           error => {

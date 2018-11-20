@@ -63,11 +63,11 @@
                     <v-btn slot="activator" color="info" small>
                       <v-icon>cloud_download</v-icon>
                     </v-btn>
-                    <v-list v-if="props.item.codeStatut >= 2">
+                    <v-list v-if="props.item.codeStatut >= 3">
                       <v-list-tile @click="downloadFile(props.item.num, 'epn')">
                         <v-list-tile-title>Télécharger le fichier PPN/EPN</v-list-tile-title>
                       </v-list-tile>
-                      <v-list-tile @click="downloadFile(props.item.num, 'result')" v-if="props.item.codeStatut >= 6">
+                      <v-list-tile @click="downloadFile(props.item.num, 'result')" v-if="props.item.codeStatut >= 7">
                         <v-list-tile-title>Télécharger le fichier résultat</v-list-tile-title>
                       </v-list-tile>
                     </v-list>
@@ -251,14 +251,14 @@
           case 1:
             this.$router.push("upload");
             break;
-          case 2:
+          case 3:
             if (traitement !== "Non défini") {
               this.$router.push("uploadFinal");
             } else {
               this.$router.push("traitement");
             }
             break;
-          case 3:
+          case 4:
             this.$router.push("simulation");
             break;
           default:

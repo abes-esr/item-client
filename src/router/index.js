@@ -133,7 +133,7 @@ router.beforeEach((to, from, next) => {
         params: { nextUrl: to.fullPath }
       })
     } else {
-      if (user.email == null && to.path != "/profil" && user.role != "ADMIN") {
+      if (user.email == null && to.path != "/profil") {
         next({
           path: '/profil'
         })
@@ -163,14 +163,14 @@ router.beforeEach((to, from, next) => {
             case 1:
               next({ path: "/upload" })
               break;
-            case 2:
+            case 3:
               if (result.data.traitement != null) {
                 next({ path: "/uploadFinal" })
               } else {
                 next({ path: "/traitement" })
               }
               break;
-            case 3:
+            case 4:
               next({ path: "/simulation" })
               break;
             default:

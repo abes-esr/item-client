@@ -80,7 +80,6 @@
               "Impossible de récupérer la liste des RCR. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.";
             this.alert = true;
             this.alertType = "error";
-            console.error(error);
           }
         );
       }
@@ -125,7 +124,6 @@
         }
       },
       searchRCR(item, queryText, itemText) {
-        console.log(item)
         return item.rcr.startsWith(queryText) || item.shortname.toLowerCase().includes(queryText.toLowerCase()) ;
       },
       checkActive () {
