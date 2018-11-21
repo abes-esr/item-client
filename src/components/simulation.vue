@@ -41,6 +41,7 @@
         <v-alert :value="alert" :type="alertType" transition="scale-transition" dismissible><span v-html="alertMessage"></span>
         </v-alert>
         <v-card>
+          <h3 class="headline mb-0" id="numLigne">Ligne de votre fichier : {{ noticeEnCours + 1 }}</h3>
           <v-container fluid grid-list-md>
             <v-layout row wrap>
               <v-flex xs5>
@@ -50,10 +51,8 @@
                       <v-layout fill-height>
                         <v-flex xs12 align-end flexbox>
                           <span class="headline --text">Avant</span>
-                          <div>
-                            <pre>
-                              {{ noticeAvant }}
-                            </pre>
+                          <div class="notice">
+                            <pre>{{ noticeAvant }}</pre>
                           </div>
                         </v-flex>
                       </v-layout>
@@ -89,10 +88,8 @@
                       <v-layout fill-height>
                         <v-flex xs12 align-end flexbox>
                           <span class="headline --text">Après</span>
-                          <div>
-                            <pre>
-                              {{ noticeApres }}
-                            </pre>
+                          <div class="notice">
+                            <pre>{{ noticeApres }}</pre>
                           </div>
                         </v-flex>
                       </v-layout>
@@ -157,12 +154,6 @@
               "Impossible de récupérer la notice pour la simulation. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.";
             if (error.response.status == 401) {
               this.$emit("logout");
-            } else if (error.response.status == 401) {
-              this.alert = true;
-              this.alertType = "info";
-              this.alertMessage =
-                "Vous êtes à la dernière notice de votre demande, impossible d'aller plus loin.";
-              this.noticeEnCours--;
             }
           }
         );
@@ -194,6 +185,12 @@
               "Impossible de récupérer la notice pour la simulation. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.";
             if (error.response.status == 401) {
               this.$emit("logout");
+            } else if (error.response.status == 400) {
+              this.alert = true;
+              this.alertType = "info";
+              this.alertMessage =
+                "Vous êtes à la dernière notice de votre demande, impossible d'aller plus loin.";
+              this.noticeEnCours--;
             }
           }
         );
@@ -229,9 +226,17 @@
   .v-card {
     width: 100%;
   }
+  .notice {
+    padding-top: 20px;
+  }
   #demInfos {
     margin-bottom: 10px;
     text-align: left;
+  }
+  #numLigne{
+    text-align: left !important;
+    padding-top: 20px;
+    padding-left: 20px;
   }
 </style>
 
