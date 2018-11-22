@@ -245,7 +245,7 @@
         this.fileReady = false;
         this.dialog = true;
         if (type == "epn") {
-          var filename = "fichier_apresws_" + numDem + ".csv?id=" + numDem;
+          var filename = "fichier_prepare_" + numDem + ".csv?id=" + numDem;
         } else {
           var filename = "??";
         }

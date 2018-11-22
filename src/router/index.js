@@ -13,6 +13,7 @@ import MentionsComponent from '@/components/footer/mentions.vue'
 import NotFoundComponent from '@/components/errors/notFound.vue'
 import uploadFinalComponent from '@/components/uploadFinal.vue'
 import simulationComponent from '@/components/simulation.vue'
+import homeComponent from '@/components/home.vue'
 
 
 Vue.use(Router)
@@ -23,7 +24,15 @@ const router = new Router({
     {
       path: '/',
       redirect: {
-        name: 'tab'
+        name: 'home'
+      }
+    },
+    {
+      path: '/home',
+      name: 'home',
+      component: homeComponent,
+      meta: {
+        requiresAuth: true,
       }
     },
     {

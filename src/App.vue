@@ -17,7 +17,7 @@
         <v-list-tile>
           <v-switch label="Mode nuit" v-model="isDark"></v-switch>
         </v-list-tile>
-        <v-list-tile v-on:click="$router.push({ name: 'tab' })">
+        <v-list-tile v-on:click="$router.push({ name: 'home' })">
           <v-list-tile-action>
             <v-icon>home</v-icon>
           </v-list-tile-action>
@@ -25,7 +25,7 @@
             <v-list-tile-title>Accueil</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile v-if="authenticated && !isAdmin" v-on:click="$router.push({ name: 'profil' })">
+        <v-list-tile v-if="authenticated" v-on:click="$router.push({ name: 'profil' })">
           <v-list-tile-action>
             <v-icon>face</v-icon>
           </v-list-tile-action>
