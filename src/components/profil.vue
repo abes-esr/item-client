@@ -23,7 +23,7 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="info" v-on:click="majProfil()">Valider</v-btn>
+            <v-btn color="info" :loading="loading" v-on:click="majProfil()">Valider</v-btn>
           </v-card-actions>
         </v-card>
         <v-alert :value="alert" type="error" transition="scale-transition">
@@ -53,16 +53,18 @@
             const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             return pattern.test(value) || "e-mail invalide";
           }
-        }
+        },
+        loading: false
       };
     },
     mounted() {
-       this.user = JSON.parse(sessionStorage.getItem("user"));
+      this.user = JSON.parse(sessionStorage.getItem("user"));
     },
     methods: {
       majProfil() {
-        alert = false;
-        
+        this.loading = true;
+        this.alert = false;
+
         //TODO : supprimer nbtentatives dans le PUT !!
         if (
           this.$refs.form.validate() &&
@@ -75,7 +77,7 @@
             data: {
               email: this.input.email1,
               numUser: this.user.userNum,
-              nbtentatives:0
+              nbtentatives: 0
             }
           }).then(
             result => {
@@ -90,10 +92,12 @@
               if (error.response.status == 401) {
                 this.$emit("logout");
               }
+              this.loading = false;
             }
           );
         } else {
           this.alert = true;
+          this.loading = false;
         }
       }
     }

@@ -76,12 +76,7 @@
                 if (result.data.accessToken !== null) {
                   this.$emit("authenticated", true);
                   this.authenticated = true;
-
-                  if (this.authUser.role == "ADMIN") {
-                    this.$router.replace({ name: "tab" });
-                  } else {
-                    this.getMail();
-                  }
+                  this.getMail();
                 }
               },
               error => {
@@ -115,7 +110,7 @@
             } else {
               this.user.email = result.data.email;
               sessionStorage.setItem("user", JSON.stringify(this.user));
-              this.$router.replace({ name: "tab" });
+              this.$router.replace({ name: "home" });
             }
           },
           error => {

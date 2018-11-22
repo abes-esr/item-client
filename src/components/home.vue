@@ -39,10 +39,6 @@
     </v-container>
 </template>
 
-<script>
-    export default {};
-</script>
-
 <style scoped>
     .v-card {
       margin-top: 10px;
