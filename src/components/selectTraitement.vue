@@ -26,14 +26,14 @@
 </template>
 
 <script>
-import axios from 'axios'
-import loading from 'vue-full-loading'
+import axios from 'axios';
+import loading from 'vue-full-loading';
 
 export default {
   components: {
-    loading
+    loading,
   },
-  data () {
+  data() {
     return {
       json: '',
       listTraitements: [],
@@ -43,97 +43,94 @@ export default {
       alertMessage: 'Erreur.',
       alertType: 'error',
       user: {},
-      loading: false
-    }
+      loading: false,
+    };
   },
-  mounted () {
-    this.getListTraitements()
+  mounted() {
+    this.getListTraitements();
   },
   methods: {
-    getListTraitements () {
-      this.loading = true
-      this.user = JSON.parse(sessionStorage.getItem('user'))
+    getListTraitements() {
+      this.loading = true;
+      this.user = JSON.parse(sessionStorage.getItem('user'));
       if (this.user !== null && this.user.jwt !== null) {
         axios({
           headers: { Authorization: this.user.jwt },
           method: 'GET',
-          url: process.env.ROOT_API + 'traitements'
+          url: `${process.env.ROOT_API}traitements`,
         }).then(
-          result => {
-            this.listTraitements = result.data
+          (result) => {
+            this.listTraitements = result.data;
           },
-          error => {
-            this.alertMessage =
-                'Impossible de récupérer la liste des traitements. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.'
-            this.alert = true
-            this.alertType = 'error'
+          (error) => {
+            this.alertMessage = 'Impossible de récupérer la liste des traitements. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.';
+            this.alert = true;
+            this.alertType = 'error';
             if (error.response.status === 401) {
-              this.$emit('logout')
+              this.$emit('logout');
             }
-          }
-        )
+          },
+        );
       }
-      this.loading = false
+      this.loading = false;
     },
-    selectTraitement () {
-      this.active = false
-      this.alert = false
-      let demande = {}
-      this.loading = true
+    selectTraitement() {
+      this.active = false;
+      this.alert = false;
+      let demande = {};
+      this.loading = true;
 
       if (this.user !== null && this.user.jwt !== null) {
         axios({
           headers: { Authorization: this.user.jwt },
           method: 'GET',
           url:
-              process.env.ROOT_API + 'demandes/' + sessionStorage.getItem('dem')
+              `${process.env.ROOT_API}demandes/${sessionStorage.getItem('dem')}`,
         }).then(
-          result => {
-            demande = result.data
-            demande.traitement = this.selected
-            this.updateDemande(demande)
-            this.loading = false
+          (result) => {
+            demande = result.data;
+            demande.traitement = this.selected;
+            this.updateDemande(demande);
+            this.loading = false;
           },
-          error => {
-            this.alertMessage =
-                "Impossible de récupérer la demande en cours d'édition. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter."
-            this.alert = true
-            this.alertType = 'error'
+          (error) => {
+            this.alertMessage = "Impossible de récupérer la demande en cours d'édition. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.";
+            this.alert = true;
+            this.alertType = 'error';
             if (error.response.status === 401) {
-              this.$emit('logout')
+              this.$emit('logout');
             }
-          }
-        )
+          },
+        );
       }
     },
-    updateDemande (demande) {
-      this.loading = true
+    updateDemande(demande) {
+      this.loading = true;
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'PUT',
-        url: process.env.ROOT_API + 'demandes/' + sessionStorage.getItem('dem'),
-        data: demande
+        url: `${process.env.ROOT_API}demandes/${sessionStorage.getItem('dem')}`,
+        data: demande,
       }).then(
-        result => {
-          this.alertMessage = 'Demande mise à jour.'
-          this.alert = true
-          this.alertType = 'success'
-          this.loading = false
-          this.$router.replace({ name: 'uploadFinal' })
+        () => {
+          this.alertMessage = 'Demande mise à jour.';
+          this.alert = true;
+          this.alertType = 'success';
+          this.loading = false;
+          this.$router.replace({ name: 'uploadFinal' });
         },
-        error => {
-          this.alertMessage =
-              'Impossible de mettre à jour la demande. <br /> Si le problème persiste merci de nous contacter.'
-          this.alert = true
-          this.alertType = 'error'
+        (error) => {
+          this.alertMessage = 'Impossible de mettre à jour la demande. <br /> Si le problème persiste merci de nous contacter.';
+          this.alert = true;
+          this.alertType = 'error';
           if (error.response.status === 401) {
-            this.$emit('logout')
+            this.$emit('logout');
           }
-        }
-      )
-    }
-  }
-}
+        },
+      );
+    },
+  },
+};
 </script>
 
 <style scoped>

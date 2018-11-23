@@ -144,67 +144,67 @@
 <script>
 export default {
   name: 'App',
-  data () {
+  data() {
     return {
       authenticated: false,
       drawer: true,
       user: {},
       isDark: false,
       isAdmin: false,
-      dialog: false
-    }
+      dialog: false,
+    };
   },
-  mounted () {
-    this.getUserData()
-    let cookieScript = document.createElement('script')
+  mounted() {
+    this.getUserData();
+    const cookieScript = document.createElement('script');
     cookieScript.setAttribute(
       'src',
-      'https://outils.abes.fr/cookie-banner/bandeau.js'
-    )
+      'https://outils.abes.fr/cookie-banner/bandeau.js',
+    );
     cookieScript.setAttribute(
       'id',
-      'cookie-banner-script'
-    )
+      'cookie-banner-script',
+    );
     cookieScript.setAttribute(
       'data-cookie-banner-style',
-      'z-index: 10000; background-color: black; position: absolute; width: 100%; top: 0; padding: 0.5%; color: white; font-family: Roboto,sans-serif;'
-    )
+      'z-index: 10000; background-color: black; position: absolute; width: 100%; top: 0; padding: 0.5%; color: white; font-family: Roboto,sans-serif;',
+    );
     cookieScript.setAttribute(
       'data-cookie-banner-url',
-      '/donnees'
-    )
-    document.head.appendChild(cookieScript)
+      '/donnees',
+    );
+    document.head.appendChild(cookieScript);
   },
   methods: {
-    setAuthenticated (status) {
-      this.authenticated = status
-      this.getUserData()
+    setAuthenticated(status) {
+      this.authenticated = status;
+      this.getUserData();
     },
-    logout () {
-      this.authenticated = false
-      sessionStorage.clear()
-      this.user = {}
-      this.isAdmin = false
+    logout() {
+      this.authenticated = false;
+      sessionStorage.clear();
+      this.user = {};
+      this.isAdmin = false;
 
-      this.$router.push({ name: 'login' })
+      this.$router.push({ name: 'login' });
     },
-    logoutExpired () {
-      this.dialog = true
-      this.logout()
+    logoutExpired() {
+      this.dialog = true;
+      this.logout();
     },
-    getUserData () {
+    getUserData() {
       if (sessionStorage.getItem('user') != null) {
-        this.user = JSON.parse(sessionStorage.getItem('user'))
+        this.user = JSON.parse(sessionStorage.getItem('user'));
         if (this.user !== null && this.user.jwt !== null) {
-          this.authenticated = true
+          this.authenticated = true;
           if (this.user.role === 'ADMIN') {
-            this.isAdmin = true
+            this.isAdmin = true;
           }
         }
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style>

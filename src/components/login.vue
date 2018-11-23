@@ -9,8 +9,24 @@
           </v-toolbar>
           <v-card-text>
             <v-form ref="form">
-              <v-text-field prepend-icon="person" type="text" name="username" v-model="input.username" placeholder="Nom utilisateur" :rules="[rules.required]" @keyup.enter="login()" />
-              <v-text-field prepend-icon="lock" type="password" name="password" v-model="input.password" placeholder="Mot de passe" :rules="[rules.required]" @keyup.enter="login()" />
+              <v-text-field
+                prepend-icon="person"
+                type="text"
+                name="username"
+                v-model="input.username"
+                placeholder="Nom utilisateur"
+                :rules="[rules.required]"
+                @keyup.enter="login()"
+              />
+              <v-text-field
+                prepend-icon="lock"
+                type="password"
+                name="password"
+                v-model="input.password"
+                placeholder="Mot de passe"
+                :rules="[rules.required]"
+                @keyup.enter="login()"
+              />
             </v-form>
           </v-card-text>
           <v-card-actions>
@@ -18,24 +34,23 @@
             <v-btn color="info" :loading="loading" :disabled="loading" v-on:click="login()">Login</v-btn>
           </v-card-actions>
         </v-card>
-        <v-alert :value="alert" type="error" transition="scale-transition">
-          {{ alertMessage }}
-        </v-alert>
+        <v-alert :value="alert" type="error" transition="scale-transition">{{ alertMessage }}</v-alert>
       </v-flex>
     </v-layout>
   </v-container>
 </template>
 
 <script>
-import axios from 'axios'
+import axios from 'axios';
+
 export default {
   name: 'Login',
-  data () {
+  data() {
     return {
       input: {
         authenticated: false,
         username: '',
-        password: ''
+        password: '',
       },
       authUser: {},
       user: {},
@@ -43,84 +58,80 @@ export default {
       alertMessage: "Nom d'utilisateur ou mot de passe incorrect",
       loading: false,
       rules: {
-        required: value => !!value || 'Champ obligatoire.'
-      }
-    }
+        required: value => !!value || 'Champ obligatoire.',
+      },
+    };
   },
   methods: {
-    login () {
-      this.alert = false
+    login() {
+      this.alert = false;
       if (
-        this.$refs.form.validate() &&
-          this.input.username !== '' &&
-          this.input.password !== ''
+        this.$refs.form.validate()
+          && this.input.username !== ''
+          && this.input.password !== ''
       ) {
-        this.loading = true
+        this.loading = true;
         axios
-          .post(process.env.ROOT_API + 'signin', {
+          .post(`${process.env.ROOT_API}signin`, {
             username: this.input.username,
-            password: this.input.password
+            password: this.input.password,
           })
           .then(
-            result => {
-              this.authUser.user = this.input.username
-              this.authUser.username = result.data.shortName
-              this.authUser.jwt = 'Bearer ' + result.data.accessToken
-              this.authUser.userNum = result.data.userNum
-              this.authUser.iln = result.data.iln
-              this.authUser.role = result.data.role
-              sessionStorage.setItem('user', JSON.stringify(this.authUser))
+            (result) => {
+              this.authUser.user = this.input.username;
+              this.authUser.username = result.data.shortName;
+              this.authUser.jwt = `Bearer ${result.data.accessToken}`;
+              this.authUser.userNum = result.data.userNum;
+              this.authUser.iln = result.data.iln;
+              this.authUser.role = result.data.role;
+              sessionStorage.setItem('user', JSON.stringify(this.authUser));
 
-              this.loading = false
+              this.loading = false;
 
               if (result.data.accessToken !== null) {
-                this.$emit('authenticated', true)
-                this.authenticated = true
-                this.getMail()
+                this.$emit('authenticated', true);
+                this.authenticated = true;
+                this.getMail();
               }
             },
-            error => {
-              this.loading = false
+            (error) => {
+              this.loading = false;
               if (error.response.status === 401) {
-                this.alertMessage =
-                    "Nom d'utilisateur ou mot de passe incorrect"
+                this.alertMessage = "Nom d'utilisateur ou mot de passe incorrect";
               } else {
-                this.alertMessage =
-                    'Service indisponible, veuillez réessayer ultérieurement. Si le problème persiste, merci de nous contacter.'
+                this.alertMessage = 'Service indisponible, veuillez réessayer ultérieurement. Si le problème persiste, merci de nous contacter.';
               }
-              this.alert = true
-            }
-          )
+              this.alert = true;
+            },
+          );
       } else {
-        this.alertMessage = "Nom d'utilisateur ou mot de passe incorrect"
-        this.alert = true
+        this.alertMessage = "Nom d'utilisateur ou mot de passe incorrect";
+        this.alert = true;
       }
     },
-    getMail () {
-      this.user = JSON.parse(sessionStorage.getItem('user'))
+    getMail() {
+      this.user = JSON.parse(sessionStorage.getItem('user'));
 
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
-        url: process.env.ROOT_API + 'utilisateurs/' + this.user.userNum
+        url: `${process.env.ROOT_API}utilisateurs/${this.user.userNum}`,
       }).then(
-        result => {
+        (result) => {
           if (result.data === null) {
-            this.$router.replace({ name: 'profil' })
+            this.$router.replace({ name: 'profil' });
           } else {
-            this.user.email = result.data.email
-            sessionStorage.setItem('user', JSON.stringify(this.user))
-            this.$router.replace({ name: 'home' })
+            this.user.email = result.data.email;
+            sessionStorage.setItem('user', JSON.stringify(this.user));
+            this.$router.replace({ name: 'home' });
           }
         },
-        error => {
-          console.log(error)
-          this.alertMessage =
-              'Service indisponible, veuillez réessayer ultérieurement. Si le problème persiste, merci de nous contacter.'
-          this.alert = true
-        }
-      )
-    }
-  }
-}
+        () => {
+          this.alertMessage = 'Service indisponible, veuillez réessayer ultérieurement. Si le problème persiste, merci de nous contacter.';
+          this.alert = true;
+        },
+      );
+    },
+  },
+};
 </script>

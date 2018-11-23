@@ -28,15 +28,16 @@
 </template>
 
 <script>
-import axios from 'axios'
-import upload from '@/components/utils/upload.vue'
+import axios from 'axios';
+// eslint-disable-next-line import/no-unresolved
+import upload from '@/components/utils/upload.vue';
 
 export default {
   name: 'uploadComponent',
   components: {
-    upload
+    upload,
   },
-  data () {
+  data() {
     return {
       file: '',
       fileLink: '',
@@ -46,93 +47,90 @@ export default {
       alertMessage: 'Erreur.',
       alertType: 'error',
       loading: false,
-      user: {}
-    }
+      user: {},
+    };
   },
   methods: {
-    uploadFile: function (file) {
-      this.loading = true
-      this.file = file
-      let formData = new FormData()
-      formData.append('file', this.file)
-      formData.append('numDemande', sessionStorage.getItem('dem'))
+    uploadFile(file) {
+      this.loading = true;
+      this.file = file;
+      const formData = new FormData();
+      formData.append('file', this.file);
+      formData.append('numDemande', sessionStorage.getItem('dem'));
 
-      this.user = JSON.parse(sessionStorage.getItem('user'))
+      this.user = JSON.parse(sessionStorage.getItem('user'));
       if (this.user !== null && this.user.jwt !== null) {
         axios
-          .post(process.env.ROOT_API + 'uploadDemande', formData, {
+          .post(`${process.env.ROOT_API}uploadDemande`, formData, {
             headers: {
               Authorization: this.user.jwt,
-              'Content-Type': 'multipart/form-data'
-            }
+              'Content-Type': 'multipart/form-data',
+            },
           })
           .then(
-            result => {
-              this.alertMessage = 'Fichier envoyé.'
-              this.alertType = 'success'
-              this.alert = true
-              this.showForm = false
-              this.getFileResult()
+            () => {
+              this.alertMessage = 'Fichier envoyé.';
+              this.alertType = 'success';
+              this.alert = true;
+              this.showForm = false;
+              this.getFileResult();
             },
-            error => {
-              this.alertMessage =
-                  "Une erreur est survenue lors de l'envoi du fichier. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter."
-              this.alertType = 'error'
-              this.alert = true
-              this.loading = false
+            (error) => {
+              this.alertMessage = "Une erreur est survenue lors de l'envoi du fichier. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.";
+              this.alertType = 'error';
+              this.alert = true;
+              this.loading = false;
 
               if (error.response.status === 400) {
-                this.alertMessage = error.response.data.message
+                this.alertMessage = error.response.data.message;
               }
 
               if (error.response.status === 401) {
-                this.$emit('logout')
+                this.$emit('logout');
               }
-            }
-          )
+            },
+          );
       } else {
-        this.alertMessage =
-            'Une erreur est survenue. Essayez de vous déconnecter puis reconnecter. <br /> Si le problème persiste merci de nous contacter.'
-        this.alertType = 'error'
-        this.alert = true
-        this.loading = false
+        this.alertMessage = 'Une erreur est survenue. Essayez de vous déconnecter puis reconnecter. <br /> Si le problème persiste merci de nous contacter.';
+        this.alertType = 'error';
+        this.alert = true;
+        this.loading = false;
       }
     },
-    getFileResult () {
+    getFileResult() {
       axios
         .get(
-          process.env.ROOT_API +
-              'files/fichier_prepare_' +
-              sessionStorage.getItem('dem') +
-              '.csv?id=' +
-              sessionStorage.getItem('dem'),
+          `${process.env.ROOT_API
+          }files/fichier_prepare_${
+            sessionStorage.getItem('dem')
+          }.csv?id=${
+            sessionStorage.getItem('dem')}`,
           {
             headers: {
               Authorization: this.user.jwt,
-              'Content-Type': 'multipart/form-data'
-            }
-          }
+              'Content-Type': 'multipart/form-data',
+            },
+          },
         )
         .then(
-          result => {
-            this.loading = false
-            var blob = new Blob([result.data], { type: 'application/csv' })
-            this.fileLink = window.URL.createObjectURL(blob)
-            this.$refs.fileLinkBtn.click()
+          (result) => {
+            this.loading = false;
+            const blob = new Blob([result.data], { type: 'application/csv' });
+            this.fileLink = window.URL.createObjectURL(blob);
+            this.$refs.fileLinkBtn.click();
           },
-          error => {
-            this.alertMessage =
-                'Une erreur est survenue lors de la récupération du fichier enrichi. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.'
-            this.alertType = 'error'
-            this.alert = true
-            this.loading = false
+          (error) => {
+            this.alertMessage = 'Une erreur est survenue lors de la récupération du fichier enrichi. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.';
+            this.alertType = 'error';
+            this.alert = true;
+            this.loading = false;
 
             if (error.response.status === 401) {
-              this.$emit('logout')
+              this.$emit('logout');
             }
-          }
-        )
-    }
-  }
-}
+          },
+        );
+    },
+  },
+};
 </script>

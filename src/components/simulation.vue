@@ -105,113 +105,109 @@
   </v-container>
 </template>
 <script>
-import loading from 'vue-full-loading'
-import axios from 'axios'
+import loading from 'vue-full-loading';
+import axios from 'axios';
 
 export default {
   components: {
-    loading
+    loading,
   },
-  data () {
+  data() {
     return {
       noticeEnCours: 0,
       loading: false,
       demande: {
         traitement: {
-          libelle: ''
-        }
+          libelle: '',
+        },
       },
       alertMessage: 'Erreur.',
       alertType: 'error',
       alert: false,
       user: {},
       noticeAvant: 'Notice en cours de chargement...',
-      noticeApres: 'Notice en cours de chargement...'
-    }
+      noticeApres: 'Notice en cours de chargement...',
+    };
   },
-  mounted () {
-    this.user = JSON.parse(sessionStorage.getItem('user'))
-    let numDem = sessionStorage.getItem('dem')
-    this.getInfosDemande(numDem)
+  mounted() {
+    this.user = JSON.parse(sessionStorage.getItem('user'));
+    const numDem = sessionStorage.getItem('dem');
+    this.getInfosDemande(numDem);
   },
   methods: {
-    getInfosDemande (numDem) {
-      this.loading = true
+    getInfosDemande(numDem) {
+      this.loading = true;
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
-        url: process.env.ROOT_API + 'demandes/' + numDem
+        url: `${process.env.ROOT_API}demandes/${numDem}`,
       }).then(
-        result => {
-          this.demande = result.data
-          this.getSimulation()
+        (result) => {
+          this.demande = result.data;
+          this.getSimulation();
         },
-        error => {
-          this.loading = false
-          this.alert = true
-          this.alertType = 'error'
-          this.alertMessage =
-              'Impossible de récupérer la notice pour la simulation. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.'
+        (error) => {
+          this.loading = false;
+          this.alert = true;
+          this.alertType = 'error';
+          this.alertMessage = 'Impossible de récupérer la notice pour la simulation. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.';
           if (error.response.status === 401) {
-            this.$emit('logout')
+            this.$emit('logout');
           }
-        }
-      )
+        },
+      );
     },
-    getSimulation () {
-      this.alert = false
-      this.loading = true
+    getSimulation() {
+      this.alert = false;
+      this.loading = true;
 
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
         url:
-            process.env.ROOT_API +
-            'simulerLigne?numDemande=' +
-            this.demande.numDemande +
-            '&numLigne=' +
-            this.noticeEnCours
+            `${process.env.ROOT_API
+            }simulerLigne?numDemande=${
+              this.demande.numDemande
+            }&numLigne=${
+              this.noticeEnCours}`,
       }).then(
-        result => {
-          this.noticeAvant = result.data[0]
-          this.noticeApres = result.data[1]
-          this.loading = false
+        (result) => {
+          this.noticeAvant = result.data[0];
+          this.noticeApres = result.data[1];
+          this.loading = false;
         },
-        error => {
-          this.loading = false
-          this.alert = true
-          this.alertType = 'error'
-          this.alertMessage =
-              'Impossible de récupérer la notice pour la simulation. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.'
+        (error) => {
+          this.loading = false;
+          this.alert = true;
+          this.alertType = 'error';
+          this.alertMessage = 'Impossible de récupérer la notice pour la simulation. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.';
           if (error.response.status === 401) {
-            this.$emit('logout')
+            this.$emit('logout');
           } else if (error.response.status === 400) {
-            this.alert = true
-            this.alertType = 'info'
-            this.alertMessage =
-                "Vous êtes à la dernière notice de votre demande, impossible d'aller plus loin."
-            this.noticeEnCours--
+            this.alert = true;
+            this.alertType = 'info';
+            this.alertMessage = "Vous êtes à la dernière notice de votre demande, impossible d'aller plus loin.";
+            this.noticeEnCours -= 1;
           }
-        }
-      )
+        },
+      );
     },
-    getNextSimu () {
-      this.noticeEnCours++
-      this.getSimulation()
+    getNextSimu() {
+      this.noticeEnCours += 1;
+      this.getSimulation();
     },
-    getPreviousSimu () {
+    getPreviousSimu() {
       if (this.noticeEnCours > 0) {
-        this.noticeEnCours--
-        this.getSimulation()
+        this.noticeEnCours -= 1;
+        this.getSimulation();
       } else {
-        this.alert = true
-        this.alertMessage =
-            "Vous êtes sur la première notice de votre demande, il n'y a pas de notice précedente."
-        this.alertType = 'info'
+        this.alert = true;
+        this.alertMessage = "Vous êtes sur la première notice de votre demande, il n'y a pas de notice précedente.";
+        this.alertType = 'info';
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>

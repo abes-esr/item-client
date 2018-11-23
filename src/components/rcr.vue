@@ -37,15 +37,15 @@
 </template>
 
 <script>
-import axios from 'axios'
-import loading from 'vue-full-loading'
+import axios from 'axios';
+import loading from 'vue-full-loading';
 
 export default {
   name: 'Rcr',
   components: {
-    loading
+    loading,
   },
-  data () {
+  data() {
     return {
       json: '',
       listRcr: [],
@@ -57,100 +57,98 @@ export default {
       show: false,
       user: {},
       label: 'Initialisation de la demande en cours...',
-      isEditing: false
-    }
+      isEditing: false,
+    };
   },
-  mounted () {
-    this.user = JSON.parse(sessionStorage.getItem('user'))
+  mounted() {
+    this.user = JSON.parse(sessionStorage.getItem('user'));
     if (this.user !== null && this.user.jwt !== null) {
       axios({
         method: 'GET',
         url:
-            'https://www.idref.fr/services/iln2rcr/' +
-            this.user.iln +
-            '&format=text/json'
+            `https://www.idref.fr/services/iln2rcr/${
+              this.user.iln
+            }&format=text/json`,
       }).then(
-        result => {
-          this.json = result.data.sudoc.query.result
-          let item
-          for (let key in this.json) {
+        (result) => {
+          this.json = result.data.sudoc.query.result;
+          let item;
+          for (const key in this.json) {
             item = {
               rcr: this.json[key].library.rcr,
               name:
-                  this.json[key].library.rcr +
-                  ' - ' +
-                  this.json[key].library.shortname,
-              shortname: this.json[key].library.shortname
-            }
-            this.listRcr.push(item)
+                  `${this.json[key].library.rcr
+                  } - ${
+                    this.json[key].library.shortname}`,
+              shortname: this.json[key].library.shortname,
+            };
+            this.listRcr.push(item);
           }
         },
-        error => {
+        (error) => {
           if (error) {
-            console.log(error)
+            console.log(error);
           }
-          this.alertMessage =
-              'Impossible de récupérer la liste des RCR. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.'
-          this.alert = true
-          this.alertType = 'error'
-        }
-      )
+          this.alertMessage = 'Impossible de récupérer la liste des RCR. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.';
+          this.alert = true;
+          this.alertType = 'error';
+        },
+      );
     }
   },
   methods: {
-    selectRCR () {
+    selectRCR() {
       if (this.user !== null && this.user.jwt !== null) {
-        this.active = false
-        this.show = true
+        this.active = false;
+        this.show = true;
         axios({
           headers: { Authorization: this.user.jwt },
           method: 'GET',
           url:
-              process.env.ROOT_API +
-              'creerdemande?rcr=' +
-              this.selected +
-              '&userNum=' +
-              this.user.userNum
+              `${process.env.ROOT_API
+              }creerdemande?rcr=${
+                this.selected
+              }&userNum=${
+                this.user.userNum}`,
         }).then(
-          result => {
-            sessionStorage.setItem('dem', result.data.numDemande)
-            this.alertMessage = 'Demande initialisée.'
-            this.alert = true
-            this.alertType = 'success'
-            this.show = false
-            this.active = true
-            this.$router.replace({ name: 'upload' })
+          (result) => {
+            sessionStorage.setItem('dem', result.data.numDemande);
+            this.alertMessage = 'Demande initialisée.';
+            this.alert = true;
+            this.alertType = 'success';
+            this.show = false;
+            this.active = true;
+            this.$router.replace({ name: 'upload' });
           },
-          error => {
-            this.alertMessage =
-                'Impossible de créer la demande.Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.'
-            this.alert = true
-            this.alertType = 'error'
-            this.show = false
-            this.active = true
+          (error) => {
+            this.alertMessage = 'Impossible de créer la demande.Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.';
+            this.alert = true;
+            this.alertType = 'error';
+            this.show = false;
+            this.active = true;
 
             if (error.response.status === 401) {
-              this.$emit('logout')
+              this.$emit('logout');
             }
-          }
-        )
+          },
+        );
       }
     },
-    searchRCR (item, queryText, itemText) {
+    searchRCR(item, queryText) {
       return (
-        item.rcr.startsWith(queryText) ||
-          item.shortname.toLowerCase().includes(queryText.toLowerCase())
-      )
+        item.rcr.startsWith(queryText)
+          || item.shortname.toLowerCase().includes(queryText.toLowerCase())
+      );
     },
-    checkActive () {
+    checkActive() {
       if (this.selected !== null && this.selected !== '') {
-        this.active = true
+        this.active = true;
       } else {
-        this.active = false
+        this.active = false;
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>

@@ -16,7 +16,7 @@ module.exports = {
     // consider switching to `plugin:vue/strongly-recommended` or `plugin:vue/recommended` for stricter rules.
     'plugin:vue/essential',
     // https://github.com/standard/standard/blob/master/docs/RULES-en.md
-    'standard'
+    'airbnb-base'
   ],
   // required to lint *.vue files
   plugins: [
@@ -29,12 +29,6 @@ module.exports = {
     'generator-star-spacing': 'off',
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    "no-const-assign": "warn",
-    "no-this-before-super": "warn",
-    "no-undef": "warn",
-    "no-unreachable": "warn",
-    "no-unused-vars": "warn",
-    "constructor-super": "warn",
-    "valid-typeof": "warn"
+    'max-len': 'off'
   }
 }

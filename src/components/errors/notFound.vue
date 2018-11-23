@@ -7,8 +7,13 @@
                         <span class="title">¯\_(ツ)_/¯</span>
                     </v-card-title>
                     <v-card-text>
-                        <span class="display-4">404</span><br /><br /><br />
-                        <span class="headline">Vous êtes perdu ? Pas de problème, on connait le chemin du retour !</span>
+                        <span class="display-4">404</span>
+                        <br>
+                        <br>
+                        <br>
+                        <span
+                            class="headline"
+                        >Vous êtes perdu ? Pas de problème, on connait le chemin du retour !</span>
                     </v-card-text>
                     <v-card-actions>
                         <v-btn flat class="red darken-3 white--text" to="/">Retour</v-btn>
