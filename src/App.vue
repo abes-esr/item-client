@@ -41,6 +41,14 @@
             <v-list-tile-title>Créer une demande</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
+        <v-list-tile v-if="authenticated" v-on:click="$router.push({ name: 'tab' })">
+          <v-list-tile-action>
+            <v-icon>list</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Gérer mes demandes</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
         <v-list-group v-if="authenticated" prepend-icon="description" no-action>
           <v-list-tile slot="activator">
             <v-list-tile-content>
@@ -134,69 +142,69 @@
 </template>
 
 <script>
-  export default {
-    name: "App",
-    data() {
-      return {
-        authenticated: false,
-        drawer: true,
-        user: {},
-        isDark: false,
-        isAdmin: false,
-        dialog: false
-      };
+export default {
+  name: 'App',
+  data () {
+    return {
+      authenticated: false,
+      drawer: true,
+      user: {},
+      isDark: false,
+      isAdmin: false,
+      dialog: false
+    }
+  },
+  mounted () {
+    this.getUserData()
+    let cookieScript = document.createElement('script')
+    cookieScript.setAttribute(
+      'src',
+      'https://outils.abes.fr/cookie-banner/bandeau.js'
+    )
+    cookieScript.setAttribute(
+      'id',
+      'cookie-banner-script'
+    )
+    cookieScript.setAttribute(
+      'data-cookie-banner-style',
+      'z-index: 10000; background-color: black; position: absolute; width: 100%; top: 0; padding: 0.5%; color: white; font-family: Roboto,sans-serif;'
+    )
+    cookieScript.setAttribute(
+      'data-cookie-banner-url',
+      '/donnees'
+    )
+    document.head.appendChild(cookieScript)
+  },
+  methods: {
+    setAuthenticated (status) {
+      this.authenticated = status
+      this.getUserData()
     },
-    mounted() {
-      this.getUserData();
-      let cookieScript = document.createElement("script");
-      cookieScript.setAttribute(
-        "src",
-        "https://outils.abes.fr/cookie-banner/bandeau.js"
-      );
-      cookieScript.setAttribute(
-        "id",
-        "cookie-banner-script"
-      );
-      cookieScript.setAttribute(
-        "data-cookie-banner-style",
-        "z-index: 10000; background-color: black; position: absolute; width: 100%; top: 0; padding: 0.5%; color: white; font-family: Roboto,sans-serif;"
-      );
-      cookieScript.setAttribute(
-        "data-cookie-banner-url",
-        "/donnees"
-      );
-      document.head.appendChild(cookieScript);
-    },
-    methods: {
-      setAuthenticated(status) {
-        this.authenticated = status;
-        this.getUserData();
-      },
-      logout() {
-        this.authenticated = false;
-        sessionStorage.clear();
-        this.user = {};
-        this.isAdmin = false;
+    logout () {
+      this.authenticated = false
+      sessionStorage.clear()
+      this.user = {}
+      this.isAdmin = false
 
-        this.$router.push({ name: "login" });
-      },
-      logoutExpired() {
-        this.dialog = true;
-        this.logout();
-      },
-      getUserData() {
-        if (sessionStorage.getItem("user") != null) {
-          this.user = JSON.parse(sessionStorage.getItem("user"));
-          if (this.user !== null && this.user.jwt !== null) {
-            this.authenticated = true;
-            if (this.user.role == "ADMIN") {
-              this.isAdmin = true;
-            }
+      this.$router.push({ name: 'login' })
+    },
+    logoutExpired () {
+      this.dialog = true
+      this.logout()
+    },
+    getUserData () {
+      if (sessionStorage.getItem('user') != null) {
+        this.user = JSON.parse(sessionStorage.getItem('user'))
+        if (this.user !== null && this.user.jwt !== null) {
+          this.authenticated = true
+          if (this.user.role === 'ADMIN') {
+            this.isAdmin = true
           }
         }
       }
     }
-  };
+  }
+}
 </script>
 
 <style>

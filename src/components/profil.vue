@@ -35,73 +35,73 @@
 </template>
 
 <script>
-  import axios from "axios";
-  export default {
-    name: "Profil",
-    data() {
-      return {
-        valid: true,
-        input: {
-          email1: "",
-          email2: ""
-        },
-        alert: false,
-        user: {},
-        rules: {
-          required: value => !!value || "Champ obligatoire.",
-          email: value => {
-            const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            return pattern.test(value) || "e-mail invalide";
-          }
-        },
-        loading: false
-      };
-    },
-    mounted() {
-      this.user = JSON.parse(sessionStorage.getItem("user"));
-    },
-    methods: {
-      majProfil() {
-        this.loading = true;
-        this.alert = false;
-
-        //TODO : supprimer nbtentatives dans le PUT !!
-        if (
-          this.$refs.form.validate() &&
-          this.input.email1 == this.input.email2
-        ) {
-          axios({
-            headers: { Authorization: this.user.jwt },
-            method: "PUT",
-            url: process.env.ROOT_API + "utilisateurs/" + this.user.userNum,
-            data: {
-              email: this.input.email1,
-              numUser: this.user.userNum,
-              nbtentatives: 0
-            }
-          }).then(
-            result => {
-              this.user.email = result.data.email;
-              sessionStorage.setItem("user", JSON.stringify(this.user));
-              this.$router.replace({ name: "tab" });
-            },
-            error => {
-              this.alertMessage =
-                "Service indisponible, veuillez réessayer ultérieurement. Si le problème persiste, merci de nous contacter.";
-              this.alert = true;
-              if (error.response.status == 401) {
-                this.$emit("logout");
-              }
-              this.loading = false;
-            }
-          );
-        } else {
-          this.alert = true;
-          this.loading = false;
+import axios from 'axios'
+export default {
+  name: 'Profil',
+  data () {
+    return {
+      valid: true,
+      input: {
+        email1: '',
+        email2: ''
+      },
+      alert: false,
+      user: {},
+      rules: {
+        required: value => !!value || 'Champ obligatoire.',
+        email: value => {
+          const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+          return pattern.test(value) || 'e-mail invalide'
         }
+      },
+      loading: false
+    }
+  },
+  mounted () {
+    this.user = JSON.parse(sessionStorage.getItem('user'))
+  },
+  methods: {
+    majProfil () {
+      this.loading = true
+      this.alert = false
+
+      // TODO : supprimer nbtentatives dans le PUT !!
+      if (
+        this.$refs.form.validate() &&
+          this.input.email1 === this.input.email2
+      ) {
+        axios({
+          headers: { Authorization: this.user.jwt },
+          method: 'PUT',
+          url: process.env.ROOT_API + 'utilisateurs/' + this.user.userNum,
+          data: {
+            email: this.input.email1,
+            numUser: this.user.userNum,
+            nbtentatives: 0
+          }
+        }).then(
+          result => {
+            this.user.email = result.data.email
+            sessionStorage.setItem('user', JSON.stringify(this.user))
+            this.$router.replace({ name: 'tab' })
+          },
+          error => {
+            this.alertMessage =
+                'Service indisponible, veuillez réessayer ultérieurement. Si le problème persiste, merci de nous contacter.'
+            this.alert = true
+            if (error.response.status === 401) {
+              this.$emit('logout')
+            }
+            this.loading = false
+          }
+        )
+      } else {
+        this.alert = true
+        this.loading = false
       }
     }
-  };
+  }
+}
 </script>
 
 <style scoped>

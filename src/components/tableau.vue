@@ -2,12 +2,6 @@
   <v-container fluid>
     <v-layout justify-center align-center>
       <v-flex text-xs-center>
-        <v-card>
-          <v-btn large block color="primary" v-on:click="$router.push({ name: 'rcr' })">
-            <v-icon>add</v-icon>&nbsp; Créer une nouvelle demande
-          </v-btn>
-        </v-card>
-        <br />
         <v-alert :value="alert" type="error" dismissible transition="scale-transition"><span v-html="alertMessage"></span>
         </v-alert>
         <v-card>
@@ -48,7 +42,7 @@
                 </th>
                 <th>
                   <v-combobox v-model="searchCodeStatut" :items="listCodeStatut" single-line hide-details clearable multiple chips hide-selected v-on:change="computedItems('codeStatut')">
-                    <template slot="item" slot-scope="data">                      
+                    <template slot="item" slot-scope="data">
                       <span v-if="data.item == 1">
                        <v-btn slot="activator" color="info" small disabled>
                         <v-icon>cloud_download</v-icon>
@@ -65,9 +59,9 @@
                       slot-scope="{ item, parent, selected }"
                     >
                       <v-chip class="v-chip--select-multi">
-                        <span v-if="item == 1">                      
-                          <v-icon slot="activator" color="info" small disabled>cloud_download</v-icon>   
-                          <v-icon small @click="parent.selectItem(item)">close</v-icon>                   
+                        <span v-if="item == 1">
+                          <v-icon slot="activator" color="info" small disabled>cloud_download</v-icon>
+                          <v-icon small @click="parent.selectItem(item)">close</v-icon>
                         </span>
                         <span v-if="item >= 2">
                           <v-icon slot="activator" color="info" small >cloud_download</v-icon>
@@ -147,267 +141,267 @@
 </template>
 
 <script>
-  import axios from "axios";
-  import loading from "vue-full-loading";
+import axios from 'axios'
 
-  export default {
-    name: "tableauComponent",
-    data() {
-      return {
-        pagination: {
-          sortBy: "name"
-        },
-        search: "",
-        selectedColumns: [],
-        searchDate: "",
-        searchILN: "",
-        searchRCR: "",
-        searchNum: "",
-        searchTraitement: "",
-        searchStatut: "",
-        searchCodeStatut: ["1","2"],
-        listCodeStatut:["1","2"],
-        typeSearch: "search",
-        searchCombo: [],
-        headers: [],
-        items: [],
-        alert: false,
-        alertMessage: "",
-        user: {},
-        fileLink: "",
-        blobName: "demande.csv",
-        dialog: false,
-        fileReady: false
-      };
-    },
-    mounted() {
-      this.user = JSON.parse(sessionStorage.getItem("user"));
+export default {
+  name: 'tableauComponent',
+  data () {
+    return {
+      pagination: {
+        sortBy: 'name'
+      },
+      search: '',
+      selectedColumns: [],
+      searchDate: '',
+      searchILN: '',
+      searchRCR: '',
+      searchNum: '',
+      searchTraitement: '',
+      searchStatut: '',
+      searchCodeStatut: ['1', '2'],
+      listCodeStatut: ['1', '2'],
+      typeSearch: 'search',
+      searchCombo: [],
+      headers: [],
+      items: [],
+      alert: false,
+      alertMessage: '',
+      user: {},
+      fileLink: '',
+      blobName: 'demande.csv',
+      dialog: false,
+      fileReady: false
+    }
+  },
+  mounted () {
+    this.user = JSON.parse(sessionStorage.getItem('user'))
 
-      this.initHeader();
+    this.initHeader()
 
-      if (this.user !== null && this.user.jwt !== null) {
-        let url = "";
-        if (this.user.role == "ADMIN") {
-          url = process.env.ROOT_API + "demandes";
-        } else {
-          url =
+    if (this.user !== null && this.user.jwt !== null) {
+      let url = ''
+      if (this.user.role === 'ADMIN') {
+        url = process.env.ROOT_API + 'demandes'
+      } else {
+        url =
             process.env.ROOT_API +
-            "chercherDemandes?userNum=" +
-            this.user.userNum;
-        }
-
-        axios({
-          headers: { Authorization: this.user.jwt },
-          method: "GET",
-          url: url
-        }).then(
-          result => {
-            for (let key in result.data) {
-              //pour éviter les erreurs si null
-              if (
-                result.data[key].traitement == null ||
-                result.data[key].traitement == undefined
-              ) {
-                result.data[key].traitement = {};
-                result.data[key].traitement.libelle = "Non défini";
-              }
-
-              this.items.push({
-                date: result.data[key].dateModification,
-                rcr: result.data[key].rcr + " - " + result.data[key].shortname,
-                iln: result.data[key].iln,
-                num: result.data[key].numDemande,
-                traitement: result.data[key].traitement.libelle,
-                statut: result.data[key].etatDemande.libelle,
-                codeStatut: result.data[key].etatDemande.numEtat
-              });
-            }
-          },
-          error => {
-            this.alertMessage =
-              "Impossible de récupérer la liste des demandes. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.";
-            this.alert = true;
-            this.alertType = "error";
-
-            if (error.response.status == 401) {
-              this.$emit("logout");
-            }
-          }
-        );
+            'chercherDemandes?userNum=' +
+            this.user.userNum
       }
 
-      //Tri par défaut sur les numéros demandes
-      this.changeSort("num");
-      this.pagination.descending = true;
-    },
-    methods: {
-      downloadFile(numDem, type) {
-        this.fileReady = false;
-        this.dialog = true;
-        if (type == "epn") {
-          var filename = "fichier_prepare_" + numDem + ".csv?id=" + numDem;
-        } else {
-          var filename = "??";
-        }
-        if (this.user !== null && this.user.jwt !== null) {
-          return axios({
-            headers: { Authorization: this.user.jwt },
-            method: "GET",
-            url: process.env.ROOT_API + "files/" + filename
-          }).then(
-            result => {
-              var blob = new Blob([result.data], { type: "application/csv" });
-              this.fileLink = window.URL.createObjectURL(blob);
-              this.$refs.fileLinkBtn.click();
-              this.fileReady = true;
-            },
-            error => {
-              this.fileReady = false;
-              this.dialog = false;
-              this.alertMessage =
-                "Impossible de récupérer votre fichier. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.";
-              this.alert = true;
-              this.alertType = "error";
-              if (error.response.status == 401) {
-                this.$emit("logout");
-              }
-            }
-          );
-        }
-      },
-      clickRow(numDem, codeStatut, traitement) {
-        sessionStorage.setItem("dem", numDem);
-        switch (codeStatut) {
-          case 1:
-            this.$router.push("upload");
-            break;
-          case 3:
-            if (traitement !== "Non défini") {
-              this.$router.push("uploadFinal");
-            } else {
-              this.$router.push("traitement");
-            }
-            break;
-          case 4:
-            this.$router.push("simulation");
-            break;
-          default:
-            break;
-        }
-      },
-      initHeader() {
-        if (this.user.role == "ADMIN") {
-          this.headers = [
-            { text: "Date Création", value: "date" },
-            { text: "ILN", value: "iln" },
-            { text: "RCR", value: "rcr" },
-            { text: "Numéro de demande", value: "num" },
-            { text: "Traitement", value: "traitement" },
-            { text: "Statut", value: "statut" },
-            { text: "Résultat", value: "codeStatut" }
-          ];
-        } else {
-          this.headers = [
-            { text: "Date Création", value: "date" },
-            { text: "RCR", value: "rcr" },
-            { text: "Numéro de demande", value: "num" },
-            { text: "Traitement", value: "traitement" },
-            { text: "Statut", value: "statut" },
-            { text: "Résultat", value: "codeStatut" }
-          ];
-        }
-
-        this.searchCombo = Object.assign([], this.headers); 
-        this.searchCombo.splice(this.searchCombo.length-1,1);
-        for (var i = 0; i < this.searchCombo.length; i++) {
-          this.selectedColumns[i] = this.searchCombo[i].value;
-        }
-      },
-      computedItems(type) {
-        //Si appeller pr peupler le tableau
-        if (type != "guess") {
-          this.typeSearch = type;
-        }
-
-        //Si recherche sur une colonne spécifique
-        if (this.typeSearch != "search") {
-          this.search = "";          
-          return this.items.filter((currentValue, index, arr) => {
+      axios({
+        headers: { Authorization: this.user.jwt },
+        method: 'GET',
+        url: url
+      }).then(
+        result => {
+          for (let key in result.data) {
+            // pour éviter les erreurs si null
             if (
-              (currentValue["date"]
-                .toString()
-                .toLowerCase()
-                .indexOf(this.searchDate) > -1 ||
+              result.data[key].traitement == null ||
+                result.data[key].traitement === undefined
+            ) {
+              result.data[key].traitement = {}
+              result.data[key].traitement.libelle = 'Non défini'
+            }
+
+            this.items.push({
+              date: result.data[key].dateModification,
+              rcr: result.data[key].rcr + ' - ' + result.data[key].shortname,
+              iln: result.data[key].iln,
+              num: result.data[key].numDemande,
+              traitement: result.data[key].traitement.libelle,
+              statut: result.data[key].etatDemande.libelle,
+              codeStatut: result.data[key].etatDemande.numEtat
+            })
+          }
+        },
+        error => {
+          this.alertMessage =
+              'Impossible de récupérer la liste des demandes. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.'
+          this.alert = true
+          this.alertType = 'error'
+
+          if (error.response.status === 401) {
+            this.$emit('logout')
+          }
+        }
+      )
+    }
+
+    // Tri par défaut sur les numéros demandes
+    this.changeSort('num')
+    this.pagination.descending = true
+  },
+  methods: {
+    downloadFile (numDem, type) {
+      this.fileReady = false
+      this.dialog = true
+      var filename = ''
+      if (type === 'epn') {
+        filename = 'fichier_prepare_' + numDem + '.csv?id=' + numDem
+      } else {
+        filename = '??'
+      }
+      if (this.user !== null && this.user.jwt !== null) {
+        return axios({
+          headers: { Authorization: this.user.jwt },
+          method: 'GET',
+          url: process.env.ROOT_API + 'files/' + filename
+        }).then(
+          result => {
+            var blob = new Blob([result.data], { type: 'application/csv' })
+            this.fileLink = window.URL.createObjectURL(blob)
+            this.$refs.fileLinkBtn.click()
+            this.fileReady = true
+          },
+          error => {
+            this.fileReady = false
+            this.dialog = false
+            this.alertMessage =
+                'Impossible de récupérer votre fichier. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.'
+            this.alert = true
+            this.alertType = 'error'
+            if (error.response.status === 401) {
+              this.$emit('logout')
+            }
+          }
+        )
+      }
+    },
+    clickRow (numDem, codeStatut, traitement) {
+      sessionStorage.setItem('dem', numDem)
+      switch (codeStatut) {
+        case 1:
+          this.$router.push('upload')
+          break
+        case 3:
+          if (traitement !== 'Non défini') {
+            this.$router.push('uploadFinal')
+          } else {
+            this.$router.push('traitement')
+          }
+          break
+        case 4:
+          this.$router.push('simulation')
+          break
+        default:
+          break
+      }
+    },
+    initHeader () {
+      if (this.user.role === 'ADMIN') {
+        this.headers = [
+          { text: 'Date Création', value: 'date' },
+          { text: 'ILN', value: 'iln' },
+          { text: 'RCR', value: 'rcr' },
+          { text: 'Numéro de demande', value: 'num' },
+          { text: 'Traitement', value: 'traitement' },
+          { text: 'Statut', value: 'statut' },
+          { text: 'Résultat', value: 'codeStatut' }
+        ]
+      } else {
+        this.headers = [
+          { text: 'Date Création', value: 'date' },
+          { text: 'RCR', value: 'rcr' },
+          { text: 'Numéro de demande', value: 'num' },
+          { text: 'Traitement', value: 'traitement' },
+          { text: 'Statut', value: 'statut' },
+          { text: 'Résultat', value: 'codeStatut' }
+        ]
+      }
+
+      this.searchCombo = Object.assign([], this.headers)
+      this.searchCombo.splice(this.searchCombo.length - 1, 1)
+      for (var i = 0; i < this.searchCombo.length; i++) {
+        this.selectedColumns[i] = this.searchCombo[i].value
+      }
+    },
+    computedItems (type) {
+      // Si appeller pr peupler le tableau
+      if (type !== 'guess') {
+        this.typeSearch = type
+      }
+
+      // Si recherche sur une colonne spécifique
+      if (this.typeSearch !== 'search') {
+        this.search = ''
+        return this.items.filter((currentValue, index, arr) => {
+          if (
+            (currentValue['date']
+              .toString()
+              .toLowerCase()
+              .indexOf(this.searchDate) > -1 ||
                 this.searchDate == null) &&
-              (currentValue["iln"]
+              (currentValue['iln']
                 .toString()
                 .toLowerCase()
                 .indexOf(this.searchILN) > -1 ||
                 this.searchRCR == null) &&
-              (currentValue["rcr"]
+              (currentValue['rcr']
                 .toString()
                 .toLowerCase()
                 .indexOf(this.searchRCR) > -1 ||
                 this.searchRCR == null) &&
-              (currentValue["num"]
+              (currentValue['num']
                 .toString()
                 .toLowerCase()
                 .indexOf(this.searchNum) > -1 ||
                 this.searchNum == null) &&
-              (currentValue["traitement"]
+              (currentValue['traitement']
                 .toString()
                 .toLowerCase()
                 .indexOf(this.searchTraitement) > -1 ||
                 this.searchTraitement == null) &&
-              (currentValue["statut"]
+              (currentValue['statut']
                 .toString()
                 .toLowerCase()
                 .indexOf(this.searchStatut) > -1 ||
                 this.searchStatut == null) &&
-              (this.searchCodeStatut.toString().indexOf(currentValue["codeStatut"])  > -1 ||
-                this.searchCodeStatut.toString() == "")
-            ) {              
-              return true;
-            }
-          });          
-        } //Recherche sur une ou plusieurs colonnes
-        else {
-          this.searchDate = "";
-          this.searchILN = "";
-          this.searchRCR = "";
-          this.searchNum = "";
-          this.searchTraitement = "";
-          this.searchStatut = "";
-          this.searchCodeStatut = "";
-          return this.items.filter((currentValue, index, arr) => {
-            if (this.selectedColumns.length == 0 || this.search == null) {
-              return true;
-            } else {
-              for (var i = 0; i < this.selectedColumns.length; i++) {
-                if (
-                  currentValue[this.selectedColumns[i]]
-                    .toString()
-                    .toLowerCase()
-                    .indexOf(this.search) > -1
-                ) {
-                  return true;
-                }
+              (this.searchCodeStatut.toString().indexOf(currentValue['codeStatut']) > -1 ||
+                this.searchCodeStatut.toString() === '')
+          ) {
+            return true
+          }
+        })
+      } else {
+        // Recherche sur une ou plusieurs colonnes
+        this.searchDate = ''
+        this.searchILN = ''
+        this.searchRCR = ''
+        this.searchNum = ''
+        this.searchTraitement = ''
+        this.searchStatut = ''
+        this.searchCodeStatut = ''
+        return this.items.filter((currentValue, index, arr) => {
+          if (this.selectedColumns.length === 0 || this.search == null) {
+            return true
+          } else {
+            for (var i = 0; i < this.selectedColumns.length; i++) {
+              if (
+                currentValue[this.selectedColumns[i]]
+                  .toString()
+                  .toLowerCase()
+                  .indexOf(this.search) > -1
+              ) {
+                return true
               }
-              return false;
             }
-          });
-        }
-      },
-      changeSort(column) {
-        if (this.pagination.sortBy === column) {
-          this.pagination.descending = !this.pagination.descending;
-        } else {
-          this.pagination.sortBy = column;
-          this.pagination.descending = false;
-        }
+            return false
+          }
+        })
+      }
+    },
+    changeSort (column) {
+      if (this.pagination.sortBy === column) {
+        this.pagination.descending = !this.pagination.descending
+      } else {
+        this.pagination.sortBy = column
+        this.pagination.descending = false
       }
     }
-  };
+  }
+}
 </script>
 
 <style scoped>

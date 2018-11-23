@@ -32,55 +32,66 @@
 </template>
 
 <script>
-    import loading from "vue-full-loading";
+import loading from 'vue-full-loading'
 
-    export default {
-      name: "upload",
-      components: {
-        loading
-      },
-      props: {
-        title: {
-          default: "Envoi de votre fichier"
-        },
-        loading: {
-          default: false
-        },
-        loadingMessage: {
-            default: "Envoi en cours..."
-        },
-        format: {
-          default: ".txt"
-        }
-      },
-      data() {
-        return {
-          fichierPresent: false,
-          alert: false,
-          alertMessage: "Erreur.",
-          alertType: "error",
-        };
-      },
-      methods: {
-        checkFile() {
-          if (this.$refs.fileInput.files[0].size > 0) {
-            this.fichierPresent = true;
-          } else {
-            this.fichierPresent = false;
-          }
-        },
-        checkFormat() {
-          this.alert = false;
-          if (!this.$refs.fileInput.files[0].name.includes(this.format)) {
-            this.alertMessage = "Le fichier doit être au format " + this.format;
-            this.alertType = "error";
-            this.alert = true;
-            this.fichierPresent = false;
-            this.$refs.fileInput.files = null;
-          }
-        }
+export default {
+  name: 'upload',
+  components: {
+    loading
+  },
+  props: {
+    /** Titre de la carte vuetify */
+    title: {
+      default: 'Envoi de votre fichier'
+    },
+    /** Active le chargement (plein écran) */
+    loading: {
+      default: false
+    },
+    /** Message affiché lors du chargement */
+    loadingMessage: {
+      default: 'Envoi en cours...'
+    },
+    /** Extension de fichier acceptée par le composant upload */
+    format: {
+      default: '.txt'
+    }
+  },
+  data () {
+    return {
+      fichierPresent: false,
+      alert: false,
+      alertMessage: 'Erreur.',
+      alertType: 'error'
+    }
+  },
+  methods: {
+    /**
+         * Modifie l'attribut fichierPresent à true/false selon si l'utilisateur a ajouté un fichier au formulaire ou non
+         */
+    checkFile () {
+      if (this.$refs.fileInput.files[0].size > 0) {
+        this.fichierPresent = true
+      } else {
+        this.fichierPresent = false
       }
-    };
+    },
+    /**
+         * Vérifie que le format du fichier déposé correspond bien à celui spécifié dans les props
+         * Affiche une erreur si ce n'est pas le cas
+         */
+    checkFormat () {
+      this.alert = false
+      if (!this.$refs.fileInput.files[0].name.includes(this.format)) {
+        this.alertMessage = 'Le fichier doit être au format ' + this.format
+        this.alertType = 'error'
+        this.alert = true
+        this.fichierPresent = false
+        this.$refs.fileInput.files = null
+      }
+    }
+  }
+}
 </script>
 
 <style scoped>

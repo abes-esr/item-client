@@ -14,10 +14,9 @@ import NotFoundComponent from '@/components/errors/notFound.vue'
 import uploadFinalComponent from '@/components/uploadFinal.vue'
 import simulationComponent from '@/components/simulation.vue'
 import homeComponent from '@/components/home.vue'
-
+import axios from 'axios'
 
 Vue.use(Router)
-import axios from "axios";
 
 const router = new Router({
   routes: [
@@ -28,11 +27,11 @@ const router = new Router({
       }
     },
     {
-      path: '/home',
+      path: '/accueil',
       name: 'home',
       component: homeComponent,
       meta: {
-        requiresAuth: true,
+        requiresAuth: true
       }
     },
     {
@@ -40,23 +39,23 @@ const router = new Router({
       name: 'rcr',
       component: RcrComponent,
       meta: {
-        requiresAuth: true,
+        requiresAuth: true
       }
     },
     {
-      path: '/upload',
+      path: '/fichier',
       name: 'upload',
       component: uploadComponent,
       meta: {
-        requiresAuth: true,
+        requiresAuth: true
       }
     },
     {
-      path: '/uploadFinal',
+      path: '/fichierEnrichi',
       name: 'uploadFinal',
       component: uploadFinalComponent,
       meta: {
-        requiresAuth: true,
+        requiresAuth: true
       }
     },
     {
@@ -64,7 +63,7 @@ const router = new Router({
       name: 'traitement',
       component: traitementComponent,
       meta: {
-        requiresAuth: true,
+        requiresAuth: true
       }
     },
     {
@@ -72,7 +71,7 @@ const router = new Router({
       name: 'login',
       component: LoginComponent,
       beforeEnter: (to, from, next) => {
-        let user = JSON.parse(sessionStorage.getItem('user'));
+        let user = JSON.parse(sessionStorage.getItem('user'))
         if (user !== null && user.jwt !== null) {
           next({
             path: from.fullPath
@@ -83,7 +82,7 @@ const router = new Router({
       }
     },
     {
-      path: '/tab',
+      path: '/tableau',
       name: 'tab',
       component: TableauComponent,
       meta: {
@@ -107,24 +106,24 @@ const router = new Router({
       }
     },
     {
-      path: '/about',
+      path: '/apropos',
       name: 'about',
-      component: AboutComponent,
+      component: AboutComponent
     },
     {
       path: '/cgu',
       name: 'cgu',
-      component: CGUComponent,
+      component: CGUComponent
     },
     {
       path: '/donnees',
       name: 'donnees',
-      component: DonneesComponent,
+      component: DonneesComponent
     },
     {
       path: '/mentions',
       name: 'mentions',
-      component: MentionsComponent,
+      component: MentionsComponent
     },
     {
       path: '*', component: NotFoundComponent
@@ -134,7 +133,7 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  let user = JSON.parse(sessionStorage.getItem('user'));
+  let user = JSON.parse(sessionStorage.getItem('user'))
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (user == null || user.jwt == null) {
       next({
@@ -142,7 +141,7 @@ router.beforeEach((to, from, next) => {
         params: { nextUrl: to.fullPath }
       })
     } else {
-      if (user.email == null && to.path != "/profil") {
+      if (user.email == null && to.path !== '/profil') {
         next({
           path: '/profil'
         })
@@ -154,44 +153,44 @@ router.beforeEach((to, from, next) => {
     next()
   }
 
-  //ROUTEGUARD SELON ETAT DEMANDE
+  // ROUTEGUARD SELON ETAT DEMANDE
 
-  let numDem = sessionStorage.getItem('dem');
-  if (["/upload", "/uploadFinal", "/traitement", "/simulation"].includes(to.path)) {
-    if (numDem == undefined) {
-      next({ path: "/" })
+  let numDem = sessionStorage.getItem('dem')
+  if (['/upload', '/uploadFinal', '/traitement', '/simulation'].includes(to.path)) {
+    if (numDem === undefined) {
+      next({ path: '/' })
     } else {
       axios({
         headers: { Authorization: user.jwt },
-        method: "GET",
+        method: 'GET',
         url:
-          process.env.ROOT_API + "demandes/" + numDem
+          process.env.ROOT_API + 'demandes/' + numDem
       }).then(
         result => {
           switch (result.data.etatDemande.numEtat) {
             case 1:
-              next({ path: "/upload" })
-              break;
+              next({ path: '/upload' })
+              break
             case 3:
               if (result.data.traitement != null) {
-                next({ path: "/uploadFinal" })
+                next({ path: '/uploadFinal' })
               } else {
-                next({ path: "/traitement" })
+                next({ path: '/traitement' })
               }
-              break;
+              break
             case 4:
-              next({ path: "/simulation" })
-              break;
+              next({ path: '/simulation' })
+              break
             default:
-              next({ path: "/tab" })
-              break;
+              next({ path: '/tab' })
+              break
           }
         },
         error => {
-          if (error.response.status == 401) {
-            this.$emit("logout");
+          if (error.response.status === 401) {
+            this.$emit('logout')
           } else {
-            next({ path: "/" })
+            next({ path: '/' })
           }
         }
       )

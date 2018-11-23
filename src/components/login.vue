@@ -27,103 +27,100 @@
 </template>
 
 <script>
-  import axios from "axios";
-  export default {
-    name: "Login",
-    data() {
-      return {
-        input: {
-          authenticated: false,
-          username: "",
-          password: ""
-        },
-        authUser: {},
-        user: {},
-        alert: false,
-        alertMessage: "Nom d'utilisateur ou mot de passe incorrect",
-        loading: false,
-        rules: {
-          required: value => !!value || "Champ obligatoire."
-        }
-      };
-    },
-    methods: {
-      login() {
-        alert = false;
-        if (
-          this.$refs.form.validate() &&
-          this.input.username !== "" &&
-          this.input.password !== ""
-        ) {
-          this.loading = true;
-          axios
-            .post(process.env.ROOT_API + "signin", {
-              username: this.input.username,
-              password: this.input.password
-            })
-            .then(
-              result => {
-                this.authUser.user = this.input.username;
-                this.authUser.username = result.data.shortName;
-                this.authUser.jwt = "Bearer " + result.data.accessToken;
-                this.authUser.userNum = result.data.userNum;
-                this.authUser.iln = result.data.iln;
-                this.authUser.role = result.data.role;
-                sessionStorage.setItem("user", JSON.stringify(this.authUser));
-
-                this.loading = false;
-
-                if (result.data.accessToken !== null) {
-                  this.$emit("authenticated", true);
-                  this.authenticated = true;
-                  this.getMail();
-                }
-              },
-              error => {
-                this.loading = false;
-                if (error.response.status == 401) {
-                  this.alertMessage =
-                    "Nom d'utilisateur ou mot de passe incorrect";
-                } else {
-                  this.alertMessage =
-                    "Service indisponible, veuillez réessayer ultérieurement. Si le problème persiste, merci de nous contacter.";
-                }
-                this.alert = true;
-              }
-            );
-        } else {
-          this.alertMessage = "Nom d'utilisateur ou mot de passe incorrect";
-          this.alert = true;
-        }
+import axios from 'axios'
+export default {
+  name: 'Login',
+  data () {
+    return {
+      input: {
+        authenticated: false,
+        username: '',
+        password: ''
       },
-      getMail() {
-        this.user = JSON.parse(sessionStorage.getItem("user"));
-
-        axios({
-          headers: { Authorization: this.user.jwt },
-          method: "GET",
-          url: process.env.ROOT_API + "utilisateurs/" + this.user.userNum
-        }).then(
-          result => {
-            if (result.data === null) {
-              this.$router.replace({ name: "profil" });
-            } else {
-              this.user.email = result.data.email;
-              sessionStorage.setItem("user", JSON.stringify(this.user));
-              this.$router.replace({ name: "home" });
-            }
-          },
-          error => {
-            console.log(error);
-            this.alertMessage =
-              "Service indisponible, veuillez réessayer ultérieurement. Si le problème persiste, merci de nous contacter.";
-            this.alert = true;
-          }
-        );
+      authUser: {},
+      user: {},
+      alert: false,
+      alertMessage: "Nom d'utilisateur ou mot de passe incorrect",
+      loading: false,
+      rules: {
+        required: value => !!value || 'Champ obligatoire.'
       }
     }
-  };
-</script>
+  },
+  methods: {
+    login () {
+      this.alert = false
+      if (
+        this.$refs.form.validate() &&
+          this.input.username !== '' &&
+          this.input.password !== ''
+      ) {
+        this.loading = true
+        axios
+          .post(process.env.ROOT_API + 'signin', {
+            username: this.input.username,
+            password: this.input.password
+          })
+          .then(
+            result => {
+              this.authUser.user = this.input.username
+              this.authUser.username = result.data.shortName
+              this.authUser.jwt = 'Bearer ' + result.data.accessToken
+              this.authUser.userNum = result.data.userNum
+              this.authUser.iln = result.data.iln
+              this.authUser.role = result.data.role
+              sessionStorage.setItem('user', JSON.stringify(this.authUser))
 
-<style scoped>
-</style>
+              this.loading = false
+
+              if (result.data.accessToken !== null) {
+                this.$emit('authenticated', true)
+                this.authenticated = true
+                this.getMail()
+              }
+            },
+            error => {
+              this.loading = false
+              if (error.response.status === 401) {
+                this.alertMessage =
+                    "Nom d'utilisateur ou mot de passe incorrect"
+              } else {
+                this.alertMessage =
+                    'Service indisponible, veuillez réessayer ultérieurement. Si le problème persiste, merci de nous contacter.'
+              }
+              this.alert = true
+            }
+          )
+      } else {
+        this.alertMessage = "Nom d'utilisateur ou mot de passe incorrect"
+        this.alert = true
+      }
+    },
+    getMail () {
+      this.user = JSON.parse(sessionStorage.getItem('user'))
+
+      axios({
+        headers: { Authorization: this.user.jwt },
+        method: 'GET',
+        url: process.env.ROOT_API + 'utilisateurs/' + this.user.userNum
+      }).then(
+        result => {
+          if (result.data === null) {
+            this.$router.replace({ name: 'profil' })
+          } else {
+            this.user.email = result.data.email
+            sessionStorage.setItem('user', JSON.stringify(this.user))
+            this.$router.replace({ name: 'home' })
+          }
+        },
+        error => {
+          console.log(error)
+          this.alertMessage =
+              'Service indisponible, veuillez réessayer ultérieurement. Si le problème persiste, merci de nous contacter.'
+          this.alert = true
+        }
+      )
+    }
+  }
+}
+</script>

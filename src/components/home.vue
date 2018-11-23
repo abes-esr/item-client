@@ -2,7 +2,25 @@
     <v-container fluid fill-height>
         <v-layout align-center justify-center>
             <v-flex xs12 sm8 id="flexBox">
-                <v-card raised hover @click.native="$router.push({ name: 'rcr' })">
+                <!--
+                <v-card raised hover @click="$router.push({ name: 'tab' })">
+                    <v-card-title primary-title>
+                        <v-container grid-list-md>
+                            <v-layout row wrap align-center>
+                                <v-flex xs2>
+                                    <span class="group pa-3 indigo">
+                                        <v-icon x-large dark>add</v-icon>
+                                    </span>
+                                </v-flex>
+                                <v-flex xs6 ml-4>
+                                    <h3 class="headline">Créer des exemplaires</h3>
+                                </v-flex>
+                            </v-layout>
+                        </v-container>
+                    </v-card-title>
+                </v-card>
+                -->
+                <v-card raised hover @click="$router.push({ name: 'rcr' })">
                     <v-card-title primary-title>
                         <v-container grid-list-md>
                             <v-layout row wrap align-center>
@@ -18,7 +36,25 @@
                         </v-container>
                     </v-card-title>
                 </v-card>
-                <v-card raised hover @click.native="$router.push({ name: 'tab' })">
+                <!--
+                <v-card raised hover @click="$router.push({ name: 'tab' })">
+                    <v-card-title primary-title>
+                        <v-container grid-list-md>
+                            <v-layout row wrap align-center>
+                                <v-flex xs2>
+                                    <span class="group pa-3 indigo">
+                                        <v-icon x-large dark>delete</v-icon>
+                                    </span>
+                                </v-flex>
+                                <v-flex xs6 ml-4>
+                                    <h3 class="headline">Supprimer des exemplaires</h3>
+                                </v-flex>
+                            </v-layout>
+                        </v-container>
+                    </v-card-title>
+                </v-card>
+                -->
+                <v-card raised hover @click="$router.push({ name: 'tab' })">
                     <v-card-title primary-title>
                         <v-container grid-list-md>
                             <v-layout row wrap align-center>
@@ -34,6 +70,24 @@
                         </v-container>
                     </v-card-title>
                 </v-card>
+                <!--
+                <v-card raised hover @click="$router.push({ name: 'tab' })">
+                    <v-card-title primary-title>
+                        <v-container grid-list-md>
+                            <v-layout row wrap align-center>
+                                <v-flex xs2>
+                                    <span class="group pa-3 indigo">
+                                        <v-icon x-large dark>bar_chart</v-icon>
+                                    </span>
+                                </v-flex>
+                                <v-flex xs6 ml-4>
+                                    <h3 class="headline">Calculer mon taux de recouvrement</h3>
+                                </v-flex>
+                            </v-layout>
+                        </v-container>
+                    </v-card-title>
+                </v-card>
+                -->
             </v-flex>
         </v-layout>
     </v-container>
@@ -49,8 +103,7 @@
       flex: 1;
       justify-content: space-around;
     }
-    #flexBox{
-        max-width: 700px;
+    #flexBox {
+      max-width: 700px;
     }
 </style>
-
