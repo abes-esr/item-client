@@ -4,13 +4,15 @@
   "description": "Front-end Kopya",
   "author": "Théo Chambon <chambon@abes.fr>",
   "private": true,
+  "artifactory": {"artifactId":"front","groupId":"fr.abes.kopya"},
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --port 3000 --config build/webpack.dev.conf.js",
     "start": "npm run dev",
     "lint": "eslint --ext .js,.vue src",
     "build": "node build/build.js prod",
     "build-dev": "node build/build.js dev",
-    "build-test": "node build/build.js test"
+    "build-test": "node build/build.js test",
+    "build-all": "npm run build-dev & npm run build-test & npm run build"
   },
   "dependencies": {
     "axios": "^0.18.0",
