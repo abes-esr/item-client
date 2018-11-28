@@ -8,7 +8,7 @@ $apache_path = '/var/www/html/kopya/'
 # ################################################################################
 
 class {'abes':
-  appliName => 'kopya',
+  appliName => 'kopyaFront',
   env       => 'DEV',
   groupId   => 'fr.abes.kopya',
 }
@@ -22,6 +22,11 @@ node /^raiponce(\d)-dev/ {
   abes::apache::htaccess { 'htaccess' :
     apachePathWeb => $apache_path,
     fileName      => 'htaccess_kopya',
+  }
+
+  abes::apache::front { 'appli vue.js'
+    apachePathWeb => $apache_path,
+    artifactId    => 'front'
   }
 }
 
