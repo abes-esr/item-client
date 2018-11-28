@@ -24,7 +24,7 @@ node /^raiponce(\d)-dev/ {
     fileName      => 'htaccess_kopya',
   }
 
-  abes::apache::front { 'appli vue.js'
+  abes::apache::front { 'appli vue.js' :
     apachePathWeb => $apache_path,
     artifactId    => 'front'
   }
