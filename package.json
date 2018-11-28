@@ -1,6 +1,6 @@
 {
   "name": "kopya-ui",
-  "version": "1.0.0",
+  "version": "1.0.0-SNAPSHOT",
   "description": "Front-end Kopya",
   "author": "Théo Chambon <chambon@abes.fr>",
   "private": true,
