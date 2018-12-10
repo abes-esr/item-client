@@ -3,6 +3,31 @@
     <loading :show="loading" label="Chargement en cours..."></loading>
     <v-layout justify-center align-center>
       <v-flex text-xs-center>
+        <v-dialog v-model="dialog" width="500">
+          <v-card>
+            <v-card-title class="headline grey lighten-2" primary-title>Lancement du traitement</v-card-title>
+            <v-card-text>Attention, une fois les modifications effectuées, aucun retour en arrière n'est possible.</v-card-text>
+            <v-divider></v-divider>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="primary" flat @click="dialog = false">Annuler</v-btn>
+              <v-btn color="primary" flat @click="dialog = false, confirm()">Valider</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+        <v-dialog v-model="dialogFinished" width="500">
+          <v-card>
+            <v-card-title class="headline grey lighten-2" primary-title>Traitement validé</v-card-title>
+            <v-card-text>Votre demande est en cours de traitement, elle sera traité dès que possible. Un e-mail vous sera envoyé une fois le traitement terminé.
+              <br />Vous pouvez retrouver l'ensemble de vos demandes depuis la page "Gérer mes demandes".
+            </v-card-text>
+            <v-divider></v-divider>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="primary" flat @click="dialog = false, $router.push({ name: 'home' })">OK</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
         <v-card id="demInfos">
           <h3 style="padding-top: 15px; padding-left: 15px;" class="headline">Ma demande</h3>
           <v-container grid-list-md>
@@ -10,35 +35,36 @@
               <v-flex xs3>
                 <div style="padding: 15px;">
                   <span style="color: grey;">Numéro de Demande</span>
-                  <br />
+                  <br>
                   <span>{{ demande.numDemande }}</span>
                 </div>
               </v-flex>
               <v-flex xs3>
                 <div style="padding: 15px;">
                   <span style="color: grey;">Date de création</span>
-                  <br />
+                  <br>
                   <span>{{ demande.dateCreation }}</span>
                 </div>
               </v-flex>
               <v-flex xs3>
                 <div style="padding: 15px;">
                   <span style="color: grey;">RCR</span>
-                  <br />
+                  <br>
                   <span>{{ demande.rcr }} - {{ demande.shortname }}</span>
                 </div>
               </v-flex>
               <v-flex xs3>
                 <div style="padding: 15px;">
                   <span style="color: grey;">Traitement</span>
-                  <br />
+                  <br>
                   <span>{{ demande.traitement.libelle }}</span>
                 </div>
               </v-flex>
             </v-layout>
           </v-container>
         </v-card>
-        <v-alert :value="alert" :type="alertType" transition="scale-transition" dismissible><span v-html="alertMessage"></span>
+        <v-alert :value="alert" :type="alertType" transition="scale-transition" dismissible>
+          <span v-html="alertMessage"></span>
         </v-alert>
         <v-card>
           <h3 class="headline mb-0" id="numLigne">Ligne de votre fichier : {{ noticeEnCours + 1 }}</h3>
@@ -62,23 +88,22 @@
               </v-flex>
               <v-flex xs2>
                 <v-layout align-center justify-center column fill-height>
-                  <v-btn color="error" fab large dark @click="getPreviousSimu()">
+                  <v-btn
+                    v-if="noticeEnCours > 0"
+                    color="error"
+                    fab
+                    large
+                    dark
+                    @click="getPreviousSimu()"
+                  >
                     <v-icon>navigate_before</v-icon>
                   </v-btn>
-                  <span>Notice précedente</span>
-                  <br />
+                  <span v-if="noticeEnCours > 0">Notice précedente</span>
+                  <br>
                   <v-btn color="error" fab large dark @click="getNextSimu()">
                     <v-icon>navigate_next</v-icon>
                   </v-btn>
                   <span>Notice suivante</span>
-                  <br />
-                  <div id="validButton">
-                    <v-btn color="green" fab large dark>
-                      <v-icon>done</v-icon>
-                    </v-btn>
-                    <br />
-                    <span>Lancer le traitement</span>
-                  </div>
                 </v-layout>
               </v-flex>
               <v-flex xs5>
@@ -100,6 +125,10 @@
             </v-layout>
           </v-container>
         </v-card>
+        <br />
+        <v-layout justify-end id="layoutButtonOk">
+          <v-btn large color="success" @click="dialog = true">Lancer le traitement</v-btn>
+        </v-layout>
       </v-flex>
     </v-layout>
   </v-container>
@@ -127,6 +156,8 @@ export default {
       user: {},
       noticeAvant: 'Notice en cours de chargement...',
       noticeApres: 'Notice en cours de chargement...',
+      dialog: false,
+      dialogFinished: false,
     };
   },
   mounted() {
@@ -164,12 +195,9 @@ export default {
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
-        url:
-            `${process.env.ROOT_API
-            }simulerLigne?numDemande=${
-              this.demande.numDemande
-            }&numLigne=${
-              this.noticeEnCours}`,
+        url: `${process.env.ROOT_API}simulerLigne?numDemande=${
+          this.demande.numDemande
+        }&numLigne=${this.noticeEnCours}`,
       }).then(
         (result) => {
           this.noticeAvant = result.data[0];
@@ -206,6 +234,37 @@ export default {
         this.alertType = 'info';
       }
     },
+    confirm() {
+      this.alert = false;
+      this.loading = true;
+
+      axios({
+        headers: { Authorization: this.user.jwt },
+        method: 'GET',
+        url: `${process.env.ROOT_API}passerEnCours?numDemande=${
+          this.demande.numDemande
+        }`,
+      }).then(
+        () => {
+          this.loading = false;
+          this.dialogFinished = true;
+        },
+        (error) => {
+          this.loading = false;
+          this.alert = true;
+          this.alertType = 'error';
+          this.alertMessage = 'Impossible de récupérer la notice pour la simulation. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.';
+          if (error.response.status === 401) {
+            this.$emit('logout');
+          } else if (error.response.status === 400) {
+            this.alert = true;
+            this.alertType = 'info';
+            this.alertMessage = "Vous êtes à la dernière notice de votre demande, impossible d'aller plus loin.";
+            this.noticeEnCours -= 1;
+          }
+        },
+      );
+    },
   },
 };
 </script>
@@ -215,8 +274,6 @@ export default {
     text-align: left !important;
     white-space: pre-wrap; /* Since CSS 2.1 */
     white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
-    white-space: -pre-wrap; /* Opera 4-6 */
-    white-space: -o-pre-wrap; /* Opera 7 */
     word-wrap: break-word; /* Internet Explorer 5.5+ */
   }
   .v-card {
@@ -229,9 +286,12 @@ export default {
     margin-bottom: 10px;
     text-align: left;
   }
-  #numLigne{
+  #numLigne {
     text-align: left !important;
     padding-top: 20px;
     padding-left: 20px;
+  }
+  #layoutButtonOk {
+    padding-right: 8%;
   }
 </style>

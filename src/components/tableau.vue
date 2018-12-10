@@ -2,127 +2,198 @@
   <v-container fluid>
     <v-layout justify-center align-center>
       <v-flex text-xs-center>
-        <v-alert :value="alert" type="error" dismissible transition="scale-transition"><span v-html="alertMessage"></span>
+        <v-alert :value="alert" type="error" dismissible transition="scale-transition">
+          <span v-html="alertMessage"></span>
         </v-alert>
         <v-card>
-          <v-card-title>
-            Mes demandes
-            <v-spacer></v-spacer>
-            <v-combobox v-model="selectedColumns" :items="searchCombo" label="Colonnes de recherche sélectionnées" multiple :return-object="false" hide-details></v-combobox>
-            <v-spacer></v-spacer>
-            <v-text-field v-model="search" append-icon="search" label="Rechercher" single-line hide-details clearable v-on:keyup="computedItems('search')"></v-text-field>
-          </v-card-title>
-          <v-data-table :headers="headers" :items="computedItems('guess')" rows-per-page-text="Lignes par page" :pagination.sync="pagination" no-data-text="Aucune demande" class="elevation-1" :rows-per-page-items='[10,25, {"text":"Toutes","value":-1}]'>
+          <v-card-title class="title">Mes demandes</v-card-title>
+          <v-data-table
+            :headers="headers"
+            :items="computedItems('guess')"
+            rows-per-page-text="Lignes par page"
+            :pagination.sync="pagination"
+            no-data-text="Aucune demande"
+            class="elevation-1"
+            :rows-per-page-items='[10,25, {"text":"Toutes","value":-1}]'
+          >
             <template slot="headers" slot-scope="props">
-
               <tr>
-                <th v-for="header in props.headers" :key="header.text" :class="['column sortable', pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']" @click="changeSort(header.value)">
+                <th
+                  v-for="header in props.headers"
+                  :key="header.text"
+                  :class="['column sortable', pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']"
+                  @click="changeSort(header.value)"
+                >
                   <v-icon small>arrow_upward</v-icon>
                   {{ header.text }}
                 </th>
               </tr>
               <tr>
                 <th>
-                  <v-text-field v-model="searchDate" append-icon="search" single-line hide-details clearable v-on:keyup="computedItems('date')"></v-text-field>
+                  <v-menu
+                    :close-on-content-click="false"
+                    v-model="menu"
+                    lazy
+                    transition="scale-transition"
+                    offset-y
+                    full-width
+                    min-width="290px"
+                  >
+                    <v-text-field
+                      slot="activator"
+                      v-model="searchDate"
+                      prepend-icon="event"
+                      append-icon="search"
+                      clearable
+                      readonly
+                    ></v-text-field>
+                    <v-date-picker
+                      v-model="searchDate"
+                      @input="menu = false"
+                      locale="fr-fr"
+                      first-day-of-week="1"
+                      no-title
+                      scrollable
+                      @change="computedItems('date')"
+                    >
+                      <v-spacer></v-spacer>
+                      <v-btn flat color="primary" @click="menu = false">Annuler</v-btn>
+                    </v-date-picker>
+                  </v-menu>
                 </th>
                 <th v-if="user.role == 'ADMIN'">
-                  <v-text-field v-model="searchILN" append-icon="search" single-line hide-details clearable v-on:keyup="computedItems('iln')"></v-text-field>
+                  <v-text-field
+                    v-model="searchILN"
+                    append-icon="search"
+                    single-line
+                    hide-details
+                    clearable
+                    v-on:keyup="computedItems('iln')"
+                  ></v-text-field>
                 </th>
                 <th>
-                  <v-text-field v-model="searchRCR" append-icon="search" single-line hide-details clearable v-on:keyup="computedItems('rcr')"></v-text-field>
+                  <v-text-field
+                    v-model="searchRCR"
+                    append-icon="search"
+                    single-line
+                    hide-details
+                    clearable
+                    v-on:keyup="computedItems('rcr')"
+                  ></v-text-field>
                 </th>
                 <th>
-                  <v-text-field v-model="searchNum" append-icon="search" single-line hide-details clearable v-on:keyup="computedItems('num')"></v-text-field>
+                  <v-text-field
+                    v-model="searchNum"
+                    append-icon="search"
+                    single-line
+                    hide-details
+                    clearable
+                    v-on:keyup="computedItems('num')"
+                  ></v-text-field>
                 </th>
                 <th>
-                  <v-text-field v-model="searchTraitement" append-icon="search" single-line hide-details clearable v-on:keyup="computedItems('traitement')"></v-text-field>
+                  <v-select
+                    v-model="searchTraitement"
+                    :items="listTraitements"
+                    item-value="libelle"
+                    item-text="libelle"
+                    no-data-text="Aucun traitement trouvé."
+                    @change="computedItems('traitement')"
+                    clearable
+                  ></v-select>
                 </th>
                 <th>
-                  <v-text-field v-model="searchStatut" append-icon="search" single-line hide-details clearable v-on:keyup="computedItems('statut')"></v-text-field>
-                </th>
-                <th>
-                  <v-combobox v-model="searchCodeStatut" :items="listCodeStatut" single-line hide-details clearable multiple chips hide-selected v-on:change="computedItems('codeStatut')">
-                    <template slot="item" slot-scope="data">
-                      <span v-if="data.item == 1">
-                       <v-btn slot="activator" color="info" small disabled>
-                        <v-icon>cloud_download</v-icon>
-                      </v-btn>
-                      </span>
-                      <span v-if="data.item >= 2">
-                       <v-btn slot="activator" color="info" small>
-                        <v-icon>cloud_download</v-icon>
-                      </v-btn>
-                      </span>
-                    </template>
-                    <template
-                      slot="selection"
-                      slot-scope="{ item, parent, selected }"
-                    >
-                      <v-chip class="v-chip--select-multi">
-                        <span v-if="item == 1">
-                          <v-icon slot="activator" color="info" small disabled>cloud_download</v-icon>
-                          <v-icon small @click="parent.selectItem(item)">close</v-icon>
-                        </span>
-                        <span v-if="item >= 2">
-                          <v-icon slot="activator" color="info" small >cloud_download</v-icon>
-                          <v-icon small  @click="parent.selectItem(item)">close</v-icon>
-                        </span>
-                      </v-chip>
-                    </template>
-                  </v-combobox>
+                  <v-select
+                    v-model="searchStatut"
+                    :items="listStatut"
+                    no-data-text="Aucun statut trouvé."
+                    @change="computedItems('statut')"
+                    clearable
+                  ></v-select>
                 </th>
               </tr>
             </template>
             <template slot="items" slot-scope="props">
-                <td class="text-xs-left" @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)">{{ props.item.date }}</td>
-                <td v-if="user.role == 'ADMIN'" class="text-xs-left" @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)">{{ props.item.iln }}</td>
-                <td class="text-xs-left" @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)">{{ props.item.rcr }}</td>
-                <td class="text-xs-left" @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)">{{ props.item.num }}</td>
-                <td class="text-xs-left" @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)">{{ props.item.traitement }}</td>
-                <td class="text-xs-left" @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)">{{ props.item.statut }}</td>
-                <td class="text-xs-left">
-                  <v-menu offset-y v-if="props.item.codeStatut >= 2">
-                    <v-btn slot="activator" color="info" small>
-                      <v-icon>cloud_download</v-icon>
-                    </v-btn>
-                    <v-list v-if="props.item.codeStatut >= 3">
-                      <v-list-tile @click="downloadFile(props.item.num, 'epn')">
-                        <v-list-tile-title>Télécharger le fichier PPN/EPN</v-list-tile-title>
-                      </v-list-tile>
-                      <v-list-tile @click="downloadFile(props.item.num, 'result')" v-if="props.item.codeStatut >= 7">
-                        <v-list-tile-title>Télécharger le fichier résultat</v-list-tile-title>
-                      </v-list-tile>
-                    </v-list>
-                  </v-menu>
-                  <span v-if="props.item.codeStatut == 1">
-                    <v-btn slot="activator" color="info" small disabled>
-                      <v-icon>cloud_download</v-icon>
-                    </v-btn>
-                  </span>
-                </td>
+              <td
+                class="text-xs-left"
+                @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
+              >{{ props.item.date }}</td>
+              <td
+                v-if="user.role == 'ADMIN'"
+                class="text-xs-left"
+                @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
+              >{{ props.item.iln }}</td>
+              <td
+                class="text-xs-left"
+                @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
+              >{{ props.item.rcr }}</td>
+              <td
+                class="text-xs-left"
+                @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
+              >{{ props.item.num }}</td>
+              <td
+                class="text-xs-left"
+                @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
+              >{{ props.item.traitement }}</td>
+              <td
+                class="text-xs-left"
+                @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
+              >{{ props.item.statut }}</td>
+              <td class="text-xs-left">
+                <v-menu offset-y v-if="props.item.codeStatut >= 2">
+                  <v-btn slot="activator" color="info" small>
+                    <v-icon>cloud_download</v-icon>
+                  </v-btn>
+                  <v-list v-if="props.item.codeStatut >= 3">
+                    <v-list-tile @click="downloadFile(props.item.num, 'epn')">
+                      <v-list-tile-title>Télécharger le fichier PPN/EPN</v-list-tile-title>
+                    </v-list-tile>
+                    <v-list-tile
+                      @click="downloadFile(props.item.num, 'result')"
+                      v-if="props.item.codeStatut >= 7"
+                    >
+                      <v-list-tile-title>Télécharger le fichier résultat</v-list-tile-title>
+                    </v-list-tile>
+                  </v-list>
+                </v-menu>
+                <span v-if="props.item.codeStatut == 1">
+                  <v-btn slot="activator" color="info" small disabled>
+                    <v-icon>cloud_download</v-icon>
+                  </v-btn>
+                </span>
+              </td>
             </template>
-            <template slot="pageText" slot-scope="props">
-              Lignes {{ props.pageStart }} - {{ props.pageStop }} de {{ props.itemsLength }}
-            </template>
-            <v-alert slot="no-results" :value="true" color="error" icon="warning">
-              Votre recherche sur "{{ search }}" ne donne aucun résultat.
-            </v-alert>
+            <template
+              slot="pageText"
+              slot-scope="props"
+            >Lignes {{ props.pageStart }} - {{ props.pageStop }} de {{ props.itemsLength }}</template>
+            <v-alert
+              slot="no-results"
+              :value="true"
+              color="error"
+              icon="warning"
+            >Votre recherche sur "{{ search }}" ne donne aucun résultat.</v-alert>
           </v-data-table>
         </v-card>
       </v-flex>
       <v-dialog v-model="dialog" width="500">
         <v-card>
-          <v-card-title class="headline grey lighten-2" primary-title>
-            Téléchargement du fichier
-          </v-card-title>
+          <v-card-title class="headline grey lighten-2" primary-title>Téléchargement du fichier</v-card-title>
           <v-card-text>
-            <div v-if="fileReady">
-              Votre fichier est en cours de téléchargement, veuillez patienter.
+            <div v-if="fileReady">Votre fichier est en cours de téléchargement, veuillez patienter.
               <v-progress-linear :indeterminate="true"></v-progress-linear>
             </div>
             <div v-if="!fileReady">
               <v-flex align-center justify-center fill-height class="text-xs-center">
-                <v-btn outline large color="indigo" ref="fileLinkBtn" :href="fileLink" :download="blobName">Télécharger le fichier <v-icon right dark>cloud_download</v-icon>
+                <v-btn
+                  outline
+                  large
+                  color="indigo"
+                  ref="fileLinkBtn"
+                  :href="fileLink"
+                  :download="blobName"
+                >Télécharger le fichier
+                  <v-icon right dark>cloud_download</v-icon>
                 </v-btn>
               </v-flex>
             </div>
@@ -130,9 +201,7 @@
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" flat @click="dialog = false">
-              Fermer
-            </v-btn>
+            <v-btn color="primary" flat @click="dialog = false">Fermer</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -171,6 +240,9 @@ export default {
       blobName: 'demande.csv',
       dialog: false,
       fileReady: false,
+      menu: false,
+      listTraitements: [],
+      listStatut: ['A compléter', 'En simulation', 'En préparation'],
     };
   },
   mounted() {
@@ -183,9 +255,9 @@ export default {
       if (this.user.role === 'ADMIN') {
         url = `${process.env.ROOT_API}demandes`;
       } else {
-        url = `${process.env.ROOT_API
-        }chercherDemandes?userNum=${
-          this.user.userNum}`;
+        url = `${process.env.ROOT_API}chercherDemandes?userNum=${
+          this.user.userNum
+        }`;
       }
 
       axios({
@@ -225,6 +297,8 @@ export default {
           }
         },
       );
+
+      this.getListTraitements();
     }
 
     // Tri par défaut sur les numéros demandes
@@ -267,15 +341,37 @@ export default {
       }
       return '';
     },
+    getListTraitements() {
+      if (this.user !== null && this.user.jwt !== null) {
+        axios({
+          headers: { Authorization: this.user.jwt },
+          method: 'GET',
+          url: `${process.env.ROOT_API}traitements`,
+        }).then(
+          (result) => {
+            this.listTraitements = result.data;
+            this.listTraitements.push({ libelle: 'Non défini' });
+          },
+          (error) => {
+            this.alertMessage = 'Impossible de récupérer la liste des traitements. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.';
+            this.alert = true;
+            this.alertType = 'error';
+            if (error.response.status === 401) {
+              this.$emit('logout');
+            }
+          },
+        );
+      }
+    },
     clickRow(numDem, codeStatut, traitement) {
       sessionStorage.setItem('dem', numDem);
       switch (codeStatut) {
         case 1:
-          this.$router.push('upload');
+          this.$router.push('fichier');
           break;
         case 3:
           if (traitement !== 'Non défini') {
-            this.$router.push('uploadFinal');
+            this.$router.push('fichierEnrichi');
           } else {
             this.$router.push('traitement');
           }
@@ -336,27 +432,26 @@ export default {
                 .toLowerCase()
                 .indexOf(this.searchILN) > -1
                 || this.searchRCR == null)
-              && (currentValue.rcr
+              && (this.searchRCR == null || currentValue.rcr
                 .toString()
                 .toLowerCase()
-                .indexOf(this.searchRCR) > -1
-                || this.searchRCR == null)
+                .indexOf(this.searchRCR.toLowerCase()) > -1)
               && (currentValue.num
                 .toString()
                 .toLowerCase()
                 .indexOf(this.searchNum) > -1
                 || this.searchNum == null)
-              && (currentValue.traitement
+              && (this.searchTraitement == null
+              || currentValue.traitement
                 .toString()
                 .toLowerCase()
-                .indexOf(this.searchTraitement) > -1
-                || this.searchTraitement == null)
-              && (currentValue.statut
+                .indexOf(this.searchTraitement.toLowerCase()) > -1)
+              && (this.searchStatut == null || currentValue.statut
                 .toString()
                 .toLowerCase()
-                .indexOf(this.searchStatut) > -1
-                || this.searchStatut == null)
-              && (this.searchCodeStatut.toString().indexOf(currentValue.codeStatut) > -1
+                .indexOf(this.searchStatut.toLowerCase()) > -1)
+              && (this.searchCodeStatut.toString().indexOf(currentValue.codeStatut)
+                > -1
                 || this.searchCodeStatut.toString() === '')
           ) {
             return true;
@@ -404,5 +499,9 @@ export default {
 <style scoped>
   td {
     cursor: pointer;
+  }
+  th {
+    padding-top: 0;
+    padding-bottom: 0;
   }
 </style>

@@ -66,7 +66,6 @@ export default {
       this.loading = true;
       this.alert = false;
 
-      // TODO : supprimer nbtentatives dans le PUT !!
       if (
         this.$refs.form.validate()
           && this.input.email1 === this.input.email2

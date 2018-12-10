@@ -155,7 +155,7 @@ router.beforeEach((to, from, next) => {
   // ROUTEGUARD SELON ETAT DEMANDE
 
   const numDem = sessionStorage.getItem('dem');
-  if (['/upload', '/uploadFinal', '/traitement', '/simulation'].includes(to.path)) {
+  if (['/fichier', '/fichierEnrichi', '/traitement', '/simulation'].includes(to.path)) {
     if (numDem === undefined) {
       next({ path: '/' });
     } else {
@@ -168,11 +168,11 @@ router.beforeEach((to, from, next) => {
         (result) => {
           switch (result.data.etatDemande.numEtat) {
             case 1:
-              next({ path: '/upload' });
+              next({ path: '/fichier' });
               break;
             case 3:
               if (result.data.traitement != null) {
-                next({ path: '/uploadFinal' });
+                next({ path: '/fichierEnrichi' });
               } else {
                 next({ path: '/traitement' });
               }
@@ -181,7 +181,7 @@ router.beforeEach((to, from, next) => {
               next({ path: '/simulation' });
               break;
             default:
-              next({ path: '/tab' });
+              next({ path: '/tableau' });
               break;
           }
         },
