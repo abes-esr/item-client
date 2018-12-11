@@ -6,7 +6,7 @@
         <v-dialog v-model="dialog" width="500">
           <v-card>
             <v-card-title class="headline grey lighten-2" primary-title>Lancement du traitement</v-card-title>
-            <v-card-text>Attention, une fois les modifications effectuées, aucun retour en arrière n'est possible.</v-card-text>
+            <v-card-text>ëtes-vous sûr de vouloir lancer le traitement en production ? Aucune annulation n'est possible.</v-card-text>
             <v-divider></v-divider>
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -19,7 +19,7 @@
           <v-card>
             <v-card-title class="headline grey lighten-2" primary-title>Traitement validé</v-card-title>
             <v-card-text>Votre demande est en cours de traitement, elle sera traité dès que possible. Un e-mail vous sera envoyé une fois le traitement terminé.
-              <br />Vous pouvez retrouver l'ensemble de vos demandes depuis la page "Gérer mes demandes".
+              <br>Vous pouvez retrouver l'ensemble de vos demandes depuis la page "Gérer mes demandes".
             </v-card-text>
             <v-divider></v-divider>
             <v-card-actions>
@@ -125,7 +125,7 @@
             </v-layout>
           </v-container>
         </v-card>
-        <br />
+        <br>
         <v-layout justify-end id="layoutButtonOk">
           <v-btn large color="success" @click="dialog = true">Lancer le traitement</v-btn>
         </v-layout>
@@ -211,7 +211,12 @@ export default {
           this.alertMessage = 'Impossible de récupérer la notice pour la simulation. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.';
           if (error.response.status === 401) {
             this.$emit('logout');
-          } else if (error.response.status === 400) {
+          } else if (error.response.status === 400 && error.response.status.contains('Numéro de notice erroné')
+          ) {
+            this.alert = true;
+            this.alertType = 'warning';
+            this.alertMessage = 'Numéro de notice exemplaire erronné.';
+          } else if (error.response.status === 400 && error.response.status.contains('Fin du fichier')) {
             this.alert = true;
             this.alertType = 'info';
             this.alertMessage = "Vous êtes à la dernière notice de votre demande, impossible d'aller plus loin.";
@@ -241,7 +246,7 @@ export default {
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
-        url: `${process.env.ROOT_API}passerEnCours?numDemande=${
+        url: `${process.env.ROOT_API}passerEnAttente?numDemande=${
           this.demande.numDemande
         }`,
       }).then(
@@ -253,14 +258,9 @@ export default {
           this.loading = false;
           this.alert = true;
           this.alertType = 'error';
-          this.alertMessage = 'Impossible de récupérer la notice pour la simulation. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.';
+          this.alertMessage = 'Impossible de valider le lancer le traitement sur votre demande, veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.';
           if (error.response.status === 401) {
             this.$emit('logout');
-          } else if (error.response.status === 400) {
-            this.alert = true;
-            this.alertType = 'info';
-            this.alertMessage = "Vous êtes à la dernière notice de votre demande, impossible d'aller plus loin.";
-            this.noticeEnCours -= 1;
           }
         },
       );

@@ -62,7 +62,7 @@
                   </v-menu>
                 </th>
                 <th v-if="user.role == 'ADMIN'">
-                  <v-text-field
+                   <v-text-field
                     v-model="searchILN"
                     append-icon="search"
                     single-line
@@ -500,8 +500,11 @@ export default {
   td {
     cursor: pointer;
   }
-  th {
-    padding-top: 0;
-    padding-bottom: 0;
+  /* Ne me demandez pas pourquoi, mais ça marche pour aligner les barres de recherche... */
+  .v-select {
+    height: 43px !important;
+  }
+  .v-menu  {
+    height: 49px !important;
   }
 </style>
