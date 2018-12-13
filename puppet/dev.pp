@@ -1,16 +1,16 @@
 # ################################################################################
 # ### VARIABLES ##################################################################
 # ################################################################################
-$apache_path = '/var/www/html/kopya/'
+$apache_path = '/var/www/html/kopya'
 
 # ################################################################################
 # ### INIT #######################################################################
 # ################################################################################
 
 class {'abes':
-  appliName => 'kopyaFront',
-  env       => 'DEV',
-  groupId   => 'fr.abes.kopya',
+  appli_name => 'kopyaFront',
+  env        => 'DEV',
+  group_id   => 'fr.abes.kopya',
 }
 
 # ################################################################################
@@ -20,18 +20,18 @@ node /^raiponce(\d)-dev/ {
   notify { "Deploy on RAIPONCE ${1} DEV": }
 
   abes::apache::htaccess { 'htaccess' :
-    apachePathWeb => $apache_path,
-    fileName      => 'htaccess_kopya',
+    apache_path_web => $apache_path,
+    file_name       => 'htaccess_kopya',
   }
 
   abes::apache::front { 'appli vue.js' :
-    apachePathWeb => $apache_path,
-    artifactId    => 'front'
+    apache_path_web => $apache_path,
+    artifact_id     => 'front'
   }
 }
 
 # ################################################################################
 node default {
-  notify { "Aucun deploiement sur cette machine" : }
+  notify { 'Aucun deploiement sur cette machine' : }
 }
 
