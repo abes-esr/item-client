@@ -18,7 +18,7 @@
         <v-dialog v-model="dialogFinished" width="500">
           <v-card>
             <v-card-title class="headline grey lighten-2" primary-title>Traitement validé</v-card-title>
-            <v-card-text>Votre demande est en cours de traitement, elle sera traité dès que possible. Un e-mail vous sera envoyé une fois le traitement terminé.
+            <v-card-text>Votre demande est en cours de traitement, elle sera traitée dès que possible. Un e-mail vous sera envoyé une fois le traitement terminé.
               <br>Vous pouvez retrouver l'ensemble de vos demandes depuis la page "Gérer mes demandes".
             </v-card-text>
             <v-divider></v-divider>
@@ -100,10 +100,10 @@
                   </v-btn>
                   <span v-if="noticeEnCours > 0">Notice précedente</span>
                   <br>
-                  <v-btn color="error" fab large dark @click="getNextSimu()">
+                  <v-btn v-if="!derniereNotice" color="error" fab large dark @click="getNextSimu()">
                     <v-icon>navigate_next</v-icon>
                   </v-btn>
-                  <span>Notice suivante</span>
+                  <span v-if="!derniereNotice">Notice suivante</span>
                 </v-layout>
               </v-flex>
               <v-flex xs5>
@@ -158,6 +158,7 @@ export default {
       noticeApres: 'Notice en cours de chargement...',
       dialog: false,
       dialogFinished: false,
+      derniereNotice: false,
     };
   },
   mounted() {
@@ -205,21 +206,23 @@ export default {
           this.loading = false;
         },
         (error) => {
+          console.log(error.response.data.message);
           this.loading = false;
           this.alert = true;
           this.alertType = 'error';
           this.alertMessage = 'Impossible de récupérer la notice pour la simulation. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.';
           if (error.response.status === 401) {
             this.$emit('logout');
-          } else if (error.response.status === 400 && error.response.status.contains('Numéro de notice erroné')
+          } else if (error.response.status === 400 && error.response.data.message.includes('Numéro de notice erroné')
           ) {
             this.alert = true;
             this.alertType = 'warning';
             this.alertMessage = 'Numéro de notice exemplaire erronné.';
-          } else if (error.response.status === 400 && error.response.status.contains('Fin du fichier')) {
+          } else if (error.response.status === 400 && error.response.data.message.includes('Fin du fichier')) {
             this.alert = true;
             this.alertType = 'info';
             this.alertMessage = "Vous êtes à la dernière notice de votre demande, impossible d'aller plus loin.";
+            this.derniereNotice = true;
             this.noticeEnCours -= 1;
           }
         },
@@ -230,6 +233,7 @@ export default {
       this.getSimulation();
     },
     getPreviousSimu() {
+      this.derniereNotice = false;
       if (this.noticeEnCours > 0) {
         this.noticeEnCours -= 1;
         this.getSimulation();

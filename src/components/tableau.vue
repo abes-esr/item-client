@@ -145,8 +145,17 @@
                     <v-icon>cloud_download</v-icon>
                   </v-btn>
                   <v-list v-if="props.item.codeStatut >= 3">
+                    <v-list-tile @click="downloadFile(props.item.num, 'ppn')">
+                      <v-list-tile-title>Télécharger le fichier initial des PPN</v-list-tile-title>
+                    </v-list-tile>
                     <v-list-tile @click="downloadFile(props.item.num, 'epn')">
-                      <v-list-tile-title>Télécharger le fichier PPN/EPN</v-list-tile-title>
+                      <v-list-tile-title>Télécharger le fichier de correspondance PPN/EPN</v-list-tile-title>
+                    </v-list-tile>
+                    <v-list-tile
+                      @click="downloadFile(props.item.num, 'enrichi')"
+                      v-if="props.item.codeStatut >= 4"
+                    >
+                      <v-list-tile-title>Télécharger le fichier enrichi</v-list-tile-title>
                     </v-list-tile>
                     <v-list-tile
                       @click="downloadFile(props.item.num, 'result')"
@@ -242,7 +251,7 @@ export default {
       fileReady: false,
       menu: false,
       listTraitements: [],
-      listStatut: ['A compléter', 'En simulation', 'En préparation'],
+      listStatut: ['A compléter', 'En simulation', 'En préparation', 'En attente', 'Terminée', 'En cours de traitement'],
     };
   },
   mounted() {
@@ -310,10 +319,27 @@ export default {
       this.fileReady = false;
       this.dialog = true;
       let filename = '';
-      if (type === 'epn') {
-        filename = `fichier_prepare_${numDem}.csv?id=${numDem}`;
-      } else {
-        filename = '??';
+      switch (type) {
+        case 'ppn':
+          filename = `fichier_initial_${numDem}.txt?id=${numDem}`;
+          this.blobName = 'fichier_initial.txt';
+          break;
+        case 'epn':
+          filename = `fichier_prepare_${numDem}.csv?id=${numDem}`;
+          this.blobName = 'fichier_epn.csv';
+          break;
+        case 'enrichi':
+          filename = `fichier_enrichi_${numDem}.csv?id=${numDem}`;
+          this.blobName = 'fichier_enrichi.csv';
+          break;
+        case 'resultat':
+          filename = `fichier_resultat_${numDem}.csv?id=${numDem}`;
+          this.blobName = 'fichier_resultat.csv';
+          break;
+        default:
+          filename = `fichier_prepare_${numDem}.csv?id=${numDem}`;
+          this.blobName = 'fichier_initial.csv';
+          break;
       }
       if (this.user !== null && this.user.jwt !== null) {
         return axios({
