@@ -139,7 +139,6 @@ router.beforeEach((to, from, next) => {
     if (user == null || user.jwt == null) {
       next({
         path: '/login',
-        params: { nextUrl: to.fullPath },
       });
     } else if (user.email == null && to.path !== '/profil') {
       next({

@@ -12,10 +12,10 @@ Vue.use(Vuetify, {
     primary: '#295494',
     secondary: '#252C61',
     accent: '#980827',
-    error: '#f44336',
-    warning: '#ffeb3b',
-    info: '#2196f3',
-    success: '#4caf50',
+    error: '#a32525',
+    warning: '#ec6839',
+    info: '#326bb1',
+    success: '#4da432',
   },
 });
 Vue.config.productionTip = false;

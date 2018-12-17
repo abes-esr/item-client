@@ -10,7 +10,7 @@
           </v-toolbar>
           <v-card-text>
             <v-flex align-center justify-center fill-height class="text-xs-center">
-              <v-btn outline large color="indigo" ref="fileLinkBtn" :href="fileLink" :download="blobName">Télécharger le fichier de correspondances PPN/EPN <v-icon right dark>cloud_download</v-icon>
+              <v-btn outline large color="secondary" ref="fileLinkBtn" :href="fileLink" :download="blobName">Télécharger le fichier de correspondances PPN/EPN <v-icon right dark>cloud_download</v-icon>
               </v-btn>
             </v-flex>
           </v-card-text>

@@ -6,7 +6,7 @@
           <span v-html="alertMessage"></span>
         </v-alert>
         <v-card>
-          <v-card-title class="title">Mes demandes</v-card-title>
+          <v-card-title class="title">Gérer mes demandes</v-card-title>
           <v-data-table
             :headers="headers"
             :items="computedItems('guess')"
@@ -29,7 +29,17 @@
                 </th>
               </tr>
               <tr>
-                <th>
+                <th id="smallTD">
+                  <v-text-field
+                    v-model="searchNum"
+                    append-icon="search"
+                    single-line
+                    hide-details
+                    clearable
+                    v-on:keyup="computedItems('num')"
+                  ></v-text-field>
+                </th>
+                <th id="smallTD">
                   <v-menu
                     :close-on-content-click="false"
                     v-model="menu"
@@ -61,7 +71,7 @@
                     </v-date-picker>
                   </v-menu>
                 </th>
-                <th v-if="user.role == 'ADMIN'">
+                <th v-if="user.role == 'ADMIN'" id="smallTD">
                    <v-text-field
                     v-model="searchILN"
                     append-icon="search"
@@ -82,16 +92,6 @@
                   ></v-text-field>
                 </th>
                 <th>
-                  <v-text-field
-                    v-model="searchNum"
-                    append-icon="search"
-                    single-line
-                    hide-details
-                    clearable
-                    v-on:keyup="computedItems('num')"
-                  ></v-text-field>
-                </th>
-                <th>
                   <v-select
                     v-model="searchTraitement"
                     :items="listTraitements"
@@ -102,7 +102,7 @@
                     clearable
                   ></v-select>
                 </th>
-                <th>
+                <th id="smallTD">
                   <v-select
                     v-model="searchStatut"
                     :items="listStatut"
@@ -117,6 +117,10 @@
               <td
                 class="text-xs-left"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
+              >{{ props.item.num }}</td>
+              <td
+                class="text-xs-left"
+                @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
               >{{ props.item.date }}</td>
               <td
                 v-if="user.role == 'ADMIN'"
@@ -127,10 +131,6 @@
                 class="text-xs-left"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
               >{{ props.item.rcr }}</td>
-              <td
-                class="text-xs-left"
-                @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
-              >{{ props.item.num }}</td>
               <td
                 class="text-xs-left"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
@@ -197,7 +197,7 @@
                 <v-btn
                   outline
                   large
-                  color="indigo"
+                  color="secondary"
                   ref="fileLinkBtn"
                   :href="fileLink"
                   :download="blobName"
@@ -412,19 +412,19 @@ export default {
     initHeader() {
       if (this.user.role === 'ADMIN') {
         this.headers = [
+          { text: 'Numéro de demande', value: 'num' },
           { text: 'Date Création', value: 'date' },
           { text: 'ILN', value: 'iln' },
           { text: 'RCR', value: 'rcr' },
-          { text: 'Numéro de demande', value: 'num' },
           { text: 'Traitement', value: 'traitement' },
           { text: 'Statut', value: 'statut' },
           { text: 'Résultat', value: 'codeStatut' },
         ];
       } else {
         this.headers = [
+          { text: 'Numéro de demande', value: 'num' },
           { text: 'Date Création', value: 'date' },
           { text: 'RCR', value: 'rcr' },
-          { text: 'Numéro de demande', value: 'num' },
           { text: 'Traitement', value: 'traitement' },
           { text: 'Statut', value: 'statut' },
           { text: 'Résultat', value: 'codeStatut' },
@@ -525,6 +525,12 @@ export default {
 <style scoped>
   td {
     cursor: pointer;
+  }
+  table.v-table thead th {
+    font-size: 14px;
+  }
+  #smallTD {
+    width: 10%
   }
   /* Ne me demandez pas pourquoi, mais ça marche pour aligner les barres de recherche... */
   .v-select {

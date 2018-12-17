@@ -1,7 +1,7 @@
 <template>
   <v-app id="inspire" :dark="isDark">
-    <v-navigation-drawer v-model="drawer" fixed app>
-      <v-toolbar flat class="transparent mb-4" v-if="authenticated">
+    <v-navigation-drawer v-model="drawer" fixed app v-if="authenticated">
+      <v-toolbar flat class="transparent mb-4">
         <v-list three-line>
           <v-list-tile>
             <v-list-tile-content>
@@ -12,11 +12,12 @@
           </v-list-tile>
         </v-list>
       </v-toolbar>
-      <v-list dense>
-        <v-divider v-if="authenticated"></v-divider>
+      <v-list>
+        <v-divider></v-divider>
         <v-list-tile>
           <v-switch label="Mode nuit" v-model="isDark"></v-switch>
         </v-list-tile>
+        <v-divider></v-divider>
         <v-list-tile v-on:click="$router.push({ name: 'home' })">
           <v-list-tile-action>
             <v-icon>home</v-icon>
@@ -25,23 +26,23 @@
             <v-list-tile-title>Accueil</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile v-if="authenticated" v-on:click="$router.push({ name: 'profil' })">
+        <v-list-tile v-on:click="$router.push({ name: 'profil' })">
           <v-list-tile-action>
             <v-icon>face</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>Profil</v-list-tile-title>
+            <v-list-tile-title>Modifier mon adresse mail</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile v-if="authenticated" v-on:click="$router.push({ name: 'rcr' })">
+        <v-list-tile v-on:click="$router.push({ name: 'rcr' })">
           <v-list-tile-action>
-            <v-icon>add</v-icon>
+            <v-icon>edit</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>Créer une demande</v-list-tile-title>
+            <v-list-tile-title>Modifier des exemplaires</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile v-if="authenticated" v-on:click="$router.push({ name: 'tab' })">
+        <v-list-tile v-on:click="$router.push({ name: 'tab' })">
           <v-list-tile-action>
             <v-icon>list</v-icon>
           </v-list-tile-action>
@@ -49,105 +50,47 @@
             <v-list-tile-title>Gérer mes demandes</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-group v-if="authenticated" prepend-icon="description" no-action>
-          <v-list-tile slot="activator">
-            <v-list-tile-content>
-              <v-list-tile-title>Documentation</v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
-          <v-list-tile href="http://documentation.abes.fr/aidecolodus/index.html#ManuelColodus_1" target="_blank">
-            <v-list-tile-content>
-              <v-list-tile-title>Manuel utilisateur</v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
-          <v-list-tile href="http://documentation.abes.fr/sudoc/formats/loc/index.htm#TOP" target="_blank">
-            <v-list-tile-content>
-              <v-list-tile-title>Description des exemplaires</v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
-          <v-list-tile href="http://documentation.abes.fr/sudoc/formats/loc/index2.htm#TOP" target="_blank">
-            <v-list-tile-content>
-              <v-list-tile-title>Données locales</v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
-        </v-list-group>
-        <v-list-tile href="https://stp.abes.fr/" target="_blank">
-          <v-list-tile-action>
-            <v-icon>help</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Assistance (STP)</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-        <v-divider v-if="authenticated"></v-divider>
-        <v-list-tile v-if="authenticated" @click="logout()">
-          <v-list-tile-action>
-            <v-icon>power_settings_new</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Déconnexion</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
       </v-list>
     </v-navigation-drawer>
-    <v-toolbar color="indigo" dark fixed app>
-      <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <img src="/static/logo.png" width="38px" height="38px">
+    <v-toolbar color="primary" dark fixed app>
+      <v-toolbar-side-icon @click.stop="drawer = !drawer" v-if="authenticated"></v-toolbar-side-icon>
+      <img src="/static/logo.png"  width="38px" height="38px">
       <v-toolbar-title>Kopya</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-btn flat v-if="authenticated" @click="logout()"><v-icon>power_settings_new</v-icon>&nbsp;&nbsp;Déconnexion</v-btn>
+        <v-tooltip right nudge-bottom="20">
+          <span slot="activator"><a href="http://documentation.abes.fr/sudoc/formats/loc/index2.htm#TOP" target="_blank"><img src="/static/aide.png" width="38px" height="38px" href="http://documentation.abes.fr/sudoc/formats/loc/index2.htm#TOP" target="_blank"></a></span>
+        <span>Documentation</span>
+    </v-tooltip>
     </v-toolbar>
     <v-content>
       <router-view @authenticated="setAuthenticated" @logout="logoutExpired" />
     </v-content>
-    <v-footer height="auto" color="indigo">
-      <v-layout justify-center row wrap>
-        <v-btn color="white" flat round @click="$router.push({ name: 'about' })">
-          A Propos
-        </v-btn>
-        <v-btn color="white" flat round @click="$router.push({ name: 'donnees' })">
-          Données Personnelles
-        </v-btn>
-        <v-btn color="white" flat round @click="$router.push({ name: 'mentions' })">
-          Mentions Légales
-        </v-btn>
-        <v-btn color="white" flat round @click="$router.push({ name: 'cgu' })">
-          Conditions Générales d'Utilisation (CGU)
-        </v-btn>
-        <v-flex indigo lighten-1 py-2 text-xs-center white--text xs12>
-          &copy;2019 — <strong><a href="http://abes.fr/">ABES</a></strong>
-        </v-flex>
-      </v-layout>
-    </v-footer>
-
-    <!-- POP UP SESSION EXPIREE -->
-    <v-dialog v-model="dialog" width="500">
-      <v-card>
-        <v-card-title class="headline grey lighten-2" primary-title>
-          Déconnexion
-        </v-card-title>
-
-        <v-card-text>
-          Vous avez été déconnecté car votre session a expiré. <br />Vous pouvez dès maintenant vous reconnecter et reprendre votre activité.
-        </v-card-text>
-
-        <v-divider></v-divider>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" flat @click="dialog = false">
-            OK
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <footerDesc v-if="!authenticated"></footerDesc>
+    <footerAbes></footerAbes>
+    <logout :dialog=dialog></logout>
   </v-app>
 </template>
 
 <script>
+// eslint-disable-next-line import/no-unresolved
+import footerAbes from '@/components/footer/footer.vue';
+// eslint-disable-next-line import/no-unresolved
+import footerDesc from '@/components/footer/desc.vue';
+// eslint-disable-next-line import/no-unresolved
+import logout from '@/components/utils/logoutPopup.vue';
+
 export default {
   name: 'App',
+  components: {
+    footerAbes,
+    logout,
+    footerDesc,
+  },
   data() {
     return {
       authenticated: false,
-      drawer: true,
+      drawer: false,
       user: {},
       isDark: false,
       isAdmin: false,

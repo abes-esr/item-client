@@ -8,7 +8,7 @@
                         <v-container grid-list-md>
                             <v-layout row wrap align-center>
                                 <v-flex xs2>
-                                    <span class="group pa-3 indigo">
+                                    <span class="group pa-3 secondary">
                                         <v-icon x-large dark>add</v-icon>
                                     </span>
                                 </v-flex>
@@ -25,7 +25,7 @@
                         <v-container grid-list-md>
                             <v-layout row wrap align-center>
                                 <v-flex xs2>
-                                    <span class="group pa-3 indigo">
+                                    <span class="group pa-3 secondary">
                                         <v-icon x-large dark>edit</v-icon>
                                     </span>
                                 </v-flex>
@@ -42,7 +42,7 @@
                         <v-container grid-list-md>
                             <v-layout row wrap align-center>
                                 <v-flex xs2>
-                                    <span class="group pa-3 indigo">
+                                    <span class="group pa-3 secondary">
                                         <v-icon x-large dark>delete</v-icon>
                                     </span>
                                 </v-flex>
@@ -59,7 +59,7 @@
                         <v-container grid-list-md>
                             <v-layout row wrap align-center>
                                 <v-flex xs2>
-                                    <span class="group pa-3 indigo">
+                                    <span class="group pa-3 secondary">
                                         <v-icon x-large dark>sort</v-icon>
                                     </span>
                                 </v-flex>
@@ -76,7 +76,7 @@
                         <v-container grid-list-md>
                             <v-layout row wrap align-center>
                                 <v-flex xs2>
-                                    <span class="group pa-3 indigo">
+                                    <span class="group pa-3 secondary">
                                         <v-icon x-large dark>bar_chart</v-icon>
                                     </span>
                                 </v-flex>
