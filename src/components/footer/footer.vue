@@ -1,5 +1,5 @@
 <template>
-    <v-footer height="auto" color="primary">
+    <v-footer height="auto" color="secondary">
       <v-layout justify-center row wrap>
         <v-flex text-xs-center white--text xs12>
           &copy;2019 — <strong><a href="http://abes.fr/">ABES</a></strong>

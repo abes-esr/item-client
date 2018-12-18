@@ -1,7 +1,7 @@
 <template>
   <v-container fluid fill-height>
     <v-layout align-center justify-center>
-      <v-flex md7>
+      <v-flex sm8 md4>
         <v-card class="elevation-12">
           <v-toolbar dark color="primary">
             <v-toolbar-title>Connexion</v-toolbar-title>
