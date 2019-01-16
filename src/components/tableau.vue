@@ -158,7 +158,7 @@
                       <v-list-tile-title>Télécharger le fichier enrichi</v-list-tile-title>
                     </v-list-tile>
                     <v-list-tile
-                      @click="downloadFile(props.item.num, 'result')"
+                      @click="downloadFile(props.item.num, 'resultat')"
                       v-if="props.item.codeStatut >= 7"
                     >
                       <v-list-tile-title>Télécharger le fichier résultat</v-list-tile-title>
@@ -251,7 +251,7 @@ export default {
       fileReady: false,
       menu: false,
       listTraitements: [],
-      listStatut: ['A compléter', 'En simulation', 'En préparation', 'En attente', 'Terminée', 'En cours de traitement'],
+      listStatut: [],
     };
   },
   mounted() {
@@ -285,6 +285,7 @@ export default {
               result.data[key].traitement.libelle = 'Non défini';
             }
 
+            console.log(result.data[key]);
             this.items.push({
               date: result.data[key].dateModification,
               rcr: `${result.data[key].rcr} - ${result.data[key].shortname}`,
@@ -308,6 +309,7 @@ export default {
       );
 
       this.getListTraitements();
+      this.getListStatus();
     }
 
     // Tri par défaut sur les numéros demandes
@@ -338,7 +340,7 @@ export default {
           break;
         default:
           filename = `fichier_prepare_${numDem}.csv?id=${numDem}`;
-          this.blobName = 'fichier_initial.csv';
+          this.blobName = 'fichier_prepare.csv';
           break;
       }
       if (this.user !== null && this.user.jwt !== null) {
@@ -517,6 +519,27 @@ export default {
         this.pagination.sortBy = column;
         this.pagination.descending = false;
       }
+    },
+    getListStatus() {
+      axios({
+        headers: { Authorization: this.user.jwt },
+        method: 'GET',
+        url: `${process.env.ROOT_API}EtatDemande`,
+      }).then(
+        (result) => {
+          for (let i = 0; i < result.data.length; i++) {
+            this.listStatut.push(result.data[i].libelle);
+          }
+        },
+        (error) => {
+          this.alertMessage = 'Impossible de récupérer la liste des statuts. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.';
+          this.alert = true;
+          this.alertType = 'error';
+          if (error.response.status === 401) {
+            this.$emit('logout');
+          }
+        },
+      );
     },
   },
 };

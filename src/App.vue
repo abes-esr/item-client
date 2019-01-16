@@ -54,8 +54,7 @@
     </v-navigation-drawer>
     <v-toolbar color="primary" dark fixed app>
       <v-toolbar-side-icon @click.stop="drawer = !drawer" v-if="authenticated"></v-toolbar-side-icon>
-      <img src="/static/logo.png"  width="38px" height="38px">
-      <v-toolbar-title>Kopya</v-toolbar-title>
+      <v-toolbar-title></v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn flat v-if="authenticated" @click="logout()"><v-icon>power_settings_new</v-icon>&nbsp;&nbsp;Déconnexion</v-btn>
         <v-tooltip right nudge-bottom="20">

@@ -83,7 +83,7 @@ export default {
           (result) => {
             this.user.email = result.data.email;
             sessionStorage.setItem('user', JSON.stringify(this.user));
-            this.$router.replace({ name: 'tab' });
+            this.$router.replace({ name: 'home' });
           },
           (error) => {
             this.alertMessage = 'Service indisponible, veuillez réessayer ultérieurement. Si le problème persiste, merci de nous contacter.';

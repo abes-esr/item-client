@@ -54,7 +54,7 @@ export default {
     },
     /** Extension de fichier acceptée par le composant upload */
     format: {
-      default: '.txt',
+      default: ['txt'],
     },
   },
   data() {
@@ -82,8 +82,8 @@ export default {
          */
     checkFormat() {
       this.alert = false;
-      if (!this.$refs.fileInput.files[0].name.includes(this.format)) {
-        this.alertMessage = `Le fichier doit être au format ${this.format}`;
+      if (!(this.format.includes(this.$refs.fileInput.files[0].name.split('.')[1]))) {
+        this.alertMessage = `Le fichier doit être au format(s) ${this.format}`;
         this.alertType = 'error';
         this.alert = true;
         this.fichierPresent = false;

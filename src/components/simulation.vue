@@ -24,7 +24,7 @@
             <v-divider></v-divider>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="primary" flat @click="dialog = false, $router.push({ name: 'home' })">OK</v-btn>
+              <v-btn color="primary" flat @click="dialog = false, $router.push({ name: 'tableau' })">OK</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -206,11 +206,12 @@ export default {
           this.loading = false;
         },
         (error) => {
-          console.log(error.response.data.message);
+          this.noticeAvant = '';
+          this.noticeApres = '';
           this.loading = false;
           this.alert = true;
           this.alertType = 'error';
-          this.alertMessage = 'Impossible de récupérer la notice pour la simulation. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.';
+          this.alertMessage = `Impossible de récupérer la notice pour la simulation : ${error.response.data.message}.  <br /> Veuillez réessayer ultérieurement. Si le problème persiste merci de nous contacter.`;
           if (error.response.status === 401) {
             this.$emit('logout');
           } else if (error.response.status === 400 && error.response.data.message.includes('Numéro de notice erroné')

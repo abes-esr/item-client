@@ -2,7 +2,7 @@
   <v-container fluid fill-height>
     <v-layout align-center justify-center>
       <v-flex md7>
-        <upload v-if="showForm" :loading="loading" format=".txt" v-on:upload="uploadFile"></upload>
+        <upload v-if="showForm" :loading="loading" :format=format v-on:upload="uploadFile"></upload>
         <v-card v-if="!showForm" class="elevation-12">
           <v-toolbar dark color="primary">
             <v-toolbar-title>Récupération du fichier de correspondances</v-toolbar-title>
@@ -48,6 +48,7 @@ export default {
       alertType: 'error',
       loading: false,
       user: {},
+      format: ['txt', 'csv'],
     };
   },
   methods: {
