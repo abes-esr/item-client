@@ -2,7 +2,7 @@
   <v-container fluid fill-height>
     <v-layout align-center justify-center>
       <v-flex md7>
-        <upload v-if="showForm" :loading="loading" :format=format v-on:upload="uploadFile"></upload>
+        <upload v-if="showForm" :loading="loading" :format=format :title=titleUpload :text=textUpload v-on:upload="uploadFile"></upload>
         <v-card v-if="!showForm" class="elevation-12">
           <v-toolbar dark color="primary">
             <v-toolbar-title>Récupération du fichier de correspondances</v-toolbar-title>
@@ -49,6 +49,8 @@ export default {
       loading: false,
       user: {},
       format: ['txt', 'csv'],
+      textUpload: 'Cliquez ou faites glisser ici<br />Pour charger votre liste de PPN<br />(Fichier PPN sur une colonne, format txt ou csv)',
+      titleUpload: 'Obtenir pour votre RCR une correspondance PPN / EPN',
     };
   },
   methods: {

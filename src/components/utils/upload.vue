@@ -12,7 +12,7 @@
                     <div class="dropbox">
                         <input type="file" :accept="format" ref="fileInput" @change="checkFile(); checkFormat();" class="input-file">
                         <p v-if="!fichierPresent">
-                            Faites glisser votre fichier<br> ou cliquez ici pour le rechercher
+                            <span v-html="text"></span>
                         </p>
                         <p v-else>
                             <v-icon>file_copy</v-icon> Fichier : {{ $refs.fileInput.files[0].name }}
@@ -43,6 +43,10 @@ export default {
     /** Titre de la carte vuetify */
     title: {
       default: 'Envoi de votre fichier',
+    },
+    /** Texte dans le carré ou l'on dépose le fichier */
+    text: {
+      default: 'Faites glisser votre fichier<br> ou cliquez ici pour le rechercher',
     },
     /** Active le chargement (plein écran) */
     loading: {

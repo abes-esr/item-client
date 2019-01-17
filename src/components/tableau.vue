@@ -285,7 +285,6 @@ export default {
               result.data[key].traitement.libelle = 'Non défini';
             }
 
-            console.log(result.data[key]);
             this.items.push({
               date: result.data[key].dateModification,
               rcr: `${result.data[key].rcr} - ${result.data[key].shortname}`,
