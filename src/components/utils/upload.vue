@@ -10,12 +10,12 @@
             <v-card-text>
                 <form enctype="multipart/form-data">
                     <div class="dropbox">
-                        <input type="file" :accept="format" ref="fileInput" @change="checkFile(); checkFormat();" class="input-file">
+                        <input type="file" :accept="format" ref="fileInput" @change="checkFile(); checkFormat(); getRefName();" class="input-file">
                         <p v-if="!fichierPresent">
                             <span v-html="text"></span>
                         </p>
                         <p v-else>
-                            <v-icon>file_copy</v-icon> Fichier : {{ $refs.fileInput.files[0].name }}
+                            <v-icon>file_copy</v-icon> Fichier : {{ filename }}
                         </p>
                     </div>
                 </form>
@@ -67,6 +67,7 @@ export default {
       alert: false,
       alertMessage: 'Erreur.',
       alertType: 'error',
+      filename: '',
     };
   },
   methods: {
@@ -93,6 +94,10 @@ export default {
         this.fichierPresent = false;
         this.$refs.fileInput.files = null;
       }
+    },
+    getRefName() {
+      // Obligatoire car $refs n'est plus réactif depuis Vue 2.0
+      this.filename = this.$refs.fileInput.files[0].name;
     },
   },
 };

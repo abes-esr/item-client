@@ -5,8 +5,8 @@
       <v-flex text-xs-center>
         <v-dialog v-model="dialog" width="500">
           <v-card>
-            <v-card-title class="headline grey lighten-2" primary-title>Lancement du traitement</v-card-title>
-            <v-card-text>ëtes-vous sûr de vouloir lancer le traitement en production ? Aucune annulation n'est possible.</v-card-text>
+            <v-card-title class="headline grey lighten-2" primary-title>Lancement du traitement en production</v-card-title>
+            <v-card-text>Êtes-vous sûr de vouloir lancer le traitement en production ?<br /> Aucune annulation n'est possible.</v-card-text>
             <v-divider></v-divider>
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -18,7 +18,7 @@
         <v-dialog v-model="dialogFinished" width="500">
           <v-card>
             <v-card-title class="headline grey lighten-2" primary-title>Traitement validé</v-card-title>
-            <v-card-text>Votre demande est en cours de traitement, elle sera traitée dès que possible. Un e-mail vous sera envoyé une fois le traitement terminé.
+            <v-card-text>Votre demande est en cours de traitement, elle sera traitée dès que possible.<br />Un e-mail vous sera envoyé une fois le traitement terminé.
               <br>Vous pouvez retrouver l'ensemble de vos demandes depuis la page "Gérer mes demandes".
             </v-card-text>
             <v-divider></v-divider>
@@ -67,6 +67,16 @@
           <span v-html="alertMessage"></span>
         </v-alert>
         <v-card>
+          <v-toolbar dark color="primary">
+            <v-toolbar-title>Ecran de simulation</v-toolbar-title>
+            <v-spacer></v-spacer>
+          </v-toolbar>
+          <br />
+          <span class="subheading">
+            Cet écran n'est qu'une visualisation du traitement. <br />
+            Les règles de validation ne sont pas prises en compte lors de cette simulation. <br />
+            Il s'agit de la dernière étape avant de lancer le traitement en base de production.
+          </span>
           <h3 class="headline mb-0" id="numLigne">Ligne de votre fichier : {{ noticeEnCours + 1 }}</h3>
           <v-container fluid grid-list-md>
             <v-layout row wrap>
@@ -76,7 +86,7 @@
                     <v-container fill-height fluid pa-2>
                       <v-layout fill-height>
                         <v-flex xs12 align-end flexbox>
-                          <span class="headline --text">Avant</span>
+                          <span class="headline --text">Avant traitement</span>
                           <div class="notice">
                             <pre>{{ noticeAvant }}</pre>
                           </div>
@@ -90,7 +100,7 @@
                 <v-layout align-center justify-center column fill-height>
                   <v-btn
                     v-if="noticeEnCours > 0"
-                    color="error"
+                    color="success"
                     fab
                     large
                     dark
@@ -100,7 +110,7 @@
                   </v-btn>
                   <span v-if="noticeEnCours > 0">Notice précedente</span>
                   <br>
-                  <v-btn v-if="!derniereNotice" color="error" fab large dark @click="getNextSimu()">
+                  <v-btn v-if="!derniereNotice" color="success" fab large dark @click="getNextSimu()">
                     <v-icon>navigate_next</v-icon>
                   </v-btn>
                   <span v-if="!derniereNotice">Notice suivante</span>
@@ -112,7 +122,7 @@
                     <v-container fill-height fluid pa-2>
                       <v-layout fill-height>
                         <v-flex xs12 align-end flexbox>
-                          <span class="headline --text">Après</span>
+                          <span class="headline --text">Après traitement</span>
                           <div class="notice">
                             <pre>{{ noticeApres }}</pre>
                           </div>
@@ -127,7 +137,7 @@
         </v-card>
         <br>
         <v-layout justify-end id="layoutButtonOk">
-          <v-btn large color="success" @click="dialog = true">Lancer le traitement</v-btn>
+          <v-btn large color="error" @click="dialog = true">Lancer le traitement en production</v-btn>
         </v-layout>
       </v-flex>
     </v-layout>

@@ -38,8 +38,6 @@
       </v-flex>
     </v-layout>
   </v-container>
-</div>
-
 </template>
 
 <script>
@@ -98,12 +96,11 @@ export default {
             },
             (error) => {
               this.loading = false;
+              this.alertMessage = 'Service indisponible, veuillez réessayer ultérieurement. Si le problème persiste, merci de nous contacter.';
+              this.alert = true;
               if (error.response.status === 401) {
                 this.alertMessage = "Nom d'utilisateur ou mot de passe incorrect";
-              } else {
-                this.alertMessage = 'Service indisponible, veuillez réessayer ultérieurement. Si le problème persiste, merci de nous contacter.';
               }
-              this.alert = true;
             },
           );
       } else {

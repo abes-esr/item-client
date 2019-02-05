@@ -5,18 +5,18 @@
         <upload v-if="showForm" :loading="loading" :format=format :title=titleUpload :text=textUpload v-on:upload="uploadFile"></upload>
         <v-card v-if="!showForm" class="elevation-12">
           <v-toolbar dark color="primary">
-            <v-toolbar-title>Récupération du fichier de correspondances</v-toolbar-title>
+            <v-toolbar-title>Récupération du fichier de correspondances PPN / EPN</v-toolbar-title>
             <v-spacer></v-spacer>
           </v-toolbar>
           <v-card-text>
             <v-flex align-center justify-center fill-height class="text-xs-center">
-              <v-btn outline large color="secondary" ref="fileLinkBtn" :href="fileLink" :download="blobName">Télécharger le fichier de correspondances PPN/EPN <v-icon right dark>cloud_download</v-icon>
+              <v-btn outline large color="secondary" ref="fileLinkBtn" @click="disabledButton = false;" :href="fileLink" :download="blobName">Télécharger le fichier de correspondances PPN/EPN <v-icon right dark>cloud_download</v-icon>
               </v-btn>
             </v-flex>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="info" v-on:click="$router.replace({ name: 'traitement' })">Suivant</v-btn>
+            <v-btn color="info" :disabled="disabledButton" v-on:click="$router.replace({ name: 'traitement' })">Suivant</v-btn>
           </v-card-actions>
         </v-card>
         <br />
@@ -49,8 +49,9 @@ export default {
       loading: false,
       user: {},
       format: ['txt', 'csv'],
-      textUpload: 'Cliquez ou faites glisser ici<br />Pour charger votre liste de PPN<br />(Fichier PPN sur une colonne, format txt ou csv)',
+      textUpload: 'Cliquez ou faites glisser ici<br />pour charger votre liste de PPN<br />(fichier PPN sur une colonne, format txt ou csv)',
       titleUpload: 'Obtenir pour votre RCR une correspondance PPN / EPN',
+      disabledButton: true,
     };
   },
   methods: {
@@ -120,7 +121,8 @@ export default {
             this.loading = false;
             const blob = new Blob([result.data], { type: 'application/csv' });
             this.fileLink = window.URL.createObjectURL(blob);
-            this.$refs.fileLinkBtn.click();
+            // TODO : Réparer ça
+            // this.$refs.fileLinkBtn.$el.click();
           },
           (error) => {
             this.alertMessage = 'Une erreur est survenue lors de la récupération du fichier enrichi. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.';

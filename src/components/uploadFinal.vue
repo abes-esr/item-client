@@ -2,7 +2,7 @@
   <v-container fluid fill-height>
     <v-layout align-center justify-center>
       <v-flex md7>
-        <upload :loading="loading" :format=format title="Envoyer le fichier complété" v-on:upload="uploadFile"></upload>
+        <upload :loading="loading" :format=format :title=titleUpload :text=textUpload v-on:upload="uploadFile"></upload>
         <br />
         <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span>
         </v-alert>
@@ -30,6 +30,8 @@ export default {
       loading: false,
       user: {},
       format: ['csv'],
+      titleUpload: 'Envoyer le fichier complété de la zone d\'exemplaire à traiter',
+      textUpload: 'Cliquez ou faites glisser ici<br />pour charger votre fichier complété<br />(format txt ou csv)',
     };
   },
   methods: {

@@ -88,10 +88,10 @@ export default {
           (error) => {
             this.alertMessage = 'Service indisponible, veuillez réessayer ultérieurement. Si le problème persiste, merci de nous contacter.';
             this.alert = true;
+            this.loading = false;
             if (error.response.status === 401) {
               this.$emit('logout');
             }
-            this.loading = false;
           },
         );
       } else {
