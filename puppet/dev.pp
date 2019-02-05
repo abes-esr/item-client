@@ -8,8 +8,6 @@ $apache_path = 'kopya'
 # ################################################################################
 
 class {'abes':
-  appli_name => 'kopyaFront',
-  env        => 'DEV',
   group_id   => 'fr.abes.kopya',
 }
 
