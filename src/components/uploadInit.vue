@@ -2,6 +2,7 @@
   <v-container fluid fill-height>
     <v-layout align-center justify-center>
       <v-flex md7>
+        <stepper id="stepper" current="2"></stepper>
         <upload v-if="showForm" :loading="loading" :format=format :title=titleUpload :text=textUpload v-on:upload="uploadFile"></upload>
         <v-card v-if="!showForm" class="elevation-12">
           <v-toolbar dark color="primary">
@@ -31,11 +32,13 @@
 import axios from 'axios';
 // eslint-disable-next-line import/no-unresolved
 import upload from '@/components/utils/upload.vue';
+import stepper from '@/components/utils/stepper.vue';
 
 export default {
   name: 'uploadComponent',
   components: {
     upload,
+    stepper,
   },
   data() {
     return {

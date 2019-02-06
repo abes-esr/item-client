@@ -26,14 +26,6 @@
             <v-list-tile-title>Accueil</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile v-on:click="$router.push({ name: 'profil' })">
-          <v-list-tile-action>
-            <v-icon>face</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Modifier mon adresse mail</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
         <v-list-tile v-on:click="$router.push({ name: 'rcr' })">
           <v-list-tile-action>
             <v-icon>edit</v-icon>
@@ -48,6 +40,14 @@
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>Gérer mes demandes</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile v-on:click="$router.push({ name: 'profil' })">
+          <v-list-tile-action>
+            <v-icon>face</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Modifier mon adresse mail</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
@@ -163,5 +163,8 @@ export default {
   footer a {
     text-decoration: none;
     color: white;
+  }
+  #stepper{
+  margin-bottom: 20px;
   }
 </style>

@@ -16,7 +16,7 @@
                 v-model="input.username"
                 placeholder="Nom utilisateur"
                 :rules="[rules.required]"
-                @keyup.enter="login()"
+                v-on:keyup.enter="login"
               />
               <v-text-field
                 prepend-icon="lock"
@@ -25,7 +25,7 @@
                 v-model="input.password"
                 placeholder="Mot de passe"
                 :rules="[rules.required]"
-                @keyup.enter="login()"
+                v-on:keyup.enter="login"
               />
             </v-form>
           </v-card-text>

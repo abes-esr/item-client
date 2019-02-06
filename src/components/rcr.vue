@@ -3,6 +3,7 @@
     <v-layout justify-center align-center>
       <loading :show="show" :label="label"></loading>
       <v-flex md7>
+        <stepper id="stepper" current="1"></stepper>
         <v-card class="elevation-12">
           <v-toolbar dark color="primary">
             <v-toolbar-title>Séléction du RCR</v-toolbar-title>
@@ -39,11 +40,13 @@
 <script>
 import axios from 'axios';
 import loading from 'vue-full-loading';
+import stepper from '@/components/utils/stepper.vue';
 
 export default {
   name: 'Rcr',
   components: {
     loading,
+    stepper,
   },
   data() {
     return {
@@ -150,6 +153,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-</style>

@@ -24,10 +24,11 @@
             <v-divider></v-divider>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="primary" flat @click="dialog = false, $router.push({ name: 'tableau' })">OK</v-btn>
+              <v-btn color="primary" flat @click="dialog = false, $router.push({ name: 'tab' })">OK</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
+        <stepper id="stepper" current="5"></stepper>
         <v-card id="demInfos">
           <h3 style="padding-top: 15px; padding-left: 15px;" class="headline">Ma demande</h3>
           <v-container grid-list-md>
@@ -146,10 +147,12 @@
 <script>
 import loading from 'vue-full-loading';
 import axios from 'axios';
+import stepper from '@/components/utils/stepper.vue';
 
 export default {
   components: {
     loading,
+    stepper,
   },
   data() {
     return {

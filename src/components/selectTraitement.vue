@@ -3,6 +3,7 @@
     <v-layout justify-center align-center>
       <loading :show="loading" label="Chargement en cours..."></loading>
       <v-flex md5 id="flexBox">
+        <stepper id="stepper" current="3"></stepper>
         <v-card class="elevation-12">
           <v-toolbar dark color="primary">
             <v-toolbar-title>Choix du type de traitement</v-toolbar-title>
@@ -50,10 +51,12 @@
 <script>
 import axios from 'axios';
 import loading from 'vue-full-loading';
+import stepper from '@/components/utils/stepper.vue';
 
 export default {
   components: {
     loading,
+    stepper,
   },
   data() {
     return {
