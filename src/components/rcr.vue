@@ -20,12 +20,12 @@
               no-data-text="Aucun RCR correspondant."
               hint="Entrez le début du RCR de l'éblissement ou une partie du nom pour rechercher"
               persistent-hint
-              @change="checkActive()"
+              @change="checkActive"
             ></v-autocomplete>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="info" :disabled="!active" v-on:click="selectRCR()">Valider</v-btn>
+            <v-btn color="info" :disabled="!active" v-on:click="selectRCR">Valider</v-btn>
           </v-card-actions>
         </v-card>
         <br>
@@ -143,8 +143,8 @@ export default {
           || item.shortname.toLowerCase().includes(queryText.toLowerCase())
       );
     },
-    checkActive() {
-      if (this.selected !== null && this.selected !== '') {
+    checkActive(selected) {
+      if (selected !== null && selected !== '') {
         this.active = true;
       } else {
         this.active = false;
