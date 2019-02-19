@@ -1,11 +1,12 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue';
-import Vuetify from 'vuetify';
+import Vuetify from 'vuetify/lib';
 // eslint-disable-next-line import/no-unresolved
 import App from './App';
 import router from './router';
 import 'vuetify/dist/vuetify.min.css';
+import 'vuetify/src/stylus/app.styl';
 
 Vue.use(Vuetify, {
   theme: {
@@ -17,7 +18,7 @@ Vue.use(Vuetify, {
     info: '#326bb1',
     success: '#4da432',
   },
-});
+}) from ;
 Vue.config.productionTip = false;
 
 /* eslint-disable no-new */

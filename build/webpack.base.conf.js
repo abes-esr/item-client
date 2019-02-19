@@ -8,6 +8,13 @@ function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
 
+const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
+module.exports = {
+  plugins: [
+    new VuetifyLoaderPlugin()
+  ]
+}
+
 const createLintingRule = () => ({
   test: /\.(js|vue)$/,
   loader: 'eslint-loader',
