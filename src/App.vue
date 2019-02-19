@@ -58,7 +58,7 @@
         <v-spacer></v-spacer>
         <v-btn flat v-if="authenticated" @click="logout()"><v-icon>power_settings_new</v-icon>&nbsp;&nbsp;Déconnexion</v-btn>
         <v-tooltip right nudge-bottom="20">
-          <span slot="activator"><a href="http://documentation.abes.fr/sudoc/formats/loc/index2.htm#TOP" target="_blank"><img src="/static/aide.png" width="38px" height="38px" href="http://documentation.abes.fr/sudoc/formats/loc/index2.htm#TOP" target="_blank"></a></span>
+          <span slot="activator"><a href="http://documentation.abes.fr/sudoc/formats/loc/index2.htm#TOP" target="_blank"><img src="@/assets/aide.png" width="38px" height="38px" href="http://documentation.abes.fr/sudoc/formats/loc/index2.htm#TOP" target="_blank"></a></span>
         <span>Documentation</span>
     </v-tooltip>
     </v-toolbar>

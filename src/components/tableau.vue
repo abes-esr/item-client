@@ -262,9 +262,9 @@ export default {
     if (this.user !== null && this.user.jwt !== null) {
       let url = '';
       if (this.user.role === 'ADMIN') {
-        url = `${process.env.ROOT_API}demandes`;
+        url = `${process.env.VUE_APP_ROOT_API}demandes`;
       } else {
-        url = `${process.env.ROOT_API}chercherDemandes?userNum=${
+        url = `${process.env.VUE_APP_ROOT_API}chercherDemandes?userNum=${
           this.user.userNum
         }`;
       }
@@ -281,7 +281,9 @@ export default {
               result.data[key].traitement == null
                 || result.data[key].traitement === undefined
             ) {
+              // eslint-disable-next-line no-param-reassign
               result.data[key].traitement = {};
+              // eslint-disable-next-line no-param-reassign
               result.data[key].traitement.libelle = 'Non défini';
             }
 
@@ -346,7 +348,7 @@ export default {
         return axios({
           headers: { Authorization: this.user.jwt },
           method: 'GET',
-          url: `${process.env.ROOT_API}files/${filename}`,
+          url: `${process.env.VUE_APP_ROOT_API}files/${filename}`,
         }).then(
           (result) => {
             const blob = new Blob([result.data], { type: 'application/csv' });
@@ -373,7 +375,7 @@ export default {
         axios({
           headers: { Authorization: this.user.jwt },
           method: 'GET',
-          url: `${process.env.ROOT_API}traitements`,
+          url: `${process.env.VUE_APP_ROOT_API}traitements`,
         }).then(
           (result) => {
             this.listTraitements = result.data;
@@ -523,7 +525,7 @@ export default {
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
-        url: `${process.env.ROOT_API}EtatDemande`,
+        url: `${process.env.VUE_APP_ROOT_API}EtatDemande`,
       }).then(
         (result) => {
           for (let i = 0; i < result.data.length; i++) {

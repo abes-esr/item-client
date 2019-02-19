@@ -82,7 +82,7 @@ export default {
         axios({
           headers: { Authorization: this.user.jwt },
           method: 'GET',
-          url: `${process.env.ROOT_API}traitements`,
+          url: `${process.env.VUE_APP_ROOT_API}traitements`,
         }).then(
           (result) => {
             this.listTraitements = result.data;
@@ -110,7 +110,7 @@ export default {
           headers: { Authorization: this.user.jwt },
           method: 'GET',
           url:
-              `${process.env.ROOT_API}demandes/${sessionStorage.getItem('dem')}`,
+              `${process.env.VUE_APP_ROOT_API}demandes/${sessionStorage.getItem('dem')}`,
         }).then(
           (result) => {
             demande = result.data;
@@ -134,7 +134,7 @@ export default {
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'PUT',
-        url: `${process.env.ROOT_API}demandes/${sessionStorage.getItem('dem')}`,
+        url: `${process.env.VUE_APP_ROOT_API}demandes/${sessionStorage.getItem('dem')}`,
         data: demande,
       }).then(
         () => {

@@ -73,7 +73,7 @@ export default {
         axios({
           headers: { Authorization: this.user.jwt },
           method: 'PUT',
-          url: `${process.env.ROOT_API}utilisateurs/${this.user.userNum}`,
+          url: `${process.env.VUE_APP_ROOT_API}utilisateurs/${this.user.userNum}`,
           data: {
             email: this.input.email1,
             numUser: this.user.userNum,

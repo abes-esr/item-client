@@ -185,7 +185,7 @@ export default {
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
-        url: `${process.env.ROOT_API}demandes/${numDem}`,
+        url: `${process.env.VUE_APP_ROOT_API}demandes/${numDem}`,
       }).then(
         (result) => {
           this.demande = result.data;
@@ -209,7 +209,7 @@ export default {
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
-        url: `${process.env.ROOT_API}simulerLigne?numDemande=${
+        url: `${process.env.VUE_APP_ROOT_API}simulerLigne?numDemande=${
           this.demande.numDemande
         }&numLigne=${this.noticeEnCours}`,
       }).then(
@@ -264,7 +264,7 @@ export default {
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
-        url: `${process.env.ROOT_API}passerEnAttente?numDemande=${
+        url: `${process.env.VUE_APP_ROOT_API}passerEnAttente?numDemande=${
           this.demande.numDemande
         }`,
       }).then(

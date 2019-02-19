@@ -19,7 +19,7 @@ export default {
   name: 'upload',
   props: {
     /** Numéro de l'étape courante */
-    current: '',
+    current: String,
   },
 };
 </script>

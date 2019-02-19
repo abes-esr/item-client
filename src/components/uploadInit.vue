@@ -68,7 +68,7 @@ export default {
       this.user = JSON.parse(sessionStorage.getItem('user'));
       if (this.user !== null && this.user.jwt !== null) {
         axios
-          .post(`${process.env.ROOT_API}uploadDemande`, formData, {
+          .post(`${process.env.VUE_APP_ROOT_API}uploadDemande`, formData, {
             headers: {
               Authorization: this.user.jwt,
               'Content-Type': 'multipart/form-data',
@@ -107,7 +107,7 @@ export default {
     getFileResult() {
       axios
         .get(
-          `${process.env.ROOT_API
+          `${process.env.VUE_APP_ROOT_API
           }files/fichier_prepare_${
             sessionStorage.getItem('dem')
           }.csv?id=${

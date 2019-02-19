@@ -72,7 +72,7 @@ export default {
       ) {
         this.loading = true;
         axios
-          .post(`${process.env.ROOT_API}signin`, {
+          .post(`${process.env.VUE_APP_ROOT_API}signin`, {
             username: this.input.username,
             password: this.input.password,
           })
@@ -114,7 +114,7 @@ export default {
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
-        url: `${process.env.ROOT_API}utilisateurs/${this.user.userNum}`,
+        url: `${process.env.VUE_APP_ROOT_API}utilisateurs/${this.user.userNum}`,
       }).then(
         (result) => {
           if (result.data === null) {
