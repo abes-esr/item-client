@@ -88,10 +88,7 @@ export default {
             this.listRcr.push(item);
           }
         },
-        (error) => {
-          if (error) {
-            console.log(error);
-          }
+        () => {
           this.alertMessage = 'Impossible de récupérer la liste des RCR. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.';
           this.alert = true;
           this.alertType = 'error';
