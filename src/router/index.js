@@ -158,12 +158,12 @@ router.beforeEach((to, from, next) => {
   if (['/fichier', '/fichierEnrichi', '/traitement', '/simulation'].includes(to.path)) {
     if (numDem === undefined) {
       next({ path: '/' });
-    } else {
+    } else if (user !== undefined && user !== null) {
       axios({
         headers: { Authorization: user.jwt },
         method: 'GET',
         url:
-          `${process.env.VUE_APP_ROOT_API}demandes/${numDem}`,
+            `${process.env.VUE_APP_ROOT_API}demandes/${numDem}`,
       }).then(
         (result) => {
           switch (result.data.etatDemande.numEtat) {
@@ -193,6 +193,8 @@ router.beforeEach((to, from, next) => {
           }
         },
       );
+    } else {
+      this.$emit('logout');
     }
   } else {
     next();
