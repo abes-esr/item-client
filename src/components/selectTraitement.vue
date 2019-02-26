@@ -3,6 +3,7 @@
     <v-layout justify-center align-center>
       <loading :show="loading" label="Chargement en cours..."></loading>
       <v-flex md5 id="flexBox">
+        <stepper id="stepper" current="3"></stepper>
         <v-card class="elevation-12">
           <v-toolbar dark color="primary">
             <v-toolbar-title>Choix du type de traitement</v-toolbar-title>
@@ -50,10 +51,12 @@
 <script>
 import axios from 'axios';
 import loading from 'vue-full-loading';
+import stepper from '@/components/utils/stepper.vue';
 
 export default {
   components: {
     loading,
+    stepper,
   },
   data() {
     return {
@@ -79,7 +82,7 @@ export default {
         axios({
           headers: { Authorization: this.user.jwt },
           method: 'GET',
-          url: `${process.env.ROOT_API}traitements`,
+          url: `${process.env.VUE_APP_ROOT_API}traitements`,
         }).then(
           (result) => {
             this.listTraitements = result.data;
@@ -107,13 +110,12 @@ export default {
           headers: { Authorization: this.user.jwt },
           method: 'GET',
           url:
-              `${process.env.ROOT_API}demandes/${sessionStorage.getItem('dem')}`,
+              `${process.env.VUE_APP_ROOT_API}demandes/${sessionStorage.getItem('dem')}`,
         }).then(
           (result) => {
             demande = result.data;
             demande.traitement = this.selected;
             this.updateDemande(demande);
-            this.loading = false;
           },
           (error) => {
             this.alertMessage = "Impossible de récupérer la demande en cours d'édition. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.";
@@ -131,15 +133,15 @@ export default {
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'PUT',
-        url: `${process.env.ROOT_API}demandes/${sessionStorage.getItem('dem')}`,
+        url: `${process.env.VUE_APP_ROOT_API}demandes/${sessionStorage.getItem('dem')}`,
         data: demande,
       }).then(
         () => {
           this.alertMessage = 'Demande mise à jour.';
           this.alert = true;
           this.alertType = 'success';
-          this.loading = false;
           this.$router.replace({ name: 'uploadFinal' });
+          this.loading = false;
         },
         (error) => {
           this.alertMessage = 'Impossible de mettre à jour la demande. <br /> Si le problème persiste merci de nous contacter.';

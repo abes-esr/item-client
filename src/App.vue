@@ -26,14 +26,6 @@
             <v-list-tile-title>Accueil</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile v-on:click="$router.push({ name: 'profil' })">
-          <v-list-tile-action>
-            <v-icon>face</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Modifier mon adresse mail</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
         <v-list-tile v-on:click="$router.push({ name: 'rcr' })">
           <v-list-tile-action>
             <v-icon>edit</v-icon>
@@ -50,6 +42,14 @@
             <v-list-tile-title>Gérer mes demandes</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
+        <v-list-tile v-on:click="$router.push({ name: 'profil' })">
+          <v-list-tile-action>
+            <v-icon>face</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Modifier mon adresse mail</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
       </v-list>
     </v-navigation-drawer>
     <v-toolbar color="primary" dark fixed app>
@@ -58,12 +58,14 @@
         <v-spacer></v-spacer>
         <v-btn flat v-if="authenticated" @click="logout()"><v-icon>power_settings_new</v-icon>&nbsp;&nbsp;Déconnexion</v-btn>
         <v-tooltip right nudge-bottom="20">
-          <span slot="activator"><a href="http://documentation.abes.fr/sudoc/formats/loc/index2.htm#TOP" target="_blank"><img src="/static/aide.png" width="38px" height="38px" href="http://documentation.abes.fr/sudoc/formats/loc/index2.htm#TOP" target="_blank"></a></span>
+          <span slot="activator"><a href="http://documentation.abes.fr/sudoc/formats/loc/index2.htm#TOP" target="_blank"><img src="@/assets/aide.png" width="38px" height="38px" href="http://documentation.abes.fr/sudoc/formats/loc/index2.htm#TOP" target="_blank"></a></span>
         <span>Documentation</span>
     </v-tooltip>
     </v-toolbar>
     <v-content>
-      <router-view @authenticated="setAuthenticated" @logout="logoutExpired" />
+      <transition name="fade">
+        <router-view @authenticated="setAuthenticated" @logout="logoutExpired" />
+      </transition>
     </v-content>
     <footerDesc v-if="!authenticated"></footerDesc>
     <footerAbes></footerAbes>
@@ -72,11 +74,8 @@
 </template>
 
 <script>
-// eslint-disable-next-line import/no-unresolved
 import footerAbes from '@/components/footer/footer.vue';
-// eslint-disable-next-line import/no-unresolved
 import footerDesc from '@/components/footer/desc.vue';
-// eslint-disable-next-line import/no-unresolved
 import logout from '@/components/utils/logoutPopup.vue';
 
 export default {
@@ -163,5 +162,19 @@ export default {
   footer a {
     text-decoration: none;
     color: white;
+  }
+  #stepper{
+  margin-bottom: 20px;
+  }
+
+  .fade-enter-active, .fade-leave-active {
+  transition: opacity .2s;
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+  }
+  .v-btn:hover {
+    background-color: #ec6839 !important;
+    border-color: #ec6839 !important;
   }
 </style>

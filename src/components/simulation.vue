@@ -28,6 +28,7 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+        <stepper id="stepper" current="5"></stepper>
         <v-card id="demInfos">
           <h3 style="padding-top: 15px; padding-left: 15px;" class="headline">Ma demande</h3>
           <v-container grid-list-md>
@@ -146,10 +147,12 @@
 <script>
 import loading from 'vue-full-loading';
 import axios from 'axios';
+import stepper from '@/components/utils/stepper.vue';
 
 export default {
   components: {
     loading,
+    stepper,
   },
   data() {
     return {
@@ -182,7 +185,7 @@ export default {
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
-        url: `${process.env.ROOT_API}demandes/${numDem}`,
+        url: `${process.env.VUE_APP_ROOT_API}demandes/${numDem}`,
       }).then(
         (result) => {
           this.demande = result.data;
@@ -206,7 +209,7 @@ export default {
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
-        url: `${process.env.ROOT_API}simulerLigne?numDemande=${
+        url: `${process.env.VUE_APP_ROOT_API}simulerLigne?numDemande=${
           this.demande.numDemande
         }&numLigne=${this.noticeEnCours}`,
       }).then(
@@ -261,7 +264,7 @@ export default {
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
-        url: `${process.env.ROOT_API}passerEnAttente?numDemande=${
+        url: `${process.env.VUE_APP_ROOT_API}passerEnAttente?numDemande=${
           this.demande.numDemande
         }`,
       }).then(

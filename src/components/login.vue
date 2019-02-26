@@ -16,7 +16,7 @@
                 v-model="input.username"
                 placeholder="Nom utilisateur"
                 :rules="[rules.required]"
-                @keyup.enter="login()"
+                v-on:keyup.enter="login"
               />
               <v-text-field
                 prepend-icon="lock"
@@ -25,7 +25,7 @@
                 v-model="input.password"
                 placeholder="Mot de passe"
                 :rules="[rules.required]"
-                @keyup.enter="login()"
+                v-on:keyup.enter="login"
               />
             </v-form>
           </v-card-text>
@@ -72,7 +72,7 @@ export default {
       ) {
         this.loading = true;
         axios
-          .post(`${process.env.ROOT_API}signin`, {
+          .post(`${process.env.VUE_APP_ROOT_API}signin`, {
             username: this.input.username,
             password: this.input.password,
           })
@@ -84,6 +84,7 @@ export default {
               this.authUser.userNum = result.data.userNum;
               this.authUser.iln = result.data.iln;
               this.authUser.role = result.data.role;
+              this.authUser.email = result.data.email;
               sessionStorage.setItem('user', JSON.stringify(this.authUser));
 
               this.loading = false;
@@ -110,26 +111,11 @@ export default {
     },
     getMail() {
       this.user = JSON.parse(sessionStorage.getItem('user'));
-
-      axios({
-        headers: { Authorization: this.user.jwt },
-        method: 'GET',
-        url: `${process.env.ROOT_API}utilisateurs/${this.user.userNum}`,
-      }).then(
-        (result) => {
-          if (result.data === null) {
-            this.$router.replace({ name: 'profil' });
-          } else {
-            this.user.email = result.data.email;
-            sessionStorage.setItem('user', JSON.stringify(this.user));
-            this.$router.replace({ name: 'home' });
-          }
-        },
-        () => {
-          this.alertMessage = 'Service indisponible, veuillez réessayer ultérieurement. Si le problème persiste, merci de nous contacter.';
-          this.alert = true;
-        },
-      );
+      if (this.user.email === null) {
+        this.$router.replace({ name: 'profil' });
+      } else {
+        this.$router.replace({ name: 'home' });
+      }
     },
   },
 };

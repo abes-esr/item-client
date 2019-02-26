@@ -1,21 +1,22 @@
 /* eslint-disable import/no-unresolved */
 import Vue from 'vue';
 import Router from 'vue-router';
-import LoginComponent from '@/components/login.vue';
-import RcrComponent from '@/components/rcr.vue';
-import uploadComponent from '@/components/uploadInit.vue';
-import traitementComponent from '@/components/selectTraitement.vue';
-import TableauComponent from '@/components/tableau.vue';
-import ProfilComponent from '@/components/profil.vue';
-import AboutComponent from '@/components/footer/about.vue';
-import CGUComponent from '@/components/footer/cgu.vue';
-import DonneesComponent from '@/components/footer/donnees.vue';
-import MentionsComponent from '@/components/footer/mentions.vue';
-import NotFoundComponent from '@/components/errors/notFound.vue';
-import uploadFinalComponent from '@/components/uploadFinal.vue';
-import simulationComponent from '@/components/simulation.vue';
-import homeComponent from '@/components/home.vue';
 import axios from 'axios';
+
+const LoginComponent = () => import('@/components/login.vue');
+const RcrComponent = () => import('@/components/rcr.vue');
+const uploadComponent = () => import('@/components/uploadInit.vue');
+const traitementComponent = () => import('@/components/selectTraitement.vue');
+const TableauComponent = () => import('@/components/tableau.vue');
+const ProfilComponent = () => import('@/components/profil.vue');
+const AboutComponent = () => import('@/components/footer/about.vue');
+const CGUComponent = () => import('@/components/footer/cgu.vue');
+const DonneesComponent = () => import('@/components/footer/donnees.vue');
+const MentionsComponent = () => import('@/components/footer/mentions.vue');
+const NotFoundComponent = () => import('@/components/errors/notFound.vue');
+const uploadFinalComponent = () => import('@/components/uploadFinal.vue');
+const simulationComponent = () => import('@/components/simulation.vue');
+const homeComponent = () => import('@/components/home.vue');
 
 Vue.use(Router);
 
@@ -157,12 +158,12 @@ router.beforeEach((to, from, next) => {
   if (['/fichier', '/fichierEnrichi', '/traitement', '/simulation'].includes(to.path)) {
     if (numDem === undefined) {
       next({ path: '/' });
-    } else {
+    } else if (user !== undefined && user !== null) {
       axios({
         headers: { Authorization: user.jwt },
         method: 'GET',
         url:
-          `${process.env.ROOT_API}demandes/${numDem}`,
+            `${process.env.VUE_APP_ROOT_API}demandes/${numDem}`,
       }).then(
         (result) => {
           switch (result.data.etatDemande.numEtat) {
@@ -192,6 +193,8 @@ router.beforeEach((to, from, next) => {
           }
         },
       );
+    } else {
+      this.$emit('logout');
     }
   } else {
     next();

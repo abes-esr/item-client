@@ -3,6 +3,7 @@
     <v-layout justify-center align-center>
       <loading :show="show" :label="label"></loading>
       <v-flex md7>
+        <stepper id="stepper" current="1"></stepper>
         <v-card class="elevation-12">
           <v-toolbar dark color="primary">
             <v-toolbar-title>Séléction du RCR</v-toolbar-title>
@@ -19,12 +20,12 @@
               no-data-text="Aucun RCR correspondant."
               hint="Entrez le début du RCR de l'éblissement ou une partie du nom pour rechercher"
               persistent-hint
-              @change="checkActive()"
+              @change="checkActive"
             ></v-autocomplete>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="info" :disabled="!active" v-on:click="selectRCR()">Valider</v-btn>
+            <v-btn color="info" :disabled="!active" v-on:click="selectRCR">Valider</v-btn>
           </v-card-actions>
         </v-card>
         <br>
@@ -39,11 +40,13 @@
 <script>
 import axios from 'axios';
 import loading from 'vue-full-loading';
+import stepper from '@/components/utils/stepper.vue';
 
 export default {
   name: 'Rcr',
   components: {
     loading,
+    stepper,
   },
   data() {
     return {
@@ -85,10 +88,7 @@ export default {
             this.listRcr.push(item);
           }
         },
-        (error) => {
-          if (error) {
-            console.log(error);
-          }
+        () => {
           this.alertMessage = 'Impossible de récupérer la liste des RCR. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.';
           this.alert = true;
           this.alertType = 'error';
@@ -105,7 +105,7 @@ export default {
           headers: { Authorization: this.user.jwt },
           method: 'GET',
           url:
-              `${process.env.ROOT_API
+              `${process.env.VUE_APP_ROOT_API
               }creerdemande?rcr=${
                 this.selected
               }&userNum=${
@@ -113,11 +113,6 @@ export default {
         }).then(
           (result) => {
             sessionStorage.setItem('dem', result.data.numDemande);
-            this.alertMessage = 'Demande initialisée.';
-            this.alert = true;
-            this.alertType = 'success';
-            this.show = false;
-            this.active = true;
             this.$router.replace({ name: 'upload' });
           },
           (error) => {
@@ -140,8 +135,8 @@ export default {
           || item.shortname.toLowerCase().includes(queryText.toLowerCase())
       );
     },
-    checkActive() {
-      if (this.selected !== null && this.selected !== '') {
+    checkActive(selected) {
+      if (selected !== null && selected !== '') {
         this.active = true;
       } else {
         this.active = false;
@@ -150,6 +145,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-</style>
