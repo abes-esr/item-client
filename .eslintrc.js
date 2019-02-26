@@ -19,7 +19,6 @@ module.exports = {
     'prefer-destructuring': 'off',
     'no-restricted-syntax': 'off',
     'no-plusplus': 'off',
-
   },
   parserOptions: {
     parser: 'babel-eslint',

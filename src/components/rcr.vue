@@ -113,11 +113,6 @@ export default {
         }).then(
           (result) => {
             sessionStorage.setItem('dem', result.data.numDemande);
-            this.alertMessage = 'Demande initialisée.';
-            this.alert = true;
-            this.alertType = 'success';
-            this.show = false;
-            this.active = true;
             this.$router.replace({ name: 'upload' });
           },
           (error) => {

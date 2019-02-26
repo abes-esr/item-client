@@ -116,7 +116,6 @@ export default {
             demande = result.data;
             demande.traitement = this.selected;
             this.updateDemande(demande);
-            this.loading = false;
           },
           (error) => {
             this.alertMessage = "Impossible de récupérer la demande en cours d'édition. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.";
@@ -141,8 +140,8 @@ export default {
           this.alertMessage = 'Demande mise à jour.';
           this.alert = true;
           this.alertType = 'success';
-          this.loading = false;
           this.$router.replace({ name: 'uploadFinal' });
+          this.loading = false;
         },
         (error) => {
           this.alertMessage = 'Impossible de mettre à jour la demande. <br /> Si le problème persiste merci de nous contacter.';

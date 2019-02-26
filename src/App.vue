@@ -63,7 +63,9 @@
     </v-tooltip>
     </v-toolbar>
     <v-content>
-      <router-view @authenticated="setAuthenticated" @logout="logoutExpired" />
+      <transition name="fade">
+        <router-view @authenticated="setAuthenticated" @logout="logoutExpired" />
+      </transition>
     </v-content>
     <footerDesc v-if="!authenticated"></footerDesc>
     <footerAbes></footerAbes>
@@ -72,11 +74,8 @@
 </template>
 
 <script>
-// eslint-disable-next-line import/no-unresolved
 import footerAbes from '@/components/footer/footer.vue';
-// eslint-disable-next-line import/no-unresolved
 import footerDesc from '@/components/footer/desc.vue';
-// eslint-disable-next-line import/no-unresolved
 import logout from '@/components/utils/logoutPopup.vue';
 
 export default {
@@ -166,5 +165,16 @@ export default {
   }
   #stepper{
   margin-bottom: 20px;
+  }
+
+  .fade-enter-active, .fade-leave-active {
+  transition: opacity .2s;
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+  }
+  .v-btn:hover {
+    background-color: #ec6839 !important;
+    border-color: #ec6839 !important;
   }
 </style>

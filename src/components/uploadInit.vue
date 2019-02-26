@@ -30,7 +30,6 @@
 
 <script>
 import axios from 'axios';
-// eslint-disable-next-line import/no-unresolved
 import upload from '@/components/utils/upload.vue';
 import stepper from '@/components/utils/stepper.vue';
 

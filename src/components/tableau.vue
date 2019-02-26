@@ -8,6 +8,7 @@
         <v-card>
           <v-card-title class="title">Gérer mes demandes</v-card-title>
           <v-data-table
+            :loading="tableLoading"
             :headers="headers"
             :items="computedItems('guess')"
             rows-per-page-text="Lignes par page"
@@ -252,6 +253,7 @@ export default {
       menu: false,
       listTraitements: [],
       listStatut: [],
+      tableLoading: true,
     };
   },
   mounted() {
@@ -296,6 +298,8 @@ export default {
               statut: result.data[key].etatDemande.libelle,
               codeStatut: result.data[key].etatDemande.numEtat,
             });
+
+            this.tableLoading = false;
           }
         },
         (error) => {
