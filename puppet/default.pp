@@ -14,8 +14,8 @@ class {'abes':
 # ################################################################################
 # ### WEB ########################################################################
 # ################################################################################
-node /^raiponce(\d)-dev/ {
-  notify { "Deploy on RAIPONCE ${1} DEV": }
+node /^raiponce(\d)/ {
+  notify { "Deploy on RAIPONCE ${1} ${abes::env}": }
 
   abes::apache::htaccess { 'htaccess' :
     apache_path_web => $apache_path,
@@ -32,4 +32,3 @@ node /^raiponce(\d)-dev/ {
 node default {
   notify { 'Aucun deploiement sur cette machine' : }
 }
-
