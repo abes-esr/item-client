@@ -9,7 +9,11 @@
                         Ces traitements sont automatiquement répercutés dans les fichiers de transfert régulier.
                     </v-card-text>
                 </v-flex>
-                <v-flex xs6>
+                <v-flex xs4></v-flex>
+                <v-flex xs1>
+                    <v-layout justify-end><v-img :src="require('@/assets/logo-mesri.png')" alt="Logo Enseignement Supérieur" max-width="60"></v-img></v-layout>
+                </v-flex>
+                <v-flex xs1>
                     <v-layout justify-end><v-img :src="require('@/assets/abes.png')" alt="Logo ABES" max-width="110"></v-img></v-layout>
                 </v-flex>
             </v-layout>

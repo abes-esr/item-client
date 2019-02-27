@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-layout justify-center align-center>
       <v-flex text-xs-center>
-        <v-alert :value="alert" type="error" dismissible transition="scale-transition">
+        <v-alert :value="alert" :type="alertType" dismissible transition="scale-transition">
           <span v-html="alertMessage"></span>
         </v-alert>
         <v-card>
@@ -112,6 +112,8 @@
                     clearable
                   ></v-select>
                 </th>
+                <th></th>
+                <th></th>
               </tr>
             </template>
             <template slot="items" slot-scope="props">
@@ -140,8 +142,8 @@
                 class="text-xs-left"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
               >{{ props.item.statut }}</td>
-              <td class="text-xs-left">
-                <v-menu offset-y v-if="props.item.codeStatut >= 2">
+              <td class="text-xs-center">
+                <v-menu bottom left v-if="props.item.codeStatut >= 2">
                   <v-btn slot="activator" color="info" small>
                     <v-icon>cloud_download</v-icon>
                   </v-btn>
@@ -172,6 +174,16 @@
                   </v-btn>
                 </span>
               </td>
+              <td class="text-xs-center">
+                <span v-if="props.item.codeStatut < 5">
+                  <v-btn icon @click="current = props.item.num; popupDelete = true;">
+                    <v-icon>delete</v-icon>
+                  </v-btn>
+                </span>
+                <span v-else-if="props.item.codeStatut == 7">
+                  <v-icon>archive</v-icon>
+                </span>
+              </td>
             </template>
             <template
               slot="pageText"
@@ -188,7 +200,7 @@
       </v-flex>
       <v-dialog v-model="dialog" width="500">
         <v-card>
-          <v-card-title class="headline grey lighten-2" primary-title>Téléchargement du fichier</v-card-title>
+          <v-card-title class="headline" primary-title>Téléchargement du fichier</v-card-title>
           <v-card-text>
             <div v-if="fileReady">Votre fichier est en cours de téléchargement, veuillez patienter.
               <v-progress-linear :indeterminate="true"></v-progress-linear>
@@ -212,6 +224,20 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="primary" flat @click="dialog = false">Fermer</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <v-dialog v-model="popupDelete" width="500">
+        <v-card>
+          <v-card-title class="headline" primary-title>Suppression</v-card-title>
+          <v-card-text>
+            Êtes-vous certain de vouloir supprimer définitivement cette demande ?
+          </v-card-text>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" :loading="deleteLoading" :disabled="deleteLoading" flat @click="deleteDem">Confirmer</v-btn>
+            <v-btn color="primary" flat @click="popupDelete = false">Annuler</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -245,6 +271,7 @@ export default {
       items: [],
       alert: false,
       alertMessage: '',
+      alertType: 'error',
       user: {},
       fileLink: '',
       blobName: 'demande.csv',
@@ -254,68 +281,19 @@ export default {
       listTraitements: [],
       listStatut: [],
       tableLoading: true,
+      popupDelete: false,
+      deleteLoading: false,
+      current: '',
     };
   },
   mounted() {
     this.user = JSON.parse(sessionStorage.getItem('user'));
 
     this.initHeader();
+    this.fetchData();
+    this.getListTraitements();
+    this.getListStatus();
 
-    if (this.user !== null && this.user.jwt !== null) {
-      let url = '';
-      if (this.user.role === 'ADMIN') {
-        url = `${process.env.VUE_APP_ROOT_API}demandes`;
-      } else {
-        url = `${process.env.VUE_APP_ROOT_API}chercherDemandes?userNum=${
-          this.user.userNum
-        }`;
-      }
-
-      axios({
-        headers: { Authorization: this.user.jwt },
-        method: 'GET',
-        url,
-      }).then(
-        (result) => {
-          for (const key in result.data) {
-            // pour éviter les erreurs si null
-            if (
-              result.data[key].traitement == null
-                || result.data[key].traitement === undefined
-            ) {
-              // eslint-disable-next-line no-param-reassign
-              result.data[key].traitement = {};
-              // eslint-disable-next-line no-param-reassign
-              result.data[key].traitement.libelle = 'Non défini';
-            }
-
-            this.items.push({
-              date: result.data[key].dateModification,
-              rcr: `${result.data[key].rcr} - ${result.data[key].shortname}`,
-              iln: result.data[key].iln,
-              num: result.data[key].numDemande,
-              traitement: result.data[key].traitement.libelle,
-              statut: result.data[key].etatDemande.libelle,
-              codeStatut: result.data[key].etatDemande.numEtat,
-            });
-
-            this.tableLoading = false;
-          }
-        },
-        (error) => {
-          this.alertMessage = 'Impossible de récupérer la liste des demandes. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.';
-          this.alert = true;
-          this.alertType = 'error';
-
-          if (error.response.status === 401) {
-            this.$emit('logout');
-          }
-        },
-      );
-
-      this.getListTraitements();
-      this.getListStatus();
-    }
 
     // Tri par défaut sur les numéros demandes
     this.changeSort('num');
@@ -426,6 +404,7 @@ export default {
           { text: 'Traitement', value: 'traitement' },
           { text: 'Statut', value: 'statut' },
           { text: 'Résultat', value: 'codeStatut' },
+          { text: '', value: 'delete' },
         ];
       } else {
         this.headers = [
@@ -435,6 +414,7 @@ export default {
           { text: 'Traitement', value: 'traitement' },
           { text: 'Statut', value: 'statut' },
           { text: 'Résultat', value: 'codeStatut' },
+          { text: '', value: 'delete' },
         ];
       }
 
@@ -442,6 +422,61 @@ export default {
       this.searchCombo.splice(this.searchCombo.length - 1, 1);
       for (let i = 0; i < this.searchCombo.length; i += 1) {
         this.selectedColumns[i] = this.searchCombo[i].value;
+      }
+    },
+    fetchData() {
+      if (this.user !== null && this.user.jwt !== null) {
+        let url = '';
+        if (this.user.role === 'ADMIN') {
+          url = `${process.env.VUE_APP_ROOT_API}demandes`;
+        } else {
+          url = `${process.env.VUE_APP_ROOT_API}chercherDemandes?userNum=${
+            this.user.userNum
+          }`;
+        }
+
+        axios({
+          headers: { Authorization: this.user.jwt },
+          method: 'GET',
+          url,
+        }).then(
+          (result) => {
+            this.items = [];
+            for (const key in result.data) {
+            // pour éviter les erreurs si null
+              if (
+                result.data[key].traitement == null
+                || result.data[key].traitement === undefined
+              ) {
+              // eslint-disable-next-line no-param-reassign
+                result.data[key].traitement = {};
+                // eslint-disable-next-line no-param-reassign
+                result.data[key].traitement.libelle = 'Non défini';
+              }
+
+              this.items.push({
+                date: result.data[key].dateModification,
+                rcr: `${result.data[key].rcr} - ${result.data[key].shortname}`,
+                iln: result.data[key].iln,
+                num: result.data[key].numDemande,
+                traitement: result.data[key].traitement.libelle,
+                statut: result.data[key].etatDemande.libelle,
+                codeStatut: result.data[key].etatDemande.numEtat,
+              });
+
+              this.tableLoading = false;
+            }
+          },
+          (error) => {
+            this.alertMessage = 'Impossible de récupérer la liste des demandes. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.';
+            this.alert = true;
+            this.alertType = 'error';
+
+            if (error.response.status === 401) {
+              this.$emit('logout');
+            }
+          },
+        );
       }
     },
     computedItems(type) {
@@ -540,6 +575,33 @@ export default {
           this.alertMessage = 'Impossible de récupérer la liste des statuts. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.';
           this.alert = true;
           this.alertType = 'error';
+          if (error.response.status === 401) {
+            this.$emit('logout');
+          }
+        },
+      );
+    },
+    deleteDem() {
+      this.deleteLoading = true;
+      axios({
+        headers: { Authorization: this.user.jwt },
+        method: 'DELETE',
+        url: `${process.env.VUE_APP_ROOT_API}demandes/${this.current}`,
+      }).then(
+        () => {
+          this.alertMessage = 'Demande supprimée.';
+          this.alertType = 'success';
+          this.alert = true;
+          this.fetchData();
+          this.popupDelete = false;
+          this.deleteLoading = false;
+        },
+        (error) => {
+          this.alertMessage = 'Impossible de supprimer votre demande, merci de réessayer plus tard. Si le problème persiste, contactez nous.';
+          this.alertType = 'error';
+          this.alert = true;
+          this.popupDelete = false;
+          this.deleteLoading = false;
           if (error.response.status === 401) {
             this.$emit('logout');
           }
