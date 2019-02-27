@@ -20,23 +20,28 @@
                     </v-card-title>
                 </v-card>
                 -->
-                <v-card raised hover @click="$router.push({ name: 'rcr' })">
-                    <v-card-title primary-title>
-                        <v-container grid-list-md>
-                            <v-layout row wrap align-center>
-                                <v-flex xs2>
-                                    <span class="group pa-3 secondary">
-                                        <v-icon x-large dark>edit</v-icon>
-                                    </span>
-                                </v-flex>
-                                <v-flex xs6 ml-4>
-                                    <h3 class="headline">Modifier des exemplaires</h3>
-                                </v-flex>
-                            </v-layout>
-                        </v-container>
-                    </v-card-title>
-                </v-card>
-                <!--
+
+
+                <!--<v-card raised hover @click="$router.push({ name: 'rcr' })">-->
+                    <!--<v-card-title primary-title>-->
+                        <!--<v-container grid-list-md>-->
+                            <!--<v-layout row wrap align-center>-->
+                                <!--<v-flex xs2>-->
+                                    <!--<span class="group pa-3 secondary">-->
+                                        <!--<v-icon x-large dark>edit</v-icon>-->
+                                    <!--</span>-->
+                                <!--</v-flex>-->
+                                <!--<v-flex xs6 ml-4>-->
+                                    <!--<h3 class="headline">Modifier des exemplaires</h3>-->
+                                <!--</v-flex>-->
+                            <!--</v-layout>-->
+                        <!--</v-container>-->
+                    <!--</v-card-title>-->
+                <!--</v-card>-->
+
+              <menu-cards titleName="test" iconType="edit" routerLink="rcr"></menu-cards>
+
+                             <!--
                 <v-card raised hover @click="$router.push({ name: 'tab' })">
                     <v-card-title primary-title>
                         <v-container grid-list-md>
@@ -92,6 +97,16 @@
         </v-layout>
     </v-container>
 </template>
+
+<script>
+  import menuCards from '@/components/utils/menuCards';
+
+  export default {
+    components: {
+      menuCards
+    }
+  }
+</script>
 
 <style scoped>
     .v-card {
