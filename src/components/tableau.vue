@@ -284,13 +284,19 @@ export default {
       popupDelete: false,
       deleteLoading: false,
       current: '',
+      polling: null,
     };
+  },
+  beforeDestroy() {
+    clearInterval(this.polling);
   },
   mounted() {
     this.user = JSON.parse(sessionStorage.getItem('user'));
 
     this.initHeader();
     this.fetchData();
+    // Rafraichissement des données toutes les 10 sec
+    this.polling = setInterval(this.fetchData, 10000);
     this.getListTraitements();
     this.getListStatus();
 
