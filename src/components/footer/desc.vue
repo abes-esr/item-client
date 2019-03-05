@@ -9,7 +9,12 @@
                         Ces traitements sont automatiquement répercutés dans les fichiers de transfert régulier.
                     </v-card-text>
                 </v-flex>
-                <v-flex xs4></v-flex>
+                <v-flex xs4>
+                    <v-card-text class="white--text pt-0 text-xs-left">
+                        <span class="title">Assistance</span><br />
+                        <a class="white--text pt-0 text-xs-left" href="https://stp.abes.fr/" target="_blank">Guichet ABESstp</a>
+                    </v-card-text>
+                </v-flex>
                 <v-flex xs1>
                     <v-layout justify-end><v-img :src="require('@/assets/logo-mesri.png')" alt="Logo Enseignement Supérieur" max-width="60"></v-img></v-layout>
                 </v-flex>
@@ -24,5 +29,9 @@
 <style scoped>
     .v-card{
         padding-top: 20px;
+    }
+    a {
+        text-decoration: none;
+        margin-left: 20px;
     }
 </style>

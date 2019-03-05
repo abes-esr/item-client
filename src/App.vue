@@ -56,11 +56,18 @@
       <v-toolbar-side-icon @click.stop="drawer = !drawer" v-if="authenticated"></v-toolbar-side-icon>
       <v-toolbar-title></v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-btn flat v-if="authenticated" @click="logout()"><v-icon>power_settings_new</v-icon>&nbsp;&nbsp;Déconnexion</v-btn>
-        <v-tooltip right nudge-bottom="20">
-          <span slot="activator"><a href="http://documentation.abes.fr/sudoc/formats/loc/index2.htm#TOP" target="_blank"><img src="@/assets/aide.png" alt="icone documentation" width="38px" height="38px" href="http://documentation.abes.fr/sudoc/formats/loc/index2.htm#TOP" target="_blank"></a></span>
-        <span>Documentation</span>
-    </v-tooltip>
+        <v-tooltip left nudge-bottom="20">
+          <span slot="activator"><a href="https://stp.abes.fr/" target="_blank"><img src="@/assets/assistance.png" alt="icone assistance" width="38px" height="38px" href="http://documentation.abes.fr/sudoc/formats/loc/index2.htm#TOP" target="_blank"></a></span>
+          <span>Assistance</span>
+        </v-tooltip>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <v-tooltip left nudge-bottom="20">
+          <span slot="activator"><a href="http://documentation.abes.fr/sudoc/formats/loc/index2.htm#TOP" target="_blank"><img src="@/assets/documentation.png" alt="icone documentation" width="38px" height="38px" href="http://documentation.abes.fr/sudoc/formats/loc/index2.htm#TOP" target="_blank"></a></span>
+          <span>Documentation</span>
+        </v-tooltip>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <v-tooltip left nudge-bottom="20" v-if="authenticated">
+          <span slot="activator" @click="logout()"><img src="@/assets/deconnexion.png" alt="icone déconnexion" width="38px" height="38px"></span>
+          <span>Déconnexion</span>
+        </v-tooltip>
     </v-toolbar>
     <v-content>
       <transition name="fade">
