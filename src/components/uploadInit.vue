@@ -104,13 +104,14 @@ export default {
       }
     },
     getFileResult() {
+      const numDem = sessionStorage.getItem('dem');
       axios
         .get(
           `${process.env.VUE_APP_ROOT_API
           }files/fichier_prepare_${
-            sessionStorage.getItem('dem')
+            numDem
           }.csv?id=${
-            sessionStorage.getItem('dem')}`,
+            numDem}`,
           {
             headers: {
               Authorization: this.user.jwt,
@@ -123,6 +124,7 @@ export default {
             this.loading = false;
             const blob = new Blob([result.data], { type: 'application/csv' });
             this.fileLink = window.URL.createObjectURL(blob);
+            this.blobName = `fichier_demande_${numDem}.csv`;
             // TODO : Réparer ça
             // this.$refs.fileLinkBtn.$el.click();
           },

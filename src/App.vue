@@ -53,15 +53,15 @@
       </v-list>
     </v-navigation-drawer>
     <v-toolbar color="primary" dark fixed app>
-      <v-toolbar-side-icon @click.stop="drawer = !drawer" v-if="authenticated"></v-toolbar-side-icon>
+      <v-toolbar-side-icon @click.stop="drawer = !drawer" v-if="authenticated" aria-label="menu latéral"></v-toolbar-side-icon>
       <v-toolbar-title></v-toolbar-title>
         <v-spacer></v-spacer>
         <v-tooltip left nudge-bottom="20">
-          <span slot="activator"><a href="https://stp.abes.fr/" target="_blank"><img src="@/assets/assistance.png" alt="icone assistance" width="38px" height="38px" href="http://documentation.abes.fr/sudoc/formats/loc/index2.htm#TOP" target="_blank"></a></span>
+          <span slot="activator"><a href="https://stp.abes.fr/" target="_blank" rel="noopener"><img src="@/assets/assistance.png" alt="icone assistance" width="38px" height="38px" href="http://documentation.abes.fr/sudoc/formats/loc/index2.htm#TOP" target="_blank"></a></span>
           <span>Assistance</span>
         </v-tooltip>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <v-tooltip left nudge-bottom="20">
-          <span slot="activator"><a href="http://documentation.abes.fr/sudoc/formats/loc/index2.htm#TOP" target="_blank"><img src="@/assets/documentation.png" alt="icone documentation" width="38px" height="38px" href="http://documentation.abes.fr/sudoc/formats/loc/index2.htm#TOP" target="_blank"></a></span>
+          <span slot="activator"><a href="http://documentation.abes.fr/sudoc/formats/loc/index2.htm#TOP" target="_blank" rel="noopener"><img src="@/assets/documentation.png" alt="icone documentation" width="38px" height="38px" href="http://documentation.abes.fr/sudoc/formats/loc/index2.htm#TOP" target="_blank"></a></span>
           <span>Documentation</span>
         </v-tooltip>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <v-tooltip left nudge-bottom="20" v-if="authenticated">

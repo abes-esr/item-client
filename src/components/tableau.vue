@@ -30,9 +30,10 @@
                 </th>
               </tr>
               <tr>
-                <th id="smallTD">
+                <th class="smallTD">
                   <v-text-field
                     v-model="searchNum"
+                    aria-label="Recherche par numéro"
                     append-icon="search"
                     single-line
                     hide-details
@@ -40,7 +41,7 @@
                     v-on:keyup="computedItems('num')"
                   ></v-text-field>
                 </th>
-                <th id="smallTD">
+                <th class="smallTD">
                   <v-menu
                     :close-on-content-click="false"
                     v-model="menu"
@@ -53,6 +54,7 @@
                     <v-text-field
                       slot="activator"
                       v-model="searchDate"
+                      aria-label="Recherche par date"
                       prepend-icon="event"
                       append-icon="search"
                       clearable
@@ -68,13 +70,14 @@
                       @change="computedItems('date')"
                     >
                       <v-spacer></v-spacer>
-                      <v-btn flat color="primary" @click="menu = false">Annuler</v-btn>
+                      <v-btn flat color="primary" @click="menu = false" aria-label="Annuler">Annuler</v-btn>
                     </v-date-picker>
                   </v-menu>
                 </th>
-                <th v-if="user.role == 'ADMIN'" id="smallTD">
+                <th v-if="user.role == 'ADMIN'" class="smallTD">
                    <v-text-field
                     v-model="searchILN"
+                    aria-label="Recherche par ILN"
                     append-icon="search"
                     single-line
                     hide-details
@@ -86,6 +89,7 @@
                   <v-text-field
                     v-model="searchRCR"
                     append-icon="search"
+                    aria-label="Recherche par RCR"
                     single-line
                     hide-details
                     clearable
@@ -96,6 +100,7 @@
                   <v-select
                     v-model="searchTraitement"
                     :items="listTraitements"
+                    aria-label="Recherche par type de traitement"
                     item-value="libelle"
                     item-text="libelle"
                     no-data-text="Aucun traitement trouvé."
@@ -103,9 +108,10 @@
                     clearable
                   ></v-select>
                 </th>
-                <th id="smallTD">
+                <th class="smallTD">
                   <v-select
                     v-model="searchStatut"
+                    aria-label="Recherche par statut"
                     :items="listStatut"
                     no-data-text="Aucun statut trouvé."
                     @change="computedItems('statut')"
@@ -144,7 +150,7 @@
               >{{ props.item.statut }}</td>
               <td class="text-xs-center">
                 <v-menu bottom left v-if="props.item.codeStatut >= 2">
-                  <v-btn slot="activator" color="info" small>
+                  <v-btn slot="activator" color="info" small aria-label="Télécharger les fichiers">
                     <v-icon>cloud_download</v-icon>
                   </v-btn>
                   <v-list v-if="props.item.codeStatut >= 3">
@@ -169,14 +175,14 @@
                   </v-list>
                 </v-menu>
                 <span v-if="props.item.codeStatut == 1">
-                  <v-btn slot="activator" color="info" small disabled>
+                  <v-btn slot="activator" color="info" aria-label="Téléchargement impossible" small disabled>
                     <v-icon>cloud_download</v-icon>
                   </v-btn>
                 </span>
               </td>
               <td class="text-xs-center">
                 <span v-if="props.item.codeStatut < 5">
-                  <v-btn icon @click="current = props.item.num; popupDelete = true;">
+                  <v-btn icon @click="current = props.item.num; popupDelete = true;" aria-label="Supprimer">
                     <v-icon>delete</v-icon>
                   </v-btn>
                 </span>
@@ -223,7 +229,7 @@
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" flat @click="dialog = false">Fermer</v-btn>
+            <v-btn color="primary" flat @click="dialog = false" aria-label="Fermer">Fermer</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -236,8 +242,8 @@
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" :loading="deleteLoading" :disabled="deleteLoading" flat @click="deleteDem">Confirmer</v-btn>
-            <v-btn color="primary" flat @click="popupDelete = false">Annuler</v-btn>
+            <v-btn color="primary" :loading="deleteLoading" :disabled="deleteLoading" flat @click="deleteDem" aria-label="Confirmer">Confirmer</v-btn>
+            <v-btn color="primary" flat @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -313,23 +319,23 @@ export default {
       switch (type) {
         case 'ppn':
           filename = `fichier_initial_${numDem}.txt?id=${numDem}`;
-          this.blobName = 'fichier_initial.txt';
+          this.blobName = `fichier_initial_${numDem}.txt`;
           break;
         case 'epn':
           filename = `fichier_prepare_${numDem}.csv?id=${numDem}`;
-          this.blobName = 'fichier_epn.csv';
+          this.blobName = `fichier_epn_${numDem}.csv`;
           break;
         case 'enrichi':
           filename = `fichier_enrichi_${numDem}.csv?id=${numDem}`;
-          this.blobName = 'fichier_enrichi.csv';
+          this.blobName = `fichier_enrichi_${numDem}.csv`;
           break;
         case 'resultat':
           filename = `fichier_resultat_${numDem}.csv?id=${numDem}`;
-          this.blobName = 'fichier_resultat.csv';
+          this.blobName = `fichier_resultat_${numDem}.csv`;
           break;
         default:
           filename = `fichier_prepare_${numDem}.csv?id=${numDem}`;
-          this.blobName = 'fichier_prepare.csv';
+          this.blobName = `fichier_prepare_${numDem}.csv`;
           break;
       }
       if (this.user !== null && this.user.jwt !== null) {
@@ -625,7 +631,7 @@ export default {
   table.v-table thead th {
     font-size: 14px;
   }
-  #smallTD {
+  .smallTD {
     width: 10%
   }
   /* Ne me demandez pas pourquoi, mais ça marche pour aligner les barres de recherche... */

@@ -10,8 +10,8 @@
             <v-divider></v-divider>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="primary" flat @click="dialog = false">Annuler</v-btn>
-              <v-btn color="primary" flat @click="dialog = false, confirm()">Valider</v-btn>
+              <v-btn color="primary" flat @click="dialog = false" aria-label="Annuler">Annuler</v-btn>
+              <v-btn color="primary" flat @click="dialog = false, confirm()" aria-label="Valider">Valider</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -24,7 +24,7 @@
             <v-divider></v-divider>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="primary" flat @click="dialog = false, $router.push({ name: 'tab' })">OK</v-btn>
+              <v-btn color="primary" flat @click="dialog = false, $router.push({ name: 'tab' })" aria-label="OK">OK</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -106,12 +106,13 @@
                     large
                     dark
                     @click="getPreviousSimu()"
+                    aria-label="Notice précédente"
                   >
                     <v-icon>navigate_before</v-icon>
                   </v-btn>
                   <span v-if="noticeEnCours > 0">Notice précedente</span>
                   <br>
-                  <v-btn v-if="!derniereNotice" color="success" fab large dark @click="getNextSimu()">
+                  <v-btn v-if="!derniereNotice" color="success" fab large dark @click="getNextSimu()" aria-label="Notice suivante">
                     <v-icon>navigate_next</v-icon>
                   </v-btn>
                   <span v-if="!derniereNotice">Notice suivante</span>
@@ -138,7 +139,7 @@
         </v-card>
         <br>
         <v-layout justify-end id="layoutButtonOk">
-          <v-btn large color="error" @click="dialog = true">Lancer le traitement en production</v-btn>
+          <v-btn large color="error" @click="dialog = true" aria-label="Lancer le traitement en production">Lancer le traitement en production</v-btn>
         </v-layout>
       </v-flex>
     </v-layout>

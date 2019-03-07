@@ -10,7 +10,7 @@
             <v-card-text>
                 <form enctype="multipart/form-data">
                     <div class="dropbox">
-                        <input type="file" :accept="format" ref="fileInput" @change="checkFile(); checkFormat(); getRefName();" class="input-file">
+                        <input type="file" :accept="format" aria-label="Dépôt du fichier" ref="fileInput" @change="checkFile(); checkFormat(); getRefName();" class="input-file">
                         <p v-if="!fichierPresent">
                             <span v-html="text"></span>
                         </p>
