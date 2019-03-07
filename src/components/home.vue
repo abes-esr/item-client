@@ -15,13 +15,13 @@
 </template>
 
 <script>
-  import menuCards from '@/components/utils/menuCards';
+import menuCards from '@/components/utils/menuCards.vue';
 
-  export default {
-    components: {
-      menuCards,
-    },
-  };
+export default {
+  components: {
+    menuCards,
+  },
+};
 </script>
 
 <style scoped>

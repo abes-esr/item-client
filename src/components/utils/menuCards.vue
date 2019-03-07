@@ -18,22 +18,25 @@
 </template>
 
 <script>
-  export default {
-    name: 'menuCards',
+export default {
+  name: 'menuCards',
 
-    props: {
-      titleName: String,
-      routerLink: String,
-      iconType: String,
-      cardHeight: 0
+  props: {
+    titleName: String,
+    routerLink: String,
+    iconType: String,
+    cardHeight: {
+      type: Number,
+      default: 0,
     },
+  },
 
-    methods: {
-      route() {
-        this.$router.push({ name: this.routerLink });
-      },
+  methods: {
+    route() {
+      this.$router.push({ name: this.routerLink });
     },
-  };
+  },
+};
 </script>
 
 <style scoped>
