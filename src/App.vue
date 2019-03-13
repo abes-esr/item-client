@@ -76,7 +76,7 @@
     </v-content>
     <footerDesc v-if="!authenticated"></footerDesc>
     <footerAbes></footerAbes>
-    <logout :dialog=dialog></logout>
+    <logout :dialog=dialog @closePopup="dialog = false;"></logout>
   </v-app>
 </template>
 

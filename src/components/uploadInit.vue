@@ -1,9 +1,10 @@
 <template>
   <v-container fluid fill-height>
+    <loading :show="loading" label="Chargement en cours..."></loading>
     <v-layout align-center justify-center>
       <v-flex md7>
         <stepper id="stepper" current="2"></stepper>
-        <upload v-if="showForm" :loading="loading" :format=format :title=titleUpload :text=textUpload v-on:upload="uploadFile"></upload>
+        <upload v-if="showForm" :loading="loading" :format=format :title=titleUpload :text=textUpload v-on:upload="uploadFile" @supprimer="supprimerDemande(numDem)"></upload>
         <v-card v-if="!showForm" class="elevation-12">
           <v-toolbar dark color="primary">
             <v-toolbar-title>Récupération du fichier de correspondances PPN / EPN</v-toolbar-title>
@@ -17,7 +18,8 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="info" :disabled="disabledButton" v-on:click="$router.replace({ name: 'traitement' })">Suivant</v-btn>
+            <v-btn color="info" v-on:click="supprimerDemande(numDem)" aria-label="Annuler">Annuler</v-btn>
+            <v-btn color="info" :disabled="disabledButton" v-on:click="$router.replace({ name: 'traitement' })" aria-label="Suivant">Suivant</v-btn>
           </v-card-actions>
         </v-card>
         <br />
@@ -30,17 +32,22 @@
 
 <script>
 import axios from 'axios';
+import loading from 'vue-full-loading';
 import upload from '@/components/utils/upload.vue';
 import stepper from '@/components/utils/stepper.vue';
+import supprMixin from '@/mixins/delete';
 
 export default {
   name: 'uploadComponent',
+  mixins: [supprMixin],
   components: {
     upload,
     stepper,
+    loading,
   },
   data() {
     return {
+      numDem: 0,
       file: '',
       fileLink: '',
       blobName: 'fichier_demande.csv',
@@ -56,13 +63,16 @@ export default {
       disabledButton: true,
     };
   },
+  created() {
+    this.numDem = sessionStorage.getItem('dem');
+  },
   methods: {
     uploadFile(file) {
       this.loading = true;
       this.file = file;
       const formData = new FormData();
       formData.append('file', this.file);
-      formData.append('numDemande', sessionStorage.getItem('dem'));
+      formData.append('numDemande', this.numDem);
 
       this.user = JSON.parse(sessionStorage.getItem('user'));
       if (this.user !== null && this.user.jwt !== null) {
@@ -71,6 +81,7 @@ export default {
             headers: {
               Authorization: this.user.jwt,
               'Content-Type': 'multipart/form-data',
+              charset: 'utf-8',
             },
           })
           .then(
@@ -104,14 +115,13 @@ export default {
       }
     },
     getFileResult() {
-      const numDem = sessionStorage.getItem('dem');
       axios
         .get(
           `${process.env.VUE_APP_ROOT_API
           }files/fichier_prepare_${
-            numDem
+            this.numDem
           }.csv?id=${
-            numDem}`,
+            this.numDem}`,
           {
             headers: {
               Authorization: this.user.jwt,
@@ -124,7 +134,7 @@ export default {
             this.loading = false;
             const blob = new Blob([result.data], { type: 'application/csv' });
             this.fileLink = window.URL.createObjectURL(blob);
-            this.blobName = `fichier_demande_${numDem}.csv`;
+            this.blobName = `fichier_demande_${this.numDem}.csv`;
             // TODO : Réparer ça
             // this.$refs.fileLinkBtn.$el.click();
           },

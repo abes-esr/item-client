@@ -3,7 +3,7 @@
     <v-layout align-center justify-center>
       <v-flex md7>
         <stepper id="stepper" current="4"></stepper>
-        <upload :loading="loading" :format=format :title=titleUpload :text=textUpload v-on:upload="uploadFile"></upload>
+        <upload :loading="loading" :format=format :title=titleUpload :text=textUpload v-on:upload="uploadFile" @supprimer="supprimerDemande(numDem)"></upload>
         <br />
         <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span>
         </v-alert>
@@ -14,12 +14,13 @@
 
 <script>
 import axios from 'axios';
-// eslint-disable-next-line import/no-unresolved
 import upload from '@/components/utils/upload.vue';
 import stepper from '@/components/utils/stepper.vue';
+import supprMixin from '@/mixins/delete';
 
 export default {
   name: 'uploadComponent',
+  mixins: [supprMixin],
   components: {
     upload,
     stepper,
@@ -33,9 +34,13 @@ export default {
       loading: false,
       user: {},
       format: ['csv'],
+      numDem: 0,
       titleUpload: 'Envoyer le fichier complété de la zone d\'exemplaire à traiter',
       textUpload: 'Cliquez ou faites glisser ici<br />pour charger votre fichier complété<br />(format txt ou csv)',
     };
+  },
+  created() {
+    this.numDem = sessionStorage.getItem('dem');
   },
   methods: {
     uploadFile(file) {
@@ -43,7 +48,7 @@ export default {
       this.file = file;
       const formData = new FormData();
       formData.append('file', this.file);
-      formData.append('numDemande', sessionStorage.getItem('dem'));
+      formData.append('numDemande', this.numDem);
 
       this.user = JSON.parse(sessionStorage.getItem('user'));
       if (this.user !== null && this.user.jwt !== null) {

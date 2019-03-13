@@ -139,6 +139,7 @@
         </v-card>
         <br>
         <v-layout justify-end id="layoutButtonOk">
+          <v-btn large color="error" @click="supprimerDemande(numDem)" aria-label="Annuler cette demande">Annuler cette demande</v-btn>
           <v-btn large color="error" @click="dialog = true" aria-label="Lancer le traitement en production">Lancer le traitement en production</v-btn>
         </v-layout>
       </v-flex>
@@ -149,12 +150,14 @@
 import loading from 'vue-full-loading';
 import axios from 'axios';
 import stepper from '@/components/utils/stepper.vue';
+import supprMixin from '@/mixins/delete';
 
 export default {
   components: {
     loading,
     stepper,
   },
+  mixins: [supprMixin],
   data() {
     return {
       noticeEnCours: 0,
@@ -173,20 +176,21 @@ export default {
       dialog: false,
       dialogFinished: false,
       derniereNotice: false,
+      numDem: 0,
     };
   },
   mounted() {
     this.user = JSON.parse(sessionStorage.getItem('user'));
-    const numDem = sessionStorage.getItem('dem');
-    this.getInfosDemande(numDem);
+    this.numDem = sessionStorage.getItem('dem');
+    this.getInfosDemande();
   },
   methods: {
-    getInfosDemande(numDem) {
+    getInfosDemande() {
       this.loading = true;
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
-        url: `${process.env.VUE_APP_ROOT_API}demandes/${numDem}`,
+        url: `${process.env.VUE_APP_ROOT_API}demandes/${this.numDem}`,
       }).then(
         (result) => {
           this.demande = result.data;

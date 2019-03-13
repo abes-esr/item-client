@@ -22,8 +22,8 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="info" v-on:click="">Annuler</v-btn>
-                <v-btn color="info" :disabled="!fichierPresent" v-on:click="$emit('upload', $refs.fileInput.files[0])">Envoyer</v-btn>
+                <v-btn color="info" v-on:click="$emit('supprimer')" aria-label="Annuler">Annuler</v-btn>
+                <v-btn color="info" :disabled="!fichierPresent" v-on:click="$emit('upload', $refs.fileInput.files[0])" aria-label="Envoyer">Envoyer</v-btn>
             </v-card-actions>
         </v-card>
         <br />
