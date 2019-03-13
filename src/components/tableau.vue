@@ -440,7 +440,9 @@ export default {
       if (this.user !== null && this.user.jwt !== null) {
         let url = '';
         if (this.user.role === 'ADMIN') {
-          url = `${process.env.VUE_APP_ROOT_API}demandes`;
+          url = `${process.env.VUE_APP_ROOT_API}demandes?userNum=${
+            this.user.userNum
+          }`;
         } else {
           url = `${process.env.VUE_APP_ROOT_API}chercherDemandes?userNum=${
             this.user.userNum
