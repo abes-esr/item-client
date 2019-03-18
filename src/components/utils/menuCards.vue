@@ -8,7 +8,7 @@
               <v-icon style="margin-top: -7px" x-large dark color="white">{{ iconType }}</v-icon>
             </span>
           </v-flex>
-          <v-flex class="xs6 ml-4">
+          <v-flex class="xs9 ml-3">
             <h3 class="headline">{{ titleName }}</h3>
           </v-flex>
         </v-layout>
