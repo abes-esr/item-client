@@ -7,7 +7,8 @@ const LoginComponent = () => import('@/components/login.vue');
 const RcrComponent = () => import('@/components/rcr.vue');
 const uploadComponent = () => import('@/components/uploadInit.vue');
 const traitementComponent = () => import('@/components/selectTraitement.vue');
-const TableauComponent = () => import('@/components/tableau.vue');
+const GererComponent = () => import('@/components/gerer.vue');
+const ArchiveComponent = () => import('@/components/archive.vue');
 const ProfilComponent = () => import('@/components/profil.vue');
 const AboutComponent = () => import('@/components/footer/about.vue');
 const CGUComponent = () => import('@/components/footer/cgu.vue');
@@ -86,7 +87,15 @@ const router = new Router({
     {
       path: '/tableau',
       name: 'tab',
-      component: TableauComponent,
+      component: GererComponent,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/archive',
+      name: 'archive',
+      component: ArchiveComponent,
       meta: {
         requiresAuth: true,
       },
