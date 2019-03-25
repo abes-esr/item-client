@@ -26,7 +26,6 @@ export default {
     routerLink: String,
     iconType: String,
     cardHeight: {
-      type: Number,
       default: 0,
     },
   },

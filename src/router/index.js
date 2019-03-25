@@ -143,17 +143,17 @@ const router = new Router({
   mode: 'history',
 });
 
-router.beforeEach((to, from, next) => {
+// eslint-disable-next-line consistent-return
+router.beforeResolve((to, from, next) => {
   const user = JSON.parse(sessionStorage.getItem('user'));
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (user == null || user.jwt == null) {
       next({
+        replace: true,
         path: '/login',
       });
-    } else if (user.email == null && to.path !== '/profil') {
-      next({
-        path: '/profil',
-      });
+    } else if ((user.email === null || user.email === '') && to.path !== '/profil') {
+      return next('/profil');
     } else {
       next();
     }

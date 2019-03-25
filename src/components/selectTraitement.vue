@@ -13,12 +13,12 @@
             <!--
             <v-select v-model="selected" :items="listTraitements" item-value="numTraitement" item-text="libelle" label="Séléctionnez le traitement dans la liste" no-data-text="Aucun traitement trouvé." @change="active = true;">
             </v-select> -->
-            <v-card raised hover v-for="traitement in listTraitements" :key="traitement.numTraitement" @click="selected=traitement; selectTraitement();">
+            <v-card raised hover v-for="traitement in listTraitements" :key="traitement.numTraitement" @click="selected=traitement; selectTraitement();" height="7.8em">
                     <v-card-title primary-title>
                         <v-container grid-list-md>
                             <v-layout row wrap align-center>
                                 <v-flex xs2>
-                                    <span class="group pa-3 secondary">
+                                    <span class="group pa-3 secondary" style="height: 4.2em">
                                         <v-icon v-if="traitement.numTraitement == 1" x-large dark>add</v-icon>
                                         <v-icon v-else-if="traitement.numTraitement == 2" x-large dark>redo</v-icon>
                                         <v-icon v-else-if="traitement.numTraitement == 3" x-large dark>edit</v-icon>

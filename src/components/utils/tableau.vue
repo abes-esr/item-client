@@ -182,12 +182,12 @@
                 </span>
               </td>
               <td v-if="!archive" class="text-xs-center">
-                <span v-if="props.item.codeStatut < 5">
+                <span v-if="props.item.codeStatut < 5 && user.iln == props.item.iln">
                   <v-btn icon @click="current = props.item.num; popupDelete = true;" aria-label="Supprimer">
                     <v-icon>delete</v-icon>
                   </v-btn>
                 </span>
-                <span v-else-if="props.item.codeStatut == 7">
+                <span v-else-if="props.item.codeStatut == 7 && user.iln == props.item.iln">
                   <v-btn icon @click="current = props.item.num; popupArchive = true;" aria-label="Supprimer">
                     <v-icon>archive</v-icon>
                   </v-btn>

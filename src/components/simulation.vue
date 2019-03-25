@@ -139,7 +139,7 @@
         </v-card>
         <br>
         <v-layout justify-end id="layoutButtonOk">
-          <v-btn large color="error" @click="supprimerDemande(numDem)" aria-label="Annuler cette demande">Annuler cette demande</v-btn>
+          <v-btn large color="error" @click="precedentDemande(numDem)" aria-label="Annuler cette demande">Annuler cette demande</v-btn>
           <v-btn large color="error" @click="dialog = true" aria-label="Lancer le traitement en production">Lancer le traitement en production</v-btn>
         </v-layout>
       </v-flex>

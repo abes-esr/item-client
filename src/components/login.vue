@@ -113,7 +113,7 @@ export default {
     },
     getMail() {
       this.user = JSON.parse(sessionStorage.getItem('user'));
-      if (this.user.email === null) {
+      if (this.user.email === null || this.user.email === '') {
         this.$router.replace({ name: 'profil' });
       } else {
         this.$router.replace({ name: 'home' });
