@@ -6,7 +6,8 @@
           <span v-html="alertMessage"></span>
         </v-alert>
         <v-card>
-          <v-card-title class="title">Gérer mes demandes</v-card-title>
+          <v-card-title v-if="archive" class="title">Mes demandes archivées</v-card-title>
+          <v-card-title v-else class="title">Gérer mes demandes</v-card-title>
           <v-data-table
             :loading="tableLoading"
             :headers="headers"
@@ -108,7 +109,7 @@
                     clearable
                   ></v-select>
                 </th>
-                <th class="smallTD">
+                <th v-if="!archive" class="smallTD">
                   <v-select
                     v-model="searchStatut"
                     aria-label="Recherche par statut"
@@ -119,7 +120,7 @@
                   ></v-select>
                 </th>
                 <th></th>
-                <th></th>
+                <th v-if="!archive"></th>
               </tr>
             </template>
             <template slot="items" slot-scope="props">
@@ -180,14 +181,16 @@
                   </v-btn>
                 </span>
               </td>
-              <td class="text-xs-center">
+              <td v-if="!archive" class="text-xs-center">
                 <span v-if="props.item.codeStatut < 5">
                   <v-btn icon @click="current = props.item.num; popupDelete = true;" aria-label="Supprimer">
                     <v-icon>delete</v-icon>
                   </v-btn>
                 </span>
                 <span v-else-if="props.item.codeStatut == 7">
-                  <v-icon>archive</v-icon>
+                  <v-btn icon @click="current = props.item.num; popupArchive = true;" aria-label="Supprimer">
+                    <v-icon>archive</v-icon>
+                  </v-btn>
                 </span>
               </td>
             </template>
@@ -233,7 +236,7 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <v-dialog v-model="popupDelete" width="500">
+      <v-dialog v-if="!archive" v-model="popupDelete" width="500">
         <v-card>
           <v-card-title class="headline" primary-title>Suppression</v-card-title>
           <v-card-text>
@@ -242,8 +245,22 @@
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" :loading="deleteLoading" :disabled="deleteLoading" flat @click="deleteDem" aria-label="Confirmer">Confirmer</v-btn>
             <v-btn color="primary" flat @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
+            <v-btn color="primary" :loading="deleteLoading" :disabled="deleteLoading" flat @click="deleteDem" aria-label="Confirmer">Confirmer</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <v-dialog v-if="!archive" v-model="popupArchive" width="500">
+        <v-card>
+          <v-card-title class="headline" primary-title>Archiver</v-card-title>
+          <v-card-text>
+            Êtes-vous certain de vouloir archiver cette demande ?
+          </v-card-text>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" flat @click="popupArchive = false" aria-label="Annuler">Annuler</v-btn>
+            <v-btn color="primary" :loading="deleteLoading" :disabled="deleteLoading" flat @click="archiveDem" aria-label="Confirmer">Confirmer</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -288,10 +305,20 @@ export default {
       listStatut: [],
       tableLoading: true,
       popupDelete: false,
+      popupArchive: false,
       deleteLoading: false,
       current: '',
       polling: null,
     };
+  },
+  props: {
+    /** Tableau d'archive ou non ?
+     * Si oui, on affiche uniquement les demandes archivées et désactive certaines fonctions
+     * Si non, on affiche le tableau de gestion classique
+     */
+    archive: {
+      default: false,
+    },
   },
   beforeDestroy() {
     clearInterval(this.polling);
@@ -304,8 +331,9 @@ export default {
     // Rafraichissement des données toutes les 10 sec
     this.polling = setInterval(this.fetchData, 10000);
     this.getListTraitements();
-    this.getListStatus();
-
+    if (!this.archive) {
+      this.getListStatus();
+    }
 
     // Tri par défaut sur les numéros demandes
     this.changeSort('num');
@@ -407,7 +435,28 @@ export default {
       }
     },
     initHeader() {
-      if (this.user.role === 'ADMIN') {
+      if (this.archive) {
+        if (this.user.role === 'ADMIN') {
+          this.headers = [
+            { text: 'Numéro de demande', value: 'num' },
+            { text: 'Date Création', value: 'date' },
+            { text: 'ILN', value: 'iln' },
+            { text: 'RCR', value: 'rcr' },
+            { text: 'Traitement', value: 'traitement' },
+            { text: 'Statut', value: 'statut' },
+            { text: 'Résultat', value: 'codeStatut' },
+          ];
+        } else {
+          this.headers = [
+            { text: 'Numéro de demande', value: 'num' },
+            { text: 'Date Création', value: 'date' },
+            { text: 'RCR', value: 'rcr' },
+            { text: 'Traitement', value: 'traitement' },
+            { text: 'Statut', value: 'statut' },
+            { text: 'Résultat', value: 'codeStatut' },
+          ];
+        }
+      } else if (this.user.role === 'ADMIN') {
         this.headers = [
           { text: 'Numéro de demande', value: 'num' },
           { text: 'Date Création', value: 'date' },
@@ -430,6 +479,7 @@ export default {
         ];
       }
 
+
       this.searchCombo = Object.assign([], this.headers);
       this.searchCombo.splice(this.searchCombo.length - 1, 1);
       for (let i = 0; i < this.searchCombo.length; i += 1) {
@@ -437,9 +487,14 @@ export default {
       }
     },
     fetchData() {
+      this.alert = false;
       if (this.user !== null && this.user.jwt !== null) {
         let url = '';
-        if (this.user.role === 'ADMIN') {
+        if (this.archive) {
+          url = `${process.env.VUE_APP_ROOT_API}chercherArchives?userNum=${
+            this.user.userNum
+          }`;
+        } else if (this.user.role === 'ADMIN') {
           url = `${process.env.VUE_APP_ROOT_API}demandes?userNum=${
             this.user.userNum
           }`;
@@ -448,6 +503,7 @@ export default {
             this.user.userNum
           }`;
         }
+
 
         axios({
           headers: { Authorization: this.user.jwt },
@@ -477,9 +533,8 @@ export default {
                 statut: result.data[key].etatDemande.libelle,
                 codeStatut: result.data[key].etatDemande.numEtat,
               });
-
-              this.tableLoading = false;
             }
+            this.tableLoading = false;
           },
           (error) => {
             this.alertMessage = 'Impossible de récupérer la liste des demandes. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.';
@@ -615,6 +670,33 @@ export default {
           this.alertType = 'error';
           this.alert = true;
           this.popupDelete = false;
+          this.deleteLoading = false;
+          if (error.response.status === 401) {
+            this.$emit('logout');
+          }
+        },
+      );
+    },
+    archiveDem() {
+      this.deleteLoading = true;
+      axios({
+        headers: { Authorization: this.user.jwt },
+        method: 'GET',
+        url: `${process.env.VUE_APP_ROOT_API}archiverDemande?numDemande=${this.current}`,
+      }).then(
+        () => {
+          this.alertMessage = 'Demande archivée.';
+          this.alertType = 'success';
+          this.alert = true;
+          this.fetchData();
+          this.popupArchive = false;
+          this.deleteLoading = false;
+        },
+        (error) => {
+          this.alertMessage = 'Impossible d\'archiver votre demande, merci de réessayer plus tard. Si le problème persiste, contactez nous.';
+          this.alertType = 'error';
+          this.alert = true;
+          this.popupArchive = false;
           this.deleteLoading = false;
           if (error.response.status === 401) {
             this.$emit('logout');

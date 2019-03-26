@@ -42,6 +42,14 @@
             <v-list-tile-title>Gérer mes demandes</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
+        <v-list-tile v-on:click="$router.push({ name: 'archive' })">
+          <v-list-tile-action>
+            <v-icon>archive</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Demandes archivées</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
         <v-list-tile v-on:click="$router.push({ name: 'profil' })">
           <v-list-tile-action>
             <v-icon>face</v-icon>
@@ -65,7 +73,7 @@
           <span>Documentation</span>
         </v-tooltip>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <v-tooltip left nudge-bottom="20" v-if="authenticated">
-          <span slot="activator" @click="logout()"><img src="@/assets/deconnexion.png" alt="icone déconnexion" width="38px" height="38px"></span>
+          <span slot="activator" @click="logout()"><a><img src="@/assets/deconnexion.png" alt="icone déconnexion" width="38px" height="38px"></a></span>
           <span>Déconnexion</span>
         </v-tooltip>
     </v-toolbar>
