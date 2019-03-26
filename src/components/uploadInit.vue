@@ -66,7 +66,7 @@ export default {
   },
   created() {
     this.numDem = sessionStorage.getItem('dem');
-    //this.numRcr = sessionStorage
+    // this.numRcr = sessionStorage
   },
   methods: {
     uploadFile(file) {
