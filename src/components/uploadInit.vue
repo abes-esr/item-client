@@ -48,6 +48,7 @@ export default {
   data() {
     return {
       numDem: 0,
+      numRcr: 0,
       file: '',
       fileLink: '',
       blobName: 'fichier_demande.csv',
@@ -65,6 +66,7 @@ export default {
   },
   created() {
     this.numDem = sessionStorage.getItem('dem');
+    //this.numRcr = sessionStorage
   },
   methods: {
     uploadFile(file) {
