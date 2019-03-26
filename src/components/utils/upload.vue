@@ -6,6 +6,7 @@
             <v-toolbar dark color="primary">
                 <v-toolbar-title>{{ title }}</v-toolbar-title>
                 <v-spacer></v-spacer>
+                <v-btn flat @click="popupDelete = true"><v-icon>delete</v-icon>Supprimer</v-btn>
             </v-toolbar>
             <v-card-text>
                 <form enctype="multipart/form-data">
@@ -22,13 +23,27 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="info" v-on:click="$emit('precedent')" aria-label="Annuler">Précédent</v-btn>
-                <v-btn color="info" :disabled="!fichierPresent" v-on:click="$emit('upload', $refs.fileInput.files[0])" aria-label="Envoyer">Envoyer</v-btn>
+                <v-btn color="info" v-if="precedent" @click="$emit('precedent')" aria-label="Annuler">Précédent</v-btn>
+                <v-btn color="info" :disabled="!fichierPresent" @click="$emit('upload', $refs.fileInput.files[0])" aria-label="Envoyer">Envoyer</v-btn>
             </v-card-actions>
         </v-card>
         <br />
         <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span>
         </v-alert>
+        <v-dialog v-model="popupDelete" width="500">
+        <v-card>
+          <v-card-title class="headline" primary-title>Suppression</v-card-title>
+          <v-card-text>
+            Êtes-vous certain de vouloir supprimer définitivement cette demande ?
+          </v-card-text>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" flat @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
+            <v-btn color="primary" flat @click="$emit('supprimer')" aria-label="Confirmer">Confirmer</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-container>
 </template>
 
@@ -61,6 +76,10 @@ export default {
     format: {
       default: ['txt'],
     },
+    /** Afficher le bouton précédent */
+    precedent: {
+      default: false,
+    },
   },
   data() {
     return {
@@ -69,6 +88,7 @@ export default {
       alertMessage: 'Erreur.',
       alertType: 'error',
       filename: '',
+      popupDelete: false,
     };
   },
   methods: {

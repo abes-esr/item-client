@@ -3,7 +3,7 @@
     <v-layout align-center justify-center>
       <v-flex md7>
         <stepper id="stepper" current="4"></stepper>
-        <upload :loading="loading" :format=format :title=titleUpload :text=textUpload v-on:upload="uploadFile" @precedent="precedentDemande(numDem)"></upload>
+        <upload :loading="loading" :format=format :precedent="true" :title=titleUpload :text=textUpload v-on:upload="uploadFile" @precedent="precedentDemande(numDem)" @supprimer="supprimerDemande(numDem)"></upload>
         <br />
         <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span>
         </v-alert>

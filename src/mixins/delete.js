@@ -12,10 +12,11 @@ export default {
       }).then(
         () => {
           this.loading = false;
-          this.$router.push('/');
+          this.$router.replace('/');
         },
         () => {
           this.alert = true;
+          this.alertType = 'error';
           this.alertMessage = "Impossible d'annuler la demande. Veuillez réessayer ultérieurement. Merci de nous contacter si le problème persiste.";
           this.loading = false;
         },
@@ -31,10 +32,11 @@ export default {
       }).then(
         () => {
           this.loading = false;
-          this.$router.push('/rcr');
+          this.$router.replace('/fichier');
         },
         () => {
           this.alert = true;
+          this.alertType = 'error';
           this.alertMessage = 'Impossible de revenir en arrière. Veuillez réessayer ultérieurement. Merci de nous contacter si le problème persiste.';
           this.loading = false;
         },

@@ -8,6 +8,7 @@
           <v-toolbar dark color="primary">
             <v-toolbar-title>Choix du type de traitement</v-toolbar-title>
             <v-spacer></v-spacer>
+            <v-btn flat @click="popupDelete = true"><v-icon>delete</v-icon>Supprimer</v-btn>
           </v-toolbar>
           <v-card-text>
             <v-card raised hover v-for="traitement in listTraitements" :key="traitement.numTraitement" @click="selected=traitement; selectTraitement();" height="7.8em">
@@ -41,6 +42,20 @@
         <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span>
         </v-alert>
       </v-flex>
+      <v-dialog v-model="popupDelete" width="500">
+        <v-card>
+          <v-card-title class="headline" primary-title>Suppression</v-card-title>
+          <v-card-text>
+            Êtes-vous certain de vouloir supprimer définitivement cette demande ?
+          </v-card-text>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" flat @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
+            <v-btn color="primary" flat @click="supprimerDemande(numDem)" aria-label="Confirmer">Confirmer</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-layout>
   </v-container>
 </template>
@@ -69,6 +84,7 @@ export default {
       user: {},
       loading: false,
       numDem: 0,
+      popupDelete: false,
     };
   },
   mounted() {
