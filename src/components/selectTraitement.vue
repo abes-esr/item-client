@@ -10,9 +10,6 @@
             <v-spacer></v-spacer>
           </v-toolbar>
           <v-card-text>
-            <!--
-            <v-select v-model="selected" :items="listTraitements" item-value="numTraitement" item-text="libelle" label="Séléctionnez le traitement dans la liste" no-data-text="Aucun traitement trouvé." @change="active = true;">
-            </v-select> -->
             <v-card raised hover v-for="traitement in listTraitements" :key="traitement.numTraitement" @click="selected=traitement; selectTraitement();" height="7.8em">
                     <v-card-title primary-title>
                         <v-container grid-list-md>
@@ -35,10 +32,10 @@
                     </v-card-title>
                 </v-card>
           </v-card-text>
-          <!-- <v-card-actions>
+          <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="info" :disabled="!active" v-on:click="selectTraitement()">Valider</v-btn>
-          </v-card-actions> -->
+            <v-btn color="info" v-on:click="precedentDemande(numDem)">Précédent</v-btn>
+          </v-card-actions>
         </v-card>
         <br />
         <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span>
@@ -52,8 +49,10 @@
 import axios from 'axios';
 import loading from 'vue-full-loading';
 import stepper from '@/components/utils/stepper.vue';
+import supprMixin from '@/mixins/delete';
 
 export default {
+  mixins: [supprMixin],
   components: {
     loading,
     stepper,
@@ -69,10 +68,12 @@ export default {
       alertType: 'error',
       user: {},
       loading: false,
+      numDem: 0,
     };
   },
   mounted() {
     this.getListTraitements();
+    this.numDem = sessionStorage.getItem('dem');
   },
   methods: {
     getListTraitements() {

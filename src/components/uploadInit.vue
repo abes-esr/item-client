@@ -4,7 +4,7 @@
     <v-layout align-center justify-center>
       <v-flex md7>
         <stepper id="stepper" current="2"></stepper>
-        <upload v-if="showForm" :loading="loading" :format=format :title=titleUpload :text=textUpload v-on:upload="uploadFile" @supprimer="precedentDemande(numDem)"></upload>
+        <upload v-if="showForm" :loading="loading" :format=format :title=titleUpload :text=textUpload v-on:upload="uploadFile" @precedent="precedentDemande(numDem)"></upload>
         <v-card v-if="!showForm" class="elevation-12">
           <v-toolbar dark color="primary">
             <v-toolbar-title>Récupération du fichier de correspondances PPN / EPN</v-toolbar-title>
@@ -18,7 +18,7 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="info" v-on:click="precedentDemande(numDem)" aria-label="Annuler">Annuler</v-btn>
+            <v-btn color="info" v-on:click="precedentDemande(numDem)" aria-label="Annuler">Précédent</v-btn>
             <v-btn color="info" :disabled="disabledButton" v-on:click="$router.replace({ name: 'traitement' })" aria-label="Suivant">Suivant</v-btn>
           </v-card-actions>
         </v-card>
