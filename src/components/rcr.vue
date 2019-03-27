@@ -6,7 +6,7 @@
         <stepper id="stepper" current="1"></stepper>
         <v-card class="elevation-12">
           <v-toolbar dark color="primary">
-            <v-toolbar-title>Séléction du RCR</v-toolbar-title>
+            <v-toolbar-title>Sélection du RCR</v-toolbar-title>
             <v-spacer></v-spacer>
           </v-toolbar>
           <v-card-text>
@@ -16,7 +16,7 @@
               :items="listRcr"
               item-value="rcr"
               item-text="name"
-              label="Séléctionnez votre RCR dans la liste"
+              label="Sélectionnez votre RCR dans la liste"
               no-data-text="Aucun RCR correspondant."
               hint="Entrez le début du RCR de l'éblissement ou une partie du nom pour rechercher"
               persistent-hint
