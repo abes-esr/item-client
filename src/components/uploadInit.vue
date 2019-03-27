@@ -75,16 +75,29 @@ export default {
       user: {},
       format: ['txt', 'csv'],
       textUpload: 'Cliquez ou faites glisser ici<br />pour charger votre liste de PPN<br />(fichier PPN sur une colonne, format txt ou csv)',
-      titleUpload: 'Obtenir pour votre RCR une correspondance PPN / EPN',
+      titleUpload: '',
       disabledButton: true,
       popupDelete: false,
     };
   },
   created() {
+    this.user = JSON.parse(sessionStorage.getItem('user'));
     this.numDem = sessionStorage.getItem('dem');
-    // this.numRcr = sessionStorage
+    this.setTitleUploadWithRcr();
   },
   methods: {
+    setTitleUploadWithRcr() {
+      this.loading = true;
+      axios({
+        headers: { Authorization: this.user.jwt },
+        method: 'GET',
+        url: `${process.env.VUE_APP_ROOT_API}demandes/${this.numDem}`,
+      }).then(
+        (result) => { // L'objet result contient le numero de RCR, qui n'est pas accessible via sessionStorage
+          this.titleUpload = `RCR n°${result.data.rcr} : obtenir correspondance PPN / EPN`;
+        },
+      );
+    },
     uploadFile(file) {
       this.loading = true;
       this.file = file;
@@ -92,7 +105,6 @@ export default {
       formData.append('file', this.file);
       formData.append('numDemande', this.numDem);
 
-      this.user = JSON.parse(sessionStorage.getItem('user'));
       if (this.user !== null && this.user.jwt !== null) {
         axios
           .post(`${process.env.VUE_APP_ROOT_API}uploadDemande`, formData, {
