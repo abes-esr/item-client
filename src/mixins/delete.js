@@ -23,6 +23,7 @@ export default {
       );
     },
     precedentDemande(numDemande) {
+      console.info('App currentRoute:', this.$router.currentRoute.name);
       this.loading = true;
       const user = JSON.parse(sessionStorage.getItem('user'));
       axios({
@@ -32,7 +33,12 @@ export default {
       }).then(
         () => {
           this.loading = false;
-          this.$router.replace('/fichier');
+          // Redirection après précédent
+          if (this.$router.currentRoute.name === 'uploadFinal') {
+            this.$router.replace('/traitement');
+          } else {
+            this.$router.replace('/fichier');
+          }
         },
         () => {
           this.alert = true;

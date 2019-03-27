@@ -29,13 +29,8 @@
             </p>
             <h2 class="display-1">4. Présentation du site</h2>
             <p>
-              Le site
-              <span style="font-weight: blod; color: red;">Nom application</span>a pour objet :
-            </p>
-            <p>
-              <span
-                style="font-weight: blod; color: red;"
-              >Description du site internet et de son objet à remplir par le responsable fonctionnel (en 2 ou 3 lignes)</span>
+              L'application professionnelle Colodus est conçue pour la gestion des exemplaires (création, modification, suppression) liés aux notices bibliographiques du catalogue Sudoc. Elle est à la disposition des profession
+              Elle est à la disposition des professionnels des réseaux Sudoc et Sudoc-PS habilités à intervenir sur les données d’exemplaires de leur établissement.
             </p>
             <h2 class="display-1">5. Contact</h2>
             <p>
@@ -45,15 +40,10 @@
             </p>
             <p></p>
             <ul>
-              <li style="font-weight: blod; color: red;">
-                Pour les applications qui ont un guichet d’assistance ajouter le lien (eg. pour theses.fr :
-                <a
-                  href="https://stp.abes.fr/node/3?origine=thesesFr"
-                >Guichet d'assistance</a>)
+              <li>
+                <a href="https://stp.abes.fr/node/3?origine=colodus">Guichet d'assistance</a>
               </li>
-              <li
-                style="font-weight: blod; color: red;"
-              >Le secrétariat de l'ABES au +33 4 67 54 84 10</li>
+              <li>Le secrétariat de l'ABES au +33 4 67 54 84 10</li>
             </ul>
             <h2 class="display-1">6. Propriété intellectuelle</h2>
             <p>
