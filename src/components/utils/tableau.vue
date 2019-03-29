@@ -164,11 +164,11 @@
               <td
                 class="text-xs-left"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
-              >{{ props.item.dateCreation }}</td>
+              >{{ props.item.dateCreation | formatDate }}</td>
               <td
                 class="text-xs-left"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
-              >{{ props.item.dateModification }}</td>
+              >{{ props.item.dateModification | formatDate }}</td>
               <td
                 v-if="user.role == 'ADMIN'"
                 class="text-xs-left"
@@ -307,6 +307,7 @@
 
 <script>
 import axios from 'axios';
+import moment from 'moment';
 
 export default {
   name: 'tableauComponent',
@@ -356,6 +357,14 @@ export default {
      */
     archive: {
       default: false,
+    },
+  },
+  filters: {
+    formatDate(value) {
+      if (value) {
+        return moment(String(value)).format('MM/DD/YYYY hh:mm');
+      }
+      return value;
     },
   },
   beforeDestroy() {
@@ -476,9 +485,9 @@ export default {
       if (this.archive) {
         if (this.user.role === 'ADMIN') {
           this.headers = [
-            { text: 'Numéro de demande', value: 'num' },
+            { text: 'Demande', value: 'num' },
             { text: 'Création', value: 'dateCreation' },
-            { text: 'Dernière Modification', value: 'dateModification' },
+            { text: 'Modification', value: 'dateModification' },
             { text: 'ILN', value: 'iln' },
             { text: 'RCR', value: 'rcr' },
             { text: 'Traitement', value: 'traitement' },
@@ -487,9 +496,9 @@ export default {
           ];
         } else {
           this.headers = [
-            { text: 'Numéro de demande', value: 'num' },
+            { text: 'Demande', value: 'num' },
             { text: 'Création', value: 'dateCreation' },
-            { text: 'Dernière Modification', value: 'dateModification' },
+            { text: 'Modification', value: 'dateModification' },
             { text: 'RCR', value: 'rcr' },
             { text: 'Traitement', value: 'traitement' },
             { text: 'Statut', value: 'statut' },
@@ -498,9 +507,9 @@ export default {
         }
       } else if (this.user.role === 'ADMIN') {
         this.headers = [
-          { text: 'Numéro de demande', value: 'num' },
+          { text: 'Demande', value: 'num' },
           { text: 'Création', value: 'dateCreation' },
-          { text: 'Dernière Modification', value: 'dateModification' },
+          { text: 'Modification', value: 'dateModification' },
           { text: 'ILN', value: 'iln' },
           { text: 'RCR', value: 'rcr' },
           { text: 'Traitement', value: 'traitement' },
@@ -510,9 +519,9 @@ export default {
         ];
       } else {
         this.headers = [
-          { text: 'Numéro de demande', value: 'num' },
+          { text: 'Demande', value: 'num' },
           { text: 'Création', value: 'dateCreation' },
-          { text: 'Dernière Modification', value: 'dateModification' },
+          { text: 'Modification', value: 'dateModification' },
           { text: 'RCR', value: 'rcr' },
           { text: 'Traitement', value: 'traitement' },
           { text: 'Statut', value: 'statut' },
