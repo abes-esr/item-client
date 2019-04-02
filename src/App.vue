@@ -1,5 +1,6 @@
 <template>
   <v-app id="inspire" :dark="isDark">
+    <!-- MENU LATERAL -->
     <v-navigation-drawer v-model="drawer" fixed app v-if="authenticated">
       <v-toolbar flat class="transparent mb-4">
         <v-list three-line>
@@ -60,6 +61,7 @@
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
+    <!-- BARRE DE TITRE SUPERIEURE -->
     <v-toolbar color="primary" dark fixed app>
       <v-toolbar-side-icon @click.stop="drawer = !drawer" v-if="authenticated" aria-label="menu latéral"></v-toolbar-side-icon>
       <v-toolbar-title></v-toolbar-title>
@@ -82,8 +84,10 @@
         <router-view @authenticated="setAuthenticated" @logout="logoutExpired" />
       </transition>
     </v-content>
+    <!-- FOOTER -->
     <footerDesc v-if="!authenticated"></footerDesc>
     <footerAbes></footerAbes>
+    <!-- POPUP EN CAS DE DECONNEXION AUTOMATIQUE -->
     <logout :dialog=dialog @closePopup="dialog = false;"></logout>
   </v-app>
 </template>
@@ -112,6 +116,8 @@ export default {
   },
   mounted() {
     this.getUserData();
+
+    // Bannière pour prévenir de l'utilisation de cookies
     const cookieScript = document.createElement('script');
     cookieScript.setAttribute(
       'src',
@@ -136,6 +142,7 @@ export default {
       this.authenticated = status;
       this.getUserData();
     },
+    // Vide la session en cas de déconnexion, puis renvoie vers la page de logn
     logout() {
       this.authenticated = false;
       sessionStorage.clear();
@@ -144,10 +151,12 @@ export default {
 
       this.$router.push({ name: 'login' });
     },
+    // Affiche la popup de déconnexion automatique, puis lance la déconnexion
     logoutExpired() {
       this.dialog = true;
       this.logout();
     },
+    // Récupère les données de l'utilisateur depuis la session
     getUserData() {
       if (sessionStorage.getItem('user') != null) {
         this.user = JSON.parse(sessionStorage.getItem('user'));

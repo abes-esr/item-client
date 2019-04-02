@@ -35,6 +35,7 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
+            <!-- precedentDemande(numDem) est contenue dans le mixin delete.js importé plus bas -->
             <v-btn color="info" v-on:click="precedentDemande(numDem)">Précédent</v-btn>
           </v-card-actions>
         </v-card>
@@ -52,6 +53,7 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="primary" flat @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
+            <!-- supprimerDemande(numDem) est contenue dans le mixin delete.js importé plus bas -->
             <v-btn color="primary" flat @click="supprimerDemande(numDem)" aria-label="Confirmer">Confirmer</v-btn>
           </v-card-actions>
         </v-card>
@@ -67,6 +69,7 @@ import stepper from '@/components/utils/stepper.vue';
 import supprMixin from '@/mixins/delete';
 
 export default {
+  // Import du mixin contenant les méthodes suppression et de précédent
   mixins: [supprMixin],
   components: {
     loading,
@@ -89,9 +92,12 @@ export default {
   },
   mounted() {
     this.getListTraitements();
+    // Récupération du numéro de demande courant depuis sessionStorage
+    // Il est enregistré par rcr.vue lors de la création, ou depuis le tableau lorsque l'on clique sur une demande
     this.numDem = sessionStorage.getItem('dem');
   },
   methods: {
+    // Récupère la liste des traitements afin de les afficher
     getListTraitements() {
       this.loading = true;
       this.user = JSON.parse(sessionStorage.getItem('user'));
@@ -116,6 +122,8 @@ export default {
       }
       this.loading = false;
     },
+    // Lorsque l'utilisateur choisit le traitement (au clic) on récupère la demande en GET et on modifie le traitement dans l'objet demande
+    // Puis la méthode permettant d'enregistrer la MAJ est appelée
     selectTraitement() {
       this.active = false;
       this.alert = false;
@@ -145,6 +153,8 @@ export default {
         );
       }
     },
+    // Enregistrement des modification de la demande
+    // On renvoie l'objet complet modifié
     updateDemande(demande) {
       this.loading = true;
       axios({

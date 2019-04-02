@@ -1,4 +1,5 @@
 <template>
+  <!-- SELECTION DU RCR -->
   <v-container fluid fill-height>
     <v-layout justify-center align-center>
       <loading :show="show" :label="label"></loading>
@@ -64,7 +65,10 @@ export default {
     };
   },
   mounted() {
+    // On récupère les infos utilisateur en session car on a besoin du jwt afin d'appeler les WS REST
     this.user = JSON.parse(sessionStorage.getItem('user'));
+
+    // Appel d'un WS IDRef qui liste les RCR de notre ILN
     if (this.user !== null && this.user.jwt !== null) {
       axios({
         method: 'GET',
@@ -97,6 +101,7 @@ export default {
     }
   },
   methods: {
+    // Crée la demande associée au RCR que l'utilisateur vient de séléctionner
     selectRCR() {
       if (this.user !== null && this.user.jwt !== null) {
         this.active = false;
@@ -112,7 +117,9 @@ export default {
                 this.user.userNum}`,
         }).then(
           (result) => {
+            // On stocke le numéro de la demande en session, utilisé par d'autres composants
             sessionStorage.setItem('dem', result.data.numDemande);
+            // Passage à l'étape suivante
             this.$router.replace({ name: 'upload' });
           },
           (error) => {
@@ -123,18 +130,23 @@ export default {
             this.active = true;
 
             if (error.response.status === 401) {
+              // Si 401 (token jwt invalide ou expiré) on fait remonter aux composants parents l'evenement "logout" afin d'afficher la popup de déconnexion et vider la session
+              // C'est le composant principal (App.vue) qui s'en occupe
               this.$emit('logout');
             }
           },
         );
       }
     },
+    // Autocomplétion des RCR disponibles lorsque l'utilsateur commence à saisir
     searchRCR(item, queryText) {
       return (
+        // On filtre sur le numéro et le nom du RCR
         item.rcr.startsWith(queryText)
           || item.shortname.toLowerCase().includes(queryText.toLowerCase())
       );
     },
+    // Active le bouton valider uniquement lorsque l'utilisateur a séléctionné un RCR (selected)
     checkActive(selected) {
       if (selected !== null && selected !== '') {
         this.active = true;

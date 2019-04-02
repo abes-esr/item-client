@@ -1,4 +1,5 @@
 <template>
+  <!-- MODIFICATION DE L'ADRESSE MAIL -->
   <v-container fluid fill-height>
     <v-layout align-center justify-center>
       <v-flex md7>
@@ -59,6 +60,7 @@ export default {
     };
   },
   mounted() {
+    // On récupère les infos utilisateur en session car on a besoin du jwt afin d'appeler les WS REST
     this.user = JSON.parse(sessionStorage.getItem('user'));
   },
   methods: {
@@ -66,6 +68,7 @@ export default {
       this.loading = true;
       this.alert = false;
 
+      // Si les 2 emails entrés sont identiques
       if (
         this.$refs.form.validate()
           && this.input.email1 === this.input.email2
@@ -81,6 +84,7 @@ export default {
           },
         }).then(
           (result) => {
+            // On met à jour l'objet utilisateur en session, puis redirige vers la page d'accueil
             this.user.email = result.data.email;
             sessionStorage.setItem('user', JSON.stringify(this.user));
             this.$router.replace({ name: 'home' });
@@ -90,6 +94,8 @@ export default {
             this.alert = true;
             this.loading = false;
             if (error.response.status === 401) {
+              // Si 401 (token jwt invalide ou expiré) on fait remonter aux composants parents l'evenement "logout" afin d'afficher la popup de déconnexion et vider la session
+              // C'est le composant principal (App.vue) qui s'en occupe
               this.$emit('logout');
             }
           },

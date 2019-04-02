@@ -1,4 +1,5 @@
 <template>
+  <!-- PAGE DE LOGIN -->
   <v-container fluid fill-height>
     <v-layout align-center justify-center>
       <v-flex sm8 md4>
@@ -67,6 +68,7 @@ export default {
   methods: {
     login() {
       this.alert = false;
+      // Si on passe la validation (et non vide)
       if (
         this.$refs.form.validate()
           && this.input.username !== ''
@@ -80,6 +82,7 @@ export default {
           })
           .then(
             (result) => {
+              // On construit un objet utilisateur contenant les informations, et on l'enregistre dans sessionStorage
               this.authUser.user = this.input.username;
               this.authUser.username = result.data.shortName;
               this.authUser.jwt = `Bearer ${result.data.accessToken}`;
@@ -91,6 +94,7 @@ export default {
 
               this.loading = false;
 
+              // Si on a bien reçu le token, le login a bien fonctionné, on vérifie ensuite si l'utilisateur a renseigné son mail
               if (result.data.accessToken !== null) {
                 this.$emit('authenticated', true);
                 this.authenticated = true;
@@ -112,6 +116,7 @@ export default {
       }
     },
     getMail() {
+      // Si un mail existe, on va vers la page d'accueil, sinon vers /profil ou l'utilisateur doit renseigner son mail
       this.user = JSON.parse(sessionStorage.getItem('user'));
       if (this.user.email === null || this.user.email === '') {
         this.$router.replace({ name: 'profil' });

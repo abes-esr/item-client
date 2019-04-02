@@ -24,6 +24,7 @@
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="info" v-if="precedent" @click="$emit('precedent')" aria-label="Annuler">Précédent</v-btn>
+                <!-- Lors du clic sur "Envoyer", on emet un évenement "upload" avec le contenu du fichier en paramètre, afin que le composant père puisse récupérer le fichier-->
                 <v-btn color="info" :disabled="!fichierPresent" @click="$emit('upload', $refs.fileInput.files[0])" aria-label="Envoyer">Envoyer</v-btn>
             </v-card-actions>
         </v-card>
