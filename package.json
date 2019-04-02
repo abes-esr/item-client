@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "moment": "^2.24.0",
     "npm": "^6.9.0",
     "vue": "^2.6.6",
     "vue-cli-plugin-webpack-bundle-analyzer": "^1.2.0",

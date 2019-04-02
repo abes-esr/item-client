@@ -54,7 +54,7 @@
                   >
                     <v-text-field
                       slot="activator"
-                      v-model="searchDate"
+                      v-model="searchDateCreation"
                       aria-label="Recherche par date"
                       prepend-icon="event"
                       append-icon="search"
@@ -62,16 +62,49 @@
                       readonly
                     ></v-text-field>
                     <v-date-picker
-                      v-model="searchDate"
+                      v-model="searchDateCreation"
                       @input="menu = false"
                       locale="fr-fr"
                       first-day-of-week="1"
                       no-title
                       scrollable
-                      @change="computedItems('date')"
+                      @change="computedItems('dateCreation')"
                     >
                       <v-spacer></v-spacer>
                       <v-btn flat color="primary" @click="menu = false" aria-label="Annuler">Annuler</v-btn>
+                    </v-date-picker>
+                  </v-menu>
+                </th>
+                <th class="smallTD">
+                  <v-menu
+                    :close-on-content-click="false"
+                    v-model="calendar2"
+                    lazy
+                    transition="scale-transition"
+                    offset-y
+                    full-width
+                    min-width="290px"
+                  >
+                    <v-text-field
+                      slot="activator"
+                      v-model="searchDateModification"
+                      aria-label="Recherche par date"
+                      prepend-icon="event"
+                      append-icon="search"
+                      clearable
+                      readonly
+                    ></v-text-field>
+                    <v-date-picker
+                      v-model="searchDateModification"
+                      @input="calendar2 = false"
+                      locale="fr-fr"
+                      first-day-of-week="1"
+                      no-title
+                      scrollable
+                      @change="computedItems('dateModification')"
+                    >
+                      <v-spacer></v-spacer>
+                      <v-btn flat color="primary" @click="calendar2 = false" aria-label="Annuler">Annuler</v-btn>
                     </v-date-picker>
                   </v-menu>
                 </th>
@@ -131,7 +164,11 @@
               <td
                 class="text-xs-left"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
-              >{{ props.item.date }}</td>
+              >{{ props.item.dateCreation | formatDate }}</td>
+              <td
+                class="text-xs-left"
+                @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
+              >{{ props.item.dateModification | formatDate }}</td>
               <td
                 v-if="user.role == 'ADMIN'"
                 class="text-xs-left"
@@ -270,6 +307,7 @@
 
 <script>
 import axios from 'axios';
+import moment from 'moment';
 
 export default {
   name: 'tableauComponent',
@@ -280,7 +318,7 @@ export default {
       },
       search: '',
       selectedColumns: [],
-      searchDate: '',
+      searchDateCreation: '',
       searchILN: '',
       searchRCR: '',
       searchNum: '',
@@ -301,6 +339,7 @@ export default {
       dialog: false,
       fileReady: false,
       menu: false,
+      calendar2: false,
       listTraitements: [],
       listStatut: [],
       tableLoading: true,
@@ -318,6 +357,14 @@ export default {
      */
     archive: {
       default: false,
+    },
+  },
+  filters: {
+    formatDate(value) {
+      if (value) {
+        return moment(String(value)).format('MM/DD/YYYY hh:mm');
+      }
+      return value;
     },
   },
   beforeDestroy() {
@@ -438,8 +485,9 @@ export default {
       if (this.archive) {
         if (this.user.role === 'ADMIN') {
           this.headers = [
-            { text: 'Numéro de demande', value: 'num' },
-            { text: 'Date Création', value: 'date' },
+            { text: 'Demande', value: 'num' },
+            { text: 'Création', value: 'dateCreation' },
+            { text: 'Modification', value: 'dateModification' },
             { text: 'ILN', value: 'iln' },
             { text: 'RCR', value: 'rcr' },
             { text: 'Traitement', value: 'traitement' },
@@ -448,8 +496,9 @@ export default {
           ];
         } else {
           this.headers = [
-            { text: 'Numéro de demande', value: 'num' },
-            { text: 'Date Création', value: 'date' },
+            { text: 'Demande', value: 'num' },
+            { text: 'Création', value: 'dateCreation' },
+            { text: 'Modification', value: 'dateModification' },
             { text: 'RCR', value: 'rcr' },
             { text: 'Traitement', value: 'traitement' },
             { text: 'Statut', value: 'statut' },
@@ -458,8 +507,9 @@ export default {
         }
       } else if (this.user.role === 'ADMIN') {
         this.headers = [
-          { text: 'Numéro de demande', value: 'num' },
-          { text: 'Date Création', value: 'date' },
+          { text: 'Demande', value: 'num' },
+          { text: 'Création', value: 'dateCreation' },
+          { text: 'Modification', value: 'dateModification' },
           { text: 'ILN', value: 'iln' },
           { text: 'RCR', value: 'rcr' },
           { text: 'Traitement', value: 'traitement' },
@@ -469,8 +519,9 @@ export default {
         ];
       } else {
         this.headers = [
-          { text: 'Numéro de demande', value: 'num' },
-          { text: 'Date Création', value: 'date' },
+          { text: 'Demande', value: 'num' },
+          { text: 'Création', value: 'dateCreation' },
+          { text: 'Modification', value: 'dateModification' },
           { text: 'RCR', value: 'rcr' },
           { text: 'Traitement', value: 'traitement' },
           { text: 'Statut', value: 'statut' },
@@ -524,8 +575,11 @@ export default {
                 result.data[key].traitement.libelle = 'Non défini';
               }
 
+              console.log(result);
+
               this.items.push({
-                date: result.data[key].dateModification,
+                dateCreation: result.data[key].dateCreation,
+                dateModification: result.data[key].dateModification,
                 rcr: `${result.data[key].rcr} - ${result.data[key].shortname}`,
                 iln: result.data[key].iln,
                 num: result.data[key].numDemande,
@@ -559,11 +613,16 @@ export default {
         this.search = '';
         return this.items.filter((currentValue) => {
           if (
-            (currentValue.date
+            (currentValue.dateCreation
               .toString()
               .toLowerCase()
-              .indexOf(this.searchDate) > -1
-                || this.searchDate == null)
+              .indexOf(this.searchDateCreation) > -1
+                || this.searchDateCreation == null)
+            && (currentValue.dateModification
+              .toString()
+              .toLowerCase()
+              .indexOf(this.searchDateModification) > -1
+            || this.searchDateModification == null)
               && (currentValue.iln
                 .toString()
                 .toLowerCase()
@@ -597,7 +656,8 @@ export default {
         });
       }
       // Recherche sur une ou plusieurs colonnes
-      this.searchDate = '';
+      this.searchDateModification = '';
+      this.searchDateCreation = '';
       this.searchILN = '';
       this.searchRCR = '';
       this.searchNum = '';
