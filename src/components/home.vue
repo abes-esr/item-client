@@ -5,12 +5,12 @@
       <!--<menu-cards titleName="Créer des exemplaires" iconType="add_circle_outline" routerLink="tab"
                   :cardHeight=7.8></menu-cards>-->
       <menu-cards titleName="Modifier des exemplaires" iconType="edit" routerLink="rcr" :cardHeight=7.8></menu-cards>
+      <menu-cards titleName="Gérer mes demandes" iconType="sort" routerLink="tab" :cardHeight=7.8></menu-cards>
       <!--<menu-cards titleName="Supprimer des exemplaires" iconType="delete" routerLink="tab" cardHeight=7.8></menu-cards>-->
     </v-flex>
-    <v-flex xs12 md5 fill-height ma-2 pt-5>
-      <menu-cards titleName="Gérer mes demandes" iconType="sort" routerLink="tab" :cardHeight=7.8></menu-cards>
+    <!-- <v-flex xs12 md5 fill-height ma-2 pt-5>
     </v-flex>
-    <!--<v-flex xs12 md5 fill-height ma-2 pt-5>
+    <v-flex xs12 md5 fill-height ma-2 pt-5>
       <menu-cards titleName="Calculer mon taux de recouvrement" iconType="pie_chart" routerLink="tab"
                   :cardHeight=7.8></menu-cards>
     </v-flex> -->
