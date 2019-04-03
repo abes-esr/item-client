@@ -608,60 +608,67 @@ export default {
       // Si recherche sur une colonne spécifique
       if (this.typeSearch !== 'search') {
         this.search = '';
+        /* fonction callback qui permet selon le choix dans la liste déroulante de ne récupérer que certaines demandes
+           @param currentValue: objet représentant une ligne de demande de le tableau, acceder à son statut via
+           la variable d'instance .statut
+           @param searchStatut: le statut correspondant au choix dans la liste déroulante
+         */
         return this.items.filter((currentValue) => {
-          // let localStatus;
-          // if (currentValue === 'Archivée' || currentValue === 'A compléter' || currentValue === 'En simulation') localStatus = 'En saisie';
+          let statut = '';
+          if (currentValue.statut === 'Archivée' || currentValue.statut === 'A compléter'
+            || currentValue.statut === 'En simulation' || currentValue.statut === 'En saisie'
+            || currentValue.statut === 'Préparée') {
+            statut = 'En saisie';
+          } else if (currentValue.statut === 'En cours de traitement') {
+            statut = 'En cours de traitement';
+          } else if (currentValue.statut === 'Terminée') {
+            statut = 'Terminée';
+          } else if (currentValue.statut === 'En attente') {
+            statut = 'En attente';
+          } else if (currentValue.statut === 'En erreur') {
+            statut = 'En erreur';
+          }
+
           if (
             (currentValue.dateCreation
               .toString()
               .toLowerCase()
               .indexOf(this.searchDateCreation) > -1
-                || this.searchDateCreation == null)
+              || this.searchDateCreation == null)
             && (currentValue.dateModification
               .toString()
               .toLowerCase()
               .indexOf(this.searchDateModification) > -1
             || this.searchDateModification == null)
-              && (currentValue.iln
-                .toString()
-                .toLowerCase()
-                .indexOf(this.searchILN) > -1
-                || this.searchRCR == null)
-              && (this.searchRCR == null || currentValue.rcr
-                .toString()
-                .toLowerCase()
-                .indexOf(this.searchRCR.toLowerCase()) > -1)
-              && (currentValue.num
-                .toString()
-                .toLowerCase()
-                .indexOf(this.searchNum) > -1
-                || this.searchNum == null)
-              && (this.searchTraitement == null
-              || currentValue.traitement
-                .toString()
-                .toLowerCase()
-                .indexOf(this.searchTraitement.toLowerCase()) > -1)
-              && (this.searchStatut == null || currentValue.statut
-                .toString()
-                .toLowerCase()
-                .indexOf(this.searchStatut.toLowerCase()) > -1)
-
-              //TODO controler le code statut si le code statut est egal a 1 alors il faut faire matcher currentValue.codeStatut qui sera ici egal uniquement à 1 avec les codes 1, 4, 3
-              && (this.searchCodeStatut.toString().indexOf(currentValue.codeStatut)
-                > -1
-                || this.searchCodeStatut.toString() === '')
+            && (currentValue.iln
+              .toString()
+              .toLowerCase()
+              .indexOf(this.searchILN) > -1
+            || this.searchRCR == null)
+            && (this.searchRCR == null || currentValue.rcr
+              .toString()
+              .toLowerCase()
+              .indexOf(this.searchRCR.toLowerCase()) > -1)
+            && (currentValue.num
+              .toString()
+              .toLowerCase()
+              .indexOf(this.searchNum) > -1
+            || this.searchNum == null)
+            && (this.searchTraitement == null
+            || currentValue.traitement
+              .toString()
+              .toLowerCase()
+              .indexOf(this.searchTraitement.toLowerCase()) > -1)
+            && (this.searchStatut == null || statut
+              .toString()
+              .toLowerCase()
+              .indexOf(this.searchStatut.toLowerCase()) > -1)
+            && (this.searchCodeStatut.toString().indexOf(currentValue.codeStatut)
+            > -1
+            || this.searchCodeStatut.toString() === '')
           ) {
-            // console.log(`->${this.searchStatut}`);
-            // console.log(`-->${currentValue.statut}`);
-            // console.log(currentValue.statut
-            //   .toString()
-            //   .toLowerCase()
-            //   .indexOf(this.searchStatut.toLowerCase() > -1));
-            // console.log('-------');
             return true;
           }
-          // console.log(`x->${this.searchStatut}`);
-          // console.log(`x-->${localStatus.statut}`);
           return false;
         });
       }
