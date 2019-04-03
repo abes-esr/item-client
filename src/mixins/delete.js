@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+// MIXIN : permet d'importer ces deux fonctions dans n'importe quel composant
 export default {
   methods: {
     supprimerDemande(numDemande) {

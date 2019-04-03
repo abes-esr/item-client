@@ -1,4 +1,6 @@
 <template>
+    <!-- DESCRIPTION
+    APPARAIT DANS LE FOOTER AGGRANDIT SUR LA PAGE DE LOGIN UNIQUEMENT -->
     <v-card flat tile class="primary">
         <v-container grid-list-md>
             <v-layout row wrap>

@@ -1,4 +1,5 @@
 <template>
+    <!-- POPUP AFIN DE PREVENIR L'UTILISATEUR QUAND IL EST DECONNECTE AUTOMATIQUEMENT SI LA SESSION EXPIRE -->
     <v-dialog v-model="dialog" width="500">
       <v-card>
         <v-card-title class="headline grey lighten-2" primary-title>

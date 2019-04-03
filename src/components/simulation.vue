@@ -1,8 +1,10 @@
 <template>
+  <!-- PAGE DE SIMULATION -->
   <v-container fluid>
     <loading :show="loading" label="Chargement en cours..."></loading>
     <v-layout justify-center align-center>
       <v-flex text-xs-center>
+        <!-- POPUP DE LANCEMENT DU TRAITEMENT-->
         <v-dialog v-model="dialog" width="500">
           <v-card>
             <v-card-title class="headline grey lighten-2" primary-title>Lancement du traitement en production</v-card-title>
@@ -15,6 +17,7 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+        <!-- POPUP DE CONFIRMATION QUE LE TRAITEMENT EST LANCE -->
         <v-dialog v-model="dialogFinished" width="500">
           <v-card>
             <v-card-title class="headline grey lighten-2" primary-title>Traitement validé</v-card-title>
@@ -28,7 +31,9 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+        <!-- FIL D'ARIANE -->
         <stepper id="stepper" current="5"></stepper>
+        <!-- INFOS GENERALES DE LA DEMANDE -->
         <v-card id="demInfos">
           <h3 style="padding-top: 15px; padding-left: 15px;" class="headline">Ma demande</h3>
           <v-container grid-list-md>
@@ -67,6 +72,7 @@
         <v-alert :value="alert" :type="alertType" transition="scale-transition" dismissible>
           <span v-html="alertMessage"></span>
         </v-alert>
+        <!-- CONTENU SIMULATION -->
         <v-card>
           <v-toolbar dark color="primary">
             <v-toolbar-title>Ecran de simulation</v-toolbar-title>
@@ -139,6 +145,7 @@
         </v-card>
         <br>
         <v-layout justify-end id="layoutButtonOk">
+          <!-- supprimerDemande(numDem) est importée depuis le mixin delete.js (voir plus bas) -->
           <v-btn large color="error" @click="supprimerDemande(numDem)" aria-label="Supprimer cette demande">Supprimer cette demande</v-btn>
           <v-btn large color="error" @click="dialog = true" aria-label="Lancer le traitement en production">Lancer le traitement en production</v-btn>
         </v-layout>
@@ -157,6 +164,7 @@ export default {
     loading,
     stepper,
   },
+  // Voilà le mixin en question
   mixins: [supprMixin],
   data() {
     return {
@@ -180,11 +188,15 @@ export default {
     };
   },
   mounted() {
+    // On récupère les infos utilisateur en session car on a besoin du jwt afin d'appeler les WS REST
     this.user = JSON.parse(sessionStorage.getItem('user'));
+    // On récupère le numéro de la demande courante
     this.numDem = sessionStorage.getItem('dem');
+
     this.getInfosDemande();
   },
   methods: {
+    // Récupération des infos de la demande
     getInfosDemande() {
       this.loading = true;
       axios({
@@ -207,6 +219,7 @@ export default {
         },
       );
     },
+    // Récupération du AVANT / APRES
     getSimulation() {
       this.alert = false;
       this.loading = true;
@@ -262,6 +275,7 @@ export default {
         this.alertType = 'info';
       }
     },
+    // Lancement du traitement de la demande
     confirm() {
       this.alert = false;
       this.loading = true;

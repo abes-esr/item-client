@@ -3,6 +3,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import axios from 'axios';
 
+// import comme une fonction afin de permettre le lazy loading
 const LoginComponent = () => import('@/components/login.vue');
 const RcrComponent = () => import('@/components/rcr.vue');
 const uploadComponent = () => import('@/components/uploadInit.vue');
@@ -10,7 +11,6 @@ const traitementComponent = () => import('@/components/selectTraitement.vue');
 const GererComponent = () => import('@/components/gerer.vue');
 const ArchiveComponent = () => import('@/components/archive.vue');
 const ProfilComponent = () => import('@/components/profil.vue');
-const AboutComponent = () => import('@/components/footer/about.vue');
 const CGUComponent = () => import('@/components/footer/cgu.vue');
 const DonneesComponent = () => import('@/components/footer/donnees.vue');
 const MentionsComponent = () => import('@/components/footer/mentions.vue');
@@ -73,6 +73,7 @@ const router = new Router({
       path: '/login',
       name: 'login',
       component: LoginComponent,
+      // Si déjà authentifié, alors on redirige vers l'accueil
       beforeEnter: (to, from, next) => {
         const user = JSON.parse(sessionStorage.getItem('user'));
         if (user !== null && user.jwt !== null) {
@@ -117,11 +118,6 @@ const router = new Router({
       },
     },
     {
-      path: '/apropos',
-      name: 'about',
-      component: AboutComponent,
-    },
-    {
       path: '/cgu',
       name: 'cgu',
       component: CGUComponent,
@@ -136,6 +132,7 @@ const router = new Router({
       name: 'mentions',
       component: MentionsComponent,
     },
+    // Gestion de la 404
     {
       path: '*', component: NotFoundComponent,
     },
@@ -143,6 +140,7 @@ const router = new Router({
   mode: 'history',
 });
 
+// Si pas authentifié, on redirige vers la page de login, et si pas d'email, on redirige vers la page profil
 // eslint-disable-next-line consistent-return
 router.beforeResolve((to, from, next) => {
   const user = JSON.parse(sessionStorage.getItem('user'));
@@ -162,7 +160,6 @@ router.beforeResolve((to, from, next) => {
   }
 
   // ROUTEGUARD SELON ETAT DEMANDE
-
   const numDem = sessionStorage.getItem('dem');
   if (['/fichier', '/fichierEnrichi', '/traitement', '/simulation'].includes(to.path)) {
     if (numDem === undefined) {
