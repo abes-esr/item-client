@@ -10,7 +10,7 @@
       <v-divider></v-divider>
       <v-stepper-step step="4" :complete="current > 4">Fichier complété</v-stepper-step>
       <v-divider></v-divider>
-      <v-stepper-step step="5" :complete="current > 5">Simulation</v-stepper-step>
+      <v-stepper-step step="5" :complete="current > 5">Production</v-stepper-step>
     </v-stepper-header>
   </v-stepper>
 </template>
