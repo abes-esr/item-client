@@ -574,9 +574,6 @@ export default {
                 // eslint-disable-next-line no-param-reassign
                 result.data[key].traitement.libelle = 'Non défini';
               }
-
-              console.log(result);
-
               this.items.push({
                 dateCreation: result.data[key].dateCreation,
                 dateModification: result.data[key].dateModification,
@@ -612,6 +609,8 @@ export default {
       if (this.typeSearch !== 'search') {
         this.search = '';
         return this.items.filter((currentValue) => {
+          // let localStatus;
+          // if (currentValue === 'Archivée' || currentValue === 'A compléter' || currentValue === 'En simulation') localStatus = 'En saisie';
           if (
             (currentValue.dateCreation
               .toString()
@@ -646,12 +645,23 @@ export default {
                 .toString()
                 .toLowerCase()
                 .indexOf(this.searchStatut.toLowerCase()) > -1)
+
+              //TODO controler le code statut si le code statut est egal a 1 alors il faut faire matcher currentValue.codeStatut qui sera ici egal uniquement à 1 avec les codes 1, 4, 3
               && (this.searchCodeStatut.toString().indexOf(currentValue.codeStatut)
                 > -1
                 || this.searchCodeStatut.toString() === '')
           ) {
+            // console.log(`->${this.searchStatut}`);
+            // console.log(`-->${currentValue.statut}`);
+            // console.log(currentValue.statut
+            //   .toString()
+            //   .toLowerCase()
+            //   .indexOf(this.searchStatut.toLowerCase() > -1));
+            // console.log('-------');
             return true;
           }
+          // console.log(`x->${this.searchStatut}`);
+          // console.log(`x-->${localStatus.statut}`);
           return false;
         });
       }
@@ -697,7 +707,18 @@ export default {
       }).then(
         (result) => {
           for (let i = 0; i < result.data.length; i++) {
-            this.listStatut.push(result.data[i].libelle);
+            if (
+              (result.data[i].libelle === 'Archivée'
+              || result.data[i].libelle === 'A compléter'
+              || result.data[i].libelle === 'En simulation'
+              || result.data[i].libelle === 'En saisie')
+            ) {
+              if (this.listStatut.find(element => element === 'En saisie') === undefined) {
+                this.listStatut.push('En saisie');
+              }
+            } else {
+              this.listStatut.push(result.data[i].libelle);
+            }
           }
         },
         (error) => {
