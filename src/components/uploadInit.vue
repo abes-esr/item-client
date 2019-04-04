@@ -87,7 +87,6 @@ export default {
   },
   methods: {
     setTitleUploadWithRcr() {
-      this.loading = true;
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
