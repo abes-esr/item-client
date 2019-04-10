@@ -49,7 +49,7 @@
                 <div style="padding: 15px;">
                   <span style="color: grey;">Date de création</span>
                   <br>
-                  <span>{{ demande.dateCreation }}</span>
+                  <span>{{ demande.dateCreation |formatDate }}</span>
                 </div>
               </v-flex>
               <v-flex xs3>
@@ -158,6 +158,7 @@ import loading from 'vue-full-loading';
 import axios from 'axios';
 import stepper from '@/components/utils/stepper.vue';
 import supprMixin from '@/mixins/delete';
+import moment from 'moment';
 
 export default {
   components: {
@@ -194,6 +195,14 @@ export default {
     this.numDem = sessionStorage.getItem('dem');
 
     this.getInfosDemande();
+  },
+  filters: {
+    formatDate(value) {
+      if (value) {
+        return moment(String(value)).format('DD/MM/YYYY à hh:mm');
+      }
+      return value;
+    },
   },
   methods: {
     // Récupération des infos de la demande
