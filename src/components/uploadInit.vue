@@ -80,9 +80,11 @@ export default {
       popupDelete: false,
     };
   },
+  // Récupération des infos utilisateur et du numéro de demande en session
   created() {
     this.user = JSON.parse(sessionStorage.getItem('user'));
     this.numDem = sessionStorage.getItem('dem');
+    // Ajout du numéro de RCR dans le header de la card
     this.setTitleUploadWithRcr();
   },
   methods: {
@@ -97,6 +99,7 @@ export default {
         },
       );
     },
+    // Upload du fichier PPN
     uploadFile(file) {
       this.loading = true;
       this.file = file;
@@ -143,6 +146,7 @@ export default {
         this.loading = false;
       }
     },
+    // Récupération du fichier de correspondance PPN / EPN
     getFileResult() {
       axios
         .get(
@@ -160,11 +164,12 @@ export default {
         )
         .then(
           (result) => {
+            // On met le fichier récupéré dans la mémoire locale du navigateur afin que l'utilisateur puisse le récupérer instantannément
             this.loading = false;
             const blob = new Blob([result.data], { type: 'application/csv' });
             this.fileLink = window.URL.createObjectURL(blob);
             this.blobName = `fichier_demande_${this.numDem}.csv`;
-            // TODO : Réparer ça
+            // TODO : Autoclick pour lancer le téléchargement ?
             // this.$refs.fileLinkBtn.$el.click();
           },
           (error) => {

@@ -21,6 +21,8 @@ const homeComponent = () => import('@/components/home.vue');
 
 Vue.use(Router);
 
+// Routes de l'appli
+// meta requiresAuth oblige l'utilisateur a être loggé pour y accéder
 const router = new Router({
   routes: [
     {
@@ -137,6 +139,7 @@ const router = new Router({
       path: '*', component: NotFoundComponent,
     },
   ],
+  // Autorise le retour arrière via le navigateur
   mode: 'history',
 });
 
@@ -160,6 +163,7 @@ router.beforeResolve((to, from, next) => {
   }
 
   // ROUTEGUARD SELON ETAT DEMANDE
+  // Filtre sur l'id de l'état de la demande et redirige vers la page correspondante à cet état
   const numDem = sessionStorage.getItem('dem');
   if (['/fichier', '/fichierEnrichi', '/traitement', '/simulation'].includes(to.path)) {
     if (numDem === undefined) {

@@ -20,6 +20,7 @@ import supprMixin from '@/mixins/delete';
 
 export default {
   name: 'uploadComponent',
+  // Mixin contenant les fonctions de suppression et de retour arrière
   mixins: [supprMixin],
   components: {
     upload,
@@ -39,10 +40,12 @@ export default {
       textUpload: 'Cliquez ou faites glisser ici<br />pour charger votre fichier complété<br />(format txt ou csv)',
     };
   },
+  // On récupère le numéro de demande enregistré en session
   created() {
     this.numDem = sessionStorage.getItem('dem');
   },
   methods: {
+    // Upload du fichier enrichi
     uploadFile(file) {
       this.loading = true;
       this.file = file;

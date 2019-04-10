@@ -3,8 +3,11 @@ import axios from 'axios';
 // MIXIN : permet d'importer ces deux fonctions dans n'importe quel composant
 export default {
   methods: {
+    // Suppression d'une demande
     supprimerDemande(numDemande) {
+      // Nécessite d'avoir le composant vue-full-loading dans le composant appelant
       this.loading = true;
+      // Récupération des infos utilisateur et appel du WS
       const user = JSON.parse(sessionStorage.getItem('user'));
       axios({
         headers: { Authorization: user.jwt },
@@ -23,8 +26,9 @@ export default {
         },
       );
     },
+    // Retour arrière
     precedentDemande(numDemande) {
-      console.info('App currentRoute:', this.$router.currentRoute.name);
+      // Nécessite d'avoir le composant vue-full-loading dans le composant appelant
       this.loading = true;
       const user = JSON.parse(sessionStorage.getItem('user'));
       axios({

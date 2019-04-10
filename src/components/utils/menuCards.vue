@@ -1,4 +1,5 @@
 <template>
+  <!-- Card de menu cliquable réutilisable -->
   <v-card raised hover @click="route()" :height="cardHeight + 'em'">
     <v-card-title class="primary-title">
       <v-container class="grid-list-md">
