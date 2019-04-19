@@ -6,18 +6,9 @@
           <span v-html="alertMessage"></span>
         </v-alert>
         <v-card>
-          <v-card-title v-if="archive" class="title">Mes demandes archivées</v-card-title>
+          <v-card-title v-if="archive" class="title" >Mes demandes archivées</v-card-title>
           <v-card-title v-else class="title">Gérer mes demandes</v-card-title>
-          <v-data-table
-            :loading="tableLoading"
-            :headers="headers"
-            :items="computedItems('guess')"
-            rows-per-page-text="Lignes par page"
-            :pagination.sync="pagination"
-            no-data-text="Aucune demande"
-            class="elevation-1"
-            :rows-per-page-items='[10,25, {"text":"Toutes","value":-1}]'
-          >
+          <v-data-table :loading="tableLoading" :headers="headers" :items="computedItems('guess')" rows-per-page-text="Lignes par page" :pagination.sync="pagination" no-data-text="Aucune demande" class="elevation-1" :rows-per-page-items='[10,25, {"text":"Toutes","value":-1}]'>
             <template slot="headers" slot-scope="props">
               <tr>
                 <th
@@ -188,7 +179,7 @@
               >{{ props.item.statut }}</td>
               <td class="text-xs-center">
                 <v-menu bottom left v-if="props.item.codeStatut >= 2">
-                  <v-btn slot="activator" color="info" small aria-label="Télécharger les fichiers">
+                  <v-btn slot="activator" color="info" small aria-label="Télécharger les fichiers" style="min-height: 37px;">
                     <v-icon>cloud_download</v-icon>
                   </v-btn>
                   <v-list v-if="props.item.codeStatut >= 3">

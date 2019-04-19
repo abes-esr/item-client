@@ -84,7 +84,7 @@
             Les règles de validation ne sont pas prises en compte lors de cette simulation. <br />
             Il s'agit de la dernière étape avant de lancer le traitement en base de production.
           </span>
-          <h3 class="headline mb-0" id="numLigne">Ligne de votre fichier : {{ noticeEnCours + 1 }}</h3>
+          <h3 class="headline mb-0" id="numLigne">Ligne de votre fichier : {{ noticeEnCours + 1 }} sur {{ numberLines }}</h3>
           <v-container fluid grid-list-md>
             <v-layout row wrap>
               <v-flex xs5>
