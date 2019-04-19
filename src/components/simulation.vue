@@ -118,10 +118,23 @@
                   </v-btn>
                   <span v-if="noticeEnCours > 0">Notice précedente</span>
                   <br>
-                  <v-btn v-if="!derniereNotice" color="success" fab large dark @click="getNextSimu()" aria-label="Notice suivante">
+
+                  <v-btn v-if="noticeEnCours === numberLines - 1" color="disabled" depressed fab large dark @click="getNextSimu()" aria-label="Notice suivante" class="unhover">
                     <v-icon>navigate_next</v-icon>
                   </v-btn>
-                  <span v-if="!derniereNotice">Notice suivante</span>
+                  <v-btn v-if="noticeEnCours !== numberLines - 1" color="success" fab large dark @click="getNextSimu()" aria-label="Notice suivante">
+                    <v-icon>navigate_next</v-icon>
+                  </v-btn>
+                  <span>Notice suivante</span>
+
+                  <!--Bouton dernière notice-->
+                  <v-btn v-if="noticeEnCours !== numberLines - 1" color="success" fab large dark @click="getLastSimu()" aria-label="Dernière notice">
+                    <v-icon>arrow_forward</v-icon>
+                  </v-btn>
+                  <v-btn v-if="noticeEnCours === numberLines - 1" color="disabled" depressed fab large dark aria-label="Dernière notice" class="unhover">
+                    <v-icon>arrow_forward</v-icon>
+                  </v-btn>
+                  <span>Dernière Notice</span>
                 </v-layout>
               </v-flex>
               <v-flex xs5>
@@ -276,6 +289,10 @@ export default {
       this.noticeEnCours += 1;
       this.getSimulation();
     },
+    getLastSimu() {
+      this.noticeEnCours = this.numberLines - 1;
+      this.getSimulation();
+    },
     getPreviousSimu() {
       this.derniereNotice = false;
       if (this.noticeEnCours > 0) {
@@ -363,5 +380,8 @@ export default {
   }
   #layoutButtonOk {
     padding-right: 8%;
+  }
+  .unhover{
+    pointer-events: none;
   }
 </style>
