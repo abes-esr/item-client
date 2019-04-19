@@ -105,20 +105,26 @@
               </v-flex>
               <v-flex xs2>
                 <v-layout align-center justify-center column fill-height>
-                  <v-btn
-                    v-if="noticeEnCours > 0"
-                    color="success"
-                    fab
-                    large
-                    dark
-                    @click="getPreviousSimu()"
-                    aria-label="Notice précédente"
-                  >
+                  <!--Bouton première notice-->
+                  <v-btn v-if="noticeEnCours === 0" color="disabled" depressed fab large dark aria-label="Première notice" class="unhover">
+                    <v-icon>arrow_back</v-icon>
+                  </v-btn>
+                  <v-btn v-if="noticeEnCours > 0" color="success" fab large dark @click="getFirstSimu()" aria-label="Première notice">
+                    <v-icon>arrow_back</v-icon>
+                  </v-btn>
+                  <span>Première notice</span>
+
+                  <!--Bouton notice suivante-->
+                  <v-btn v-if="noticeEnCours === 0" color="disabled" depressed fab large dark @click="getPreviousSimu()" aria-label="Notice précédente" class="unhover">
                     <v-icon>navigate_before</v-icon>
                   </v-btn>
-                  <span v-if="noticeEnCours > 0">Notice précedente</span>
+                  <v-btn v-if="noticeEnCours > 0" color="success" fab large dark @click="getPreviousSimu()" aria-label="Notice précédente">
+                    <v-icon>navigate_before</v-icon>
+                  </v-btn>
+                  <span>Notice précedente</span>
                   <br>
 
+                  <!--Bouton notice suivante-->
                   <v-btn v-if="noticeEnCours === numberLines - 1" color="disabled" depressed fab large dark @click="getNextSimu()" aria-label="Notice suivante" class="unhover">
                     <v-icon>navigate_next</v-icon>
                   </v-btn>
@@ -303,6 +309,10 @@ export default {
         this.alertMessage = "Vous êtes sur la première notice de votre demande, il n'y a pas de notice précedente.";
         this.alertType = 'info';
       }
+    },
+    getFirstSimu() {
+      this.noticeEnCours = 0;
+      this.getSimulation();
     },
     // Compte le nombre de lignes totales du fichier
     getNumberLines() {
