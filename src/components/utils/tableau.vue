@@ -168,7 +168,9 @@
               <td
                 class="text-xs-left"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
-              >{{ props.item.rcr }}</td>
+              ><abbr v-bind:title="props.item.rcr.slice(11, 200)">
+                {{ props.item.rcr.slice(0,9) }}</abbr>
+              </td>
               <td
                 class="text-xs-left"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
@@ -179,7 +181,7 @@
               >{{ props.item.statut }}</td>
               <td class="text-xs-center">
                 <v-menu bottom left v-if="props.item.codeStatut >= 2">
-                  <v-btn slot="activator" color="info" small aria-label="Télécharger les fichiers" style="min-height: 37px;">
+                  <v-btn slot="activator" color="info" small aria-label="Télécharger les fichiers" style="height: 37px;">
                     <v-icon>cloud_download</v-icon>
                   </v-btn>
                   <v-list v-if="props.item.codeStatut >= 3">
@@ -803,5 +805,10 @@ export default {
   }
   .v-menu  {
     height: 49px !important;
+  }
+  abbr {
+    border-bottom: none !important;
+    cursor: inherit !important;
+    text-decoration: none !important;
   }
 </style>
