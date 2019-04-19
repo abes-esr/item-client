@@ -12,5 +12,6 @@ Vue.use(Vuetify, {
     warning: '#ec6839',
     info: '#326bb1',
     success: '#4da432',
+    disabled: '#808080',
   },
 });

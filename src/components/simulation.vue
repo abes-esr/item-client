@@ -105,23 +105,42 @@
               </v-flex>
               <v-flex xs2>
                 <v-layout align-center justify-center column fill-height>
-                  <v-btn
-                    v-if="noticeEnCours > 0"
-                    color="success"
-                    fab
-                    large
-                    dark
-                    @click="getPreviousSimu()"
-                    aria-label="Notice précédente"
-                  >
+                  <!--Bouton première notice-->
+                  <v-btn v-if="noticeEnCours === 0" color="disabled" depressed fab large dark aria-label="Première notice" class="unhover">
+                    <v-icon>arrow_back</v-icon>
+                  </v-btn>
+                  <v-btn v-if="noticeEnCours > 0" color="success" fab large dark @click="getFirstSimu()" aria-label="Première notice">
+                    <v-icon>arrow_back</v-icon>
+                  </v-btn>
+                  <span>Première notice</span>
+
+                  <!--Bouton notice suivante-->
+                  <v-btn v-if="noticeEnCours === 0" color="disabled" depressed fab large dark @click="getPreviousSimu()" aria-label="Notice précédente" class="unhover">
                     <v-icon>navigate_before</v-icon>
                   </v-btn>
-                  <span v-if="noticeEnCours > 0">Notice précedente</span>
+                  <v-btn v-if="noticeEnCours > 0" color="success" fab large dark @click="getPreviousSimu()" aria-label="Notice précédente">
+                    <v-icon>navigate_before</v-icon>
+                  </v-btn>
+                  <span>Notice précedente</span>
                   <br>
-                  <v-btn v-if="!derniereNotice" color="success" fab large dark @click="getNextSimu()" aria-label="Notice suivante">
+
+                  <!--Bouton notice suivante-->
+                  <v-btn v-if="noticeEnCours === numberLines - 1" color="disabled" depressed fab large dark @click="getNextSimu()" aria-label="Notice suivante" class="unhover">
                     <v-icon>navigate_next</v-icon>
                   </v-btn>
-                  <span v-if="!derniereNotice">Notice suivante</span>
+                  <v-btn v-if="noticeEnCours !== numberLines - 1" color="success" fab large dark @click="getNextSimu()" aria-label="Notice suivante">
+                    <v-icon>navigate_next</v-icon>
+                  </v-btn>
+                  <span>Notice suivante</span>
+
+                  <!--Bouton dernière notice-->
+                  <v-btn v-if="noticeEnCours !== numberLines - 1" color="success" fab large dark @click="getLastSimu()" aria-label="Dernière notice">
+                    <v-icon>arrow_forward</v-icon>
+                  </v-btn>
+                  <v-btn v-if="noticeEnCours === numberLines - 1" color="disabled" depressed fab large dark aria-label="Dernière notice" class="unhover">
+                    <v-icon>arrow_forward</v-icon>
+                  </v-btn>
+                  <span>Dernière Notice</span>
                 </v-layout>
               </v-flex>
               <v-flex xs5>
@@ -170,6 +189,7 @@ export default {
   data() {
     return {
       noticeEnCours: 0,
+      numberLines: 0,
       loading: false,
       demande: {
         traitement: {
@@ -193,8 +213,10 @@ export default {
     this.user = JSON.parse(sessionStorage.getItem('user'));
     // On récupère le numéro de la demande courante
     this.numDem = sessionStorage.getItem('dem');
-
+    // On recupère des infos sur la demande
     this.getInfosDemande();
+    // On compte le nombre de lignes totale sur le fichier
+    this.getNumberLines();
   },
   filters: {
     formatDate(value) {
@@ -273,6 +295,10 @@ export default {
       this.noticeEnCours += 1;
       this.getSimulation();
     },
+    getLastSimu() {
+      this.noticeEnCours = this.numberLines - 1;
+      this.getSimulation();
+    },
     getPreviousSimu() {
       this.derniereNotice = false;
       if (this.noticeEnCours > 0) {
@@ -283,6 +309,31 @@ export default {
         this.alertMessage = "Vous êtes sur la première notice de votre demande, il n'y a pas de notice précedente.";
         this.alertType = 'info';
       }
+    },
+    getFirstSimu() {
+      this.noticeEnCours = 0;
+      this.getSimulation();
+    },
+    // Compte le nombre de lignes totales du fichier
+    getNumberLines() {
+      console.log(this.numDem);
+      axios({
+        headers: { Authorization: this.user.jwt },
+        method: 'GET',
+        url: `${process.env.VUE_APP_ROOT_API}getNbLigneFichier/${this.numDem}`,
+      }).then(
+        (result) => {
+          this.numberLines = result.data;
+        },
+        (error) => {
+          this.alert = true;
+          this.alertType = 'error';
+          this.alertMessage = 'Impossible de récupérer le nombre de lignes du fichier. Veuillez réessayer ultérieurement.';
+          if (error.response.status === 401) {
+            this.$emit('logout');
+          }
+        },
+      );
     },
     // Lancement du traitement de la demande
     confirm() {
@@ -339,5 +390,8 @@ export default {
   }
   #layoutButtonOk {
     padding-right: 8%;
+  }
+  .unhover{
+    pointer-events: none;
   }
 </style>
