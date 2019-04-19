@@ -177,6 +177,7 @@
               >{{ props.item.traitement }}</td>
               <td
                 class="text-xs-left"
+                v-bind:class="props.item.statut"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
               >{{ props.item.statut }}</td>
               <td class="text-xs-center">
@@ -810,5 +811,8 @@ export default {
     border-bottom: none !important;
     cursor: inherit !important;
     text-decoration: none !important;
+  }
+  .Terminée{
+    color: #4da432;
   }
 </style>
