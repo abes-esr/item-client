@@ -16,6 +16,7 @@
             :pagination.sync="pagination"
             no-data-text="Aucune demande"
             class="elevation-1"
+            item-key="num"
             :rows-per-page-items='[10,25, {"text":"Toutes","value":-1}]'
           >
             <template slot="headers" slot-scope="props">
@@ -31,6 +32,7 @@
                 </th>
               </tr>
               <tr>
+                <th></th>
                 <th class="smallTD">
                   <v-text-field
                     v-model="searchNum"
@@ -157,6 +159,10 @@
               </tr>
             </template>
             <template slot="items" slot-scope="props">
+              <td @click="props.expanded = !props.expanded; tableExpanded = props.expanded;">
+                <v-icon v-if="props.expanded">keyboard_arrow_up</v-icon>
+                <v-icon v-else>keyboard_arrow_down</v-icon>
+              </td>
               <td
                 class="text-xs-left"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
@@ -230,6 +236,19 @@
                   </v-btn>
                 </span>
               </td>
+            </template>
+            <template v-slot:expand="props">
+              <v-card flat>
+              <v-card-text class="text-xs-left">
+                <v-textarea
+                  solo
+                  name="comment"
+                  label="Commentaire"
+                  v-model="props.item.commentaire"
+                ></v-textarea>
+                <v-btn color="info" :loading="commentButton" @click="saveComment(props.item); props.expanded = false;">Enregistrer</v-btn>
+              </v-card-text>
+            </v-card>
             </template>
             <template
               slot="pageText"
@@ -348,6 +367,8 @@ export default {
       deleteLoading: false,
       current: '',
       polling: null,
+      commentButton: false,
+      tableExpanded: false,
     };
   },
   props: {
@@ -376,7 +397,7 @@ export default {
     this.initHeader();
     this.fetchData();
     // Rafraichissement des données toutes les 10 sec
-    this.polling = setInterval(this.fetchData, 10000);
+    this.polling = setInterval(() => { this.conditionalFetch(); }, 10000);
     this.getListTraitements();
     if (!this.archive) {
       this.getListStatus();
@@ -485,6 +506,7 @@ export default {
       if (this.archive) {
         if (this.user.role === 'ADMIN') {
           this.headers = [
+            { text: ' ', value: 'expand' },
             { text: 'Demande', value: 'num' },
             { text: 'Création', value: 'dateCreation' },
             { text: 'Modification', value: 'dateModification' },
@@ -496,6 +518,7 @@ export default {
           ];
         } else {
           this.headers = [
+            { text: ' ', value: 'expand' },
             { text: 'Demande', value: 'num' },
             { text: 'Création', value: 'dateCreation' },
             { text: 'Modification', value: 'dateModification' },
@@ -507,6 +530,7 @@ export default {
         }
       } else if (this.user.role === 'ADMIN') {
         this.headers = [
+          { text: ' ', value: 'expand' },
           { text: 'Demande', value: 'num' },
           { text: 'Création', value: 'dateCreation' },
           { text: 'Modification', value: 'dateModification' },
@@ -519,6 +543,7 @@ export default {
         ];
       } else {
         this.headers = [
+          { text: ' ', value: 'expand' },
           { text: 'Demande', value: 'num' },
           { text: 'Création', value: 'dateCreation' },
           { text: 'Modification', value: 'dateModification' },
@@ -535,6 +560,12 @@ export default {
       this.searchCombo.splice(this.searchCombo.length - 1, 1);
       for (let i = 0; i < this.searchCombo.length; i += 1) {
         this.selectedColumns[i] = this.searchCombo[i].value;
+      }
+    },
+    // On met à jours les données toutes les 10sec uniquement si aucune demande n'est en cours d'édition (pour ne pas écraser les modifs en cours)
+    conditionalFetch() {
+      if (!this.tableExpanded) {
+        this.fetchData();
       }
     },
     fetchData() {
@@ -575,7 +606,6 @@ export default {
                 result.data[key].traitement.libelle = 'Non défini';
               }
               this.items.push({
-                dateCreation: result.data[key].dateCreation,
                 dateModification: result.data[key].dateModification,
                 rcr: `${result.data[key].rcr} - ${result.data[key].shortname}`,
                 iln: result.data[key].iln,
@@ -583,6 +613,7 @@ export default {
                 traitement: result.data[key].traitement.libelle,
                 statut: result.data[key].etatDemande.libelle,
                 codeStatut: result.data[key].etatDemande.numEtat,
+                commentaire: result.data[key].commentaire,
               });
             }
             this.tableLoading = false;
@@ -615,6 +646,7 @@ export default {
          */
         return this.items.filter((currentValue) => {
           let statut = '';
+          console.log(currentValue);
           if (currentValue.statut === 'Archivée' || currentValue.statut === 'A compléter'
             || currentValue.statut === 'En simulation' || currentValue.statut === 'En saisie'
             || currentValue.statut === 'Préparée') {
@@ -628,7 +660,6 @@ export default {
           } else if (currentValue.statut === 'En erreur') {
             statut = 'En erreur';
           }
-
           if (
             (currentValue.dateCreation
               .toString()
@@ -672,6 +703,7 @@ export default {
           return false;
         });
       }
+
       // Recherche sur une ou plusieurs colonnes
       this.searchDateModification = '';
       this.searchDateCreation = '';
@@ -685,7 +717,7 @@ export default {
         if (this.selectedColumns.length === 0 || this.search == null) {
           return true;
         }
-        for (let i = 0; i < this.selectedColumns.length; i += 1) {
+        for (let i = 1; i < this.selectedColumns.length; i += 1) {
           if (
             currentValue[this.selectedColumns[i]]
               .toString()
@@ -730,6 +762,28 @@ export default {
         },
         (error) => {
           this.alertMessage = 'Impossible de récupérer la liste des statuts. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.';
+          this.alert = true;
+          this.alertType = 'error';
+          if (error.response.status === 401) {
+            this.$emit('logout');
+          }
+        },
+      );
+    },
+    saveComment(demande) {
+      this.commentButton = true;
+      axios({
+        headers: { Authorization: this.user.jwt },
+        method: 'PUT',
+        url: `${process.env.VUE_APP_ROOT_API}demandes/${sessionStorage.getItem('dem')}`,
+        data: demande,
+      }).then(
+        () => {
+          this.commentButton = false;
+        },
+        (error) => {
+          this.commentButton = false;
+          this.alertMessage = 'Impossible de mettre à jour les commentaires. <br /> Si le problème persiste merci de nous contacter.';
           this.alert = true;
           this.alertType = 'error';
           if (error.response.status === 401) {
