@@ -8,7 +8,17 @@
         <v-card>
           <v-card-title v-if="archive" class="title" >Mes demandes archivées</v-card-title>
           <v-card-title v-else class="title">Gérer mes demandes</v-card-title>
-          <v-data-table :loading="tableLoading" :headers="headers" :items="computedItems('guess')" rows-per-page-text="Lignes par page" :pagination.sync="pagination" no-data-text="Aucune demande" class="elevation-1" :rows-per-page-items='[10,25, {"text":"Toutes","value":-1}]'>
+          <v-data-table
+            :loading="tableLoading"
+            :headers="headers"
+            :items="computedItems('guess')"
+            rows-per-page-text="Lignes par page"
+            :pagination.sync="pagination"
+            no-data-text="Aucune demande"
+            class="elevation-1"
+            item-key="num"
+            :rows-per-page-items='[10,25, {"text":"Toutes","value":-1}]'
+          >
             <template slot="headers" slot-scope="props">
               <tr>
                 <th
@@ -22,6 +32,7 @@
                 </th>
               </tr>
               <tr>
+                <th></th>
                 <th class="smallTD">
                   <v-text-field
                     v-model="searchNum"
@@ -148,6 +159,10 @@
               </tr>
             </template>
             <template slot="items" slot-scope="props">
+              <td @click="props.expanded = !props.expanded; tableExpanded = props.expanded;">
+                <v-icon v-if="props.expanded">keyboard_arrow_up</v-icon>
+                <v-icon v-else>keyboard_arrow_down</v-icon>
+              </td>
               <td
                 class="text-xs-left"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
@@ -224,6 +239,20 @@
                   </v-btn>
                 </span>
               </td>
+            </template>
+            <template v-slot:expand="props">
+              <v-card flat>
+              <v-card-text class="text-xs-left">
+                <v-textarea
+                  solo
+                  name="comment"
+                  label="Commentaire (150 caractères maximum)"
+                  v-model="props.item.commentaire"
+                  maxlength="150"
+                ></v-textarea>
+                <v-btn color="info" :loading="commentButton" @click="saveComment(props.item.num, props.item.commentaire); props.expanded = false;">Enregistrer</v-btn>
+              </v-card-text>
+            </v-card>
             </template>
             <template
               slot="pageText"
@@ -324,6 +353,7 @@ export default {
       searchCombo: [],
       headers: [],
       items: [],
+      itemsUnaltered: [],
       alert: false,
       alertMessage: '',
       alertType: 'error',
@@ -342,6 +372,8 @@ export default {
       deleteLoading: false,
       current: '',
       polling: null,
+      commentButton: false,
+      tableExpanded: false,
     };
   },
   props: {
@@ -370,7 +402,7 @@ export default {
     this.initHeader();
     this.fetchData();
     // Rafraichissement des données toutes les 10 sec
-    this.polling = setInterval(this.fetchData, 10000);
+    this.polling = setInterval(() => { this.conditionalFetch(); }, 10000);
     this.getListTraitements();
     if (!this.archive) {
       this.getListStatus();
@@ -479,6 +511,7 @@ export default {
       if (this.archive) {
         if (this.user.role === 'ADMIN') {
           this.headers = [
+            { text: ' ', value: 'expand' },
             { text: 'Demande', value: 'num' },
             { text: 'Création', value: 'dateCreation' },
             { text: 'Modification', value: 'dateModification' },
@@ -490,6 +523,7 @@ export default {
           ];
         } else {
           this.headers = [
+            { text: ' ', value: 'expand' },
             { text: 'Demande', value: 'num' },
             { text: 'Création', value: 'dateCreation' },
             { text: 'Modification', value: 'dateModification' },
@@ -501,6 +535,7 @@ export default {
         }
       } else if (this.user.role === 'ADMIN') {
         this.headers = [
+          { text: ' ', value: 'expand' },
           { text: 'Demande', value: 'num' },
           { text: 'Création', value: 'dateCreation' },
           { text: 'Modification', value: 'dateModification' },
@@ -513,6 +548,7 @@ export default {
         ];
       } else {
         this.headers = [
+          { text: ' ', value: 'expand' },
           { text: 'Demande', value: 'num' },
           { text: 'Création', value: 'dateCreation' },
           { text: 'Modification', value: 'dateModification' },
@@ -529,6 +565,12 @@ export default {
       this.searchCombo.splice(this.searchCombo.length - 1, 1);
       for (let i = 0; i < this.searchCombo.length; i += 1) {
         this.selectedColumns[i] = this.searchCombo[i].value;
+      }
+    },
+    // On met à jours les données toutes les 10sec uniquement si aucune demande n'est en cours d'édition (pour ne pas écraser les modifs en cours)
+    conditionalFetch() {
+      if (!this.tableExpanded) {
+        this.fetchData();
       }
     },
     fetchData() {
@@ -557,27 +599,37 @@ export default {
         }).then(
           (result) => {
             this.items = [];
+            this.itemsUnaltered = result.data;
             for (const key in result.data) {
             // pour éviter les erreurs si null
               if (
                 result.data[key].traitement == null
                 || result.data[key].traitement === undefined
               ) {
-              // eslint-disable-next-line no-param-reassign
-                result.data[key].traitement = {};
-                // eslint-disable-next-line no-param-reassign
-                result.data[key].traitement.libelle = 'Non défini';
+                this.items.push({
+                  dateCreation: result.data[key].dateCreation,
+                  dateModification: result.data[key].dateModification,
+                  rcr: `${result.data[key].rcr} - ${result.data[key].shortname}`,
+                  iln: result.data[key].iln,
+                  num: result.data[key].numDemande,
+                  traitement: 'Non défini',
+                  statut: result.data[key].etatDemande.libelle,
+                  codeStatut: result.data[key].etatDemande.numEtat,
+                  commentaire: result.data[key].commentaire,
+                });
+              } else {
+                this.items.push({
+                  dateCreation: result.data[key].dateCreation,
+                  dateModification: result.data[key].dateModification,
+                  rcr: `${result.data[key].rcr} - ${result.data[key].shortname}`,
+                  iln: result.data[key].iln,
+                  num: result.data[key].numDemande,
+                  traitement: result.data[key].traitement.libelle,
+                  statut: result.data[key].etatDemande.libelle,
+                  codeStatut: result.data[key].etatDemande.numEtat,
+                  commentaire: result.data[key].commentaire,
+                });
               }
-              this.items.push({
-                dateCreation: result.data[key].dateCreation,
-                dateModification: result.data[key].dateModification,
-                rcr: `${result.data[key].rcr} - ${result.data[key].shortname}`,
-                iln: result.data[key].iln,
-                num: result.data[key].numDemande,
-                traitement: result.data[key].traitement.libelle,
-                statut: result.data[key].etatDemande.libelle,
-                codeStatut: result.data[key].etatDemande.numEtat,
-              });
             }
             this.tableLoading = false;
           },
@@ -622,7 +674,6 @@ export default {
           } else if (currentValue.statut === 'En erreur') {
             statut = 'En erreur';
           }
-
           if (
             (currentValue.dateCreation
               .toString()
@@ -666,6 +717,7 @@ export default {
           return false;
         });
       }
+
       // Recherche sur une ou plusieurs colonnes
       this.searchDateModification = '';
       this.searchDateCreation = '';
@@ -679,7 +731,7 @@ export default {
         if (this.selectedColumns.length === 0 || this.search == null) {
           return true;
         }
-        for (let i = 0; i < this.selectedColumns.length; i += 1) {
+        for (let i = 1; i < this.selectedColumns.length; i += 1) {
           if (
             currentValue[this.selectedColumns[i]]
               .toString()
@@ -724,6 +776,30 @@ export default {
         },
         (error) => {
           this.alertMessage = 'Impossible de récupérer la liste des statuts. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.';
+          this.alert = true;
+          this.alertType = 'error';
+          if (error.response.status === 401) {
+            this.$emit('logout');
+          }
+        },
+      );
+    },
+    saveComment(numDem, comment) {
+      this.commentButton = true;
+      const demande = this.itemsUnaltered.find(element => element.numDemande === numDem);
+      demande.commentaire = comment;
+      axios({
+        headers: { Authorization: this.user.jwt },
+        method: 'PUT',
+        url: `${process.env.VUE_APP_ROOT_API}demandes/${numDem}`,
+        data: demande,
+      }).then(
+        () => {
+          this.commentButton = false;
+        },
+        (error) => {
+          this.commentButton = false;
+          this.alertMessage = 'Impossible de mettre à jour les commentaires. <br /> Si le problème persiste merci de nous contacter.';
           this.alert = true;
           this.alertType = 'error';
           if (error.response.status === 401) {
