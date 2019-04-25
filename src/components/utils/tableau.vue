@@ -246,9 +246,9 @@
                 <v-textarea
                   solo
                   name="comment"
-                  label="Commentaire"
+                  label="Commentaire (150 caractères maximum)"
                   v-model="props.item.commentaire"
-                  maxlength="300"
+                  maxlength="150"
                 ></v-textarea>
                 <v-btn color="info" :loading="commentButton" @click="saveComment(props.item.num, props.item.commentaire); props.expanded = false;">Enregistrer</v-btn>
               </v-card-text>
