@@ -182,7 +182,7 @@
               >{{ props.item.statut }}</td>
               <td class="text-xs-center">
                 <v-menu bottom left v-if="props.item.codeStatut >= 2">
-                  <v-btn slot="activator" color="info" small aria-label="Télécharger les fichiers" style="height: 37px;">
+                  <v-btn slot="activator" color="info" small aria-label="Télécharger les fichiers" class="cloudButton">
                     <v-icon>cloud_download</v-icon>
                   </v-btn>
                   <v-list v-if="props.item.codeStatut >= 3">
@@ -207,7 +207,7 @@
                   </v-list>
                 </v-menu>
                 <span v-if="props.item.codeStatut == 1">
-                  <v-btn slot="activator" color="info" aria-label="Téléchargement impossible" small disabled>
+                  <v-btn slot="activator" color="info" aria-label="Téléchargement impossible" small disabled class="cloudButton">
                     <v-icon>cloud_download</v-icon>
                   </v-btn>
                 </span>
@@ -814,5 +814,8 @@ export default {
   }
   .Terminée{
     color: #4da432;
+  }
+  .cloudButton{
+    height: 37px;
   }
 </style>
