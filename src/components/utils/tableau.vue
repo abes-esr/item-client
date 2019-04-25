@@ -6,7 +6,7 @@
           <span v-html="alertMessage"></span>
         </v-alert>
         <v-card>
-          <v-card-title v-if="archive" class="title">Mes demandes archivées</v-card-title>
+          <v-card-title v-if="archive" class="title" >Mes demandes archivées</v-card-title>
           <v-card-title v-else class="title">Gérer mes demandes</v-card-title>
           <v-data-table
             :loading="tableLoading"
@@ -183,18 +183,21 @@
               <td
                 class="text-xs-left"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
-              >{{ props.item.rcr }}</td>
+              ><abbr v-bind:title="props.item.rcr.slice(11, 200)">
+                {{ props.item.rcr.slice(0,9) }}</abbr>
+              </td>
               <td
                 class="text-xs-left"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
               >{{ props.item.traitement }}</td>
               <td
                 class="text-xs-left"
+                v-bind:class="props.item.statut"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
               >{{ props.item.statut }}</td>
               <td class="text-xs-center">
                 <v-menu bottom left v-if="props.item.codeStatut >= 2">
-                  <v-btn slot="activator" color="info" small aria-label="Télécharger les fichiers">
+                  <v-btn slot="activator" color="info" small aria-label="Télécharger les fichiers" style="height: 37px;">
                     <v-icon>cloud_download</v-icon>
                   </v-btn>
                   <v-list v-if="props.item.codeStatut >= 3">
@@ -245,8 +248,9 @@
                   name="comment"
                   label="Commentaire"
                   v-model="props.item.commentaire"
+                  maxlength="300"
                 ></v-textarea>
-                <v-btn color="info" :loading="commentButton" @click="saveComment(props.item); props.expanded = false;">Enregistrer</v-btn>
+                <v-btn color="info" :loading="commentButton" @click="saveComment(props.item.num, props.item.commentaire); props.expanded = false;">Enregistrer</v-btn>
               </v-card-text>
             </v-card>
             </template>
@@ -349,6 +353,7 @@ export default {
       searchCombo: [],
       headers: [],
       items: [],
+      itemsUnaltered: [],
       alert: false,
       alertMessage: '',
       alertType: 'error',
@@ -383,7 +388,7 @@ export default {
   filters: {
     formatDate(value) {
       if (value) {
-        return moment(String(value)).format('MM/DD/YYYY hh:mm');
+        return moment(String(value)).format('DD/MM/YYYY hh:mm');
       }
       return value;
     },
@@ -594,27 +599,37 @@ export default {
         }).then(
           (result) => {
             this.items = [];
+            this.itemsUnaltered = result.data;
             for (const key in result.data) {
             // pour éviter les erreurs si null
               if (
                 result.data[key].traitement == null
                 || result.data[key].traitement === undefined
               ) {
-              // eslint-disable-next-line no-param-reassign
-                result.data[key].traitement = {};
-                // eslint-disable-next-line no-param-reassign
-                result.data[key].traitement.libelle = 'Non défini';
+                this.items.push({
+                  dateCreation: result.data[key].dateCreation,
+                  dateModification: result.data[key].dateModification,
+                  rcr: `${result.data[key].rcr} - ${result.data[key].shortname}`,
+                  iln: result.data[key].iln,
+                  num: result.data[key].numDemande,
+                  traitement: 'Non défini',
+                  statut: result.data[key].etatDemande.libelle,
+                  codeStatut: result.data[key].etatDemande.numEtat,
+                  commentaire: result.data[key].commentaire,
+                });
+              } else {
+                this.items.push({
+                  dateCreation: result.data[key].dateCreation,
+                  dateModification: result.data[key].dateModification,
+                  rcr: `${result.data[key].rcr} - ${result.data[key].shortname}`,
+                  iln: result.data[key].iln,
+                  num: result.data[key].numDemande,
+                  traitement: result.data[key].traitement.libelle,
+                  statut: result.data[key].etatDemande.libelle,
+                  codeStatut: result.data[key].etatDemande.numEtat,
+                  commentaire: result.data[key].commentaire,
+                });
               }
-              this.items.push({
-                dateModification: result.data[key].dateModification,
-                rcr: `${result.data[key].rcr} - ${result.data[key].shortname}`,
-                iln: result.data[key].iln,
-                num: result.data[key].numDemande,
-                traitement: result.data[key].traitement.libelle,
-                statut: result.data[key].etatDemande.libelle,
-                codeStatut: result.data[key].etatDemande.numEtat,
-                commentaire: result.data[key].commentaire,
-              });
             }
             this.tableLoading = false;
           },
@@ -646,7 +661,6 @@ export default {
          */
         return this.items.filter((currentValue) => {
           let statut = '';
-          console.log(currentValue);
           if (currentValue.statut === 'Archivée' || currentValue.statut === 'A compléter'
             || currentValue.statut === 'En simulation' || currentValue.statut === 'En saisie'
             || currentValue.statut === 'Préparée') {
@@ -770,12 +784,14 @@ export default {
         },
       );
     },
-    saveComment(demande) {
+    saveComment(numDem, comment) {
       this.commentButton = true;
+      const demande = this.itemsUnaltered.find(element => element.numDemande === numDem);
+      demande.commentaire = comment;
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'PUT',
-        url: `${process.env.VUE_APP_ROOT_API}demandes/${sessionStorage.getItem('dem')}`,
+        url: `${process.env.VUE_APP_ROOT_API}demandes/${numDem}`,
         data: demande,
       }).then(
         () => {
@@ -866,5 +882,13 @@ export default {
   }
   .v-menu  {
     height: 49px !important;
+  }
+  abbr {
+    border-bottom: none !important;
+    cursor: inherit !important;
+    text-decoration: none !important;
+  }
+  .Terminée{
+    color: #4da432;
   }
 </style>
