@@ -107,10 +107,10 @@
                 <v-layout align-center justify-center column fill-height>
                   <!--Bouton première notice-->
                   <v-btn v-if="noticeEnCours === 0" color="disabled" depressed fab large dark aria-label="Première notice" class="unhover">
-                    <v-icon>arrow_back</v-icon>
+                    <v-icon>first_page</v-icon>
                   </v-btn>
                   <v-btn v-if="noticeEnCours > 0" color="success" fab large dark @click="getFirstSimu()" aria-label="Première notice">
-                    <v-icon>arrow_back</v-icon>
+                    <v-icon>first_page</v-icon>
                   </v-btn>
                   <span>Première notice</span>
 
@@ -135,10 +135,10 @@
 
                   <!--Bouton dernière notice-->
                   <v-btn v-if="noticeEnCours !== numberLines - 1" color="success" fab large dark @click="getLastSimu()" aria-label="Dernière notice">
-                    <v-icon>arrow_forward</v-icon>
+                    <v-icon>last_page</v-icon>
                   </v-btn>
                   <v-btn v-if="noticeEnCours === numberLines - 1" color="disabled" depressed fab large dark aria-label="Dernière notice" class="unhover">
-                    <v-icon>arrow_forward</v-icon>
+                    <v-icon>last_page</v-icon>
                   </v-btn>
                   <span>Dernière Notice</span>
                 </v-layout>
