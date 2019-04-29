@@ -8,7 +8,7 @@
             <v-list-tile-content>
               <v-list-tile-title>Bienvenue {{ user.username }}</v-list-tile-title>
               <v-list-tile-sub-title v-if="!isAdmin">Vous êtes habilité à intervenir sur les exemplaires des RCR de l'ILN {{ user.iln }}</v-list-tile-sub-title>
-              <v-list-tile-sub-title v-else>Vous disposez des permissions admnistrateur.</v-list-tile-sub-title>
+              <v-list-tile-sub-title v-else>Vous disposez des permissions administrateur.</v-list-tile-sub-title>
             </v-list-tile-content>
           </v-list-tile>
         </v-list>
