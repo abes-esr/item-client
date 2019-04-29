@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <v-container fluid>
     <v-layout justify-center align-center>
       <v-flex text-xs-center>
@@ -192,7 +192,7 @@
               >{{ props.item.traitement }}</td>
               <td
                 class="text-xs-left"
-                v-bind:class="props.item.statut"
+                v-bind:class="props.item.color"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
               >{{ props.item.statut }}</td>
               <td class="text-xs-center">
@@ -614,6 +614,7 @@ export default {
                   num: result.data[key].numDemande,
                   traitement: 'Non défini',
                   statut: result.data[key].etatDemande.libelle,
+                  color: this.getColor(result.data[key].etatDemande.libelle),
                   codeStatut: result.data[key].etatDemande.numEtat,
                   commentaire: result.data[key].commentaire,
                 });
@@ -626,6 +627,7 @@ export default {
                   num: result.data[key].numDemande,
                   traitement: result.data[key].traitement.libelle,
                   statut: result.data[key].etatDemande.libelle,
+                  color: this.getColor(result.data[key].etatDemande.libelle),
                   codeStatut: result.data[key].etatDemande.numEtat,
                   commentaire: result.data[key].commentaire,
                 });
@@ -862,6 +864,15 @@ export default {
         },
       );
     },
+    getColor(statut) {
+      console.log(statut);
+      if (statut === 'Terminée') {
+        return 'colorGreen';
+      } if (statut === 'En erreur') {
+        return 'colorRed';
+      }
+      return '';
+    },
   },
 };
 </script>
@@ -888,8 +899,11 @@ export default {
     cursor: inherit !important;
     text-decoration: none !important;
   }
-  .Terminée{
+  .colorGreen{
     color: #4da432;
+  }
+  .colorRed{
+    color: #d50b52;
   }
   .cloudButton{
     height: 37px;
