@@ -1,14 +1,14 @@
 <template>
-  <v-app id="inspire" :dark="isDark">
+  <v-app :dark="isDark" id="inspire">
     <!-- MENU LATERAL -->
-    <v-navigation-drawer v-model="drawer" fixed app v-if="authenticated">
-      <v-toolbar flat class="transparent mb-4">
+    <v-navigation-drawer app fixed v-if="authenticated" v-model="drawer">
+      <v-toolbar class="transparent mb-4" flat>
         <v-list three-line>
           <v-list-tile>
             <v-list-tile-content>
               <v-list-tile-title>Bienvenue {{ user.username }}</v-list-tile-title>
               <v-list-tile-sub-title v-if="!isAdmin">Vous êtes habilité à intervenir sur les exemplaires des RCR de l'ILN {{ user.iln }}</v-list-tile-sub-title>
-              <v-list-tile-sub-title v-else>Vous disposez des permissions administrateur.</v-list-tile-sub-title>
+              <v-list-tile-sub-title :style="styling" v-else>Vous disposez des permissions administrateur.</v-list-tile-sub-title>
             </v-list-tile-content>
           </v-list-tile>
         </v-list>
@@ -62,20 +62,20 @@
       </v-list>
     </v-navigation-drawer>
     <!-- BARRE DE TITRE SUPERIEURE -->
-    <v-toolbar color="primary" dark fixed app>
-      <v-toolbar-side-icon @click.stop="drawer = !drawer" v-if="authenticated" aria-label="menu latéral"></v-toolbar-side-icon>
+    <v-toolbar app color="primary" dark fixed>
+      <v-toolbar-side-icon @click.stop="drawer = !drawer" aria-label="menu latéral" v-if="authenticated"></v-toolbar-side-icon>
       <v-toolbar-title></v-toolbar-title>
         <v-spacer></v-spacer>
         <v-tooltip left nudge-bottom="20">
-          <span slot="activator"><a href="https://stp.abes.fr/" target="_blank" rel="noopener"><img src="@/assets/assistance.png" alt="icone assistance" width="38px" height="38px" href="http://documentation.abes.fr/sudoc/formats/loc/index2.htm#TOP" target="_blank"></a></span>
+          <span slot="activator"><a href="https://stp.abes.fr/" rel="noopener" target="_blank"><img alt="icone assistance" height="38px" href="http://documentation.abes.fr/sudoc/formats/loc/index2.htm#TOP" src="@/assets/assistance.png" target="_blank" width="38px"></a></span>
           <span>Assistance</span>
         </v-tooltip>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <v-tooltip left nudge-bottom="20">
-          <span slot="activator"><a href="http://documentation.abes.fr/sudoc/formats/loc/index2.htm#TOP" target="_blank" rel="noopener"><img src="@/assets/documentation.png" alt="icone documentation" width="38px" height="38px" href="http://documentation.abes.fr/sudoc/formats/loc/index2.htm#TOP" target="_blank"></a></span>
+          <span slot="activator"><a href="http://documentation.abes.fr/sudoc/formats/loc/index2.htm#TOP" rel="noopener" target="_blank"><img alt="icone documentation" height="38px" href="http://documentation.abes.fr/sudoc/formats/loc/index2.htm#TOP" src="@/assets/documentation.png" target="_blank" width="38px"></a></span>
           <span>Documentation</span>
         </v-tooltip>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <v-tooltip left nudge-bottom="20" v-if="authenticated">
-          <span slot="activator" @click="logout()"><a><img src="@/assets/deconnexion.png" alt="icone déconnexion" width="38px" height="38px"></a></span>
+          <span @click="logout()" slot="activator"><a><img alt="icone déconnexion" height="38px" src="@/assets/deconnexion.png" width="38px"></a></span>
           <span>Déconnexion</span>
         </v-tooltip>
     </v-toolbar>
@@ -113,6 +113,18 @@ export default {
       isAdmin: false,
       dialog: false,
     };
+  },
+  computed: {
+    styling() {
+      if (this.isDark) {
+        return {
+          color: 'white',
+        };
+      }
+      return {
+        color: 'black',
+      };
+    },
   },
   mounted() {
     this.getUserData();
@@ -200,5 +212,8 @@ export default {
   .v-btn:hover {
     background-color: #ec6839 !important;
     border-color: #ec6839 !important;
+  }
+  .textColor {
+    color: red;
   }
 </style>
