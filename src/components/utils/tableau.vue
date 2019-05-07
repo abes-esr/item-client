@@ -663,13 +663,13 @@ export default {
          */
         return this.items.filter((currentValue) => {
           let statut = '';
-          if (currentValue.statut === 'Archivée' || currentValue.statut === 'A compléter'
+          if (currentValue.statut === 'A compléter'
             || currentValue.statut === 'En simulation' || currentValue.statut === 'En saisie'
             || currentValue.statut === 'Préparée') {
             statut = 'En saisie';
           } else if (currentValue.statut === 'En cours de traitement') {
             statut = 'En cours de traitement';
-          } else if (currentValue.statut === 'Terminée') {
+          } else if (currentValue.statut === 'Terminée' || currentValue.statut === 'Archivée') {
             statut = 'Terminée';
           } else if (currentValue.statut === 'En attente') {
             statut = 'En attente';
@@ -775,6 +775,7 @@ export default {
               this.listStatut.push(result.data[i].libelle);
             }
           }
+          this.listStatut.sort();
         },
         (error) => {
           this.alertMessage = 'Impossible de récupérer la liste des statuts. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.';
