@@ -160,8 +160,8 @@
             </template>
             <template slot="items" slot-scope="props">
               <td @click="props.expanded = !props.expanded; tableExpanded = props.expanded;">
-                <v-icon v-if="props.expanded">keyboard_arrow_up</v-icon>
-                <v-icon v-else>keyboard_arrow_down</v-icon>
+                <v-icon v-if="props.expanded" :color='props.item.commentaire !== null && props.item.commentaire !== "" ? "primary" : "default"'>keyboard_arrow_up</v-icon>
+                <v-icon v-else :color='props.item.commentaire !== null && props.item.commentaire !== "" ? "primary" : "default"'>keyboard_arrow_down</v-icon>
               </td>
               <td
                 class="text-xs-left"
@@ -247,10 +247,11 @@
                   solo
                   name="comment"
                   label="Commentaire (150 caractères maximum)"
+                  :disabled="props.item.iln != user.iln"
                   v-model="props.item.commentaire"
                   maxlength="150"
                 ></v-textarea>
-                <v-btn color="info" :loading="commentButton" @click="saveComment(props.item.num, props.item.commentaire); props.expanded = false;">Enregistrer</v-btn>
+                <v-btn v-if="user.iln == props.item.iln" color="info" :loading="commentButton" @click="saveComment(props.item.num, props.item.commentaire); props.expanded = false;">Enregistrer</v-btn>
               </v-card-text>
             </v-card>
             </template>
@@ -865,7 +866,6 @@ export default {
       );
     },
     getColor(statut) {
-      console.log(statut);
       if (statut === 'Terminée') {
         return 'colorGreen';
       } if (statut === 'En erreur') {

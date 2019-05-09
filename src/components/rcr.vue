@@ -19,7 +19,7 @@
               item-text="name"
               label="Sélectionnez votre RCR dans la liste"
               no-data-text="Aucun RCR correspondant."
-              hint="Entrez le début du RCR de l'éblissement ou une partie du nom pour rechercher"
+              hint="Entrez le début du RCR de l'établissement ou une partie du nom pour rechercher"
               persistent-hint
               @change="checkActive"
             ></v-autocomplete>
