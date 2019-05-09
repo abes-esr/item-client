@@ -367,6 +367,7 @@ export default {
       calendar2: false,
       listTraitements: [],
       listStatut: [],
+      listStatutSorted: new Map(),
       tableLoading: true,
       popupDelete: false,
       popupArchive: false,
@@ -664,13 +665,13 @@ export default {
          */
         return this.items.filter((currentValue) => {
           let statut = '';
-          if (currentValue.statut === 'Archivée' || currentValue.statut === 'A compléter'
+          if (currentValue.statut === 'A compléter'
             || currentValue.statut === 'En simulation' || currentValue.statut === 'En saisie'
             || currentValue.statut === 'Préparée') {
             statut = 'En saisie';
           } else if (currentValue.statut === 'En cours de traitement') {
             statut = 'En cours de traitement';
-          } else if (currentValue.statut === 'Terminée') {
+          } else if (currentValue.statut === 'Terminée' || currentValue.statut === 'Archivée') {
             statut = 'Terminée';
           } else if (currentValue.statut === 'En attente') {
             statut = 'En attente';
@@ -764,17 +765,25 @@ export default {
         (result) => {
           for (let i = 0; i < result.data.length; i++) {
             if (
-              (result.data[i].libelle === 'Archivée'
+              result.data[i].libelle === 'Preparée'
+              || result.data[i].libelle === 'Archivée'
               || result.data[i].libelle === 'A compléter'
               || result.data[i].libelle === 'En simulation'
-              || result.data[i].libelle === 'En saisie')
+              || result.data[i].libelle === 'En saisie'
             ) {
-              if (this.listStatut.find(element => element === 'En saisie') === undefined) {
-                this.listStatut.push('En saisie');
-              }
-            } else {
-              this.listStatut.push(result.data[i].libelle);
+              this.listStatutSorted.set(1, 'En saisie');
+            } else if (result.data[i].libelle === 'En attente') {
+              this.listStatutSorted.set(2, 'En attente');
+            } else if (result.data[i].libelle === 'En cours de traitement') {
+              this.listStatutSorted.set(3, result.data[i].libelle);
+            } else if (result.data[i].libelle === 'Terminée') {
+              this.listStatutSorted.set(4, result.data[i].libelle);
+            } else if (result.data[i].libelle === 'En erreur') {
+              this.listStatutSorted.set(5, result.data[i].libelle);
             }
+          }
+          for (let i = 1; i < this.listStatutSorted.size + 1; i++) {
+            this.listStatut.push(this.listStatutSorted.get(i));
           }
         },
         (error) => {
