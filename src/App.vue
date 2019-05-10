@@ -3,10 +3,10 @@
     <!-- MENU LATERAL -->
     <v-navigation-drawer app fixed v-if="authenticated" v-model="drawer">
       <v-toolbar class="transparent mb-4" flat>
-        <v-list three-line>
+        <v-list three-line dense fixed style="text-overflow: ellipsis !important; white-space: nowrap !important;">
           <v-list-tile>
             <v-list-tile-content>
-              <v-list-tile-title>Bienvenue {{ user.username }}</v-list-tile-title>
+              <v-list-tile-sub-title>Bienvenue {{ user.username }}</v-list-tile-sub-title>
               <v-list-tile-sub-title v-if="!isAdmin">Vous êtes habilité à intervenir sur les exemplaires des RCR de l'ILN {{ user.iln }}</v-list-tile-sub-title>
               <v-list-tile-sub-title :style="styling" v-else>Vous disposez des permissions administrateur.</v-list-tile-sub-title>
             </v-list-tile-content>
