@@ -7,7 +7,7 @@
         </v-alert>
         <v-card>
           <v-card-title v-if="archive" class="title" >Mes demandes archivées</v-card-title>
-          <v-card-title v-else class="title">Gérer mes demandes</v-card-title>
+          <v-card-title v-else class="title" :style="style">Gérer mes demandes</v-card-title>
           <v-data-table
             :loading="tableLoading"
             :headers="headers"
@@ -379,6 +379,7 @@ export default {
     };
   },
   props: {
+    darkMode: Boolean,
     /** Tableau d'archive ou non ?
      * Si oui, on affiche uniquement les demandes archivées et désactive certaines fonctions
      * Si non, on affiche le tableau de gestion classique
@@ -413,6 +414,15 @@ export default {
     // Tri par défaut sur les numéros demandes
     this.changeSort('num');
     this.pagination.descending = true;
+  },
+  computed: {
+    style() {
+      console.log(this.darkMode);
+      if (this.darkMode) {
+        return 'color: red';
+      }
+      return 'color: blue';
+    },
   },
   methods: {
     downloadFile(numDem, type) {
@@ -917,4 +927,5 @@ export default {
   .cloudButton{
     height: 37px;
   }
+  .underline { color: red }
 </style>
