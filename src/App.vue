@@ -16,7 +16,7 @@
       <v-list>
         <v-divider></v-divider>
         <v-list-tile>
-          <v-switch label="Mode nuit" v-model="isDark"></v-switch>
+          <v-switch label="Mode nuit" color="red" v-model="isDark" ></v-switch>
         </v-list-tile>
         <v-divider></v-divider>
         <v-list-tile v-on:click="$router.push({ name: 'home' })">
@@ -212,8 +212,5 @@ export default {
   .v-btn:hover {
     background-color: #ec6839 !important;
     border-color: #ec6839 !important;
-  }
-  .textColor {
-    color: red;
   }
 </style>
