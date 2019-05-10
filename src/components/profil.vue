@@ -12,14 +12,12 @@
           <v-card-text>
             <v-form ref="form" v-model="valid" lazy-validation>
               <span v-if="user.email==null">
-                Votre adresse e-mail est obligatoire pour utiliser l'application :
+                Votre adresse e-mail est obligatoire pour utiliser l'application. Pour ajouter plusieurs adresses mail, séparez-les par des points virgules ;
               </span>
               <span v-else>
-                Votre adresse e-mail actuelle est : {{user.email}}
+                Les adresses e-mail actuelles sont : {{user.email}}.<br> Pour ajouter plusieurs adresses mail, séparez-les par des points virgules ;
               </span>
               <v-text-field prepend-icon="email" type="email" name="email1" aria-label="Adresse mail" v-model="input.email1" placeholder="Adresse e-mail" :rules="[rules.required, rules.email]" @keyup.enter="majProfil()" />
-              Confirmer votre adresse e-mail :
-              <v-text-field prepend-icon="email" type="email" name="email2" aria-label="Répéter adresse mail"  v-model="input.email2" placeholder="Confirmer votre adresse e-mail" :rules="[rules.required, rules.email]" @keyup.enter="majProfil()" />
             </v-form>
           </v-card-text>
           <v-card-actions>
@@ -45,15 +43,14 @@ export default {
       valid: true,
       input: {
         email1: '',
-        email2: '',
       },
       alert: false,
       user: {},
       rules: {
         required: value => !!value || 'Champ obligatoire.',
         email: (value) => {
-          const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-          return pattern.test(value) || 'e-mail invalide';
+          const pattern = /^((([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))[;]?)+$/;
+          return pattern.test(value) || 'e-mail(s) invalide';
         },
       },
       loading: false,
@@ -68,10 +65,9 @@ export default {
       this.loading = true;
       this.alert = false;
 
-      // Si les 2 emails entrés sont identiques
+      // Si l'adresse mail est valide
       if (
         this.$refs.form.validate()
-          && this.input.email1 === this.input.email2
       ) {
         axios({
           headers: { Authorization: this.user.jwt },
