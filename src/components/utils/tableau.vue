@@ -7,7 +7,7 @@
         </v-alert>
         <v-card>
           <v-card-title v-if="archive" class="title" >Mes demandes archivées</v-card-title>
-          <v-card-title v-else class="title" :style="style">Gérer mes demandes</v-card-title>
+          <v-card-title v-else class="title">Gérer mes demandes</v-card-title>
           <v-data-table
             :loading="tableLoading"
             :headers="headers"
@@ -160,8 +160,8 @@
             </template>
             <template slot="items" slot-scope="props">
               <td @click="props.expanded = !props.expanded; tableExpanded = props.expanded;">
-                <v-icon v-if="props.expanded" :color='props.item.commentaire !== null && props.item.commentaire !== "" ? "primary" : "default"'>keyboard_arrow_up</v-icon>
-                <v-icon v-else :color='props.item.commentaire !== null && props.item.commentaire !== "" ? "primary" : "default"'>keyboard_arrow_down</v-icon>
+                <v-icon v-if="props.expanded" :color='props.item.commentaire !== null && props.item.commentaire !== "" ? "white" : "default"' :class="{colored: props.item.commentaire}">keyboard_arrow_up</v-icon>
+                <v-icon v-else :color='props.item.commentaire !== null && props.item.commentaire !== "" ? "white" : "default"' :class="{colored: props.item.commentaire}">keyboard_arrow_down</v-icon>
               </td>
               <td
                 class="text-xs-left"
@@ -414,15 +414,6 @@ export default {
     // Tri par défaut sur les numéros demandes
     this.changeSort('num');
     this.pagination.descending = true;
-  },
-  computed: {
-    style() {
-      console.log(this.darkMode);
-      if (this.darkMode) {
-        return 'color: red';
-      }
-      return 'color: blue';
-    },
   },
   methods: {
     downloadFile(numDem, type) {
@@ -886,8 +877,14 @@ export default {
     },
     getColor(statut) {
       if (statut === 'Terminée') {
+        if (this.darkMode) {
+          return 'colorGreenDark';
+        }
         return 'colorGreen';
       } if (statut === 'En erreur') {
+        if (this.darkMode) {
+          return 'colorRedDark';
+        }
         return 'colorRed';
       }
       return '';
@@ -921,11 +918,21 @@ export default {
   .colorGreen{
     color: #4da432;
   }
+  .colorGreenDark{
+    color: #C4FF32;
+  }
   .colorRed{
     color: #d50b52;
+  }
+  .colorRedDark{
+    color: #FDC8EF;
   }
   .cloudButton{
     height: 37px;
   }
   .underline { color: red }
+  .colored{
+    background-color: #326BB1;
+    border-radius: 50%;
+  }
 </style>
