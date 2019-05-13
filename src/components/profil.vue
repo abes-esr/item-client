@@ -5,19 +5,19 @@
       <v-flex md7>
         <v-card class="elevation-12">
           <v-toolbar dark color="primary">
-            <v-toolbar-title v-if="user.email==null">Première connexion</v-toolbar-title>
+            <v-toolbar-title v-if="user.email === null || user.email === ''">Première connexion</v-toolbar-title>
             <v-toolbar-title v-else>Modifier les informations de votre compte</v-toolbar-title>
             <v-spacer></v-spacer>
           </v-toolbar>
           <v-card-text>
             <v-form ref="form" v-model="valid" lazy-validation>
-              <span v-if="user.email==null">
+              <span v-if="user.email === null || user.email === ''">
                 Votre adresse e-mail est obligatoire pour utiliser l'application. Pour ajouter plusieurs adresses mail, séparez-les par des points virgules ;
               </span>
               <span v-else>
                 Les adresses e-mail actuelles sont : {{user.email}}.<br> Pour ajouter plusieurs adresses mail, séparez-les par des points virgules ;
               </span>
-              <v-text-field prepend-icon="email" type="email" name="email1" aria-label="Adresse mail" v-model="input.email1" placeholder="Adresse e-mail" :rules="[rules.required, rules.email]" @keyup.enter="majProfil()" />
+              <v-text-field prepend-icon="email" type="email" name="email1" aria-label="Adresse mail" v-model="input.email1" placeholder="Adresse e-mail" :rules="[rules.required, rules.email]" @keyup.enter="majProfil()"></v-text-field>
             </v-form>
           </v-card-text>
           <v-card-actions>
