@@ -160,8 +160,8 @@
             </template>
             <template slot="items" slot-scope="props">
               <td @click="props.expanded = !props.expanded; tableExpanded = props.expanded;">
-                <v-icon v-if="props.expanded" :color='props.item.commentaire !== null && props.item.commentaire !== "" ? "primary" : "default"'>keyboard_arrow_up</v-icon>
-                <v-icon v-else :color='props.item.commentaire !== null && props.item.commentaire !== "" ? "primary" : "default"'>keyboard_arrow_down</v-icon>
+                <v-icon v-if="props.expanded" :color='props.item.commentaire !== null && props.item.commentaire !== "" ? "white" : "default"' :class="{colored: props.item.commentaire}">keyboard_arrow_up</v-icon>
+                <v-icon v-else :color='props.item.commentaire !== null && props.item.commentaire !== "" ? "white" : "default"' :class="{colored: props.item.commentaire}">keyboard_arrow_down</v-icon>
               </td>
               <td
                 class="text-xs-left"
@@ -379,6 +379,7 @@ export default {
     };
   },
   props: {
+    darkMode: Boolean,
     /** Tableau d'archive ou non ?
      * Si oui, on affiche uniquement les demandes archivées et désactive certaines fonctions
      * Si non, on affiche le tableau de gestion classique
@@ -876,8 +877,14 @@ export default {
     },
     getColor(statut) {
       if (statut === 'Terminée') {
+        if (this.darkMode) {
+          return 'colorGreenDark';
+        }
         return 'colorGreen';
       } if (statut === 'En erreur') {
+        if (this.darkMode) {
+          return 'colorRedDark';
+        }
         return 'colorRed';
       }
       return '';
@@ -911,10 +918,21 @@ export default {
   .colorGreen{
     color: #4da432;
   }
+  .colorGreenDark{
+    color: #C4FF32;
+  }
   .colorRed{
     color: #d50b52;
   }
+  .colorRedDark{
+    color: #FDC8EF;
+  }
   .cloudButton{
     height: 37px;
+  }
+  .underline { color: red }
+  .colored{
+    background-color: #326BB1;
+    border-radius: 50%;
   }
 </style>

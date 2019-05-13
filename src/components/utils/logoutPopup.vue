@@ -2,7 +2,7 @@
     <!-- POPUP AFIN DE PREVENIR L'UTILISATEUR QUAND IL EST DECONNECTE AUTOMATIQUEMENT SI LA SESSION EXPIRE -->
     <v-dialog v-model="dialog" width="500">
       <v-card>
-        <v-card-title class="headline grey lighten-2" primary-title>
+        <v-card-title class="headline red white--text" primary-title>
           Déconnexion
         </v-card-title>
         <v-card-text>

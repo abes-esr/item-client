@@ -92,9 +92,6 @@ export default {
       popupDelete: false,
     };
   },
-  mounted() {
-    console.log(this.color);
-  },
   methods: {
     /**
          * Modifie l'attribut fichierPresent à true/false selon si l'utilisateur a ajouté un fichier au formulaire ou non
@@ -139,7 +136,7 @@ export default {
       cursor: pointer;
     }
     .dropbox:hover {
-      background: #ec6839; /* when mouse over to the drop zone, change color */
+      background: #D4613D; /* when mouse over to the drop zone, change color */
     }
     .dropbox p {
       font-size: 1.2em;

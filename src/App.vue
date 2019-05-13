@@ -16,7 +16,7 @@
       <v-list>
         <v-divider></v-divider>
         <v-list-tile>
-          <v-switch label="Mode nuit" color="red" v-model="isDark" ></v-switch>
+          <v-switch label="Mode nuit" color="red" v-model="isDark"></v-switch>
         </v-list-tile>
         <v-divider></v-divider>
         <v-list-tile v-on:click="$router.push({ name: 'home' })">
@@ -81,7 +81,7 @@
     </v-toolbar>
     <v-content>
       <transition name="fade">
-        <router-view @authenticated="setAuthenticated" @logout="logoutExpired" />
+        <router-view @authenticated="setAuthenticated" @logout="logoutExpired" :darkMode="isDark"/>
       </transition>
     </v-content>
     <!-- FOOTER -->
