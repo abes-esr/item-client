@@ -47,39 +47,6 @@
                 <th class="smallTD">
                   <v-menu
                     :close-on-content-click="false"
-                    v-model="menu"
-                    lazy
-                    transition="scale-transition"
-                    offset-y
-                    full-width
-                    min-width="290px"
-                  >
-                    <v-text-field
-                      slot="activator"
-                      v-model="searchDateCreation"
-                      aria-label="Recherche par date"
-                      prepend-icon="event"
-                      append-icon="search"
-                      clearable
-                      readonly
-                    ></v-text-field>
-                    <v-date-picker
-                      v-model="searchDateCreation"
-                      @input="menu = false"
-                      locale="fr-fr"
-                      first-day-of-week="1"
-                      no-title
-                      scrollable
-                      @change="computedItems('dateCreation')"
-                    >
-                      <v-spacer></v-spacer>
-                      <v-btn flat color="primary" @click="menu = false" aria-label="Annuler">Annuler</v-btn>
-                    </v-date-picker>
-                  </v-menu>
-                </th>
-                <th class="smallTD">
-                  <v-menu
-                    :close-on-content-click="false"
                     v-model="calendar2"
                     lazy
                     transition="scale-transition"
@@ -167,10 +134,6 @@
                 class="text-xs-left"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
               >{{ props.item.num }}</td>
-              <td
-                class="text-xs-left"
-                @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
-              >{{ props.item.dateCreation | formatDate }}</td>
               <td
                 class="text-xs-left"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
@@ -516,7 +479,6 @@ export default {
           this.headers = [
             { text: ' ', value: 'expand' },
             { text: 'Demande', value: 'num' },
-            { text: 'Création', value: 'dateCreation' },
             { text: 'Modification', value: 'dateModification' },
             { text: 'ILN', value: 'iln' },
             { text: 'RCR', value: 'rcr' },
@@ -528,7 +490,6 @@ export default {
           this.headers = [
             { text: ' ', value: 'expand' },
             { text: 'Demande', value: 'num' },
-            { text: 'Création', value: 'dateCreation' },
             { text: 'Modification', value: 'dateModification' },
             { text: 'RCR', value: 'rcr' },
             { text: 'Traitement', value: 'traitement' },
@@ -540,7 +501,6 @@ export default {
         this.headers = [
           { text: ' ', value: 'expand' },
           { text: 'Demande', value: 'num' },
-          { text: 'Création', value: 'dateCreation' },
           { text: 'Modification', value: 'dateModification' },
           { text: 'ILN', value: 'iln' },
           { text: 'RCR', value: 'rcr' },
@@ -553,7 +513,6 @@ export default {
         this.headers = [
           { text: ' ', value: 'expand' },
           { text: 'Demande', value: 'num' },
-          { text: 'Création', value: 'dateCreation' },
           { text: 'Modification', value: 'dateModification' },
           { text: 'RCR', value: 'rcr' },
           { text: 'Traitement', value: 'traitement' },
