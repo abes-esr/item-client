@@ -112,6 +112,7 @@ export default {
       isDark: false,
       isAdmin: false,
       dialog: false,
+      wrapped: '',
     };
   },
   computed: {

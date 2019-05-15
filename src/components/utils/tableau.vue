@@ -100,6 +100,17 @@
                   ></v-text-field>
                 </th>
                 <th>
+                  <v-text-field
+                    v-model="searchZoneSousZone"
+                    append-icon="search"
+                    aria-label="Recherche par Zone et Sous-Zone"
+                    single-line
+                    hide-details
+                    clearable
+                    v-on:keyup="computedItems('zoneSousZone')"
+                  ></v-text-field>
+                </th>
+                <th>
                   <v-select
                     v-model="searchTraitement"
                     :items="listTraitements"
@@ -149,6 +160,10 @@
               ><abbr v-bind:title="props.item.rcr.slice(11, 200)">
                 {{ props.item.rcr.slice(0,9) }}</abbr>
               </td>
+              <td
+                class="text-xs-left"
+                @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
+              >{{ props.item.zoneSousZone }}</td>
               <td
                 class="text-xs-left"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
@@ -311,6 +326,7 @@ export default {
       searchNum: '',
       searchTraitement: '',
       searchStatut: '',
+      searchZoneSousZone: '',
       searchCodeStatut: ['1', '2'],
       listCodeStatut: ['1', '2'],
       typeSearch: 'search',
@@ -482,6 +498,7 @@ export default {
             { text: 'Modification', value: 'dateModification' },
             { text: 'ILN', value: 'iln' },
             { text: 'RCR', value: 'rcr' },
+            { text: 'Zones', value: 'zoneSousZone' },
             { text: 'Traitement', value: 'traitement' },
             { text: 'Statut', value: 'statut' },
             { text: 'Résultat', value: 'codeStatut' },
@@ -492,6 +509,7 @@ export default {
             { text: 'Demande', value: 'num' },
             { text: 'Modification', value: 'dateModification' },
             { text: 'RCR', value: 'rcr' },
+            { text: 'Zones', value: 'zoneSousZone' },
             { text: 'Traitement', value: 'traitement' },
             { text: 'Statut', value: 'statut' },
             { text: 'Résultat', value: 'codeStatut' },
@@ -504,6 +522,7 @@ export default {
           { text: 'Modification', value: 'dateModification' },
           { text: 'ILN', value: 'iln' },
           { text: 'RCR', value: 'rcr' },
+          { text: 'Zones', value: 'zoneSousZone' },
           { text: 'Traitement', value: 'traitement' },
           { text: 'Statut', value: 'statut' },
           { text: 'Résultat', value: 'codeStatut' },
@@ -515,6 +534,7 @@ export default {
           { text: 'Demande', value: 'num' },
           { text: 'Modification', value: 'dateModification' },
           { text: 'RCR', value: 'rcr' },
+          { text: 'Zones', value: 'zoneSousZone' },
           { text: 'Traitement', value: 'traitement' },
           { text: 'Statut', value: 'statut' },
           { text: 'Résultat', value: 'codeStatut' },
@@ -563,7 +583,20 @@ export default {
             this.items = [];
             this.itemsUnaltered = result.data;
             for (const key in result.data) {
-            // pour éviter les erreurs si null
+              // Controle que la zone et la sous zone on déjà été selectionnée afin d'eviter d'afficher null
+              let tempZone;
+              let tempSousZone;
+              if (result.data[key].zone === null) {
+                tempZone = '';
+              } else {
+                tempZone = result.data[key].zone;
+              }
+              if (result.data[key].sousZone === null) {
+                tempSousZone = '';
+              } else {
+                tempSousZone = result.data[key].sousZone;
+              }
+              // pour éviter les erreurs si null
               if (
                 result.data[key].traitement == null
                 || result.data[key].traitement === undefined
@@ -574,6 +607,7 @@ export default {
                   rcr: `${result.data[key].rcr} - ${result.data[key].shortname}`,
                   iln: result.data[key].iln,
                   num: result.data[key].numDemande,
+                  zoneSousZone: `${tempZone} ${tempSousZone}`,
                   traitement: 'Non défini',
                   statut: result.data[key].etatDemande.libelle,
                   color: this.getColor(result.data[key].etatDemande.libelle),
@@ -587,6 +621,7 @@ export default {
                   rcr: `${result.data[key].rcr} - ${result.data[key].shortname}`,
                   iln: result.data[key].iln,
                   num: result.data[key].numDemande,
+                  zoneSousZone: `${tempZone} ${tempSousZone}`,
                   traitement: result.data[key].traitement.libelle,
                   statut: result.data[key].etatDemande.libelle,
                   color: this.getColor(result.data[key].etatDemande.libelle),
@@ -658,6 +693,10 @@ export default {
               .toString()
               .toLowerCase()
               .indexOf(this.searchRCR.toLowerCase()) > -1)
+            && (this.searchZoneSousZone == null || currentValue.zoneSousZone
+              .toString()
+              .toLowerCase()
+              .indexOf(this.searchZoneSousZone.toLowerCase()) > -1)
             && (currentValue.num
               .toString()
               .toLowerCase()
@@ -688,6 +727,7 @@ export default {
       this.searchILN = '';
       this.searchRCR = '';
       this.searchNum = '';
+      this.searchZoneSousZone = '';
       this.searchTraitement = '';
       this.searchStatut = '';
       this.searchCodeStatut = '';
