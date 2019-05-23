@@ -586,6 +586,16 @@ export default {
               // Controle que la zone et la sous zone on déjà été selectionnée afin d'eviter d'afficher null
               let tempZone;
               let tempSousZone;
+              let tempStatus;
+              if (result.data[key].etatDemande.libelle === 'A compléter'
+                || result.data[key].etatDemande.libelle === 'En saisie'
+                || result.data[key].etatDemande.libelle === 'En simulation'
+              ) {
+                tempStatus = 'En saisie';
+              } else {
+                tempStatus = result.data[key].etatDemande.libelle;
+              }
+
               if (result.data[key].zone === null) {
                 tempZone = '';
               } else {
@@ -609,7 +619,7 @@ export default {
                   num: result.data[key].numDemande,
                   zoneSousZone: `${tempZone} ${tempSousZone}`,
                   traitement: 'Non défini',
-                  statut: result.data[key].etatDemande.libelle,
+                  statut: tempStatus,
                   color: this.getColor(result.data[key].etatDemande.libelle),
                   codeStatut: result.data[key].etatDemande.numEtat,
                   commentaire: result.data[key].commentaire,
@@ -623,7 +633,7 @@ export default {
                   num: result.data[key].numDemande,
                   zoneSousZone: `${tempZone} ${tempSousZone}`,
                   traitement: result.data[key].traitement.libelle,
-                  statut: result.data[key].etatDemande.libelle,
+                  statut: tempStatus,
                   color: this.getColor(result.data[key].etatDemande.libelle),
                   codeStatut: result.data[key].etatDemande.numEtat,
                   commentaire: result.data[key].commentaire,
