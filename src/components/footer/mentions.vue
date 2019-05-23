@@ -41,7 +41,7 @@
             <p></p>
             <ul>
               <li>
-                <a href="https://stp.abes.fr/node/3?origine=colodus">Guichet d'assistance</a>
+                <a href="https://stp.abes.fr/assistance/domaines/2111">Guichet d'assistance</a>
               </li>
               <li>Le secrétariat de l'ABES au +33 4 67 54 84 10</li>
             </ul>
