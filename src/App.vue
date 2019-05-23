@@ -67,11 +67,11 @@
       <v-toolbar-title></v-toolbar-title>
         <v-spacer></v-spacer>
         <v-tooltip left nudge-bottom="20">
-          <span slot="activator"><a href="https://stp.abes.fr/assistance/domaines/2111" rel="noopener" target="_blank"><img alt="icone assistance" height="38px" href="http://documentation.abes.fr/sudoc/formats/loc/index2.htm#TOP" src="@/assets/assistance.png" target="_blank" width="38px"></a></span>
+          <span slot="activator"><a href="https://stp.abes.fr/assistance/domaines/2111" rel="noopener" target="_blank"><img alt="icone assistance" height="38px" href="https://stp.abes.fr/assistance/domaines/2111" src="@/assets/assistance.png" target="_blank" width="38px"></a></span>
           <span>Assistance</span>
         </v-tooltip>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <v-tooltip left nudge-bottom="20">
-          <span slot="activator"><a href="http://documentation.abes.fr/sudoc/formats/loc/index2.htm#TOP" rel="noopener" target="_blank"><img alt="icone documentation" height="38px" href="http://documentation.abes.fr/sudoc/formats/loc/index2.htm#TOP" src="@/assets/documentation.png" target="_blank" width="38px"></a></span>
+          <span slot="activator"><a href="http://documentation.abes.fr/aideitem/index.html" rel="noopener" target="_blank"><img alt="icone documentation" height="38px" href="http://documentation.abes.fr/aideitem/index.html" src="@/assets/documentation.png" target="_blank" width="38px"></a></span>
           <span>Documentation</span>
         </v-tooltip>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <v-tooltip left nudge-bottom="20" v-if="authenticated">
