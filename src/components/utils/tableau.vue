@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <v-container fluid>
     <v-layout justify-center align-center>
       <v-flex text-xs-center>
@@ -43,39 +43,6 @@
                     clearable
                     v-on:keyup="computedItems('num')"
                   ></v-text-field>
-                </th>
-                <th class="smallTD">
-                  <v-menu
-                    :close-on-content-click="false"
-                    v-model="menu"
-                    lazy
-                    transition="scale-transition"
-                    offset-y
-                    full-width
-                    min-width="290px"
-                  >
-                    <v-text-field
-                      slot="activator"
-                      v-model="searchDateCreation"
-                      aria-label="Recherche par date"
-                      prepend-icon="event"
-                      append-icon="search"
-                      clearable
-                      readonly
-                    ></v-text-field>
-                    <v-date-picker
-                      v-model="searchDateCreation"
-                      @input="menu = false"
-                      locale="fr-fr"
-                      first-day-of-week="1"
-                      no-title
-                      scrollable
-                      @change="computedItems('dateCreation')"
-                    >
-                      <v-spacer></v-spacer>
-                      <v-btn flat color="primary" @click="menu = false" aria-label="Annuler">Annuler</v-btn>
-                    </v-date-picker>
-                  </v-menu>
                 </th>
                 <th class="smallTD">
                   <v-menu
@@ -133,6 +100,17 @@
                   ></v-text-field>
                 </th>
                 <th>
+                  <v-text-field
+                    v-model="searchZoneSousZone"
+                    append-icon="search"
+                    aria-label="Recherche par Zone et Sous-Zone"
+                    single-line
+                    hide-details
+                    clearable
+                    v-on:keyup="computedItems('zoneSousZone')"
+                  ></v-text-field>
+                </th>
+                <th>
                   <v-select
                     v-model="searchTraitement"
                     :items="listTraitements"
@@ -160,17 +138,13 @@
             </template>
             <template slot="items" slot-scope="props">
               <td @click="props.expanded = !props.expanded; tableExpanded = props.expanded;">
-                <v-icon v-if="props.expanded">keyboard_arrow_up</v-icon>
-                <v-icon v-else>keyboard_arrow_down</v-icon>
+                <v-icon v-if="props.expanded" :color='props.item.commentaire !== null && props.item.commentaire !== "" ? "white" : "default"' :class="{colored: props.item.commentaire}">keyboard_arrow_up</v-icon>
+                <v-icon v-else :color='props.item.commentaire !== null && props.item.commentaire !== "" ? "white" : "default"' :class="{colored: props.item.commentaire}">keyboard_arrow_down</v-icon>
               </td>
               <td
                 class="text-xs-left"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
               >{{ props.item.num }}</td>
-              <td
-                class="text-xs-left"
-                @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
-              >{{ props.item.dateCreation | formatDate }}</td>
               <td
                 class="text-xs-left"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
@@ -189,10 +163,14 @@
               <td
                 class="text-xs-left"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
+              >{{ props.item.zoneSousZone }}</td>
+              <td
+                class="text-xs-left"
+                @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
               >{{ props.item.traitement }}</td>
               <td
                 class="text-xs-left"
-                v-bind:class="props.item.statut"
+                v-bind:class="props.item.color"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
               >{{ props.item.statut }}</td>
               <td class="text-xs-center">
@@ -247,10 +225,11 @@
                   solo
                   name="comment"
                   label="Commentaire (150 caractères maximum)"
+                  :disabled="props.item.iln != user.iln"
                   v-model="props.item.commentaire"
                   maxlength="150"
                 ></v-textarea>
-                <v-btn color="info" :loading="commentButton" @click="saveComment(props.item.num, props.item.commentaire); props.expanded = false;">Enregistrer</v-btn>
+                <v-btn v-if="user.iln == props.item.iln" color="info" :loading="commentButton" @click="saveComment(props.item.num, props.item.commentaire); props.expanded = false;">Enregistrer</v-btn>
               </v-card-text>
             </v-card>
             </template>
@@ -347,6 +326,7 @@ export default {
       searchNum: '',
       searchTraitement: '',
       searchStatut: '',
+      searchZoneSousZone: '',
       searchCodeStatut: ['1', '2'],
       listCodeStatut: ['1', '2'],
       typeSearch: 'search',
@@ -366,6 +346,7 @@ export default {
       calendar2: false,
       listTraitements: [],
       listStatut: [],
+      listStatutSorted: new Map(),
       tableLoading: true,
       popupDelete: false,
       popupArchive: false,
@@ -377,6 +358,7 @@ export default {
     };
   },
   props: {
+    darkMode: Boolean,
     /** Tableau d'archive ou non ?
      * Si oui, on affiche uniquement les demandes archivées et désactive certaines fonctions
      * Si non, on affiche le tableau de gestion classique
@@ -388,7 +370,7 @@ export default {
   filters: {
     formatDate(value) {
       if (value) {
-        return moment(String(value)).format('DD/MM/YYYY hh:mm');
+        return moment(String(value)).format('DD/MM/YYYY HH:mm');
       }
       return value;
     },
@@ -513,10 +495,10 @@ export default {
           this.headers = [
             { text: ' ', value: 'expand' },
             { text: 'Demande', value: 'num' },
-            { text: 'Création', value: 'dateCreation' },
             { text: 'Modification', value: 'dateModification' },
             { text: 'ILN', value: 'iln' },
             { text: 'RCR', value: 'rcr' },
+            { text: 'Zones', value: 'zoneSousZone' },
             { text: 'Traitement', value: 'traitement' },
             { text: 'Statut', value: 'statut' },
             { text: 'Résultat', value: 'codeStatut' },
@@ -525,9 +507,9 @@ export default {
           this.headers = [
             { text: ' ', value: 'expand' },
             { text: 'Demande', value: 'num' },
-            { text: 'Création', value: 'dateCreation' },
             { text: 'Modification', value: 'dateModification' },
             { text: 'RCR', value: 'rcr' },
+            { text: 'Zones', value: 'zoneSousZone' },
             { text: 'Traitement', value: 'traitement' },
             { text: 'Statut', value: 'statut' },
             { text: 'Résultat', value: 'codeStatut' },
@@ -537,10 +519,10 @@ export default {
         this.headers = [
           { text: ' ', value: 'expand' },
           { text: 'Demande', value: 'num' },
-          { text: 'Création', value: 'dateCreation' },
           { text: 'Modification', value: 'dateModification' },
           { text: 'ILN', value: 'iln' },
           { text: 'RCR', value: 'rcr' },
+          { text: 'Zones', value: 'zoneSousZone' },
           { text: 'Traitement', value: 'traitement' },
           { text: 'Statut', value: 'statut' },
           { text: 'Résultat', value: 'codeStatut' },
@@ -550,9 +532,9 @@ export default {
         this.headers = [
           { text: ' ', value: 'expand' },
           { text: 'Demande', value: 'num' },
-          { text: 'Création', value: 'dateCreation' },
           { text: 'Modification', value: 'dateModification' },
           { text: 'RCR', value: 'rcr' },
+          { text: 'Zones', value: 'zoneSousZone' },
           { text: 'Traitement', value: 'traitement' },
           { text: 'Statut', value: 'statut' },
           { text: 'Résultat', value: 'codeStatut' },
@@ -601,7 +583,30 @@ export default {
             this.items = [];
             this.itemsUnaltered = result.data;
             for (const key in result.data) {
-            // pour éviter les erreurs si null
+              // Controle que la zone et la sous zone on déjà été selectionnée afin d'eviter d'afficher null
+              let tempZone;
+              let tempSousZone;
+              let tempStatus;
+              if (result.data[key].etatDemande.libelle === 'A compléter'
+                || result.data[key].etatDemande.libelle === 'En saisie'
+                || result.data[key].etatDemande.libelle === 'En simulation'
+              ) {
+                tempStatus = 'En saisie';
+              } else {
+                tempStatus = result.data[key].etatDemande.libelle;
+              }
+
+              if (result.data[key].zone === null) {
+                tempZone = '';
+              } else {
+                tempZone = result.data[key].zone;
+              }
+              if (result.data[key].sousZone === null) {
+                tempSousZone = '';
+              } else {
+                tempSousZone = result.data[key].sousZone;
+              }
+              // pour éviter les erreurs si null
               if (
                 result.data[key].traitement == null
                 || result.data[key].traitement === undefined
@@ -612,8 +617,10 @@ export default {
                   rcr: `${result.data[key].rcr} - ${result.data[key].shortname}`,
                   iln: result.data[key].iln,
                   num: result.data[key].numDemande,
+                  zoneSousZone: `${tempZone} ${tempSousZone}`,
                   traitement: 'Non défini',
-                  statut: result.data[key].etatDemande.libelle,
+                  statut: tempStatus,
+                  color: this.getColor(result.data[key].etatDemande.libelle),
                   codeStatut: result.data[key].etatDemande.numEtat,
                   commentaire: result.data[key].commentaire,
                 });
@@ -624,8 +631,10 @@ export default {
                   rcr: `${result.data[key].rcr} - ${result.data[key].shortname}`,
                   iln: result.data[key].iln,
                   num: result.data[key].numDemande,
+                  zoneSousZone: `${tempZone} ${tempSousZone}`,
                   traitement: result.data[key].traitement.libelle,
-                  statut: result.data[key].etatDemande.libelle,
+                  statut: tempStatus,
+                  color: this.getColor(result.data[key].etatDemande.libelle),
                   codeStatut: result.data[key].etatDemande.numEtat,
                   commentaire: result.data[key].commentaire,
                 });
@@ -661,13 +670,13 @@ export default {
          */
         return this.items.filter((currentValue) => {
           let statut = '';
-          if (currentValue.statut === 'Archivée' || currentValue.statut === 'A compléter'
+          if (currentValue.statut === 'A compléter'
             || currentValue.statut === 'En simulation' || currentValue.statut === 'En saisie'
             || currentValue.statut === 'Préparée') {
             statut = 'En saisie';
           } else if (currentValue.statut === 'En cours de traitement') {
             statut = 'En cours de traitement';
-          } else if (currentValue.statut === 'Terminée') {
+          } else if (currentValue.statut === 'Terminée' || currentValue.statut === 'Archivée') {
             statut = 'Terminée';
           } else if (currentValue.statut === 'En attente') {
             statut = 'En attente';
@@ -694,6 +703,10 @@ export default {
               .toString()
               .toLowerCase()
               .indexOf(this.searchRCR.toLowerCase()) > -1)
+            && (this.searchZoneSousZone == null || currentValue.zoneSousZone
+              .toString()
+              .toLowerCase()
+              .indexOf(this.searchZoneSousZone.toLowerCase()) > -1)
             && (currentValue.num
               .toString()
               .toLowerCase()
@@ -724,6 +737,7 @@ export default {
       this.searchILN = '';
       this.searchRCR = '';
       this.searchNum = '';
+      this.searchZoneSousZone = '';
       this.searchTraitement = '';
       this.searchStatut = '';
       this.searchCodeStatut = '';
@@ -761,17 +775,25 @@ export default {
         (result) => {
           for (let i = 0; i < result.data.length; i++) {
             if (
-              (result.data[i].libelle === 'Archivée'
+              result.data[i].libelle === 'Preparée'
+              || result.data[i].libelle === 'Archivée'
               || result.data[i].libelle === 'A compléter'
               || result.data[i].libelle === 'En simulation'
-              || result.data[i].libelle === 'En saisie')
+              || result.data[i].libelle === 'En saisie'
             ) {
-              if (this.listStatut.find(element => element === 'En saisie') === undefined) {
-                this.listStatut.push('En saisie');
-              }
-            } else {
-              this.listStatut.push(result.data[i].libelle);
+              this.listStatutSorted.set(1, 'En saisie');
+            } else if (result.data[i].libelle === 'En attente') {
+              this.listStatutSorted.set(2, 'En attente');
+            } else if (result.data[i].libelle === 'En cours de traitement') {
+              this.listStatutSorted.set(3, result.data[i].libelle);
+            } else if (result.data[i].libelle === 'Terminée') {
+              this.listStatutSorted.set(4, result.data[i].libelle);
+            } else if (result.data[i].libelle === 'En erreur') {
+              this.listStatutSorted.set(5, result.data[i].libelle);
             }
+          }
+          for (let i = 1; i < this.listStatutSorted.size + 1; i++) {
+            this.listStatut.push(this.listStatutSorted.get(i));
           }
         },
         (error) => {
@@ -862,6 +884,20 @@ export default {
         },
       );
     },
+    getColor(statut) {
+      if (statut === 'Terminée') {
+        if (this.darkMode) {
+          return 'colorGreenDark';
+        }
+        return 'colorGreen';
+      } if (statut === 'En erreur') {
+        if (this.darkMode) {
+          return 'colorRedDark';
+        }
+        return 'colorRed';
+      }
+      return '';
+    },
   },
 };
 </script>
@@ -888,10 +924,24 @@ export default {
     cursor: inherit !important;
     text-decoration: none !important;
   }
-  .Terminée{
+  .colorGreen{
     color: #4da432;
+  }
+  .colorGreenDark{
+    color: #C4FF32;
+  }
+  .colorRed{
+    color: #d50b52;
+  }
+  .colorRedDark{
+    color: #FDC8EF;
   }
   .cloudButton{
     height: 37px;
+  }
+  .underline { color: red }
+  .colored{
+    background-color: #326BB1;
+    border-radius: 50%;
   }
 </style>

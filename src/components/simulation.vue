@@ -7,7 +7,7 @@
         <!-- POPUP DE LANCEMENT DU TRAITEMENT-->
         <v-dialog v-model="dialog" width="500">
           <v-card>
-            <v-card-title class="headline grey lighten-2" primary-title>Lancement du traitement en production</v-card-title>
+            <v-card-title class="headline red white--text" primary-title>Lancement du traitement en production</v-card-title>
             <v-card-text>Êtes-vous sûr de vouloir lancer le traitement en production ?<br /> Aucune annulation n'est possible.</v-card-text>
             <v-divider></v-divider>
             <v-card-actions>
@@ -20,7 +20,7 @@
         <!-- POPUP DE CONFIRMATION QUE LE TRAITEMENT EST LANCE -->
         <v-dialog v-model="dialogFinished" width="500">
           <v-card>
-            <v-card-title class="headline grey lighten-2" primary-title>Traitement validé</v-card-title>
+            <v-card-title class="headline green white--text" primary-title>Traitement validé</v-card-title>
             <v-card-text>Votre demande est en cours de traitement, elle sera traitée dès que possible.<br />Un e-mail vous sera envoyé une fois le traitement terminé.
               <br>Vous pouvez retrouver l'ensemble de vos demandes depuis la page "Gérer mes demandes".
             </v-card-text>

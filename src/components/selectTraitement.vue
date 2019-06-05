@@ -1,9 +1,11 @@
 <template>
-  <v-container fluid fill-height>
-    <v-layout justify-center align-center>
+  <v-container grid-list-md>
+    <v-layout row wrap justify-center>
       <loading :show="loading" label="Chargement en cours..."></loading>
-      <v-flex md5 id="flexBox">
+      <v-flex xs8>
         <stepper id="stepper" current="3"></stepper>
+      </v-flex>
+      <v-flex md5 id="flexBox">
         <v-card class="elevation-12">
           <v-toolbar dark color="primary">
             <v-toolbar-title>Choix du type de traitement</v-toolbar-title>
