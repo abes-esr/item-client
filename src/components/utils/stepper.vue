@@ -1,6 +1,6 @@
 <template>
   <!-- FIL D'ARIANE -->
-  <v-stepper :value="current">
+  <v-stepper :value="current" alt-labels=true>
     <v-stepper-header>
       <v-stepper-step step="1" :complete="current > 1">Sélection RCR</v-stepper-step>
       <v-divider></v-divider>

@@ -12,12 +12,12 @@
           <v-card-text>
             <v-form ref="form" v-model="valid" lazy-validation>
               <span v-if="user.email === null || user.email === ''">
-                Votre adresse e-mail est obligatoire pour utiliser l'application. Pour ajouter plusieurs adresses mail, séparez-les par des points virgules ;
+                Votre adresse mail est obligatoire pour utiliser l'application. Pour ajouter plusieurs adresses mail, séparez-les par des points virgules ;
               </span>
               <span v-else>
-                Les adresses e-mail actuelles sont : {{user.email}}.<br> Pour ajouter plusieurs adresses mail, séparez-les par des points virgules ;
+                Adresse(s) mail déclarée(s) : {{user.email}}.<br> Pour ajouter plusieurs adresses mail, séparez-les par des points virgules ;
               </span>
-              <v-text-field prepend-icon="email" type="email" name="email1" aria-label="Adresse mail" v-model="input.email1" placeholder="Adresse e-mail" :rules="[rules.required, rules.email]" @keyup.enter="majProfil()"></v-text-field>
+              <v-text-field prepend-icon="email" type="email" name="email1" aria-label="Adresse mail" v-model="input.email1" placeholder="Adresse mail" :rules="[rules.required, rules.email]" @keyup.enter="majProfil()"></v-text-field>
             </v-form>
           </v-card-text>
           <v-card-actions>
@@ -26,7 +26,7 @@
           </v-card-actions>
         </v-card>
         <v-alert :value="alert" type="error" transition="scale-transition">
-          Adresse e-mail vide ou différente
+          Adresse mail vide ou différente
         </v-alert>
       </v-flex>
     </v-layout>
@@ -50,7 +50,7 @@ export default {
         required: value => !!value || 'Champ obligatoire.',
         email: (value) => {
           const pattern = /^((([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))[;]?)+$/;
-          return pattern.test(value) || 'e-mail(s) invalide';
+          return pattern.test(value) || 'mail(s) invalide';
         },
       },
       loading: false,

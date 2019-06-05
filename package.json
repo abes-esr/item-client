@@ -21,7 +21,7 @@
     "vue": "^2.6.6",
     "vue-full-loading": "^1.2.1",
     "vue-router": "^3.0.2",
-    "vuetify": "^1.5.0"
+    "vuetify": "^1.5.14"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.4.0",
@@ -30,7 +30,7 @@
     "@vue/eslint-config-airbnb": "^4.0.0",
     "babel-eslint": "^10.0.1",
     "css-loader": "^2.1.0",
-    "eslint": "^5.8.0",
+    "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
     "style-loader": "^0.23.1",
     "stylus": "^0.54.5",

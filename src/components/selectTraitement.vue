@@ -20,8 +20,8 @@
                                 <v-flex xs2>
                                     <span class="group pa-3 secondary" style="height: 4.2em">
                                         <v-icon v-if="traitement.numTraitement == 1" x-large dark>add</v-icon>
-                                        <v-icon v-else-if="traitement.numTraitement == 2" x-large dark>redo</v-icon>
-                                        <v-icon v-else-if="traitement.numTraitement == 3" x-large dark>edit</v-icon>
+                                        <v-icon v-else-if="traitement.numTraitement == 2" x-large dark>edit</v-icon>
+                                        <v-icon v-else-if="traitement.numTraitement == 3" x-large dark>redo</v-icon>
                                         <v-icon v-else-if="traitement.numTraitement == 4" x-large dark>clear</v-icon>
                                         <v-icon v-else-if="traitement.numTraitement == 5" x-large dark>delete</v-icon>
                                         <v-icon v-else x-large dark>edit</v-icon>

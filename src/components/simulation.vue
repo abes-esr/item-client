@@ -21,7 +21,7 @@
         <v-dialog v-model="dialogFinished" width="500">
           <v-card>
             <v-card-title class="headline green white--text" primary-title>Traitement validé</v-card-title>
-            <v-card-text>Votre demande est en cours de traitement, elle sera traitée dès que possible.<br />Un e-mail vous sera envoyé une fois le traitement terminé.
+            <v-card-text>Votre demande est en cours de traitement, elle sera traitée dès que possible.<br />Un mail vous sera envoyé une fois le traitement terminé.
               <br>Vous pouvez retrouver l'ensemble de vos demandes depuis la page "Gérer mes demandes".
             </v-card-text>
             <v-divider></v-divider>
@@ -166,7 +166,7 @@
         <v-layout justify-end id="layoutButtonOk">
           <!-- supprimerDemande(numDem) est importée depuis le mixin delete.js (voir plus bas) -->
           <v-btn large color="error" @click="supprimerDemande(numDem)" aria-label="Supprimer cette demande">Supprimer cette demande</v-btn>
-          <v-btn large color="error" @click="dialog = true" aria-label="Lancer le traitement en production">Lancer le traitement en production</v-btn>
+          <v-btn large color="info" @click="dialog = true" aria-label="Lancer le traitement en production">Lancer le traitement en production</v-btn>
         </v-layout>
       </v-flex>
     </v-layout>
