@@ -62,9 +62,9 @@
               </v-flex>
               <v-flex xs3>
                 <div style="padding: 15px;">
-                  <span style="color: grey;">Date de création</span>
+                  <span style="color: grey;">Date de modification</span>
                   <br>
-                  <span>{{ demande.dateCreation |formatDate }}</span>
+                  <span>{{ demande.dateModification | formatDate }}</span>
                 </div>
               </v-flex>
               <v-flex xs3>
@@ -238,7 +238,7 @@ export default {
   filters: {
     formatDate(value) {
       if (value) {
-        return moment(String(value)).format('DD/MM/YYYY à hh:mm');
+        return moment(String(value)).format('DD/MM/YYYY à HH:mm');
       }
       return value;
     },
@@ -333,7 +333,6 @@ export default {
     },
     // Compte le nombre de lignes totales du fichier
     getNumberLines() {
-      console.log(this.numDem);
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
