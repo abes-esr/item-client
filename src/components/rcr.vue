@@ -42,6 +42,7 @@
 import axios from 'axios';
 import loading from 'vue-full-loading';
 import stepper from '@/components/utils/stepper.vue';
+import constants from '@/components/utils/const';
 
 export default {
   name: 'Rcr',
@@ -93,7 +94,7 @@ export default {
           }
         },
         () => {
-          this.alertMessage = 'Impossible de récupérer la liste des RCR. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.';
+          this.alertMessage = constants.erreurRCR;
           this.alert = true;
           this.alertType = 'error';
         },
@@ -123,7 +124,7 @@ export default {
             this.$router.replace({ name: 'upload' });
           },
           (error) => {
-            this.alertMessage = 'Impossible de créer la demande.Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.';
+            this.alertMessage = constants.erreur500;
             this.alert = true;
             this.alertType = 'error';
             this.show = false;

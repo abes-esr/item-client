@@ -17,6 +17,7 @@ import axios from 'axios';
 import upload from '@/components/utils/upload.vue';
 import stepper from '@/components/utils/stepper.vue';
 import supprMixin from '@/mixins/delete';
+import constants from '@/components/utils/const';
 
 export default {
   name: 'uploadComponent',
@@ -71,7 +72,7 @@ export default {
               this.$router.replace({ name: 'simulation' });
             },
             (error) => {
-              this.alertMessage = "Une erreur est survenue lors de l'envoi du fichier. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.";
+              this.alertMessage = constants.erreurUpload;
               this.alertType = 'error';
               this.alert = true;
               this.loading = false;
@@ -86,7 +87,7 @@ export default {
             },
           );
       } else {
-        this.alertMessage = 'Une erreur est survenue. Essayez de vous déconnecter puis reconnecter. <br /> Si le problème persiste merci de nous contacter.';
+        this.alertMessage = constants.erreur500;
         this.alertType = 'error';
         this.alert = true;
         this.loading = false;

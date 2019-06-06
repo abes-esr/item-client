@@ -136,7 +136,7 @@ export default {
       cursor: pointer;
     }
     .dropbox:hover {
-      background: #D4613D; /* when mouse over to the drop zone, change color */
+      background: lightblue; /* when mouse over to the drop zone, change color */
     }
     .dropbox p {
       font-size: 1.2em;

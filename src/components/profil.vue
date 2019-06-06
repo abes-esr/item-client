@@ -35,6 +35,7 @@
 
 <script>
 import axios from 'axios';
+import constants from '@/components/utils/const';
 
 export default {
   name: 'Profil',
@@ -86,7 +87,7 @@ export default {
             this.$router.replace({ name: 'home' });
           },
           (error) => {
-            this.alertMessage = 'Service indisponible, veuillez réessayer ultérieurement. Si le problème persiste, merci de nous contacter.';
+            this.alertMessage = constants.erreur500;
             this.alert = true;
             this.loading = false;
             if (error.response.status === 401) {

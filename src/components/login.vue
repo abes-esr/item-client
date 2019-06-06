@@ -45,6 +45,7 @@
 
 <script>
 import axios from 'axios';
+import constants from '@/components/utils/const';
 
 export default {
   name: 'Login',
@@ -103,7 +104,7 @@ export default {
             },
             (error) => {
               this.loading = false;
-              this.alertMessage = 'Service indisponible, veuillez réessayer ultérieurement. Si le problème persiste, merci de nous contacter.';
+              this.alertMessage = constants.erreur500;
               this.alert = true;
               if (error.response.status === 401) {
                 this.alertMessage = "Nom d'utilisateur ou mot de passe incorrect";

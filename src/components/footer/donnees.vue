@@ -52,43 +52,10 @@
               </tbody>
             </table>
             <br />
-            <h4 class="title">2) Cookies de mesure d’audience</h4>
-              En vue d’adapter le site aux demandes de ses visiteurs, nous mesurons
-              le nombre de visites, le nombre de pages vues ainsi que l'activité des
-              visiteurs sur le site et leur fréquence de retour.
-            <p>
-              PIWIK, l'outil de statistiques utilisé par l'ABES, génère les cookies suivants :
-            </p>
-            <table border="1">
-              <thead>
-                <tr>
-                  <th>Nom du cookie</th>
-                  <th>Finalité</th>
-                  <th>Durée de conservation</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>pk_session</td>
-                  <td>Statistiques piwik</td>
-                  <td>1/2 h</td>
-                </tr>
-                <tr>
-                  <td>_pk_id</td>
-                  <td>Statistiques piwik</td>
-                  <td>13 mois</td>
-                </tr>
-                <tr>
-                  <td>piwik_ignore</td>
-                  <td>Cookie permettant d’indiquer à piwik que vous vous opposez au suivi statistique</td>
-                  <td>13 mois</td>
-                </tr>
-              </tbody>
-            </table>
             <p>
               Nous collectons également votre adresse IP, anonymisée, afin de
               déterminer la ville depuis laquelle vous vous connectez. L'application
-              Colodus ne peut donc en aucun cas remonter par ce biais à une personne physique.
+              Ce site ne peut donc en aucun cas remonter par ce biais à une personne physique.
             </p>
             <p>
               Les données personnelles recueillies (identifiant du cookie) sont

@@ -178,6 +178,7 @@ import axios from 'axios';
 import stepper from '@/components/utils/stepper.vue';
 import supprMixin from '@/mixins/delete';
 import moment from 'moment';
+import constants from '@/components/utils/const';
 
 export default {
   components: {
@@ -243,7 +244,7 @@ export default {
           this.loading = false;
           this.alert = true;
           this.alertType = 'error';
-          this.alertMessage = 'Impossible de récupérer la notice pour la simulation. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.';
+          this.alertMessage = constants.erreur500;
           if (error.response.status === 401) {
             this.$emit('logout');
           }
@@ -273,7 +274,7 @@ export default {
           this.loading = false;
           this.alert = true;
           this.alertType = 'error';
-          this.alertMessage = `Impossible de récupérer la notice pour la simulation : ${error.response.data.message}.  <br /> Veuillez réessayer ultérieurement. Si le problème persiste merci de nous contacter.`;
+          this.alertMessage = `Impossible de récupérer la notice pour la simulation : ${error.response.data.message}.  <br /> Veuillez réessayer ultérieurement. Si le problème persiste merci de contacter l'assistance.`;
           if (error.response.status === 401) {
             this.$emit('logout');
           } else if (error.response.status === 400 && error.response.data.message.includes('Numéro de notice erroné')
@@ -355,7 +356,7 @@ export default {
           this.loading = false;
           this.alert = true;
           this.alertType = 'error';
-          this.alertMessage = 'Impossible de valider le lancer le traitement sur votre demande, veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.';
+          this.alertMessage = constants.erreur500;
           if (error.response.status === 401) {
             this.$emit('logout');
           }
