@@ -310,6 +310,7 @@
 <script>
 import axios from 'axios';
 import moment from 'moment';
+import constants from '@/components/utils/const';
 
 export default {
   name: 'tableauComponent',
@@ -436,7 +437,7 @@ export default {
           (error) => {
             this.fileReady = false;
             this.dialog = false;
-            this.alertMessage = 'Impossible de récupérer votre fichier. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.';
+            this.alertMessage = constants.erreurDownload;
             this.alert = true;
             this.alertType = 'error';
             if (error.response.status === 401) {
@@ -459,7 +460,7 @@ export default {
             this.listTraitements.push({ libelle: 'Non défini' });
           },
           (error) => {
-            this.alertMessage = 'Impossible de récupérer la liste des traitements. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.';
+            this.alertMessage = constants.erreurListeTraitements;
             this.alert = true;
             this.alertType = 'error';
             if (error.response.status === 401) {
@@ -500,7 +501,6 @@ export default {
             { text: 'RCR', value: 'rcr' },
             { text: 'Zones', value: 'zoneSousZone' },
             { text: 'Traitement', value: 'traitement' },
-            { text: 'Statut', value: 'statut' },
             { text: 'Résultat', value: 'codeStatut' },
           ];
         } else {
@@ -511,7 +511,6 @@ export default {
             { text: 'RCR', value: 'rcr' },
             { text: 'Zones', value: 'zoneSousZone' },
             { text: 'Traitement', value: 'traitement' },
-            { text: 'Statut', value: 'statut' },
             { text: 'Résultat', value: 'codeStatut' },
           ];
         }
@@ -643,7 +642,7 @@ export default {
             this.tableLoading = false;
           },
           (error) => {
-            this.alertMessage = 'Impossible de récupérer la liste des demandes. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.';
+            this.alertMessage = constants.erreur500;
             this.alert = true;
             this.alertType = 'error';
 
@@ -797,7 +796,7 @@ export default {
           }
         },
         (error) => {
-          this.alertMessage = 'Impossible de récupérer la liste des statuts. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.';
+          this.alertMessage = constants.erreur500;
           this.alert = true;
           this.alertType = 'error';
           if (error.response.status === 401) {
@@ -821,7 +820,7 @@ export default {
         },
         (error) => {
           this.commentButton = false;
-          this.alertMessage = 'Impossible de mettre à jour les commentaires. <br /> Si le problème persiste merci de nous contacter.';
+          this.alertMessage = constants.erreur500;
           this.alert = true;
           this.alertType = 'error';
           if (error.response.status === 401) {
@@ -846,7 +845,7 @@ export default {
           this.deleteLoading = false;
         },
         (error) => {
-          this.alertMessage = 'Impossible de supprimer votre demande, merci de réessayer plus tard. Si le problème persiste, contactez nous.';
+          this.alertMessage = constants.erreur500;
           this.alertType = 'error';
           this.alert = true;
           this.popupDelete = false;
@@ -873,7 +872,7 @@ export default {
           this.deleteLoading = false;
         },
         (error) => {
-          this.alertMessage = 'Impossible d\'archiver votre demande, merci de réessayer plus tard. Si le problème persiste, contactez nous.';
+          this.alertMessage = constants.erreur500;
           this.alertType = 'error';
           this.alert = true;
           this.popupArchive = false;

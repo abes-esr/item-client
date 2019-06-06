@@ -29,7 +29,7 @@
             </p>
             <h2 class="display-1">4. Présentation du site</h2>
             <p>
-              L'application professionnelle Colodus est conçue pour la gestion des exemplaires (création, modification, suppression) liés aux notices bibliographiques du catalogue Sudoc. Elle est à la disposition des profession
+              Cette application professionnelle est conçue pour la gestion des exemplaires (création, modification, suppression) liés aux notices bibliographiques du catalogue Sudoc. Elle est à la disposition des profession
               Elle est à la disposition des professionnels des réseaux Sudoc et Sudoc-PS habilités à intervenir sur les données d’exemplaires de leur établissement.
             </p>
             <h2 class="display-1">5. Contact</h2>

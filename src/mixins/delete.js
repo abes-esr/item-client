@@ -1,4 +1,5 @@
 import axios from 'axios';
+import constants from '@/components/utils/const';
 
 // MIXIN : permet d'importer ces deux fonctions dans n'importe quel composant
 export default {
@@ -21,7 +22,7 @@ export default {
         () => {
           this.alert = true;
           this.alertType = 'error';
-          this.alertMessage = "Impossible d'annuler la demande. Veuillez réessayer ultérieurement. Merci de nous contacter si le problème persiste.";
+          this.alertMessage = constants.erreur500;
           this.loading = false;
         },
       );
@@ -48,7 +49,7 @@ export default {
         () => {
           this.alert = true;
           this.alertType = 'error';
-          this.alertMessage = 'Impossible de revenir en arrière. Veuillez réessayer ultérieurement. Merci de nous contacter si le problème persiste.';
+          this.alertMessage = constants.erreur500;
           this.loading = false;
         },
       );

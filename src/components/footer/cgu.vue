@@ -22,7 +22,7 @@
               >Nétiquette</a>).
             </p>
             <p>
-              La connexion et la navigation sur le site Colodus valent acceptation sans réserve des présentes Conditions Générales d'Utilisation, quelques soient les moyens techniques d'accès et les terminaux utilisés.
+              La connexion et la navigation sur ce site valent acceptation sans réserve des présentes Conditions Générales d'Utilisation, quelques soient les moyens techniques d'accès et les terminaux utilisés.
             </p>
             <h2 class="display-1">3. Responsabilités</h2>
             <p>L'éditeur n'est responsable que du contenu qu'il a lui-même édité.</p>
@@ -36,12 +36,12 @@
             <p>Par ailleurs, le site ne saurait garantir l'exactitude, la complétude, et l'actualité des informations qui y sont diffusées.</p>
             <h2 class="display-1">4. Liens hypertextes</h2>
             <p>
-              Le site peut contenir des liens hypertextes pointant vers d'autres sites internet sur lesquels Colodus n'exerce pas de contrôle. Malgré les vérifications préalables et régulières réalisées par l'éditeur, celui-ci décline tout responsabilité quant aux contenus qu'il est possible de trouver sur ces sites.
+              Le site peut contenir des liens hypertextes pointant vers d'autres sites internet sur lesquels ce site n'exerce pas de contrôle. Malgré les vérifications préalables et régulières réalisées par l'éditeur, celui-ci décline tout responsabilité quant aux contenus qu'il est possible de trouver sur ces sites.
             </p>
             <p>L'éditeur autorise la mise en place de liens hypertextes vers toute page ou document de son site.</p>
             <p>Sont exclus de cette autorisation les sites diffusant des informations à caractère illicite, violent, polémique, pornographique, xénophobe ou pouvant porter atteinte à la sensibilité du plus grand nombre.</p>
             <p>
-              Enfin, Colodus se réserve le droit de faire supprimer à tout moment un lien hypertexte pointant vers son site, si le site l'estime non conforme à sa politique éditoriale.
+              Enfin, ce site se réserve le droit de faire supprimer à tout moment un lien hypertexte pointant vers son site, si le site l'estime non conforme à sa politique éditoriale.
             </p>
             <h2 class="display-1">5. Loi applicable et juridiction compétente</h2>
             <p>Les présentes Conditions Générales d'Utilisation sont régies par la loi française. En cas de différend et à défaut d'accord amiable, le litige sera porté devant les tribunaux français conformément aux règles de compétence en vigueur.</p>

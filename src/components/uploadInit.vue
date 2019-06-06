@@ -13,7 +13,7 @@
           </v-toolbar>
           <v-card-text>
             <v-flex align-center justify-center fill-height class="text-xs-center">
-              <v-btn outline large color="secondary" ref="fileLinkBtn" @click="disabledButton = false;" :href="fileLink" :download="blobName">Télécharger le fichier de correspondances PPN/EPN <v-icon right dark>cloud_download</v-icon>
+              <v-btn round large color="primary" ref="fileLinkBtn" @click="disabledButton = false;" :href="fileLink" :download="blobName">Télécharger le fichier de correspondances PPN/EPN <v-icon right dark>cloud_download</v-icon>
               </v-btn>
             </v-flex>
           </v-card-text>
@@ -51,6 +51,7 @@ import loading from 'vue-full-loading';
 import upload from '@/components/utils/upload.vue';
 import stepper from '@/components/utils/stepper.vue';
 import supprMixin from '@/mixins/delete';
+import constants from '@/components/utils/const';
 
 export default {
   name: 'uploadComponent',
@@ -125,7 +126,7 @@ export default {
               this.getFileResult();
             },
             (error) => {
-              this.alertMessage = "Une erreur est survenue lors de l'envoi du fichier. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.";
+              this.alertMessage = constants.erreurUpload;
               this.alertType = 'error';
               this.alert = true;
               this.loading = false;
@@ -140,7 +141,7 @@ export default {
             },
           );
       } else {
-        this.alertMessage = 'Une erreur est survenue. Essayez de vous déconnecter puis reconnecter. <br /> Si le problème persiste merci de nous contacter.';
+        this.alertMessage = constants.erreur500;
         this.alertType = 'error';
         this.alert = true;
         this.loading = false;
@@ -173,7 +174,7 @@ export default {
             // this.$refs.fileLinkBtn.$el.click();
           },
           (error) => {
-            this.alertMessage = 'Une erreur est survenue lors de la récupération du fichier. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.';
+            this.alertMessage = constants.erreurDownload;
             this.alertType = 'error';
             this.alert = true;
             this.loading = false;

@@ -4,10 +4,25 @@
     <loading :show="loading" label="Chargement en cours..."></loading>
     <v-layout justify-center align-center>
       <v-flex text-xs-center>
+        <!-- POPUP DE SUPPRESSION DE LA DEMANDE -->
+        <v-dialog v-model="popupDelete" width="500">
+        <v-card>
+          <v-card-title class="headline" primary-title>Suppression</v-card-title>
+          <v-card-text>
+            Êtes-vous certain de vouloir supprimer définitivement cette demande ?
+          </v-card-text>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" flat @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
+            <v-btn color="primary" flat @click="supprimerDemande(numDem)" aria-label="Confirmer">Confirmer</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
         <!-- POPUP DE LANCEMENT DU TRAITEMENT-->
         <v-dialog v-model="dialog" width="500">
           <v-card>
-            <v-card-title class="headline red white--text" primary-title>Lancement du traitement en production</v-card-title>
+            <v-card-title class="headline" primary-title>Lancement du traitement en production</v-card-title>
             <v-card-text>Êtes-vous sûr de vouloir lancer le traitement en production ?<br /> Aucune annulation n'est possible.</v-card-text>
             <v-divider></v-divider>
             <v-card-actions>
@@ -20,8 +35,8 @@
         <!-- POPUP DE CONFIRMATION QUE LE TRAITEMENT EST LANCE -->
         <v-dialog v-model="dialogFinished" width="500">
           <v-card>
-            <v-card-title class="headline green white--text" primary-title>Traitement validé</v-card-title>
-            <v-card-text>Votre demande est en cours de traitement, elle sera traitée dès que possible.<br />Un e-mail vous sera envoyé une fois le traitement terminé.
+            <v-card-title class="headline" primary-title>Traitement validé</v-card-title>
+            <v-card-text>Votre demande est en cours de traitement, elle sera traitée dès que possible.<br />Un mail vous sera envoyé une fois le traitement terminé.
               <br>Vous pouvez retrouver l'ensemble de vos demandes depuis la page "Gérer mes demandes".
             </v-card-text>
             <v-divider></v-divider>
@@ -47,9 +62,9 @@
               </v-flex>
               <v-flex xs3>
                 <div style="padding: 15px;">
-                  <span style="color: grey;">Date de création</span>
+                  <span style="color: grey;">Date de modification</span>
                   <br>
-                  <span>{{ demande.dateCreation |formatDate }}</span>
+                  <span>{{ demande.dateModification | formatDate }}</span>
                 </div>
               </v-flex>
               <v-flex xs3>
@@ -77,6 +92,8 @@
           <v-toolbar dark color="primary">
             <v-toolbar-title>Ecran de simulation</v-toolbar-title>
             <v-spacer></v-spacer>
+            <!-- supprimerDemande(numDem) est importée depuis le mixin delete.js (voir plus bas) -->
+            <v-btn flat @click="popupDelete = true" aria-label="Supprimer cette demande"><v-icon>delete</v-icon>Supprimer</v-btn>
           </v-toolbar>
           <br />
           <span class="subheading">
@@ -164,9 +181,7 @@
         </v-card>
         <br>
         <v-layout justify-end id="layoutButtonOk">
-          <!-- supprimerDemande(numDem) est importée depuis le mixin delete.js (voir plus bas) -->
-          <v-btn large color="error" @click="supprimerDemande(numDem)" aria-label="Supprimer cette demande">Supprimer cette demande</v-btn>
-          <v-btn large color="error" @click="dialog = true" aria-label="Lancer le traitement en production">Lancer le traitement en production</v-btn>
+          <v-btn large color="info" @click="dialog = true" aria-label="Lancer le traitement en production">Lancer le traitement en production</v-btn>
         </v-layout>
       </v-flex>
     </v-layout>
@@ -178,6 +193,7 @@ import axios from 'axios';
 import stepper from '@/components/utils/stepper.vue';
 import supprMixin from '@/mixins/delete';
 import moment from 'moment';
+import constants from '@/components/utils/const';
 
 export default {
   components: {
@@ -206,6 +222,7 @@ export default {
       dialogFinished: false,
       derniereNotice: false,
       numDem: 0,
+      popupDelete: false,
     };
   },
   mounted() {
@@ -221,7 +238,7 @@ export default {
   filters: {
     formatDate(value) {
       if (value) {
-        return moment(String(value)).format('DD/MM/YYYY à hh:mm');
+        return moment(String(value)).format('DD/MM/YYYY à HH:mm');
       }
       return value;
     },
@@ -243,7 +260,7 @@ export default {
           this.loading = false;
           this.alert = true;
           this.alertType = 'error';
-          this.alertMessage = 'Impossible de récupérer la notice pour la simulation. Veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.';
+          this.alertMessage = constants.erreur500;
           if (error.response.status === 401) {
             this.$emit('logout');
           }
@@ -273,7 +290,7 @@ export default {
           this.loading = false;
           this.alert = true;
           this.alertType = 'error';
-          this.alertMessage = `Impossible de récupérer la notice pour la simulation : ${error.response.data.message}.  <br /> Veuillez réessayer ultérieurement. Si le problème persiste merci de nous contacter.`;
+          this.alertMessage = `Impossible de récupérer la notice pour la simulation : ${error.response.data.message}.  <br /> Veuillez réessayer ultérieurement. Si le problème persiste merci de contacter l'assistance.`;
           if (error.response.status === 401) {
             this.$emit('logout');
           } else if (error.response.status === 400 && error.response.data.message.includes('Numéro de notice erroné')
@@ -316,7 +333,6 @@ export default {
     },
     // Compte le nombre de lignes totales du fichier
     getNumberLines() {
-      console.log(this.numDem);
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
@@ -355,7 +371,7 @@ export default {
           this.loading = false;
           this.alert = true;
           this.alertType = 'error';
-          this.alertMessage = 'Impossible de valider le lancer le traitement sur votre demande, veuillez réessayer ultérieurement. <br /> Si le problème persiste merci de nous contacter.';
+          this.alertMessage = constants.erreur500;
           if (error.response.status === 401) {
             this.$emit('logout');
           }
