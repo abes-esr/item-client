@@ -501,7 +501,6 @@ export default {
             { text: 'RCR', value: 'rcr' },
             { text: 'Zones', value: 'zoneSousZone' },
             { text: 'Traitement', value: 'traitement' },
-            { text: 'Statut', value: 'statut' },
             { text: 'Résultat', value: 'codeStatut' },
           ];
         } else {
@@ -512,7 +511,6 @@ export default {
             { text: 'RCR', value: 'rcr' },
             { text: 'Zones', value: 'zoneSousZone' },
             { text: 'Traitement', value: 'traitement' },
-            { text: 'Statut', value: 'statut' },
             { text: 'Résultat', value: 'codeStatut' },
           ];
         }
