@@ -67,7 +67,7 @@
       <v-toolbar-title></v-toolbar-title>
         <v-spacer></v-spacer>
         <v-tooltip left nudge-bottom="20">
-          <span slot="activator"><a href="https://stp.abes.fr/assistance/domaines/2111" rel="noopener" target="_blank"><img alt="icone assistance" height="38px" href="https://stp.abes.fr/assistance/domaines/2111" src="@/assets/assistance.png" target="_blank" width="38px"></a></span>
+          <span slot="activator"><a href="https://stp.abes.fr/node/3?origine=sudocpro" rel="noopener" target="_blank"><img alt="icone assistance" height="38px" href="https://stp.abes.fr/node/3?origine=sudocpro" src="@/assets/assistance.png" target="_blank" width="38px"></a></span>
           <span>Assistance</span>
         </v-tooltip>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <v-tooltip left nudge-bottom="20">
