@@ -40,13 +40,8 @@ export default {
       }).then(
         (result) => {
           this.applicationVersion = result.data;
-          this.displayApplicationVersion();
         },
-        (error) => { console.log(error.data); },
       );
-    },
-    displayApplicationVersion() {
-      console.log(this.applicationVersion);
     },
   },
 };
