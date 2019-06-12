@@ -2,6 +2,7 @@
     <v-footer height="auto" color="secondary">
       <v-layout>
           <v-btn color="white" flat round href="http://abes.fr/">&copy; 2019 — <strong>ABES</strong></v-btn>
+          <v-btn disabled color="white" flat round>{{this.applicationVersion}}</v-btn>
            <v-spacer></v-spacer>
           <v-btn color="white" flat round @click="$router.push({ name: 'donnees' })">
             Données Personnelles
@@ -15,6 +16,41 @@
       </v-layout>
     </v-footer>
 </template>
+
+<script>
+import axios from 'axios';
+
+export default {
+  name: 'footerComponent',
+  data() {
+    return {
+      user: {},
+      applicationVersion: '',
+    };
+  },
+  created() {
+    this.user = JSON.parse(sessionStorage.getItem('user'));
+    this.getApplicationVersion();
+  },
+  methods: {
+    getApplicationVersion() {
+      return axios({
+        method: 'GET',
+        url: `${process.env.VUE_APP_ROOT_API}versionApplication`,
+      }).then(
+        (result) => {
+          this.applicationVersion = result.data;
+          this.displayApplicationVersion();
+        },
+        (error) => { console.log(error.data); },
+      );
+    },
+    displayApplicationVersion() {
+      console.log(this.applicationVersion);
+    },
+  },
+};
+</script>
 
 <style scoped>
  .v-btn {
