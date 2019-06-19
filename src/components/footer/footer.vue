@@ -2,7 +2,7 @@
     <v-footer height="auto" color="secondary">
       <v-layout>
           <v-btn color="white" flat round href="http://abes.fr/">&copy; 2019 — <strong>ABES</strong></v-btn>
-          <v-btn hidden disabled color="white" flat round>{{this.applicationVersion}}</v-btn>
+          <!--<span hidden>{{this.applicationVersion}}</span>-->
            <v-spacer></v-spacer>
           <v-btn color="white" flat round @click="$router.push({ name: 'donnees' })">
             Données Personnelles
