@@ -1,6 +1,6 @@
 <template>
   <v-container fluid fill-height>
-    <loading :show="loading" label="Chargement en cours..."></loading>
+    <loading :show="loading" label="Envoi en cours. Ce traitement peut prendre plusieurs minutes."></loading>
     <v-layout align-center justify-center>
       <v-flex md7>
         <stepper id="stepper" current="2"></stepper>

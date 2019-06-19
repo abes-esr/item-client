@@ -71,7 +71,7 @@ export default {
     },
     /** Message affiché lors du chargement */
     loadingMessage: {
-      default: 'Envoi en cours...',
+      default: 'Envoi en cours. Ce traitement peut prendre plusieurs minutes.',
     },
     /** Extension de fichier acceptée par le composant upload */
     format: {

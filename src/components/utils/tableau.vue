@@ -168,7 +168,7 @@
                 class="text-xs-left"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
               >{{ props.item.traitement }}</td>
-              <td
+              <td v-if="!archive"
                 class="text-xs-left"
                 v-bind:class="props.item.color"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
