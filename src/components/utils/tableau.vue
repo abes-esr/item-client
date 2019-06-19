@@ -589,6 +589,7 @@ export default {
               if (result.data[key].etatDemande.libelle === 'A compléter'
                 || result.data[key].etatDemande.libelle === 'En saisie'
                 || result.data[key].etatDemande.libelle === 'En simulation'
+                || result.data[key].etatDemande.libelle === 'En préparation'
               ) {
                 tempStatus = 'En saisie';
               } else {
@@ -671,7 +672,7 @@ export default {
           let statut = '';
           if (currentValue.statut === 'A compléter'
             || currentValue.statut === 'En simulation' || currentValue.statut === 'En saisie'
-            || currentValue.statut === 'Préparée') {
+            || currentValue.statut === 'Préparée' || currentValue.statut === 'En préparation') {
             statut = 'En saisie';
           } else if (currentValue.statut === 'En cours de traitement') {
             statut = 'En cours de traitement';
