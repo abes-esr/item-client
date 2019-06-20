@@ -25,12 +25,12 @@ export default {
   data() {
     return {
       user: {},
-      applicationVersion: '',
+      /**applicationVersion: '',**/
     };
   },
   created() {
     this.user = JSON.parse(sessionStorage.getItem('user'));
-    this.getApplicationVersion();
+    /**this.getApplicationVersion();**/
   },
   /**
   methods: {
