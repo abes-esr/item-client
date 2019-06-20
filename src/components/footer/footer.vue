@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+/**import axios from 'axios';**/
 
 export default {
   name: 'footerComponent',
@@ -32,6 +32,7 @@ export default {
     this.user = JSON.parse(sessionStorage.getItem('user'));
     this.getApplicationVersion();
   },
+  /**
   methods: {
     getApplicationVersion() {
       return axios({
@@ -44,6 +45,7 @@ export default {
       );
     },
   },
+  **/
 };
 </script>
 
