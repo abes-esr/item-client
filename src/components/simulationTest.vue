@@ -1,3 +1,7 @@
+<!--TODO (jeromevilliseck) supprimer ce component et la route associée dans le fichier index.js,
+ce component sert à isoler la partie template relative à l'affichage de l'ecran de simulation
+pour Exauto-->
+
 <template>
   <!-- PAGE DE SIMULATION -->
   <v-container fluid>
@@ -6,19 +10,19 @@
       <v-flex text-xs-center>
         <!-- POPUP DE SUPPRESSION DE LA DEMANDE -->
         <v-dialog v-model="popupDelete" width="500">
-        <v-card>
-          <v-card-title class="headline" primary-title>Suppression</v-card-title>
-          <v-card-text>
-            Êtes-vous certain de vouloir supprimer définitivement cette demande ?
-          </v-card-text>
-          <v-divider></v-divider>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="primary" flat @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
-            <v-btn color="primary" flat @click="supprimerDemande(numDem)" aria-label="Confirmer">Confirmer</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
+          <v-card>
+            <v-card-title class="headline" primary-title>Suppression</v-card-title>
+            <v-card-text>
+              Êtes-vous certain de vouloir supprimer définitivement cette demande ?
+            </v-card-text>
+            <v-divider></v-divider>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="primary" flat @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
+              <v-btn color="primary" flat @click="supprimerDemande(numDem)" aria-label="Confirmer">Confirmer</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
         <!-- POPUP DE LANCEMENT DU TRAITEMENT-->
         <v-dialog v-model="dialog" width="500">
           <v-card>
@@ -47,7 +51,7 @@
           </v-card>
         </v-dialog>
         <!-- FIL D'ARIANE -->
-        <stepper id="stepper" current="5"></stepper>
+        <stepper id="stepper" current="5"></stepper> <!--TODO un autre component stepper avec v-if pour exauto, une fois que l'on connaitra le fil d'ariane-->
         <!-- INFOS GENERALES DE LA DEMANDE -->
         <v-card id="demInfos">
           <h3 style="padding-top: 15px; padding-left: 15px;" class="headline">Ma demande</h3>
@@ -95,157 +99,79 @@
             <!-- supprimerDemande(numDem) est importée depuis le mixin delete.js (voir plus bas) -->
             <v-btn flat @click="popupDelete = true" aria-label="Supprimer cette demande"><v-icon>delete</v-icon>Supprimer</v-btn>
           </v-toolbar>
-          <br />
           <span class="subheading">
             Cet écran n'est qu'une visualisation du traitement. <br />
             Les règles de validation ne sont pas prises en compte lors de cette simulation. <br />
             Il s'agit de la dernière étape avant de lancer le traitement en base de production.
           </span>
-          <h3 class="headline mb-0" id="numLigne">Ligne de votre fichier : {{ noticeEnCours + 1 }} sur {{ numberLines }}</h3>
+          <span class="headline mb-0" id="numLigne">Ligne de votre fichier : {{ noticeEnCours + 1 }} sur {{ numberLines }}</span>
           <v-container fluid grid-list-md>
-            <!--Ecran de simulation pour modification de masse-->
-            <v-layout v-if="exauto === false" row wrap>
-              <v-flex xs5>
-                <v-layout fill-height>
-                  <v-card class="elevation-8">
-                    <v-container fill-height fluid pa-2>
-                      <v-layout fill-height>
-                        <v-flex xs12 align-end flexbox>
-                          <span class="headline --text">Avant traitement</span>
-                          <div class="notice">
-                            <pre>{{ noticeAvant }}</pre>
-                          </div>
-                        </v-flex>
-                      </v-layout>
-                    </v-container>
-                  </v-card>
-                </v-layout>
-              </v-flex>
-              <v-flex xs2>
-                <v-layout align-center justify-center column fill-height>
-                  <!--Bouton première notice-->
-                  <v-btn v-if="noticeEnCours === 0" color="disabled" depressed fab large dark aria-label="Première notice" class="unhover">
+            <v-layout column wrap align-center justify-center>
+            <v-flex justify-center md6>
+              <v-layout fill-height>
+                <v-card class="elevation-8">
+                  <v-container fill-height fluid pa-2>
+                    <v-layout fill-height>
+                      <v-flex xs12 align-end flexbox>
+                        <span class="headline --text">Avant traitement</span>
+                        <div class="notice">
+                          <pre>{{ noticeAvant }}</pre>
+                        </div>
+                      </v-flex>
+                    </v-layout>
+                  </v-container>
+                </v-card>
+              </v-layout>
+            </v-flex>
+            <v-flex justify-center md6>
+              <!--Conteneur des 4 boutons les centrant et les alignant-->
+              <v-layout row wrap align-start justify-space-around>
+                <!--Conteneur bouton 1-->
+                <div>
+                  <v-btn v-if="noticeEnCours === 0" color="disabled" depressed large dark aria-label="Première notice" class="unhover">
                     <v-icon>first_page</v-icon>
                   </v-btn>
-                  <v-btn v-if="noticeEnCours > 0" color="success" fab large dark @click="getFirstSimu()" aria-label="Première notice">
+                  <v-btn v-if="noticeEnCours > 0" color="success" large dark @click="getFirstSimu()" aria-label="Première notice">
                     <v-icon>first_page</v-icon>
                   </v-btn>
-                  <span>Première notice</span>
+                  <div>Première <br>notice</div>
+                </div>
 
-                  <!--Bouton notice suivante-->
-                  <v-btn v-if="noticeEnCours === 0" color="disabled" depressed fab large dark aria-label="Notice précédente" class="unhover">
+                <!--Conteneur bouton 2-->
+                <div>
+                  <v-btn v-if="noticeEnCours === 0" color="disabled" depressed large dark aria-label="Notice précédente" class="unhover">
                     <v-icon>navigate_before</v-icon>
                   </v-btn>
-                  <v-btn v-if="noticeEnCours > 0" color="success" fab large dark @click="getPreviousSimu()" aria-label="Notice précédente">
+                  <v-btn v-if="noticeEnCours > 0" color="success" large dark @click="getPreviousSimu()" aria-label="Notice précédente">
                     <v-icon>navigate_before</v-icon>
                   </v-btn>
-                  <span>Notice précedente</span>
-                  <br>
+                  <div>Notice <br>précédente</div>
+                </div>
 
-                  <!--Bouton notice suivante-->
-                  <v-btn v-if="noticeEnCours === numberLines - 1" color="disabled" depressed fab large dark aria-label="Notice suivante" class="unhover">
+                <!--Conteneur bouton 3-->
+                <div>
+                  <v-btn v-if="noticeEnCours === numberLines - 1" color="disabled" depressed large dark aria-label="Notice suivante" class="unhover">
                     <v-icon>navigate_next</v-icon>
                   </v-btn>
-                  <v-btn v-if="noticeEnCours !== numberLines - 1" color="success" fab large dark @click="getNextSimu()" aria-label="Notice suivante">
+                  <v-btn v-if="noticeEnCours !== numberLines - 1" color="success" large dark @click="getNextSimu()" aria-label="Notice suivante">
                     <v-icon>navigate_next</v-icon>
                   </v-btn>
-                  <span>Notice suivante</span>
+                  <div>Notice <br>suivante</div>
+                </div>
 
-                  <!--Bouton dernière notice-->
-                  <v-btn v-if="noticeEnCours !== numberLines - 1" color="success" fab large dark @click="getLastSimu()" aria-label="Dernière notice">
+                <!--Conteneur bouton 4-->
+                <div>
+                  <v-btn v-if="noticeEnCours === numberLines - 1" color="disabled" depressed large dark aria-label="Dernière notice" class="unhover">
                     <v-icon>last_page</v-icon>
                   </v-btn>
-                  <v-btn v-if="noticeEnCours === numberLines - 1" color="disabled" depressed fab large dark aria-label="Dernière notice" class="unhover">
+                  <v-btn v-if="noticeEnCours !== numberLines - 1" color="success" large dark @click="getLastSimu()" aria-label="Dernière notice">
                     <v-icon>last_page</v-icon>
                   </v-btn>
-                  <span>Dernière Notice</span>
-                </v-layout>
-              </v-flex>
-              <v-flex xs5>
-                <v-layout fill-height xs5>
-                  <v-card class="elevation-8">
-                    <v-container fill-height fluid pa-2>
-                      <v-layout fill-height>
-                        <v-flex xs12 align-end flexbox>
-                          <span class="headline --text">Après traitement</span>
-                          <div class="notice">
-                            <pre>{{ noticeApres }}</pre>
-                          </div>
-                        </v-flex>
-                      </v-layout>
-                    </v-container>
-                  </v-card>
-                </v-layout>
-              </v-flex>
-            </v-layout>
-
-            <!--Ecran de simulation pour exemplarisation automatique-->
-            <v-layout v-if="exauto === true" column wrap align-center justify-center>
-              <v-flex justify-center md6>
-                <v-layout fill-height>
-                  <v-card class="elevation-8">
-                    <v-container fill-height fluid pa-2>
-                      <v-layout fill-height>
-                        <v-flex xs12 align-end flexbox>
-                          <span class="headline --text">Avant traitement</span>
-                          <div class="notice">
-                            <pre>{{ noticeAvant }}</pre>
-                          </div>
-                        </v-flex>
-                      </v-layout>
-                    </v-container>
-                  </v-card>
-                </v-layout>
-              </v-flex>
-              <v-flex justify-center md6>
-                <!--Conteneur des 4 boutons les centrant et les alignant-->
-                <v-layout row wrap align-start justify-space-around>
-                  <!--Conteneur bouton 1-->
-                  <div>
-                    <v-btn v-if="noticeEnCours === 0" color="disabled" depressed large dark aria-label="Première notice" class="unhover">
-                      <v-icon>first_page</v-icon>
-                    </v-btn>
-                    <v-btn v-if="noticeEnCours > 0" color="success" large dark @click="getFirstSimu()" aria-label="Première notice">
-                      <v-icon>first_page</v-icon>
-                    </v-btn>
-                    <div>Première <br>notice</div>
-                  </div>
-
-                  <!--Conteneur bouton 2-->
-                  <div>
-                    <v-btn v-if="noticeEnCours === 0" color="disabled" depressed large dark aria-label="Notice précédente" class="unhover">
-                      <v-icon>navigate_before</v-icon>
-                    </v-btn>
-                    <v-btn v-if="noticeEnCours > 0" color="success" large dark @click="getPreviousSimu()" aria-label="Notice précédente">
-                      <v-icon>navigate_before</v-icon>
-                    </v-btn>
-                    <div>Notice <br>précédente</div>
-                  </div>
-
-                  <!--Conteneur bouton 3-->
-                  <div>
-                    <v-btn v-if="noticeEnCours === numberLines - 1" color="disabled" depressed large dark aria-label="Notice suivante" class="unhover">
-                      <v-icon>navigate_next</v-icon>
-                    </v-btn>
-                    <v-btn v-if="noticeEnCours !== numberLines - 1" color="success" large dark @click="getNextSimu()" aria-label="Notice suivante">
-                      <v-icon>navigate_next</v-icon>
-                    </v-btn>
-                    <div>Notice <br>suivante</div>
-                  </div>
-
-                  <!--Conteneur bouton 4-->
-                  <div>
-                    <v-btn v-if="noticeEnCours === numberLines - 1" color="disabled" depressed large dark aria-label="Dernière notice" class="unhover">
-                      <v-icon>last_page</v-icon>
-                    </v-btn>
-                    <v-btn v-if="noticeEnCours !== numberLines - 1" color="success" large dark @click="getLastSimu()" aria-label="Dernière notice">
-                      <v-icon>last_page</v-icon>
-                    </v-btn>
-                    <div>Dernière <br>notice</div>
-                  </div>
-                </v-layout>
-              </v-flex>
-            </v-layout>
+                  <div>Dernière <br>notice</div>
+                </div>
+              </v-layout>
+            </v-flex>
+          </v-layout>
           </v-container>
         </v-card>
         <br>
@@ -256,6 +182,7 @@
     </v-layout>
   </v-container>
 </template>
+
 <script>
 import loading from 'vue-full-loading';
 import axios from 'axios';
@@ -287,8 +214,6 @@ export default {
       user: {},
       noticeAvant: 'Notice en cours de chargement...',
       noticeApres: 'Notice en cours de chargement...',
-      exauto: false,
-      /* exauto a false pour modif de masse, true pour exauto */
       dialog: false,
       dialogFinished: false,
       derniereNotice: false,

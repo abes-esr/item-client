@@ -17,6 +17,7 @@ const MentionsComponent = () => import('@/components/footer/mentions.vue');
 const NotFoundComponent = () => import('@/components/errors/notFound.vue');
 const uploadFinalComponent = () => import('@/components/uploadFinal.vue');
 const simulationComponent = () => import('@/components/simulation.vue');
+const simulationTest = () => import('@/components/simulationTest.vue');
 const homeComponent = () => import('@/components/home.vue');
 
 Vue.use(Router);
@@ -115,6 +116,14 @@ const router = new Router({
       path: '/simulation',
       name: 'simulation',
       component: simulationComponent,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/simulationTest',
+      name: 'simulationTest',
+      component: simulationTest,
       meta: {
         requiresAuth: true,
       },
