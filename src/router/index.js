@@ -8,8 +8,10 @@ const LoginComponent = () => import('@/components/login.vue');
 const RcrComponent = () => import('@/components/rcr.vue');
 const uploadComponent = () => import('@/components/uploadInit.vue');
 const traitementComponent = () => import('@/components/selectTraitement.vue');
-const GererComponent = () => import('@/components/gerer.vue');
-const ArchiveComponent = () => import('@/components/archive.vue');
+const GererModifComponent = () => import('@/components/gererModif.vue');
+const ArchiveModifComponent = () => import('@/components/archiveModif.vue');
+const GererExComponent = () => import('@/components/gererEx.vue');
+const ArchiveExComponent = () => import('@/components/archiveEx.vue');
 const ProfilComponent = () => import('@/components/profil.vue');
 const CGUComponent = () => import('@/components/footer/cgu.vue');
 const DonneesComponent = () => import('@/components/footer/donnees.vue');
@@ -90,7 +92,7 @@ const router = new Router({
     {
       path: '/tableau',
       name: 'tab',
-      component: GererComponent,
+      component: GererModifComponent,
       meta: {
         requiresAuth: true,
       },
@@ -98,7 +100,23 @@ const router = new Router({
     {
       path: '/archive',
       name: 'archive',
-      component: ArchiveComponent,
+      component: ArchiveModifComponent,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/tableauEx',
+      name: 'tabEx',
+      component: GererExComponent,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/archiveEx',
+      name: 'archiveEx',
+      component: ArchiveExComponent,
       meta: {
         requiresAuth: true,
       },

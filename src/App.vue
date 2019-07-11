@@ -40,7 +40,7 @@
             <v-icon>list</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>Gérer mes demandes</v-list-tile-title>
+            <v-list-tile-title>Mes demandes de modification</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
         <v-list-tile v-on:click="$router.push({ name: 'archive' })">
@@ -48,7 +48,31 @@
             <v-icon>archive</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>Demandes archivées</v-list-tile-title>
+            <v-list-tile-title>Archives Modification</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile v-on:click="$router.push({ name: 'rcr' })">
+          <v-list-tile-action>
+            <v-icon>add</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Créer des exemplaires</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile v-on:click="$router.push({ name: 'tabEx' })">
+          <v-list-tile-action>
+            <v-icon>list</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Mes demandes d'exemplarisation</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile v-on:click="$router.push({ name: 'archiveEx' })">
+          <v-list-tile-action>
+            <v-icon>archive</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Archives Exemplarisation</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
         <v-list-tile v-on:click="$router.push({ name: 'profil' })">
