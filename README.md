@@ -1,4 +1,15 @@
-# kopya-client
+# item-client
+
+**I**nterface de **T**raitement des **E**xemplaires en **M**asse dans le Sudoc (partie client).
+
+- URL de production : https://item.sudoc.fr
+- Documentation utilisateur : http://documentation.abes.fr/aideitem/index.html
+
+Cette application est constituée uniquement de HTML, CSS et JS. Elle est construite avec le [framework VueJS](https://vuejs.org/).
+Elle ne peut fonctionner sans la partie serveur dont le rôle est de mettre à disposition l'API (web service) d'Item.
+
+A noter que la partie serveur n'est pas encore en opensource mais l'API d'Item étant en production sur les serveur de l'Abes ici https://item.sudoc.fr/,
+il est alors potentiellement possible de développer des adaptations de l'interface sans avoir besoin sur sa machine locale de la partie serveur.  
 
 ## Project setup
 ```
