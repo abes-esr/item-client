@@ -6,8 +6,11 @@
           <span v-html="alertMessage"></span>
         </v-alert>
         <v-card>
-          <v-card-title v-if="archive" class="title" >Mes demandes archivées</v-card-title>
-          <v-card-title v-else class="title">Gérer mes demandes</v-card-title>
+          <v-card-title v-if="archive && modif" class="title" >Mes demandes de modification archivées</v-card-title>
+          <v-card-title v-if="!archive && modif" class="title">Gérer mes demandes de modification</v-card-title>
+          <v-card-title v-if="archive && !modif" class="title">Mes demandes d'exemplarisation archivées</v-card-title>
+          <v-card-title v-if="!archive && !modif" class="title">Gérer mes demandes d'exemplarisation</v-card-title>
+
           <v-data-table
             :loading="tableLoading"
             :headers="headers"
@@ -178,7 +181,8 @@
                   <v-btn slot="activator" color="info" small aria-label="Télécharger les fichiers" class="cloudButton">
                     <v-icon>cloud_download</v-icon>
                   </v-btn>
-                  <v-list v-if="props.item.codeStatut >= 3">
+                  <!-- FICHIERS MODIF -->
+                  <v-list v-if="props.item.codeStatut >= 3 && modif">
                     <v-list-tile @click="downloadFile(props.item.num, 'ppn')">
                       <v-list-tile-title>Télécharger le fichier initial des PPN</v-list-tile-title>
                     </v-list-tile>
@@ -193,6 +197,18 @@
                     </v-list-tile>
                     <v-list-tile
                       @click="downloadFile(props.item.num, 'resultat')"
+                      v-if="props.item.codeStatut >= 7"
+                    >
+                      <v-list-tile-title>Télécharger le fichier résultat</v-list-tile-title>
+                    </v-list-tile>
+                  </v-list>
+                  <!-- FICHIERS EXEMPLARISATION -->
+                  <v-list v-if="props.item.codeStatut >= 3 && !modif">
+                    <v-list-tile @click="downloadFile(props.item.num, 'initEx')">
+                      <v-list-tile-title>Télécharger le fichier initial</v-list-tile-title>
+                    </v-list-tile>
+                    <v-list-tile
+                      @click="downloadFile(props.item.num, 'resultatEx')"
                       v-if="props.item.codeStatut >= 7"
                     >
                       <v-list-tile-title>Télécharger le fichier résultat</v-list-tile-title>
@@ -367,6 +383,13 @@ export default {
     archive: {
       default: false,
     },
+    /** Modifdemasse ou exemplarisation ?
+     *  L'intitulé et les colonnes varient
+     *  Les paramètres des appels WS également
+     */
+    modif: {
+      default: true,
+    },
   },
   filters: {
     formatDate(value) {
@@ -401,6 +424,10 @@ export default {
       this.dialog = true;
       let filename = '';
       switch (type) {
+        case 'initEx':
+          filename = `fichier_initial_${numDem}.txt?id=${numDem}`;
+          this.blobName = `fichier_initial_${numDem}.txt`;
+          break;
         case 'ppn':
           filename = `fichier_initial_${numDem}.txt?id=${numDem}`;
           this.blobName = `fichier_initial_${numDem}.txt`;
@@ -414,6 +441,10 @@ export default {
           this.blobName = `fichier_enrichi_${numDem}.csv`;
           break;
         case 'resultat':
+          filename = `fichier_resultat_${numDem}.csv?id=${numDem}`;
+          this.blobName = `fichier_resultat_${numDem}.csv`;
+          break;
+        case 'resultatEx':
           filename = `fichier_resultat_${numDem}.csv?id=${numDem}`;
           this.blobName = `fichier_resultat_${numDem}.csv`;
           break;
@@ -453,7 +484,7 @@ export default {
         axios({
           headers: { Authorization: this.user.jwt },
           method: 'GET',
-          url: `${process.env.VUE_APP_ROOT_API}traitements`,
+          url: `${process.env.VUE_APP_ROOT_API}traitements?modif=${this.modif}`,
         }).then(
           (result) => {
             this.listTraitements = result.data;
@@ -491,55 +522,15 @@ export default {
       }
     },
     initHeader() {
+      // TODO : Peut être faire ça mieux ?
+      // En générant le nom de la constante à partir des conditions ?
       if (this.archive) {
         if (this.user.role === 'ADMIN') {
-          this.headers = [
-            { text: ' ', value: 'expand' },
-            { text: 'Demande', value: 'num' },
-            { text: 'Modification', value: 'dateModification' },
-            { text: 'ILN', value: 'iln' },
-            { text: 'RCR', value: 'rcr' },
-            { text: 'Zones', value: 'zoneSousZone' },
-            { text: 'Traitement', value: 'traitement' },
-            { text: 'Résultat', value: 'codeStatut' },
-          ];
-        } else {
-          this.headers = [
-            { text: ' ', value: 'expand' },
-            { text: 'Demande', value: 'num' },
-            { text: 'Modification', value: 'dateModification' },
-            { text: 'RCR', value: 'rcr' },
-            { text: 'Zones', value: 'zoneSousZone' },
-            { text: 'Traitement', value: 'traitement' },
-            { text: 'Résultat', value: 'codeStatut' },
-          ];
-        }
+          if (this.modif) { this.headers = constants.headersArchiveAdminModif; } else { this.headers = constants.headerExempArchiveAdmin; }
+        } else if (this.modif) { this.headers = constants.headersArchiveModif; } else { this.headers = constants.headerExempArchive; }
       } else if (this.user.role === 'ADMIN') {
-        this.headers = [
-          { text: ' ', value: 'expand' },
-          { text: 'Demande', value: 'num' },
-          { text: 'Modification', value: 'dateModification' },
-          { text: 'ILN', value: 'iln' },
-          { text: 'RCR', value: 'rcr' },
-          { text: 'Zones', value: 'zoneSousZone' },
-          { text: 'Traitement', value: 'traitement' },
-          { text: 'Statut', value: 'statut' },
-          { text: 'Résultat', value: 'codeStatut' },
-          { text: '', value: 'delete' },
-        ];
-      } else {
-        this.headers = [
-          { text: ' ', value: 'expand' },
-          { text: 'Demande', value: 'num' },
-          { text: 'Modification', value: 'dateModification' },
-          { text: 'RCR', value: 'rcr' },
-          { text: 'Zones', value: 'zoneSousZone' },
-          { text: 'Traitement', value: 'traitement' },
-          { text: 'Statut', value: 'statut' },
-          { text: 'Résultat', value: 'codeStatut' },
-          { text: '', value: 'delete' },
-        ];
-      }
+        if (this.modif) { this.headers = constants.headerModifAdmin; } else { this.headers = constants.headerExempAdmin; }
+      } else if (this.modif) { this.headers = constants.headerModif; } else { this.headers = constants.headerExemp; }
 
 
       this.searchCombo = Object.assign([], this.headers);
@@ -561,15 +552,15 @@ export default {
         if (this.archive) {
           url = `${process.env.VUE_APP_ROOT_API}chercherArchives?userNum=${
             this.user.userNum
-          }`;
+          }&modif=${this.modif}`;
         } else if (this.user.role === 'ADMIN') {
           url = `${process.env.VUE_APP_ROOT_API}demandes?userNum=${
             this.user.userNum
-          }`;
+          }&modif=${this.modif}`;
         } else {
           url = `${process.env.VUE_APP_ROOT_API}chercherDemandes?userNum=${
             this.user.userNum
-          }`;
+          }&modif=${this.modif}`;
         }
 
 
@@ -890,7 +881,8 @@ export default {
           return 'colorGreenDark';
         }
         return 'colorGreen';
-      } if (statut === 'En erreur') {
+      }
+      if (statut === 'En erreur') {
         if (this.darkMode) {
           return 'colorRedDark';
         }
