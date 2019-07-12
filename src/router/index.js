@@ -14,7 +14,7 @@ const ProfilComponent = () => import('@/components/profil.vue');
 const CGUComponent = () => import('@/components/footer/cgu.vue');
 const DonneesComponent = () => import('@/components/footer/donnees.vue');
 const MentionsComponent = () => import('@/components/footer/mentions.vue');
-const NotFoundComponent = () => import('@/components/errors/notFound.vue');
+const NotFoundComponent = () => import('@/components/errors/notFound.vue'); //Composant actuellement désactivé
 const uploadFinalComponent = () => import('@/components/uploadFinal.vue');
 const simulationComponent = () => import('@/components/simulation.vue');
 const simulationTest = () => import('@/components/simulationTest.vue');
@@ -143,12 +143,14 @@ const router = new Router({
       name: 'mentions',
       component: MentionsComponent,
     },
-    // Gestion de la 404
+    // Gestion de la 404, redirection vers la page d'accueil
     {
-      path: '*', component: NotFoundComponent,
+      path: '*',
+      /*component: NotFoundComponent,*/
+      redirect: '/',
     },
   ],
-  // Autorise le retour arrière via le navigateur
+  // Autorise le retour arrière via le navigateur + url propres
   mode: 'history',
 });
 
