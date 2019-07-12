@@ -1,5 +1,5 @@
 <template>
-    <tableau :archive=true></tableau>
+    <tableau :archive=true :modif=true></tableau>
 </template>
 
 <script>

@@ -1,5 +1,5 @@
 <template>
-    <tableau :archive=false :darkMode="darkMode"></tableau>
+    <tableau :archive=false :darkMode="darkMode" :modif=true></tableau>
 </template>
 
 <script>
