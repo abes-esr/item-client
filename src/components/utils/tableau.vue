@@ -428,9 +428,6 @@ export default {
       let filename = '';
       switch (type) {
         case 'initEx':
-          filename = `fichier_initial_${numDem}.txt?id=${numDem}`;
-          this.blobName = `fichier_initial_${numDem}.txt`;
-          break;
         case 'ppn':
           filename = `fichier_initial_${numDem}.txt?id=${numDem}`;
           this.blobName = `fichier_initial_${numDem}.txt`;
@@ -444,9 +441,6 @@ export default {
           this.blobName = `fichier_enrichi_${numDem}.csv`;
           break;
         case 'resultat':
-          filename = `fichier_resultat_${numDem}.csv?id=${numDem}`;
-          this.blobName = `fichier_resultat_${numDem}.csv`;
-          break;
         case 'resultatEx':
           filename = `fichier_resultat_${numDem}.csv?id=${numDem}`;
           this.blobName = `fichier_resultat_${numDem}.csv`;
