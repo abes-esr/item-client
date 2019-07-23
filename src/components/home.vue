@@ -2,7 +2,7 @@
   <!-- PAGE D'ACCUEIL -->
   <v-layout row class="container">
     <v-flex xs12 md5 fill-height ma-2 pt-5>
-      <menu-cards titleName="Créer des exemplaires" iconType="add_circle_outline" routerLink="tabEx" :cardHeight=7.8></menu-cards>
+      <menu-cards titleName="Créer des exemplaires" iconType="add_circle_outline" routerLink="rcrEx" :cardHeight=7.8></menu-cards>
       <menu-cards titleName="Supprimer des exemplaires" iconType="delete" routerLink="tab" :cardHeight=7.8></menu-cards>
       <menu-cards titleName="Gérer mes demandes d'exemplarisation" iconType="sort" routerLink="tabEx" :cardHeight=7.8></menu-cards>
     </v-flex>

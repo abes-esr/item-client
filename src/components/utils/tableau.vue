@@ -160,13 +160,16 @@
               <td
                 class="text-xs-left"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
-              ><abbr v-bind:title="props.item.rcr.slice(11, 200)">
-                {{ props.item.rcr.slice(0,9) }}</abbr>
+              ><abbr v-bind:title="props.item.rcr">
+                {{ props.item.rcr }}</abbr>
               </td>
               <td
                 class="text-xs-left"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
-              >{{ props.item.zoneSousZone }}</td>
+              >
+                <span v-if="modif">{{ props.item.zoneSousZone }}</span>
+                <span v-else>{{ props.item.index }}</span>
+              </td>
               <td
                 class="text-xs-left"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
@@ -480,11 +483,17 @@ export default {
       return '';
     },
     getListTraitements() {
+      let addr;
+      if (this.modif) {
+        addr = `${process.env.VUE_APP_ROOT_API}traitements`;
+      } else {
+        addr = `${process.env.VUE_APP_ROOT_API}typeExemp`;
+      }
       if (this.user !== null && this.user.jwt !== null) {
         axios({
           headers: { Authorization: this.user.jwt },
           method: 'GET',
-          url: `${process.env.VUE_APP_ROOT_API}traitements?modif=${this.modif}`,
+          url: addr,
         }).then(
           (result) => {
             this.listTraitements = result.data;
@@ -609,6 +618,7 @@ export default {
                   iln: result.data[key].iln,
                   num: result.data[key].numDemande,
                   zoneSousZone: `${tempZone} ${tempSousZone}`,
+                  index: result.data[key].indexRecherche,
                   traitement: 'Non défini',
                   statut: tempStatus,
                   color: this.getColor(result.data[key].etatDemande.libelle),
@@ -623,6 +633,7 @@ export default {
                   iln: result.data[key].iln,
                   num: result.data[key].numDemande,
                   zoneSousZone: `${tempZone} ${tempSousZone}`,
+                  index: result.data[key].indexRecherche,
                   traitement: result.data[key].traitement.libelle,
                   statut: tempStatus,
                   color: this.getColor(result.data[key].etatDemande.libelle),

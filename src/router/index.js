@@ -6,21 +6,22 @@ import axios from 'axios';
 // import comme une fonction afin de permettre le lazy loading
 const LoginComponent = () => import('@/components/login.vue');
 const RcrComponent = () => import('@/components/rcr.vue');
-const uploadComponent = () => import('@/components/uploadInit.vue');
-const traitementComponent = () => import('@/components/selectTraitement.vue');
-const GererModifComponent = () => import('@/components/gererModif.vue');
-const ArchiveModifComponent = () => import('@/components/archiveModif.vue');
-const GererExComponent = () => import('@/components/gererEx.vue');
-const ArchiveExComponent = () => import('@/components/archiveEx.vue');
+const uploadComponent = () => import('@/components/modifmasse/uploadInit.vue');
+const traitementComponent = () => import('@/components/modifmasse/selectTraitement.vue');
+const GererModifComponent = () => import('@/components/modifmasse/gererModif.vue');
+const ArchiveModifComponent = () => import('@/components/modifmasse/archiveModif.vue');
+const GererExComponent = () => import('@/components/exemplarisation/gererEx.vue');
+const ArchiveExComponent = () => import('@/components/exemplarisation/archiveEx.vue');
 const ProfilComponent = () => import('@/components/profil.vue');
 const CGUComponent = () => import('@/components/footer/cgu.vue');
 const DonneesComponent = () => import('@/components/footer/donnees.vue');
 const MentionsComponent = () => import('@/components/footer/mentions.vue');
-const NotFoundComponent = () => import('@/components/errors/notFound.vue'); //Composant actuellement désactivé
-const uploadFinalComponent = () => import('@/components/uploadFinal.vue');
+const uploadFinalComponent = () => import('@/components/modifmasse/uploadFinal.vue');
 const simulationComponent = () => import('@/components/simulation.vue');
 const simulationTest = () => import('@/components/simulationTest.vue');
 const homeComponent = () => import('@/components/home.vue');
+const typeComponent = () => import('@/components/exemplarisation/selectType.vue');
+
 
 Vue.use(Router);
 
@@ -51,6 +52,15 @@ const router = new Router({
       },
     },
     {
+      path: '/rcrEx',
+      name: 'rcrEx',
+      component: RcrComponent,
+      props: { modif: false },
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
       path: '/fichier',
       name: 'upload',
       component: uploadComponent,
@@ -70,6 +80,14 @@ const router = new Router({
       path: '/traitement',
       name: 'traitement',
       component: traitementComponent,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/type',
+      name: 'type',
+      component: typeComponent,
       meta: {
         requiresAuth: true,
       },
@@ -164,7 +182,7 @@ const router = new Router({
     // Gestion de la 404, redirection vers la page d'accueil
     {
       path: '*',
-      /*component: NotFoundComponent,*/
+      /* component: NotFoundComponent, */
       redirect: '/',
     },
   ],

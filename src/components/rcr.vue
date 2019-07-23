@@ -65,6 +65,12 @@ export default {
       isEditing: false,
     };
   },
+  props: {
+    // Modif de masse ou exemplarisation
+    modif: {
+      default: true,
+    },
+  },
   mounted() {
     // On récupère les infos utilisateur en session car on a besoin du jwt afin d'appeler les WS REST
     this.user = JSON.parse(sessionStorage.getItem('user'));
@@ -115,13 +121,19 @@ export default {
               }creerdemande?rcr=${
                 this.selected
               }&userNum=${
-                this.user.userNum}`,
+                this.user.userNum}
+                &modif=${this.modif}`,
         }).then(
           (result) => {
             // On stocke le numéro de la demande en session, utilisé par d'autres composants
             sessionStorage.setItem('dem', result.data.numDemande);
             // Passage à l'étape suivante
-            this.$router.replace({ name: 'upload' });
+            if (this.modif) {
+              this.$router.replace({ name: 'upload' });
+            } else {
+              // TODO : REMPLACER PAR LA BONNE ROUTE
+              this.$router.replace({ name: 'type' });
+            }
           },
           (error) => {
             this.alertMessage = constants.erreur500;

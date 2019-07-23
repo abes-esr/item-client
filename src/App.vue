@@ -51,7 +51,7 @@
             <v-list-tile-title>Archives Modification</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile v-on:click="$router.push({ name: 'rcr' })">
+        <v-list-tile v-on:click="$router.push({ name: 'rcrEx' })">
           <v-list-tile-action>
             <v-icon>add</v-icon>
           </v-list-tile-action>
