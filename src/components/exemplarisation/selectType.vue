@@ -106,7 +106,7 @@ export default {
         axios({
           headers: { Authorization: this.user.jwt },
           method: 'GET',
-          url: `${process.env.VUE_APP_ROOT_API}/typeExemp`,
+          url: `${process.env.VUE_APP_ROOT_API}typeExemp`,
         }).then(
           (result) => {
             this.listExemp = result.data;
