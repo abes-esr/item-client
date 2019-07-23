@@ -136,7 +136,7 @@ export default {
           headers: { Authorization: this.user.jwt },
           method: 'GET',
           url:
-              `${process.env.VUE_APP_ROOT_API}demandes/${sessionStorage.getItem('dem')}?modif=false`,
+              `${process.env.VUE_APP_ROOT_API}demandesExemp/${sessionStorage.getItem('dem')}`,
         }).then(
           (result) => {
             demande = result.data;
