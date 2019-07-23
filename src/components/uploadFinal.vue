@@ -41,6 +41,12 @@ export default {
       textUpload: 'Cliquez ou faites glisser ici<br />pour charger votre fichier complété<br />(format txt ou csv)',
     };
   },
+  props: {
+    // Modif de masse ou exemplarisation
+    modif: {
+      default: true,
+    },
+  },
   // On récupère le numéro de demande enregistré en session
   created() {
     this.numDem = sessionStorage.getItem('dem');
@@ -57,7 +63,7 @@ export default {
       this.user = JSON.parse(sessionStorage.getItem('user'));
       if (this.user !== null && this.user.jwt !== null) {
         axios
-          .post(`${process.env.VUE_APP_ROOT_API}uploadDemande`, formData, {
+          .post(`${process.env.VUE_APP_ROOT_API}uploadDemande?modif=${this.modif}`, formData, {
             headers: {
               Authorization: this.user.jwt,
               'Content-Type': 'multipart/form-data',
@@ -69,7 +75,7 @@ export default {
               this.alertType = 'success';
               this.alert = true;
               this.loading = false;
-              this.$router.replace({ name: 'simulation' });
+              this.$router.replace({ name: 'simulationTest' });
             },
             (error) => {
               this.alertMessage = constants.erreurUpload;

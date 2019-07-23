@@ -168,7 +168,7 @@ export default {
           this.alertMessage = 'Demande mise à jour.';
           this.alert = true;
           this.alertType = 'success';
-          this.$router.replace({ name: 'home' });
+          this.$router.replace({ name: 'fichierExemp' });
           this.loading = false;
         },
         (error) => {

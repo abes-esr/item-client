@@ -16,7 +16,7 @@ const ProfilComponent = () => import('@/components/profil.vue');
 const CGUComponent = () => import('@/components/footer/cgu.vue');
 const DonneesComponent = () => import('@/components/footer/donnees.vue');
 const MentionsComponent = () => import('@/components/footer/mentions.vue');
-const uploadFinalComponent = () => import('@/components/modifmasse/uploadFinal.vue');
+const uploadFinalComponent = () => import('@/components/uploadFinal.vue');
 const simulationComponent = () => import('@/components/simulation.vue');
 const simulationTest = () => import('@/components/simulationTest.vue');
 const homeComponent = () => import('@/components/home.vue');
@@ -72,6 +72,15 @@ const router = new Router({
       path: '/fichierEnrichi',
       name: 'uploadFinal',
       component: uploadFinalComponent,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/fichierExemplarisation',
+      name: 'fichierExemp',
+      component: uploadFinalComponent,
+      props: { modif: false },
       meta: {
         requiresAuth: true,
       },
