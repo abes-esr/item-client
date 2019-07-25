@@ -130,7 +130,6 @@ export default {
       this.alert = false;
       let demande = {};
       this.loading = true;
-
       if (this.user !== null && this.user.jwt !== null) {
         axios({
           headers: { Authorization: this.user.jwt },
@@ -140,7 +139,7 @@ export default {
         }).then(
           (result) => {
             demande = result.data;
-            demande.traitement = this.selected;
+            demande.typeExemp = this.selected;
             this.updateDemande(demande);
           },
           (error) => {
