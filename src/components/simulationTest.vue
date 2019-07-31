@@ -80,9 +80,9 @@ pour Exauto-->
               </v-flex>
               <v-flex xs3>
                 <div style="padding: 15px;">
-                  <span style="color: grey;">Traitement</span>
+                  <span style="color: grey;">Type d'exemplarisation</span>
                   <br>
-                  <span>{{ demande.traitement.libelle }}</span>
+                  <span>{{ demande.typeExemp.libelle }}</span>
                 </div>
               </v-flex>
             </v-layout>
@@ -107,71 +107,87 @@ pour Exauto-->
           <span class="headline mb-0" id="numLigne">Ligne de votre fichier : {{ noticeEnCours + 1 }} sur {{ numberLines }}</span>
           <v-container fluid grid-list-md>
             <v-layout column wrap align-center justify-center>
-            <v-flex justify-center md6>
-              <v-layout fill-height>
-                <v-card class="elevation-8">
-                  <v-container fill-height fluid pa-2>
-                    <v-layout fill-height>
-                      <v-flex xs12 align-end flexbox>
-                        <span class="headline --text">Avant traitement</span>
-                        <div class="notice">
-                          <pre>{{ noticeAvant }}</pre>
-                        </div>
-                      </v-flex>
-                    </v-layout>
-                  </v-container>
-                </v-card>
-              </v-layout>
-            </v-flex>
-            <v-flex justify-center md6>
-              <!--Conteneur des 4 boutons les centrant et les alignant-->
-              <v-layout row wrap align-start justify-space-around>
-                <!--Conteneur bouton 1-->
-                <div>
-                  <v-btn v-if="noticeEnCours === 0" color="disabled" depressed large dark aria-label="Première notice" class="unhover">
-                    <v-icon>first_page</v-icon>
-                  </v-btn>
-                  <v-btn v-if="noticeEnCours > 0" color="success" large dark @click="getFirstSimu()" aria-label="Première notice">
-                    <v-icon>first_page</v-icon>
-                  </v-btn>
-                  <div>Première <br>notice</div>
-                </div>
+              <v-flex justify-center md6>
+                <v-layout fill-height>
+                  <v-card class="elevation-8">
+                    <v-container fill-height fluid pa-2>
+                      <v-layout fill-height>
+                        <v-flex xs12 align-end flexbox>
+                          <span class="headline --text">Avant traitement</span>
+                          <div class="notice">
+                            <pre>{{ noticeAvant }}</pre>
+                          </div>
+                        </v-flex>
+                      </v-layout>
+                    </v-container>
+                  </v-card>
+                </v-layout>
+              </v-flex>
+              <v-flex justify-center md6>
+                <!--Conteneur des 4 boutons les centrant et les alignant-->
+                <v-layout row wrap align-start justify-space-around>
+                  <!--Conteneur bouton 1-->
+                  <div>
+                    <v-btn v-if="noticeEnCours === 0" color="disabled" depressed large dark aria-label="Première notice" class="unhover">
+                      <v-icon>first_page</v-icon>
+                    </v-btn>
+                    <v-btn v-if="noticeEnCours > 0" color="success" large dark @click="getFirstSimu()" aria-label="Première notice">
+                      <v-icon>first_page</v-icon>
+                    </v-btn>
+                    <div>Première <br>notice</div>
+                  </div>
 
-                <!--Conteneur bouton 2-->
-                <div>
-                  <v-btn v-if="noticeEnCours === 0" color="disabled" depressed large dark aria-label="Notice précédente" class="unhover">
-                    <v-icon>navigate_before</v-icon>
-                  </v-btn>
-                  <v-btn v-if="noticeEnCours > 0" color="success" large dark @click="getPreviousSimu()" aria-label="Notice précédente">
-                    <v-icon>navigate_before</v-icon>
-                  </v-btn>
-                  <div>Notice <br>précédente</div>
-                </div>
+                  <!--Conteneur bouton 2-->
+                  <div>
+                    <v-btn v-if="noticeEnCours === 0" color="disabled" depressed large dark aria-label="Notice précédente" class="unhover">
+                      <v-icon>navigate_before</v-icon>
+                    </v-btn>
+                    <v-btn v-if="noticeEnCours > 0" color="success" large dark @click="getPreviousSimu()" aria-label="Notice précédente">
+                      <v-icon>navigate_before</v-icon>
+                    </v-btn>
+                    <div>Notice <br>précédente</div>
+                  </div>
 
-                <!--Conteneur bouton 3-->
-                <div>
-                  <v-btn v-if="noticeEnCours === numberLines - 1" color="disabled" depressed large dark aria-label="Notice suivante" class="unhover">
-                    <v-icon>navigate_next</v-icon>
-                  </v-btn>
-                  <v-btn v-if="noticeEnCours !== numberLines - 1" color="success" large dark @click="getNextSimu()" aria-label="Notice suivante">
-                    <v-icon>navigate_next</v-icon>
-                  </v-btn>
-                  <div>Notice <br>suivante</div>
-                </div>
+                  <!--Conteneur bouton 3-->
+                  <div>
+                    <v-btn v-if="noticeEnCours === numberLines - 1" color="disabled" depressed large dark aria-label="Notice suivante" class="unhover">
+                      <v-icon>navigate_next</v-icon>
+                    </v-btn>
+                    <v-btn v-if="noticeEnCours !== numberLines - 1" color="success" large dark @click="getNextSimu()" aria-label="Notice suivante">
+                      <v-icon>navigate_next</v-icon>
+                    </v-btn>
+                    <div>Notice <br>suivante</div>
+                  </div>
 
-                <!--Conteneur bouton 4-->
-                <div>
-                  <v-btn v-if="noticeEnCours === numberLines - 1" color="disabled" depressed large dark aria-label="Dernière notice" class="unhover">
-                    <v-icon>last_page</v-icon>
-                  </v-btn>
-                  <v-btn v-if="noticeEnCours !== numberLines - 1" color="success" large dark @click="getLastSimu()" aria-label="Dernière notice">
-                    <v-icon>last_page</v-icon>
-                  </v-btn>
-                  <div>Dernière <br>notice</div>
-                </div>
-              </v-layout>
-            </v-flex>
-          </v-layout>
+                  <!--Conteneur bouton 4-->
+                  <div>
+                    <v-btn v-if="noticeEnCours === numberLines - 1" color="disabled" depressed large dark aria-label="Dernière notice" class="unhover">
+                      <v-icon>last_page</v-icon>
+                    </v-btn>
+                    <v-btn v-if="noticeEnCours !== numberLines - 1" color="success" large dark @click="getLastSimu()" aria-label="Dernière notice">
+                      <v-icon>last_page</v-icon>
+                    </v-btn>
+                    <div>Dernière <br>notice</div>
+                  </div>
+                </v-layout>
+              </v-flex>
+              <v-flex xs5>
+                <v-layout fill-height xs5>
+                  <v-card class="elevation-8">
+                    <v-container fill-height fluid pa-2>
+                      <v-layout fill-height>
+                        <v-flex xs12 align-end flexbox>
+                          <span class="headline --text">Après traitement</span>
+                          <div class="notice">
+                            <pre>{{ noticeApres }}</pre>
+                          </div>
+                        </v-flex>
+                      </v-layout>
+                    </v-container>
+                  </v-card>
+                </v-layout>
+              </v-flex>
+            </v-layout>
           </v-container>
         </v-card>
         <br>
@@ -184,198 +200,204 @@ pour Exauto-->
 </template>
 
 <script>
-import loading from 'vue-full-loading';
-import axios from 'axios';
-import stepper from '@/components/utils/stepper.vue';
-import supprMixin from '@/mixins/delete';
-import moment from 'moment';
-import constants from '@/components/utils/const';
+  import loading from 'vue-full-loading';
+  import axios from 'axios';
+  import stepper from '@/components/utils/stepper.vue';
+  import supprMixin from '@/mixins/delete';
+  import moment from 'moment';
+  import constants from '@/components/utils/const';
 
-export default {
-  components: {
-    loading,
-    stepper,
-  },
-  // Voilà le mixin en question
-  mixins: [supprMixin],
-  data() {
-    return {
-      noticeEnCours: 0,
-      numberLines: 0,
-      loading: false,
-      demande: {
-        traitement: {
-          libelle: '',
+  export default {
+    components: {
+      loading,
+      stepper,
+    },
+    // Voilà le mixin en question
+    mixins: [supprMixin],
+    data() {
+      return {
+        noticeEnCours: 0,
+        numberLines: 0,
+        loading: false,
+        demande: {
+          typeExemp: {
+            libelle: '',
+          },
         },
+        alertMessage: 'Erreur.',
+        alertType: 'error',
+        alert: false,
+        user: {},
+        noticeAvant: 'Notice en cours de chargement...',
+        noticeApres: 'Notice en cours de chargement...',
+        dialog: false,
+        dialogFinished: false,
+        derniereNotice: false,
+        numDem: 0,
+        popupDelete: false,
+      };
+    },
+    props: {
+      // Modif de masse ou exemplarisation
+      modif: {
+        default: false,
       },
-      alertMessage: 'Erreur.',
-      alertType: 'error',
-      alert: false,
-      user: {},
-      noticeAvant: 'Notice en cours de chargement...',
-      noticeApres: 'Notice en cours de chargement...',
-      dialog: false,
-      dialogFinished: false,
-      derniereNotice: false,
-      numDem: 0,
-      popupDelete: false,
-    };
-  },
-  mounted() {
-    // On récupère les infos utilisateur en session car on a besoin du jwt afin d'appeler les WS REST
-    this.user = JSON.parse(sessionStorage.getItem('user'));
-    // On récupère le numéro de la demande courante
-    this.numDem = sessionStorage.getItem('dem');
-    // On recupère des infos sur la demande
-    this.getInfosDemande();
-    // On compte le nombre de lignes totale sur le fichier
-    this.getNumberLines();
-  },
-  filters: {
-    formatDate(value) {
-      if (value) {
-        return moment(String(value)).format('DD/MM/YYYY à HH:mm');
-      }
-      return value;
     },
-  },
-  methods: {
-    // Récupération des infos de la demande
-    getInfosDemande() {
-      this.loading = true;
-      axios({
-        headers: { Authorization: this.user.jwt },
-        method: 'GET',
-        url: `${process.env.VUE_APP_ROOT_API}demandes/${this.numDem}`,
-      }).then(
-        (result) => {
-          this.demande = result.data;
-          this.getSimulation();
-        },
-        (error) => {
-          this.loading = false;
-          this.alert = true;
-          this.alertType = 'error';
-          this.alertMessage = constants.erreur500;
-          if (error.response.status === 401) {
-            this.$emit('logout');
-          }
-        },
-      );
+    mounted() {
+      // On récupère les infos utilisateur en session car on a besoin du jwt afin d'appeler les WS REST
+      this.user = JSON.parse(sessionStorage.getItem('user'));
+      // On récupère le numéro de la demande courante
+      this.numDem = sessionStorage.getItem('dem');
+      // On recupère des infos sur la demande
+      this.getInfosDemande();
+      // On compte le nombre de lignes totale sur le fichier
+      this.getNumberLines();
     },
-    // Récupération du AVANT / APRES
-    getSimulation() {
-      this.alert = false;
-      this.loading = true;
+    filters: {
+      formatDate(value) {
+        if (value) {
+          return moment(String(value)).format('DD/MM/YYYY à HH:mm');
+        }
+        return value;
+      },
+    },
+    methods: {
+      // Récupération des infos de la demande
+      getInfosDemande() {
+        this.loading = true;
+        axios({
+          headers: { Authorization: this.user.jwt },
+          method: 'GET',
+          url: `${process.env.VUE_APP_ROOT_API}demandes/${this.numDem}?modif=${this.modif}`,
+        }).then(
+          (result) => {
+            this.demande = result.data;
+            this.getSimulation();
+          },
+          (error) => {
+            this.loading = false;
+            this.alert = true;
+            this.alertType = 'error';
+            this.alertMessage = constants.erreur500;
+            if (error.response.status === 401) {
+              this.$emit('logout');
+            }
+          },
+        );
+      },
+      // Récupération du AVANT / APRES
+      getSimulation() {
+        this.alert = false;
+        this.loading = true;
 
-      axios({
-        headers: { Authorization: this.user.jwt },
-        method: 'GET',
-        url: `${process.env.VUE_APP_ROOT_API}simulerLigne?numDemande=${
-          this.demande.numDemande
-        }&numLigne=${this.noticeEnCours}`,
-      }).then(
-        (result) => {
-          this.noticeAvant = result.data[0];
-          this.noticeApres = result.data[1];
-          this.loading = false;
-        },
-        (error) => {
-          this.noticeAvant = '';
-          this.noticeApres = '';
-          this.loading = false;
-          this.alert = true;
-          this.alertType = 'error';
-          this.alertMessage = `Impossible de récupérer la notice pour la simulation : ${error.response.data.message}.  <br /> Veuillez réessayer ultérieurement. Si le problème persiste merci de contacter l'assistance.`;
-          if (error.response.status === 401) {
-            this.$emit('logout');
-          } else if (error.response.status === 400 && error.response.data.message.includes('Numéro de notice erroné')
-          ) {
+        axios({
+          headers: { Authorization: this.user.jwt },
+          method: 'GET',
+          url: `${process.env.VUE_APP_ROOT_API}simulerLigne?modif=${this.modif}&numDemande=${
+            this.demande.numDemande
+          }&numLigne=${this.noticeEnCours}`,
+        }).then(
+          (result) => {
+            this.noticeAvant = result.data[0];
+            this.noticeApres = result.data[0];
+            this.loading = false;
+          },
+          (error) => {
+            this.noticeAvant = '';
+            // this.noticeApres = '';
+            this.loading = false;
             this.alert = true;
-            this.alertType = 'warning';
-            this.alertMessage = 'Numéro de notice exemplaire erronné.';
-          } else if (error.response.status === 400 && error.response.data.message.includes('Fin du fichier')) {
-            this.alert = true;
-            this.alertType = 'info';
-            this.alertMessage = "Vous êtes à la dernière notice de votre demande, impossible d'aller plus loin.";
-            this.derniereNotice = true;
-            this.noticeEnCours -= 1;
-          }
-        },
-      );
-    },
-    getNextSimu() {
-      this.noticeEnCours += 1;
-      this.getSimulation();
-    },
-    getLastSimu() {
-      this.noticeEnCours = this.numberLines - 1;
-      this.getSimulation();
-    },
-    getPreviousSimu() {
-      this.derniereNotice = false;
-      if (this.noticeEnCours > 0) {
-        this.noticeEnCours -= 1;
+            this.alertType = 'error';
+            this.alertMessage = `Impossible de récupérer la notice pour la simulation : ${error.response.data.message}.  <br /> Veuillez réessayer ultérieurement. Si le problème persiste merci de contacter l'assistance.`;
+            if (error.response.status === 401) {
+              this.$emit('logout');
+            } else if (error.response.status === 400 && error.response.data.message.includes('Numéro de notice erroné')
+            ) {
+              this.alert = true;
+              this.alertType = 'warning';
+              this.alertMessage = 'Numéro de notice exemplaire erronné.';
+            } else if (error.response.status === 400 && error.response.data.message.includes('Fin du fichier')) {
+              this.alert = true;
+              this.alertType = 'info';
+              this.alertMessage = "Vous êtes à la dernière notice de votre demande, impossible d'aller plus loin.";
+              this.derniereNotice = true;
+              this.noticeEnCours -= 1;
+            }
+          },
+        );
+      },
+      getNextSimu() {
+        this.noticeEnCours += 1;
         this.getSimulation();
-      } else {
-        this.alert = true;
-        this.alertMessage = "Vous êtes sur la première notice de votre demande, il n'y a pas de notice précedente.";
-        this.alertType = 'info';
-      }
-    },
-    getFirstSimu() {
-      this.noticeEnCours = 0;
-      this.getSimulation();
-    },
-    // Compte le nombre de lignes totales du fichier
-    getNumberLines() {
-      axios({
-        headers: { Authorization: this.user.jwt },
-        method: 'GET',
-        url: `${process.env.VUE_APP_ROOT_API}getNbLigneFichier/${this.numDem}`,
-      }).then(
-        (result) => {
-          this.numberLines = result.data;
-        },
-        (error) => {
+      },
+      getLastSimu() {
+        this.noticeEnCours = this.numberLines - 1;
+        this.getSimulation();
+      },
+      getPreviousSimu() {
+        this.derniereNotice = false;
+        if (this.noticeEnCours > 0) {
+          this.noticeEnCours -= 1;
+          this.getSimulation();
+        } else {
           this.alert = true;
-          this.alertType = 'error';
-          this.alertMessage = 'Impossible de récupérer le nombre de lignes du fichier. Veuillez réessayer ultérieurement.';
-          if (error.response.status === 401) {
-            this.$emit('logout');
-          }
-        },
-      );
-    },
-    // Lancement du traitement de la demande
-    confirm() {
-      this.alert = false;
-      this.loading = true;
+          this.alertMessage = "Vous êtes sur la première notice de votre demande, il n'y a pas de notice précedente.";
+          this.alertType = 'info';
+        }
+      },
+      getFirstSimu() {
+        this.noticeEnCours = 0;
+        this.getSimulation();
+      },
+      // Compte le nombre de lignes totales du fichier
+      getNumberLines() {
+        axios({
+          headers: { Authorization: this.user.jwt },
+          method: 'GET',
+          url: `${process.env.VUE_APP_ROOT_API}getNbLigneFichier/${this.numDem}`,
+        }).then(
+          (result) => {
+            this.numberLines = result.data;
+          },
+          (error) => {
+            this.alert = true;
+            this.alertType = 'error';
+            this.alertMessage = 'Impossible de récupérer le nombre de lignes du fichier. Veuillez réessayer ultérieurement.';
+            if (error.response.status === 401) {
+              this.$emit('logout');
+            }
+          },
+        );
+      },
+      // Lancement du traitement de la demande
+      confirm() {
+        this.alert = false;
+        this.loading = true;
 
-      axios({
-        headers: { Authorization: this.user.jwt },
-        method: 'GET',
-        url: `${process.env.VUE_APP_ROOT_API}passerEnAttente?numDemande=${
-          this.demande.numDemande
-        }`,
-      }).then(
-        () => {
-          this.loading = false;
-          this.dialogFinished = true;
-        },
-        (error) => {
-          this.loading = false;
-          this.alert = true;
-          this.alertType = 'error';
-          this.alertMessage = constants.erreur500;
-          if (error.response.status === 401) {
-            this.$emit('logout');
-          }
-        },
-      );
+        axios({
+          headers: { Authorization: this.user.jwt },
+          method: 'GET',
+          url: `${process.env.VUE_APP_ROOT_API}passerEnAttente?numDemande=${
+            this.demande.numDemande
+          }`,
+        }).then(
+          () => {
+            this.loading = false;
+            this.dialogFinished = true;
+          },
+          (error) => {
+            this.loading = false;
+            this.alert = true;
+            this.alertType = 'error';
+            this.alertMessage = constants.erreur500;
+            if (error.response.status === 401) {
+              this.$emit('logout');
+            }
+          },
+        );
+      },
     },
-  },
-};
+  };
 </script>
 
 <style scoped>

@@ -81,7 +81,7 @@
                   </v-menu>
                 </th>
                 <th v-if="user.role == 'ADMIN'" class="smallTD">
-                   <v-text-field
+                  <v-text-field
                     v-model="searchILN"
                     aria-label="Recherche par ILN"
                     append-icon="search"
@@ -175,9 +175,9 @@
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
               >{{ props.item.traitement }}</td>
               <td v-if="!archive"
-                class="text-xs-left"
-                v-bind:class="props.item.color"
-                @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
+                  class="text-xs-left"
+                  v-bind:class="props.item.color"
+                  @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
               >{{ props.item.statut }}</td>
               <td class="text-xs-center">
                 <v-menu bottom left v-if="props.item.codeStatut >= 2">
@@ -239,18 +239,18 @@
             </template>
             <template v-slot:expand="props">
               <v-card flat>
-              <v-card-text class="text-xs-left">
-                <v-textarea
-                  solo
-                  name="comment"
-                  label="Commentaire (150 caractères maximum)"
-                  :disabled="props.item.iln != user.iln"
-                  v-model="props.item.commentaire"
-                  maxlength="150"
-                ></v-textarea>
-                <v-btn v-if="user.iln == props.item.iln" color="info" :loading="commentButton" @click="saveComment(props.item.num, props.item.commentaire); props.expanded = false;">Enregistrer</v-btn>
-              </v-card-text>
-            </v-card>
+                <v-card-text class="text-xs-left">
+                  <v-textarea
+                    solo
+                    name="comment"
+                    label="Commentaire (150 caractères maximum)"
+                    :disabled="props.item.iln != user.iln"
+                    v-model="props.item.commentaire"
+                    maxlength="150"
+                  ></v-textarea>
+                  <v-btn v-if="user.iln == props.item.iln" color="info" :loading="commentButton" @click="saveComment(props.item.num, props.item.commentaire); props.expanded = false;">Enregistrer</v-btn>
+                </v-card-text>
+              </v-card>
             </template>
             <template
               slot="pageText"
@@ -327,576 +327,577 @@
 </template>
 
 <script>
-import axios from 'axios';
-import moment from 'moment';
-import constants from '@/components/utils/const';
+  import axios from 'axios';
+  import moment from 'moment';
+  import constants from '@/components/utils/const';
 
-export default {
-  name: 'tableauComponent',
-  data() {
-    return {
-      pagination: {
-        sortBy: 'name',
+  export default {
+    name: 'tableauComponent',
+    data() {
+      return {
+        pagination: {
+          sortBy: 'name',
+        },
+        search: '',
+        selectedColumns: [],
+        searchDateCreation: '',
+        searchILN: '',
+        searchRCR: '',
+        searchNum: '',
+        searchTraitement: '',
+        searchStatut: '',
+        searchZoneSousZone: '',
+        searchCodeStatut: ['1', '2'],
+        listCodeStatut: ['1', '2'],
+        typeSearch: 'search',
+        searchCombo: [],
+        headers: [],
+        items: [],
+        itemsUnaltered: [],
+        alert: false,
+        alertMessage: '',
+        alertType: 'error',
+        user: {},
+        fileLink: '',
+        blobName: 'demande.csv',
+        dialog: false,
+        fileReady: false,
+        menu: false,
+        calendar2: false,
+        listTraitements: [],
+        listStatut: [],
+        listStatutSorted: new Map(),
+        tableLoading: true,
+        popupDelete: false,
+        popupArchive: false,
+        deleteLoading: false,
+        current: '',
+        polling: null,
+        commentButton: false,
+        tableExpanded: false,
+      };
+    },
+    props: {
+      darkMode: Boolean,
+      /** Tableau d'archive ou non ?
+       * Si oui, on affiche uniquement les demandes archivées et désactive certaines fonctions
+       * Si non, on affiche le tableau de gestion classique
+       */
+      archive: {
+        default: false,
       },
-      search: '',
-      selectedColumns: [],
-      searchDateCreation: '',
-      searchILN: '',
-      searchRCR: '',
-      searchNum: '',
-      searchTraitement: '',
-      searchStatut: '',
-      searchZoneSousZone: '',
-      searchCodeStatut: ['1', '2'],
-      listCodeStatut: ['1', '2'],
-      typeSearch: 'search',
-      searchCombo: [],
-      headers: [],
-      items: [],
-      itemsUnaltered: [],
-      alert: false,
-      alertMessage: '',
-      alertType: 'error',
-      user: {},
-      fileLink: '',
-      blobName: 'demande.csv',
-      dialog: false,
-      fileReady: false,
-      menu: false,
-      calendar2: false,
-      listTraitements: [],
-      listStatut: [],
-      listStatutSorted: new Map(),
-      tableLoading: true,
-      popupDelete: false,
-      popupArchive: false,
-      deleteLoading: false,
-      current: '',
-      polling: null,
-      commentButton: false,
-      tableExpanded: false,
-    };
-  },
-  props: {
-    darkMode: Boolean,
-    /** Tableau d'archive ou non ?
-     * Si oui, on affiche uniquement les demandes archivées et désactive certaines fonctions
-     * Si non, on affiche le tableau de gestion classique
-     */
-    archive: {
-      default: false,
+      /** Modifdemasse ou exemplarisation ?
+       *  L'intitulé et les colonnes varient
+       *  Les paramètres des appels WS également
+       */
+      modif: {
+        default: true,
+      },
     },
-    /** Modifdemasse ou exemplarisation ?
-     *  L'intitulé et les colonnes varient
-     *  Les paramètres des appels WS également
-     */
-    modif: {
-      default: true,
+    filters: {
+      formatDate(value) {
+        if (value) {
+          return moment(String(value)).format('DD/MM/YYYY HH:mm');
+        }
+        return value;
+      },
     },
-  },
-  filters: {
-    formatDate(value) {
-      if (value) {
-        return moment(String(value)).format('DD/MM/YYYY HH:mm');
-      }
-      return value;
+    beforeDestroy() {
+      clearInterval(this.polling);
     },
-  },
-  beforeDestroy() {
-    clearInterval(this.polling);
-  },
-  mounted() {
-    this.user = JSON.parse(sessionStorage.getItem('user'));
+    mounted() {
+      this.user = JSON.parse(sessionStorage.getItem('user'));
 
-    this.initHeader();
-    this.fetchData();
-    // Rafraichissement des données toutes les 10 sec
-    this.polling = setInterval(() => { this.conditionalFetch(); }, 10000);
-    this.getListTraitements();
-    if (!this.archive) {
-      this.getListStatus();
-    }
+      this.initHeader();
+      this.fetchData();
+      // Rafraichissement des données toutes les 10 sec
+      this.polling = setInterval(() => { this.conditionalFetch(); }, 10000);
+      this.getListTraitements();
+      if (!this.archive) {
+        this.getListStatus();
+      }
 
-    // Tri par défaut sur les numéros demandes
-    this.changeSort('num');
-    this.pagination.descending = true;
-  },
-  methods: {
-    downloadFile(numDem, type) {
-      this.fileReady = false;
-      this.dialog = true;
-      let filename = '';
-      switch (type) {
-        case 'initEx':
-        case 'ppn':
-          filename = `fichier_initial_${numDem}.txt?id=${numDem}`;
-          this.blobName = `fichier_initial_${numDem}.txt`;
-          break;
-        case 'epn':
-          filename = `fichier_prepare_${numDem}.csv?id=${numDem}`;
-          this.blobName = `fichier_epn_${numDem}.csv`;
-          break;
-        case 'enrichi':
-          filename = `fichier_enrichi_${numDem}.csv?id=${numDem}`;
-          this.blobName = `fichier_enrichi_${numDem}.csv`;
-          break;
-        case 'resultat':
-        case 'resultatEx':
-          filename = `fichier_resultat_${numDem}.csv?id=${numDem}`;
-          this.blobName = `fichier_resultat_${numDem}.csv`;
-          break;
-        default:
-          filename = `fichier_prepare_${numDem}.csv?id=${numDem}`;
-          this.blobName = `fichier_prepare_${numDem}.csv`;
-          break;
-      }
-      if (this.user !== null && this.user.jwt !== null) {
-        return axios({
-          headers: { Authorization: this.user.jwt },
-          method: 'GET',
-          url: `${process.env.VUE_APP_ROOT_API}files/${filename}`,
-        }).then(
-          (result) => {
-            const blob = new Blob([result.data], { type: 'application/csv' });
-            this.fileLink = window.URL.createObjectURL(blob);
-            this.$refs.fileLinkBtn.click();
-            this.fileReady = true;
-          },
-          (error) => {
-            this.fileReady = false;
-            this.dialog = false;
-            this.alertMessage = constants.erreurDownload;
-            this.alert = true;
-            this.alertType = 'error';
-            if (error.response.status === 401) {
-              this.$emit('logout');
-            }
-          },
-        );
-      }
-      return '';
+      // Tri par défaut sur les numéros demandes
+      this.changeSort('num');
+      this.pagination.descending = true;
     },
-    getListTraitements() {
-      let addr;
-      if (this.modif) {
-        addr = `${process.env.VUE_APP_ROOT_API}traitements`;
-      } else {
-        addr = `${process.env.VUE_APP_ROOT_API}typeExemp`;
-      }
-      if (this.user !== null && this.user.jwt !== null) {
-        axios({
-          headers: { Authorization: this.user.jwt },
-          method: 'GET',
-          url: addr,
-        }).then(
-          (result) => {
-            this.listTraitements = result.data;
-            this.listTraitements.push({ libelle: 'Non défini' });
-          },
-          (error) => {
-            this.alertMessage = constants.erreurListeTraitements;
-            this.alert = true;
-            this.alertType = 'error';
-            if (error.response.status === 401) {
-              this.$emit('logout');
-            }
-          },
-        );
-      }
-    },
-    clickRow(numDem, codeStatut, traitement) {
-      sessionStorage.setItem('dem', numDem);
-      switch (codeStatut) {
-        case 1:
-          this.$router.push('fichier');
-          break;
-        case 3:
-          if (traitement !== 'Non défini') {
-            this.$router.push('fichierEnrichi');
-          } else {
-            this.$router.push('traitement');
-          }
-          break;
-        case 4:
-          this.$router.push('simulation');
-          break;
-        default:
-          break;
-      }
-    },
-    initHeader() {
-      // TODO : Peut être faire ça mieux ?
-      // En générant le nom de la constante à partir des conditions ?
-      if (this.archive) {
-        if (this.user.role === 'ADMIN') {
-          if (this.modif) { this.headers = constants.headersArchiveAdminModif; } else { this.headers = constants.headerExempArchiveAdmin; }
-        } else if (this.modif) { this.headers = constants.headersArchiveModif; } else { this.headers = constants.headerExempArchive; }
-      } else if (this.user.role === 'ADMIN') {
-        if (this.modif) { this.headers = constants.headerModifAdmin; } else { this.headers = constants.headerExempAdmin; }
-      } else if (this.modif) { this.headers = constants.headerModif; } else { this.headers = constants.headerExemp; }
-
-
-      this.searchCombo = Object.assign([], this.headers);
-      this.searchCombo.splice(this.searchCombo.length - 1, 1);
-      for (let i = 0; i < this.searchCombo.length; i += 1) {
-        this.selectedColumns[i] = this.searchCombo[i].value;
-      }
-    },
-    // On met à jours les données toutes les 10sec uniquement si aucune demande n'est en cours d'édition (pour ne pas écraser les modifs en cours)
-    conditionalFetch() {
-      if (!this.tableExpanded) {
-        this.fetchData();
-      }
-    },
-    fetchData() {
-      this.alert = false;
-      if (this.user !== null && this.user.jwt !== null) {
-        let url = '';
-        if (this.archive) {
-          url = `${process.env.VUE_APP_ROOT_API}chercherArchives?userNum=${
-            this.user.userNum
-          }&modif=${this.modif}`;
-        } else if (this.user.role === 'ADMIN') {
-          url = `${process.env.VUE_APP_ROOT_API}demandes?userNum=${
-            this.user.userNum
-          }&modif=${this.modif}`;
+    methods: {
+      downloadFile(numDem, type) {
+        this.fileReady = false;
+        this.dialog = true;
+        let filename = '';
+        switch (type) {
+          case 'initEx':
+          case 'ppn':
+            filename = `fichier_initial_${numDem}.txt?id=${numDem}`;
+            this.blobName = `fichier_initial_${numDem}.txt`;
+            break;
+          case 'epn':
+            filename = `fichier_prepare_${numDem}.csv?id=${numDem}`;
+            this.blobName = `fichier_epn_${numDem}.csv`;
+            break;
+          case 'enrichi':
+            filename = `fichier_enrichi_${numDem}.csv?id=${numDem}`;
+            this.blobName = `fichier_enrichi_${numDem}.csv`;
+            break;
+          case 'resultat':
+          case 'resultatEx':
+            filename = `fichier_resultat_${numDem}.csv?id=${numDem}`;
+            this.blobName = `fichier_resultat_${numDem}.csv`;
+            break;
+          default:
+            filename = `fichier_prepare_${numDem}.csv?id=${numDem}`;
+            this.blobName = `fichier_prepare_${numDem}.csv`;
+            break;
+        }
+        if (this.user !== null && this.user.jwt !== null) {
+          return axios({
+            headers: { Authorization: this.user.jwt },
+            method: 'GET',
+            url: `${process.env.VUE_APP_ROOT_API}files/${filename}`,
+          }).then(
+            (result) => {
+              const blob = new Blob([result.data], { type: 'application/csv' });
+              this.fileLink = window.URL.createObjectURL(blob);
+              this.$refs.fileLinkBtn.click();
+              this.fileReady = true;
+            },
+            (error) => {
+              this.fileReady = false;
+              this.dialog = false;
+              this.alertMessage = constants.erreurDownload;
+              this.alert = true;
+              this.alertType = 'error';
+              if (error.response.status === 401) {
+                this.$emit('logout');
+              }
+            },
+          );
+        }
+        return '';
+      },
+      getListTraitements() {
+        let addr;
+        if (this.modif) {
+          addr = `${process.env.VUE_APP_ROOT_API}traitements`;
         } else {
-          url = `${process.env.VUE_APP_ROOT_API}chercherDemandes?userNum=${
-            this.user.userNum
-          }&modif=${this.modif}`;
+          addr = `${process.env.VUE_APP_ROOT_API}typeExemp`;
+        }
+        if (this.user !== null && this.user.jwt !== null) {
+          axios({
+            headers: { Authorization: this.user.jwt },
+            method: 'GET',
+            url: addr,
+          }).then(
+            (result) => {
+              this.listTraitements = result.data;
+              this.listTraitements.push({ libelle: 'Non défini' });
+            },
+            (error) => {
+              this.alertMessage = constants.erreurListeTraitements;
+              this.alert = true;
+              this.alertType = 'error';
+              if (error.response.status === 401) {
+                this.$emit('logout');
+              }
+            },
+          );
+        }
+      },
+      clickRow(numDem, codeStatut, traitement) {
+        sessionStorage.setItem('dem', numDem);
+        switch (codeStatut) {
+          case 1:
+            this.$router.push('fichier');
+            break;
+          case 3:
+            if (traitement !== 'Non défini') {
+              this.$router.push('fichierEnrichi');
+            } else {
+              this.$router.push('traitement');
+            }
+            break;
+          case 4:
+            this.$router.push('simulation');
+            break;
+          default:
+            break;
+        }
+      },
+      initHeader() {
+        // TODO : Peut être faire ça mieux ?
+        // En générant le nom de la constante à partir des conditions ?
+        if (this.archive) {
+          if (this.user.role === 'ADMIN') {
+            if (this.modif) { this.headers = constants.headersArchiveAdminModif; } else { this.headers = constants.headerExempArchiveAdmin; }
+          } else if (this.modif) { this.headers = constants.headersArchiveModif; } else { this.headers = constants.headerExempArchive; }
+        } else if (this.user.role === 'ADMIN') {
+          if (this.modif) { this.headers = constants.headerModifAdmin; } else { this.headers = constants.headerExempAdmin; }
+        } else if (this.modif) { this.headers = constants.headerModif; } else { this.headers = constants.headerExemp; }
+
+
+        this.searchCombo = Object.assign([], this.headers);
+        this.searchCombo.splice(this.searchCombo.length - 1, 1);
+        for (let i = 0; i < this.searchCombo.length; i += 1) {
+          this.selectedColumns[i] = this.searchCombo[i].value;
+        }
+      },
+      // On met à jours les données toutes les 10sec uniquement si aucune demande n'est en cours d'édition (pour ne pas écraser les modifs en cours)
+      conditionalFetch() {
+        if (!this.tableExpanded) {
+          this.fetchData();
+        }
+      },
+      fetchData() {
+        this.alert = false;
+        if (this.user !== null && this.user.jwt !== null) {
+          let url = '';
+          if (this.archive) {
+            url = `${process.env.VUE_APP_ROOT_API}chercherArchives?userNum=${
+              this.user.userNum
+            }&modif=${this.modif}`;
+          } else if (this.user.role === 'ADMIN') {
+            url = `${process.env.VUE_APP_ROOT_API}demandes?userNum=${
+              this.user.userNum
+            }&modif=${this.modif}`;
+          } else {
+            url = `${process.env.VUE_APP_ROOT_API}chercherDemandes?userNum=${
+              this.user.userNum
+            }&modif=${this.modif}`;
+          }
+
+
+          axios({
+            headers: { Authorization: this.user.jwt },
+            method: 'GET',
+            url,
+          }).then(
+            (result) => {
+              this.items = [];
+              this.itemsUnaltered = result.data;
+              for (const key in result.data) {
+                // Controle que la zone et la sous zone on déjà été selectionnée afin d'eviter d'afficher null
+                let tempZone;
+                let tempSousZone;
+                let tempStatus;
+                if (result.data[key].etatDemande.libelle === 'A compléter'
+                  || result.data[key].etatDemande.libelle === 'En saisie'
+                  || result.data[key].etatDemande.libelle === 'En simulation'
+                  || result.data[key].etatDemande.libelle === 'En préparation'
+                ) {
+                  tempStatus = 'En saisie';
+                } else {
+                  tempStatus = result.data[key].etatDemande.libelle;
+                }
+
+                if (result.data[key].zone === null) {
+                  tempZone = '';
+                } else {
+                  tempZone = result.data[key].zone;
+                }
+                if (result.data[key].sousZone === null) {
+                  tempSousZone = '';
+                } else {
+                  tempSousZone = result.data[key].sousZone;
+                }
+
+                // pour éviter les erreurs si null
+                if (
+                  result.data[key].traitement == null
+                  || result.data[key].traitement === undefined
+                ) {
+                  this.items.push({
+                    dateCreation: result.data[key].dateCreation,
+                    dateModification: result.data[key].dateModification,
+                    rcr: `${result.data[key].rcr} - ${result.data[key].shortname}`,
+                    iln: result.data[key].iln,
+                    num: result.data[key].numDemande,
+                    zoneSousZone: `${tempZone} ${tempSousZone}`,
+                    // index: result.data[key].indexRecherche.libelle,
+                    traitement: 'non défini',
+                    statut: tempStatus,
+                    color: this.getColor(result.data[key].etatDemande.libelle),
+                    codeStatut: result.data[key].etatDemande.numEtat,
+                    commentaire: result.data[key].commentaire,
+                  });
+                } else {
+                  this.items.push({
+                    dateCreation: result.data[key].dateCreation,
+                    dateModification: result.data[key].dateModification,
+                    rcr: `${result.data[key].rcr} - ${result.data[key].shortname}`,
+                    iln: result.data[key].iln,
+                    num: result.data[key].numDemande,
+                    zoneSousZone: `${tempZone} ${tempSousZone}`,
+                    // index: result.data[key].indexRecherche.libelle,
+                    traitement: result.data[key].traitement.libelle,
+                    statut: tempStatus,
+                    color: this.getColor(result.data[key].etatDemande.libelle),
+                    codeStatut: result.data[key].etatDemande.numEtat,
+                    commentaire: result.data[key].commentaire,
+                  });
+                }
+              }
+              this.tableLoading = false;
+            },
+            (error) => {
+              this.alertMessage = constants.erreur500;
+              this.alert = true;
+              this.alertType = 'error';
+
+              if (error.response.status === 401) {
+                this.$emit('logout');
+              }
+            },
+          );
+        }
+      },
+      computedItems(type) {
+        // Si appeller pr peupler le tableau
+        if (type !== 'guess') {
+          this.typeSearch = type;
         }
 
+        // Si recherche sur une colonne spécifique
+        if (this.typeSearch !== 'search') {
+          this.search = '';
+          /* fonction callback qui permet selon le choix dans la liste déroulante de ne récupérer que certaines demandes
+             @param currentValue: objet représentant une ligne de demande de le tableau, acceder à son statut via
+             la variable d'instance .statut
+             @param searchStatut: le statut correspondant au choix dans la liste déroulante
+           */
+          return this.items.filter((currentValue) => {
+            let statut = '';
+            if (currentValue.statut === 'A compléter'
+              || currentValue.statut === 'En simulation' || currentValue.statut === 'En saisie'
+              || currentValue.statut === 'Préparée' || currentValue.statut === 'En préparation') {
+              statut = 'En saisie';
+            } else if (currentValue.statut === 'En cours de traitement') {
+              statut = 'En cours de traitement';
+            } else if (currentValue.statut === 'Terminée' || currentValue.statut === 'Archivée') {
+              statut = 'Terminée';
+            } else if (currentValue.statut === 'En attente') {
+              statut = 'En attente';
+            } else if (currentValue.statut === 'En erreur') {
+              statut = 'En erreur';
+            }
+            if (
+              (currentValue.dateCreation
+                  .toString()
+                  .toLowerCase()
+                  .indexOf(this.searchDateCreation) > -1
+                || this.searchDateCreation == null)
+              && (currentValue.dateModification
+                .toString()
+                .toLowerCase()
+                .indexOf(this.searchDateModification) > -1
+              || this.searchDateModification == null)
+              && (currentValue.iln
+                .toString()
+                .toLowerCase()
+                .indexOf(this.searchILN) > -1
+              || this.searchRCR == null)
+              && (this.searchRCR == null || currentValue.rcr
+                .toString()
+                .toLowerCase()
+                .indexOf(this.searchRCR.toLowerCase()) > -1)
+              && (this.searchZoneSousZone == null || currentValue.zoneSousZone
+                .toString()
+                .toLowerCase()
+                .indexOf(this.searchZoneSousZone.toLowerCase()) > -1)
+              && (currentValue.num
+                .toString()
+                .toLowerCase()
+                .indexOf(this.searchNum) > -1
+              || this.searchNum == null)
+              && (this.searchTraitement == null
+              || currentValue.traitement
+                .toString()
+                .toLowerCase()
+                .indexOf(this.searchTraitement.toLowerCase()) > -1)
+              && (this.searchStatut == null || statut
+                .toString()
+                .toLowerCase()
+                .indexOf(this.searchStatut.toLowerCase()) > -1)
+              && (this.searchCodeStatut.toString().indexOf(currentValue.codeStatut)
+              > -1
+              || this.searchCodeStatut.toString() === '')
+            ) {
+              return true;
+            }
+            return false;
+          });
+        }
 
+        // Recherche sur une ou plusieurs colonnes
+        this.searchDateModification = '';
+        this.searchDateCreation = '';
+        this.searchILN = '';
+        this.searchRCR = '';
+        this.searchNum = '';
+        this.searchZoneSousZone = '';
+        this.searchTraitement = '';
+        this.searchStatut = '';
+        this.searchCodeStatut = '';
+        return this.items.filter((currentValue) => {
+          if (this.selectedColumns.length === 0 || this.search == null) {
+            return true;
+          }
+          for (let i = 1; i < this.selectedColumns.length; i += 1) {
+            if (
+              currentValue[this.selectedColumns[i]]
+                .toString()
+                .toLowerCase()
+                .indexOf(this.search) > -1
+            ) {
+              return true;
+            }
+          }
+          return false;
+        });
+      },
+      changeSort(column) {
+        if (this.pagination.sortBy === column) {
+          this.pagination.descending = !this.pagination.descending;
+        } else {
+          this.pagination.sortBy = column;
+          this.pagination.descending = false;
+        }
+      },
+      getListStatus() {
         axios({
           headers: { Authorization: this.user.jwt },
           method: 'GET',
-          url,
+          url: `${process.env.VUE_APP_ROOT_API}EtatDemande`,
         }).then(
           (result) => {
-            this.items = [];
-            this.itemsUnaltered = result.data;
-            for (const key in result.data) {
-              // Controle que la zone et la sous zone on déjà été selectionnée afin d'eviter d'afficher null
-              let tempZone;
-              let tempSousZone;
-              let tempStatus;
-              if (result.data[key].etatDemande.libelle === 'A compléter'
-                || result.data[key].etatDemande.libelle === 'En saisie'
-                || result.data[key].etatDemande.libelle === 'En simulation'
-                || result.data[key].etatDemande.libelle === 'En préparation'
-              ) {
-                tempStatus = 'En saisie';
-              } else {
-                tempStatus = result.data[key].etatDemande.libelle;
-              }
-
-              if (result.data[key].zone === null) {
-                tempZone = '';
-              } else {
-                tempZone = result.data[key].zone;
-              }
-              if (result.data[key].sousZone === null) {
-                tempSousZone = '';
-              } else {
-                tempSousZone = result.data[key].sousZone;
-              }
-              // pour éviter les erreurs si null
+            for (let i = 0; i < result.data.length; i++) {
               if (
-                result.data[key].traitement == null
-                || result.data[key].traitement === undefined
+                result.data[i].libelle === 'Preparée'
+                || result.data[i].libelle === 'Archivée'
+                || result.data[i].libelle === 'A compléter'
+                || result.data[i].libelle === 'En simulation'
+                || result.data[i].libelle === 'En saisie'
               ) {
-                this.items.push({
-                  dateCreation: result.data[key].dateCreation,
-                  dateModification: result.data[key].dateModification,
-                  rcr: `${result.data[key].rcr} - ${result.data[key].shortname}`,
-                  iln: result.data[key].iln,
-                  num: result.data[key].numDemande,
-                  zoneSousZone: `${tempZone} ${tempSousZone}`,
-                  index: result.data[key].indexRecherche,
-                  traitement: 'Non défini',
-                  statut: tempStatus,
-                  color: this.getColor(result.data[key].etatDemande.libelle),
-                  codeStatut: result.data[key].etatDemande.numEtat,
-                  commentaire: result.data[key].commentaire,
-                });
-              } else {
-                this.items.push({
-                  dateCreation: result.data[key].dateCreation,
-                  dateModification: result.data[key].dateModification,
-                  rcr: `${result.data[key].rcr} - ${result.data[key].shortname}`,
-                  iln: result.data[key].iln,
-                  num: result.data[key].numDemande,
-                  zoneSousZone: `${tempZone} ${tempSousZone}`,
-                  index: result.data[key].indexRecherche,
-                  traitement: result.data[key].traitement.libelle,
-                  statut: tempStatus,
-                  color: this.getColor(result.data[key].etatDemande.libelle),
-                  codeStatut: result.data[key].etatDemande.numEtat,
-                  commentaire: result.data[key].commentaire,
-                });
+                this.listStatutSorted.set(1, 'En saisie');
+              } else if (result.data[i].libelle === 'En attente') {
+                this.listStatutSorted.set(2, 'En attente');
+              } else if (result.data[i].libelle === 'En cours de traitement') {
+                this.listStatutSorted.set(3, result.data[i].libelle);
+              } else if (result.data[i].libelle === 'Terminée') {
+                this.listStatutSorted.set(4, result.data[i].libelle);
+              } else if (result.data[i].libelle === 'En erreur') {
+                this.listStatutSorted.set(5, result.data[i].libelle);
               }
             }
-            this.tableLoading = false;
+            for (let i = 1; i < this.listStatutSorted.size + 1; i++) {
+              this.listStatut.push(this.listStatutSorted.get(i));
+            }
           },
           (error) => {
             this.alertMessage = constants.erreur500;
             this.alert = true;
             this.alertType = 'error';
-
             if (error.response.status === 401) {
               this.$emit('logout');
             }
           },
         );
-      }
-    },
-    computedItems(type) {
-      // Si appeller pr peupler le tableau
-      if (type !== 'guess') {
-        this.typeSearch = type;
-      }
-
-      // Si recherche sur une colonne spécifique
-      if (this.typeSearch !== 'search') {
-        this.search = '';
-        /* fonction callback qui permet selon le choix dans la liste déroulante de ne récupérer que certaines demandes
-           @param currentValue: objet représentant une ligne de demande de le tableau, acceder à son statut via
-           la variable d'instance .statut
-           @param searchStatut: le statut correspondant au choix dans la liste déroulante
-         */
-        return this.items.filter((currentValue) => {
-          let statut = '';
-          if (currentValue.statut === 'A compléter'
-            || currentValue.statut === 'En simulation' || currentValue.statut === 'En saisie'
-            || currentValue.statut === 'Préparée' || currentValue.statut === 'En préparation') {
-            statut = 'En saisie';
-          } else if (currentValue.statut === 'En cours de traitement') {
-            statut = 'En cours de traitement';
-          } else if (currentValue.statut === 'Terminée' || currentValue.statut === 'Archivée') {
-            statut = 'Terminée';
-          } else if (currentValue.statut === 'En attente') {
-            statut = 'En attente';
-          } else if (currentValue.statut === 'En erreur') {
-            statut = 'En erreur';
-          }
-          if (
-            (currentValue.dateCreation
-              .toString()
-              .toLowerCase()
-              .indexOf(this.searchDateCreation) > -1
-              || this.searchDateCreation == null)
-            && (currentValue.dateModification
-              .toString()
-              .toLowerCase()
-              .indexOf(this.searchDateModification) > -1
-            || this.searchDateModification == null)
-            && (currentValue.iln
-              .toString()
-              .toLowerCase()
-              .indexOf(this.searchILN) > -1
-            || this.searchRCR == null)
-            && (this.searchRCR == null || currentValue.rcr
-              .toString()
-              .toLowerCase()
-              .indexOf(this.searchRCR.toLowerCase()) > -1)
-            && (this.searchZoneSousZone == null || currentValue.zoneSousZone
-              .toString()
-              .toLowerCase()
-              .indexOf(this.searchZoneSousZone.toLowerCase()) > -1)
-            && (currentValue.num
-              .toString()
-              .toLowerCase()
-              .indexOf(this.searchNum) > -1
-            || this.searchNum == null)
-            && (this.searchTraitement == null
-            || currentValue.traitement
-              .toString()
-              .toLowerCase()
-              .indexOf(this.searchTraitement.toLowerCase()) > -1)
-            && (this.searchStatut == null || statut
-              .toString()
-              .toLowerCase()
-              .indexOf(this.searchStatut.toLowerCase()) > -1)
-            && (this.searchCodeStatut.toString().indexOf(currentValue.codeStatut)
-            > -1
-            || this.searchCodeStatut.toString() === '')
-          ) {
-            return true;
-          }
-          return false;
-        });
-      }
-
-      // Recherche sur une ou plusieurs colonnes
-      this.searchDateModification = '';
-      this.searchDateCreation = '';
-      this.searchILN = '';
-      this.searchRCR = '';
-      this.searchNum = '';
-      this.searchZoneSousZone = '';
-      this.searchTraitement = '';
-      this.searchStatut = '';
-      this.searchCodeStatut = '';
-      return this.items.filter((currentValue) => {
-        if (this.selectedColumns.length === 0 || this.search == null) {
-          return true;
-        }
-        for (let i = 1; i < this.selectedColumns.length; i += 1) {
-          if (
-            currentValue[this.selectedColumns[i]]
-              .toString()
-              .toLowerCase()
-              .indexOf(this.search) > -1
-          ) {
-            return true;
-          }
-        }
-        return false;
-      });
-    },
-    changeSort(column) {
-      if (this.pagination.sortBy === column) {
-        this.pagination.descending = !this.pagination.descending;
-      } else {
-        this.pagination.sortBy = column;
-        this.pagination.descending = false;
-      }
-    },
-    getListStatus() {
-      axios({
-        headers: { Authorization: this.user.jwt },
-        method: 'GET',
-        url: `${process.env.VUE_APP_ROOT_API}EtatDemande`,
-      }).then(
-        (result) => {
-          for (let i = 0; i < result.data.length; i++) {
-            if (
-              result.data[i].libelle === 'Preparée'
-              || result.data[i].libelle === 'Archivée'
-              || result.data[i].libelle === 'A compléter'
-              || result.data[i].libelle === 'En simulation'
-              || result.data[i].libelle === 'En saisie'
-            ) {
-              this.listStatutSorted.set(1, 'En saisie');
-            } else if (result.data[i].libelle === 'En attente') {
-              this.listStatutSorted.set(2, 'En attente');
-            } else if (result.data[i].libelle === 'En cours de traitement') {
-              this.listStatutSorted.set(3, result.data[i].libelle);
-            } else if (result.data[i].libelle === 'Terminée') {
-              this.listStatutSorted.set(4, result.data[i].libelle);
-            } else if (result.data[i].libelle === 'En erreur') {
-              this.listStatutSorted.set(5, result.data[i].libelle);
+      },
+      saveComment(numDem, comment) {
+        this.commentButton = true;
+        const demande = this.itemsUnaltered.find(element => element.numDemande === numDem);
+        demande.commentaire = comment;
+        axios({
+          headers: { Authorization: this.user.jwt },
+          method: 'PUT',
+          url: `${process.env.VUE_APP_ROOT_API}demandes/${numDem}`,
+          data: demande,
+        }).then(
+          () => {
+            this.commentButton = false;
+          },
+          (error) => {
+            this.commentButton = false;
+            this.alertMessage = constants.erreur500;
+            this.alert = true;
+            this.alertType = 'error';
+            if (error.response.status === 401) {
+              this.$emit('logout');
             }
+          },
+        );
+      },
+      deleteDem() {
+        this.deleteLoading = true;
+        axios({
+          headers: { Authorization: this.user.jwt },
+          method: 'DELETE',
+          url: `${process.env.VUE_APP_ROOT_API}demandes/${this.current}`,
+        }).then(
+          () => {
+            this.alertMessage = 'Demande supprimée.';
+            this.alertType = 'success';
+            this.alert = true;
+            this.fetchData();
+            this.popupDelete = false;
+            this.deleteLoading = false;
+          },
+          (error) => {
+            this.alertMessage = constants.erreur500;
+            this.alertType = 'error';
+            this.alert = true;
+            this.popupDelete = false;
+            this.deleteLoading = false;
+            if (error.response.status === 401) {
+              this.$emit('logout');
+            }
+          },
+        );
+      },
+      archiveDem() {
+        this.deleteLoading = true;
+        axios({
+          headers: { Authorization: this.user.jwt },
+          method: 'GET',
+          url: `${process.env.VUE_APP_ROOT_API}archiverDemande?numDemande=${this.current}`,
+        }).then(
+          () => {
+            this.alertMessage = 'Demande archivée.';
+            this.alertType = 'success';
+            this.alert = true;
+            this.fetchData();
+            this.popupArchive = false;
+            this.deleteLoading = false;
+          },
+          (error) => {
+            this.alertMessage = constants.erreur500;
+            this.alertType = 'error';
+            this.alert = true;
+            this.popupArchive = false;
+            this.deleteLoading = false;
+            if (error.response.status === 401) {
+              this.$emit('logout');
+            }
+          },
+        );
+      },
+      getColor(statut) {
+        if (statut === 'Terminée') {
+          if (this.darkMode) {
+            return 'colorGreenDark';
           }
-          for (let i = 1; i < this.listStatutSorted.size + 1; i++) {
-            this.listStatut.push(this.listStatutSorted.get(i));
-          }
-        },
-        (error) => {
-          this.alertMessage = constants.erreur500;
-          this.alert = true;
-          this.alertType = 'error';
-          if (error.response.status === 401) {
-            this.$emit('logout');
-          }
-        },
-      );
-    },
-    saveComment(numDem, comment) {
-      this.commentButton = true;
-      const demande = this.itemsUnaltered.find(element => element.numDemande === numDem);
-      demande.commentaire = comment;
-      axios({
-        headers: { Authorization: this.user.jwt },
-        method: 'PUT',
-        url: `${process.env.VUE_APP_ROOT_API}demandes/${numDem}`,
-        data: demande,
-      }).then(
-        () => {
-          this.commentButton = false;
-        },
-        (error) => {
-          this.commentButton = false;
-          this.alertMessage = constants.erreur500;
-          this.alert = true;
-          this.alertType = 'error';
-          if (error.response.status === 401) {
-            this.$emit('logout');
-          }
-        },
-      );
-    },
-    deleteDem() {
-      this.deleteLoading = true;
-      axios({
-        headers: { Authorization: this.user.jwt },
-        method: 'DELETE',
-        url: `${process.env.VUE_APP_ROOT_API}demandes/${this.current}`,
-      }).then(
-        () => {
-          this.alertMessage = 'Demande supprimée.';
-          this.alertType = 'success';
-          this.alert = true;
-          this.fetchData();
-          this.popupDelete = false;
-          this.deleteLoading = false;
-        },
-        (error) => {
-          this.alertMessage = constants.erreur500;
-          this.alertType = 'error';
-          this.alert = true;
-          this.popupDelete = false;
-          this.deleteLoading = false;
-          if (error.response.status === 401) {
-            this.$emit('logout');
-          }
-        },
-      );
-    },
-    archiveDem() {
-      this.deleteLoading = true;
-      axios({
-        headers: { Authorization: this.user.jwt },
-        method: 'GET',
-        url: `${process.env.VUE_APP_ROOT_API}archiverDemande?numDemande=${this.current}`,
-      }).then(
-        () => {
-          this.alertMessage = 'Demande archivée.';
-          this.alertType = 'success';
-          this.alert = true;
-          this.fetchData();
-          this.popupArchive = false;
-          this.deleteLoading = false;
-        },
-        (error) => {
-          this.alertMessage = constants.erreur500;
-          this.alertType = 'error';
-          this.alert = true;
-          this.popupArchive = false;
-          this.deleteLoading = false;
-          if (error.response.status === 401) {
-            this.$emit('logout');
-          }
-        },
-      );
-    },
-    getColor(statut) {
-      if (statut === 'Terminée') {
-        if (this.darkMode) {
-          return 'colorGreenDark';
+          return 'colorGreen';
         }
-        return 'colorGreen';
-      }
-      if (statut === 'En erreur') {
-        if (this.darkMode) {
-          return 'colorRedDark';
+        if (statut === 'En erreur') {
+          if (this.darkMode) {
+            return 'colorRedDark';
+          }
+          return 'colorRed';
         }
-        return 'colorRed';
-      }
-      return '';
+        return '';
+      },
     },
-  },
-};
+  };
 </script>
 
 <style scoped>
