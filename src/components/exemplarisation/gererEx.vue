@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import tableau from '@/components/utils/tableau.vue';
+import tableau from '@/components/exemplarisation/tableauExemp.vue';
 
 export default {
   name: 'gerer',

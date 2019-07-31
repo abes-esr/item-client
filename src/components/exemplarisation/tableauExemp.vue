@@ -146,38 +146,37 @@
               </td>
               <td
                 class="text-xs-left"
-                @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
+                @click="clickRow(props.item.num,props.item.codeStatut)"
               >{{ props.item.num }}</td>
               <td
                 class="text-xs-left"
-                @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
+                @click="clickRow(props.item.num,props.item.codeStatut)"
               >{{ props.item.dateModification | formatDate }}</td>
               <td
                 v-if="user.role == 'ADMIN'"
                 class="text-xs-left"
-                @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
+                @click="clickRow(props.item.num,props.item.codeStatut)"
               >{{ props.item.iln }}</td>
               <td
                 class="text-xs-left"
-                @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
+                @click="clickRow(props.item.num,props.item.codeStatut)"
               ><abbr v-bind:title="props.item.rcr">
                 {{ props.item.rcr }}</abbr>
               </td>
               <td
                 class="text-xs-left"
-                @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
+                @click="clickRow(props.item.num,props.item.codeStatut)"
               >
-                <span v-if="modif">{{ props.item.zoneSousZone }}</span>
-                <span v-else>{{ props.item.index }}</span>
+                <span>{{ props.item.indexRecherche }}</span>
               </td>
               <td
                 class="text-xs-left"
-                @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
-              >{{ props.item.traitement }}</td>
+                @click="clickRow(props.item.num,props.item.codeStatut)"
+              >{{ props.item.typeExemp }}</td>
               <td v-if="!archive"
                   class="text-xs-left"
                   v-bind:class="props.item.color"
-                  @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
+                  @click="clickRow(props.item.num,props.item.codeStatut)"
               >{{ props.item.statut }}</td>
               <td class="text-xs-center">
                 <v-menu bottom left v-if="props.item.codeStatut >= 2">
@@ -380,16 +379,16 @@ export default {
   props: {
     darkMode: Boolean,
     /** Tableau d'archive ou non ?
-       * Si oui, on affiche uniquement les demandes archivées et désactive certaines fonctions
-       * Si non, on affiche le tableau de gestion classique
-       */
+             * Si oui, on affiche uniquement les demandes archivées et désactive certaines fonctions
+             * Si non, on affiche le tableau de gestion classique
+             */
     archive: {
       default: false,
     },
     /** Modifdemasse ou exemplarisation ?
-       *  L'intitulé et les colonnes varient
-       *  Les paramètres des appels WS également
-       */
+             *  L'intitulé et les colonnes varient
+             *  Les paramètres des appels WS également
+             */
     modif: {
       default: true,
     },
@@ -504,21 +503,17 @@ export default {
         );
       }
     },
-    clickRow(numDem, codeStatut, traitement) {
+    clickRow(numDem, codeStatut) {
       sessionStorage.setItem('dem', numDem);
       switch (codeStatut) {
         case 1:
-          this.$router.push('fichier');
+          this.$router.push('type');
           break;
         case 3:
-          if (traitement !== 'Non défini') {
-            this.$router.push('fichierEnrichi');
-          } else {
-            this.$router.push('traitement');
-          }
+          this.$router.push('uploadFichierExemplarisation');
           break;
         case 4:
-          this.$router.push('simulation');
+          this.$router.push('simulationTest');
           break;
         default:
           break;
@@ -577,66 +572,50 @@ export default {
             this.itemsUnaltered = result.data;
             for (const key in result.data) {
               // Controle que la zone et la sous zone on déjà été selectionnée afin d'eviter d'afficher null
-              let tempZone;
-              let tempSousZone;
+              let tempIndexRecherche;
+              let tempTypeExemp;
               let tempStatus;
+
               if (result.data[key].etatDemande.libelle === 'A compléter'
-                  || result.data[key].etatDemande.libelle === 'En saisie'
-                  || result.data[key].etatDemande.libelle === 'En simulation'
-                  || result.data[key].etatDemande.libelle === 'En préparation'
+                                    || result.data[key].etatDemande.libelle === 'En saisie'
+                                    || result.data[key].etatDemande.libelle === 'En simulation'
+                                    || result.data[key].etatDemande.libelle === 'En préparation'
               ) {
                 tempStatus = 'En saisie';
               } else {
                 tempStatus = result.data[key].etatDemande.libelle;
               }
 
-              if (result.data[key].zone === null) {
-                tempZone = '';
+              if (result.data[key].indexRecherche === null) {
+                tempIndexRecherche = '';
               } else {
-                tempZone = result.data[key].zone;
-              }
-              if (result.data[key].sousZone === null) {
-                tempSousZone = '';
-              } else {
-                tempSousZone = result.data[key].sousZone;
+                tempIndexRecherche = result.data[key].indexRecherche.libelle;
               }
 
-              // pour éviter les erreurs si null
-              if (
-                result.data[key].traitement == null
-                  || result.data[key].traitement === undefined
-              ) {
-                this.items.push({
-                  dateCreation: result.data[key].dateCreation,
-                  dateModification: result.data[key].dateModification,
-                  rcr: `${result.data[key].rcr}`,
-                  iln: result.data[key].iln,
-                  num: result.data[key].numDemande,
-                  zoneSousZone: `${tempZone} ${tempSousZone}`,
-                  // index: result.data[key].indexRecherche.libelle,
-                  traitement: 'non défini',
-                  statut: tempStatus,
-                  color: this.getColor(result.data[key].etatDemande.libelle),
-                  codeStatut: result.data[key].etatDemande.numEtat,
-                  commentaire: result.data[key].commentaire,
-                });
+              if (result.data[key].typeExemp === null) {
+                tempTypeExemp = 'Non défini';
               } else {
-                this.items.push({
-                  dateCreation: result.data[key].dateCreation,
-                  dateModification: result.data[key].dateModification,
-                  rcr: `${result.data[key].rcr}`,
-                  iln: result.data[key].iln,
-                  num: result.data[key].numDemande,
-                  zoneSousZone: `${tempZone} ${tempSousZone}`,
-                  // index: result.data[key].indexRecherche.libelle,
-                  traitement: result.data[key].traitement.libelle,
-                  statut: tempStatus,
-                  color: this.getColor(result.data[key].etatDemande.libelle),
-                  codeStatut: result.data[key].etatDemande.numEtat,
-                  commentaire: result.data[key].commentaire,
-                });
+                tempTypeExemp = result.data[key].typeExemp.libelle;
               }
+
+
+              // pour éviter les erreurs si null
+              this.items.push({
+                dateCreation: result.data[key].dateCreation,
+                dateModification: result.data[key].dateModification,
+                rcr: `${result.data[key].rcr}`,
+                iln: result.data[key].iln,
+                num: result.data[key].numDemande,
+                indexRecherche: `${tempIndexRecherche}`,
+                // index: result.data[key].indexRecherche.libelle,
+                typeExemp: tempTypeExemp,
+                statut: tempStatus,
+                color: this.getColor(result.data[key].etatDemande.libelle),
+                codeStatut: result.data[key].etatDemande.numEtat,
+                commentaire: result.data[key].commentaire,
+              });
             }
+
             this.tableLoading = false;
           },
           (error) => {
@@ -661,15 +640,15 @@ export default {
       if (this.typeSearch !== 'search') {
         this.search = '';
         /* fonction callback qui permet selon le choix dans la liste déroulante de ne récupérer que certaines demandes
-             @param currentValue: objet représentant une ligne de demande de le tableau, acceder à son statut via
-             la variable d'instance .statut
-             @param searchStatut: le statut correspondant au choix dans la liste déroulante
-           */
+                         @param currentValue: objet représentant une ligne de demande de le tableau, acceder à son statut via
+                         la variable d'instance .statut
+                         @param searchStatut: le statut correspondant au choix dans la liste déroulante
+                       */
         return this.items.filter((currentValue) => {
           let statut = '';
           if (currentValue.statut === 'A compléter'
-              || currentValue.statut === 'En simulation' || currentValue.statut === 'En saisie'
-              || currentValue.statut === 'Préparée' || currentValue.statut === 'En préparation') {
+                            || currentValue.statut === 'En simulation' || currentValue.statut === 'En saisie'
+                            || currentValue.statut === 'Préparée' || currentValue.statut === 'En préparation') {
             statut = 'En saisie';
           } else if (currentValue.statut === 'En cours de traitement') {
             statut = 'En cours de traitement';
@@ -685,42 +664,42 @@ export default {
               .toString()
               .toLowerCase()
               .indexOf(this.searchDateCreation) > -1
-                || this.searchDateCreation == null)
-              && (currentValue.dateModification
-                .toString()
-                .toLowerCase()
-                .indexOf(this.searchDateModification) > -1
-              || this.searchDateModification == null)
-              && (currentValue.iln
-                .toString()
-                .toLowerCase()
-                .indexOf(this.searchILN) > -1
-              || this.searchRCR == null)
-              && (this.searchRCR == null || currentValue.rcr
-                .toString()
-                .toLowerCase()
-                .indexOf(this.searchRCR.toLowerCase()) > -1)
-              && (this.searchZoneSousZone == null || currentValue.zoneSousZone
-                .toString()
-                .toLowerCase()
-                .indexOf(this.searchZoneSousZone.toLowerCase()) > -1)
-              && (currentValue.num
-                .toString()
-                .toLowerCase()
-                .indexOf(this.searchNum) > -1
-              || this.searchNum == null)
-              && (this.searchTraitement == null
-              || currentValue.traitement
-                .toString()
-                .toLowerCase()
-                .indexOf(this.searchTraitement.toLowerCase()) > -1)
-              && (this.searchStatut == null || statut
-                .toString()
-                .toLowerCase()
-                .indexOf(this.searchStatut.toLowerCase()) > -1)
-              && (this.searchCodeStatut.toString().indexOf(currentValue.codeStatut)
-              > -1
-              || this.searchCodeStatut.toString() === '')
+                                || this.searchDateCreation == null)
+                            && (currentValue.dateModification
+                              .toString()
+                              .toLowerCase()
+                              .indexOf(this.searchDateModification) > -1
+                            || this.searchDateModification == null)
+                            && (currentValue.iln
+                              .toString()
+                              .toLowerCase()
+                              .indexOf(this.searchILN) > -1
+                            || this.searchRCR == null)
+                            && (this.searchRCR == null || currentValue.rcr
+                              .toString()
+                              .toLowerCase()
+                              .indexOf(this.searchRCR.toLowerCase()) > -1)
+                            && (this.searchZoneSousZone == null || currentValue.zoneSousZone
+                              .toString()
+                              .toLowerCase()
+                              .indexOf(this.searchZoneSousZone.toLowerCase()) > -1)
+                            && (currentValue.num
+                              .toString()
+                              .toLowerCase()
+                              .indexOf(this.searchNum) > -1
+                            || this.searchNum == null)
+                            && (this.searchTraitement == null
+                            || currentValue.traitement
+                              .toString()
+                              .toLowerCase()
+                              .indexOf(this.searchTraitement.toLowerCase()) > -1)
+                            && (this.searchStatut == null || statut
+                              .toString()
+                              .toLowerCase()
+                              .indexOf(this.searchStatut.toLowerCase()) > -1)
+                            && (this.searchCodeStatut.toString().indexOf(currentValue.codeStatut)
+                            > -1
+                            || this.searchCodeStatut.toString() === '')
           ) {
             return true;
           }
@@ -773,10 +752,10 @@ export default {
           for (let i = 0; i < result.data.length; i++) {
             if (
               result.data[i].libelle === 'Preparée'
-                || result.data[i].libelle === 'Archivée'
-                || result.data[i].libelle === 'A compléter'
-                || result.data[i].libelle === 'En simulation'
-                || result.data[i].libelle === 'En saisie'
+                                || result.data[i].libelle === 'Archivée'
+                                || result.data[i].libelle === 'A compléter'
+                                || result.data[i].libelle === 'En simulation'
+                                || result.data[i].libelle === 'En saisie'
             ) {
               this.listStatutSorted.set(1, 'En saisie');
             } else if (result.data[i].libelle === 'En attente') {

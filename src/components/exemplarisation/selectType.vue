@@ -159,9 +159,9 @@ export default {
       this.loading = true;
       axios({
         headers: { Authorization: this.user.jwt },
-        method: 'PUT',
-        url: `${process.env.VUE_APP_ROOT_API}demandesExemp/${sessionStorage.getItem('dem')}`,
-        data: demande,
+        method: 'POST',
+        url: `${process.env.VUE_APP_ROOT_API}majTypeExemp/${sessionStorage.getItem('dem')}`,
+        data: demande.typeExemp,
       }).then(
         () => {
           this.alertMessage = 'Demande mise à jour.';
