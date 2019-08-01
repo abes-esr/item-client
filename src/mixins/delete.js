@@ -13,7 +13,7 @@ export default {
       axios({
         headers: { Authorization: user.jwt },
         method: 'DELETE',
-        url: `${process.env.VUE_APP_ROOT_API}demandes/${numDemande}`,
+        url: `${process.env.VUE_APP_ROOT_API}demandes/${numDemande}?modif=${this.modif}`,
       }).then(
         () => {
           this.loading = false;
@@ -35,15 +35,21 @@ export default {
       axios({
         headers: { Authorization: user.jwt },
         method: 'GET',
-        url: `${process.env.VUE_APP_ROOT_API}etapePrecedente/${numDemande}`,
+        url: `${process.env.VUE_APP_ROOT_API}etapePrecedente/${numDemande}?modif=${this.modif}`,
       }).then(
         () => {
           this.loading = false;
-          // Redirection après précédent
-          if (this.$router.currentRoute.name === 'uploadFinal') {
-            this.$router.replace('/traitement');
+          if (this.modif === true) {
+            // Redirection après précédent
+            if (this.$router.currentRoute.name === 'uploadFinal') {
+              this.$router.replace('/traitement');
+            } else {
+              this.$router.replace('/fichier');
+            }
+          } else if (this.$router.currentRoute.name === 'type') {
+            this.$router.replace('rcr');
           } else {
-            this.$router.replace('/fichier');
+            this.$router.replace('type');
           }
         },
         () => {

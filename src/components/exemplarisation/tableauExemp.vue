@@ -104,20 +104,20 @@
                 </th>
                 <th>
                   <v-text-field
-                    v-model="searchZoneSousZone"
+                    v-model="searchIndexRecherche"
                     append-icon="search"
-                    aria-label="Recherche par Zone et Sous-Zone"
+                    aria-label="Recherche par Index de Recherche"
                     single-line
                     hide-details
                     clearable
-                    v-on:keyup="computedItems('zoneSousZone')"
+                    v-on:keyup="computedItems('indexRecherche')"
                   ></v-text-field>
                 </th>
                 <th>
                   <v-select
-                    v-model="searchTraitement"
-                    :items="listTraitements"
-                    aria-label="Recherche par type de traitement"
+                    v-model="searchTypeExemp"
+                    :items="listTypeExemp"
+                    aria-label="Recherche par type d'exemplarisation"
                     item-value="libelle"
                     item-text="libelle"
                     no-data-text="Aucun traitement trouvé."
@@ -343,9 +343,9 @@ export default {
       searchILN: '',
       searchRCR: '',
       searchNum: '',
-      searchTraitement: '',
+      searchTypeExemp: '',
       searchStatut: '',
-      searchZoneSousZone: '',
+      searchIndexRecherche: '',
       searchCodeStatut: ['1', '2'],
       listCodeStatut: ['1', '2'],
       typeSearch: 'search',
@@ -363,7 +363,7 @@ export default {
       fileReady: false,
       menu: false,
       calendar2: false,
-      listTraitements: [],
+      listTypeExemp: [],
       listStatut: [],
       listStatutSorted: new Map(),
       tableLoading: true,
@@ -411,7 +411,7 @@ export default {
     this.fetchData();
     // Rafraichissement des données toutes les 10 sec
     this.polling = setInterval(() => { this.conditionalFetch(); }, 10000);
-    this.getListTraitements();
+    this.getListTypeExemp();
     if (!this.archive) {
       this.getListStatus();
     }
@@ -475,13 +475,8 @@ export default {
       }
       return '';
     },
-    getListTraitements() {
-      let addr;
-      if (this.modif) {
-        addr = `${process.env.VUE_APP_ROOT_API}traitements`;
-      } else {
-        addr = `${process.env.VUE_APP_ROOT_API}typeExemp`;
-      }
+    getListTypeExemp() {
+      const addr = `${process.env.VUE_APP_ROOT_API}typeExemp`;
       if (this.user !== null && this.user.jwt !== null) {
         axios({
           headers: { Authorization: this.user.jwt },
@@ -489,8 +484,8 @@ export default {
           url: addr,
         }).then(
           (result) => {
-            this.listTraitements = result.data;
-            this.listTraitements.push({ libelle: 'Non défini' });
+            this.listTypeExemp = result.data;
+            this.listTypeExemp.push({ libelle: 'Non défini' });
           },
           (error) => {
             this.alertMessage = constants.erreurListeTraitements;
@@ -510,7 +505,7 @@ export default {
           this.$router.push('type');
           break;
         case 3:
-          this.$router.push('uploadFichierExemplarisation');
+          this.$router.push('fichierExemplarisation');
           break;
         case 4:
           this.$router.push('simulationTest');
@@ -679,20 +674,20 @@ export default {
                               .toString()
                               .toLowerCase()
                               .indexOf(this.searchRCR.toLowerCase()) > -1)
-                            && (this.searchZoneSousZone == null || currentValue.zoneSousZone
+                            && (this.searchIndexRecherche == null || currentValue.indexRecherche
                               .toString()
                               .toLowerCase()
-                              .indexOf(this.searchZoneSousZone.toLowerCase()) > -1)
+                              .indexOf(this.searchIndexRecherche.toLowerCase()) > -1)
                             && (currentValue.num
                               .toString()
                               .toLowerCase()
                               .indexOf(this.searchNum) > -1
                             || this.searchNum == null)
-                            && (this.searchTraitement == null
-                            || currentValue.traitement
+                            && (this.searchTypeExemp == null
+                            || currentValue.typeExemp
                               .toString()
                               .toLowerCase()
-                              .indexOf(this.searchTraitement.toLowerCase()) > -1)
+                              .indexOf(this.searchTypeExemp.toLowerCase()) > -1)
                             && (this.searchStatut == null || statut
                               .toString()
                               .toLowerCase()
@@ -713,8 +708,8 @@ export default {
       this.searchILN = '';
       this.searchRCR = '';
       this.searchNum = '';
-      this.searchZoneSousZone = '';
-      this.searchTraitement = '';
+      this.searchIndexRecherche = '';
+      this.searchTypeExemp = '';
       this.searchStatut = '';
       this.searchCodeStatut = '';
       return this.items.filter((currentValue) => {

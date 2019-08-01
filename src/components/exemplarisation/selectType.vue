@@ -33,11 +33,10 @@
                     </v-card-title>
                 </v-card>
           </v-card-text>
-          <v-card-actions>
+          <!--<v-card-actions>
             <v-spacer></v-spacer>
-            <!-- precedentDemande(numDem) est contenue dans le mixin delete.js importé plus bas -->
             <v-btn color="info" v-on:click="precedentDemande(numDem)">Précédent</v-btn>
-          </v-card-actions>
+          </v-card-actions>-->
         </v-card>
         <br />
         <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span>
@@ -91,15 +90,21 @@ export default {
       popupDelete: false,
     };
   },
+  props: {
+    // Modif de masse ou exemplarisation
+    modif: {
+      default: false,
+    },
+  },
   mounted() {
-    this.getListTraitements();
+    this.getListTypeExemp();
     // Récupération du numéro de demande courant depuis sessionStorage
     // Il est enregistré par rcr.vue lors de la création, ou depuis le tableau lorsque l'on clique sur une demande
     this.numDem = sessionStorage.getItem('dem');
   },
   methods: {
     // Récupère la liste des traitements afin de les afficher
-    getListTraitements() {
+    getListTypeExemp() {
       this.loading = true;
       this.user = JSON.parse(sessionStorage.getItem('user'));
       if (this.user !== null && this.user.jwt !== null) {

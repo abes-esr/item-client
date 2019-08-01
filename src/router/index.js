@@ -78,7 +78,7 @@ const router = new Router({
     },
     {
       path: '/fichierExemplarisation',
-      name: 'uploadFichierExemplarisation',
+      name: 'fichierExemp',
       component: uploadFinalComponent,
       props: { modif: false },
       meta: {

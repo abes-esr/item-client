@@ -364,7 +364,7 @@ export default {
       fileReady: false,
       menu: false,
       calendar2: false,
-      listTraitements: [],
+      listTypeExemp: [],
       listStatut: [],
       listStatutSorted: new Map(),
       tableLoading: true,
@@ -412,7 +412,7 @@ export default {
     this.fetchData();
     // Rafraichissement des données toutes les 10 sec
     this.polling = setInterval(() => { this.conditionalFetch(); }, 10000);
-    this.getListTraitements();
+    this.getListTypeExemp();
     if (!this.archive) {
       this.getListStatus();
     }
@@ -476,7 +476,7 @@ export default {
       }
       return '';
     },
-    getListTraitements() {
+    getListTypeExemp() {
       let addr;
       if (this.modif) {
         addr = `${process.env.VUE_APP_ROOT_API}traitements`;
@@ -491,7 +491,7 @@ export default {
         }).then(
           (result) => {
             this.listTraitements = result.data;
-            this.listTraitements.push({ libelle: 'Non défini' });
+            this.listTypeExemp.push({ libelle: 'Non défini' });
           },
           (error) => {
             this.alertMessage = constants.erreurListeTraitements;
