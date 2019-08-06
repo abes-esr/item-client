@@ -3,16 +3,16 @@
   <v-card raised hover @click="route()" :height="cardHeight + 'em'">
     <v-card-title class="primary-title">
       <v-container class="grid-list-md">
-        <v-layout class="row wrap align-center">
-          <v-flex class="xs2">
+        <v-row class="row wrap align-center">
+          <v-col class="xs2">
             <span class="group pa-3 secondary" :style="{'height': cardHeight-3.6 + 'em'}">
               <v-icon style="margin-top: -7px" x-large dark color="white">{{ iconType }}</v-icon>
             </span>
-          </v-flex>
-          <v-flex class="xs9 ml-3">
+          </v-col>
+          <v-col class="xs9 ml-3">
             <h3 class="headline">{{ titleName }}</h3>
-          </v-flex>
-        </v-layout>
+          </v-col>
+        </v-row>
       </v-container>
     </v-card-title>
   </v-card>

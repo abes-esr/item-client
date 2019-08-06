@@ -1,21 +1,21 @@
 <template>
-  <v-container fluid fill-height>
+  <v-container class="fill-height" fluid >
     <loading :show="loading" label="Envoi en cours. Ce traitement peut prendre plusieurs minutes."></loading>
-    <v-layout align-center justify-center>
-      <v-flex md7>
+    <v-row align="center" justify="center">
+      <v-col md="7">
         <stepper id="stepper" current="2"></stepper>
         <upload v-if="showForm" :loading="loading" :format=format :title=titleUpload :precedent="false" :text=textUpload v-on:upload="uploadFile" @precedent="precedentDemande(numDem)" @supprimer="supprimerDemande(numDem)"></upload>
         <v-card v-if="!showForm" class="elevation-12">
-          <v-toolbar dark color="primary">
-            <v-toolbar-title>Récupération du fichier de correspondances PPN / EPN</v-toolbar-title>
+          <v-app-bar dark color="primary">
+            <v-app-bar-title>Récupération du fichier de correspondances PPN / EPN</v-app-bar-title>
             <v-spacer></v-spacer>
             <v-btn flat @click="popupDelete = true"><v-icon>delete</v-icon>Supprimer</v-btn>
-          </v-toolbar>
+          </v-app-bar>
           <v-card-text>
-            <v-flex align-center justify-center fill-height class="text-xs-center">
+            <v-col class="text-center align justify fill-height">
               <v-btn round large color="primary" ref="fileLinkBtn" @click="disabledButton = false;" :href="fileLink" :download="blobName">Télécharger le fichier de correspondances PPN/EPN <v-icon right dark>cloud_download</v-icon>
               </v-btn>
-            </v-flex>
+            </v-col>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
@@ -26,7 +26,7 @@
         <br />
         <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span>
         </v-alert>
-      </v-flex>
+      </v-col>
       <v-dialog v-model="popupDelete" width="500">
         <v-card>
           <v-card-title class="headline" primary-title>Suppression</v-card-title>
@@ -41,7 +41,7 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-    </v-layout>
+    </v-row>
   </v-container>
 </template>
 

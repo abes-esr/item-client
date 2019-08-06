@@ -7,7 +7,13 @@ module.exports = {
     'plugin:vue/essential',
     '@vue/airbnb',
   ],
+  plugins: [
+    'vuetify'
+  ],
   rules: {
+    'vuetify/no-deprecated-classes': 'error',
+    'vuetify/grid-unknown-attributes': 'error',
+    'vuetify/no-legacy-grid': 'error',
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     // allow async-await

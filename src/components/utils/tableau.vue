@@ -1,7 +1,7 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <v-container fluid>
-    <v-layout justify-center align-center>
-      <v-flex text-xs-center>
+    <v-row justify="center" align="center">
+      <v-col class="text-center" >
         <v-alert :value="alert" :type="alertType" dismissible transition="scale-transition">
           <span v-html="alertMessage"></span>
         </v-alert>
@@ -145,41 +145,41 @@
                 <v-icon v-else :color='props.item.commentaire !== null && props.item.commentaire !== "" ? "white" : "default"' :class="{colored: props.item.commentaire}">keyboard_arrow_down</v-icon>
               </td>
               <td
-                class="text-xs-left"
+                class="text-left"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
               >{{ props.item.num }}</td>
               <td
-                class="text-xs-left"
+                class="text-left"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
               >{{ props.item.dateModification | formatDate }}</td>
               <td
                 v-if="user.role == 'ADMIN'"
-                class="text-xs-left"
+                class="text-left"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
               >{{ props.item.iln }}</td>
               <td
-                class="text-xs-left"
+                class="text-left"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
               ><abbr v-bind:title="props.item.rcr">
                 {{ props.item.rcr }}</abbr>
               </td>
               <td
-                class="text-xs-left"
+                class="text-left"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
               >
                 <span v-if="modif">{{ props.item.zoneSousZone }}</span>
                 <span v-else>{{ props.item.index }}</span>
               </td>
               <td
-                class="text-xs-left"
+                class="text-left"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
               >{{ props.item.traitement }}</td>
               <td v-if="!archive"
-                  class="text-xs-left"
+                  class="text-left"
                   v-bind:class="props.item.color"
                   @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
               >{{ props.item.statut }}</td>
-              <td class="text-xs-center">
+              <td class="text-center">
                 <v-menu bottom left v-if="props.item.codeStatut >= 2">
                   <v-btn slot="activator" color="info" small aria-label="Télécharger les fichiers" class="cloudButton">
                     <v-icon>cloud_download</v-icon>
@@ -224,7 +224,7 @@
                   </v-btn>
                 </span>
               </td>
-              <td v-if="!archive" class="text-xs-center">
+              <td v-if="!archive" class="text-center">
                 <span v-if="props.item.codeStatut < 5 && user.iln == props.item.iln">
                   <v-btn icon @click="current = props.item.num; popupDelete = true;" aria-label="Supprimer">
                     <v-icon>delete</v-icon>
@@ -239,7 +239,7 @@
             </template>
             <template v-slot:expand="props">
               <v-card flat>
-                <v-card-text class="text-xs-left">
+                <v-card-text class="text-left">
                   <v-textarea
                     solo
                     name="comment"
@@ -264,7 +264,7 @@
             >Votre recherche sur "{{ search }}" ne donne aucun résultat.</v-alert>
           </v-data-table>
         </v-card>
-      </v-flex>
+      </v-col>
       <v-dialog v-model="dialog" width="500">
         <v-card>
           <v-card-title class="headline" primary-title>Téléchargement du fichier</v-card-title>
@@ -273,7 +273,7 @@
               <v-progress-linear :indeterminate="true"></v-progress-linear>
             </div>
             <div v-if="!fileReady">
-              <v-flex align-center justify-center fill-height class="text-xs-center">
+              <v-col class="text-center align justify fill-height">
                 <v-btn
                   outline
                   large
@@ -284,7 +284,7 @@
                 >Télécharger le fichier
                   <v-icon right dark>cloud_download</v-icon>
                 </v-btn>
-              </v-flex>
+              </v-col>
             </div>
           </v-card-text>
           <v-divider></v-divider>
@@ -322,7 +322,7 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-    </v-layout>
+    </v-row>
   </v-container>
 </template>
 

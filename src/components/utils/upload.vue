@@ -3,11 +3,11 @@
         <loading :show="loading" :label="loadingMessage">
         </loading>
         <v-card class="elevation-12">
-            <v-toolbar dark color="primary">
-                <v-toolbar-title>{{ title }}</v-toolbar-title>
+            <v-app-bar dark color="primary">
+                <v-app-bar-title>{{ title }}</v-app-bar-title>
                 <v-spacer></v-spacer>
                 <v-btn flat @click="popupDelete = true"><v-icon>delete</v-icon>Supprimer</v-btn>
-            </v-toolbar>
+            </v-app-bar>
             <v-card-text>
                 <form enctype="multipart/form-data">
                     <div class="dropbox">

@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
-    <v-layout align-center justify-center>
-      <v-flex xs12>
+    <v-row align="center" justify="center">
+      <v-col cols="12">
         <v-card>
           <v-card-title primary-title>
             <div>
@@ -65,8 +65,8 @@
             <p>Vous pouvez choisir de refuser les cookies et l’analyse statistique de vos données de navigation.</p>
           </v-card-text>
         </v-card>
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 

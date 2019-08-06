@@ -2,93 +2,93 @@
   <v-app :dark="isDark" id="inspire">
     <!-- MENU LATERAL -->
     <v-navigation-drawer app fixed v-if="authenticated" v-model="drawer">
-      <v-toolbar class="transparent mb-4" flat>
+      <v-app-bar class="transparent mb-4" flat>
         <v-list three-line dense fixed style="text-overflow: ellipsis !important; white-space: nowrap !important;">
-          <v-list-tile>
-            <v-list-tile-content>
-              <v-list-tile-sub-title :class="wrapped" :style="styling">Bienvenue {{ user.username }}</v-list-tile-sub-title>
-              <v-list-tile-sub-title :class="wrapped" :style="styling" v-if="!isAdmin">Vous êtes habilité à intervenir sur les exemplaires des RCR de l'ILN {{ user.iln }}</v-list-tile-sub-title>
-              <v-list-tile-sub-title :class="wrapped" :style="styling" v-else>Vous disposez des permissions administrateur.</v-list-tile-sub-title>
-            </v-list-tile-content>
-          </v-list-tile>
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-subtitle :class="wrapped" :style="styling">Bienvenue {{ user.username }}</v-list-item-subtitle>
+              <v-list-item-subtitle :class="wrapped" :style="styling" v-if="!isAdmin">Vous êtes habilité à intervenir sur les exemplaires des RCR de l'ILN {{ user.iln }}</v-list-item-subtitle>
+              <v-list-item-subtitle :class="wrapped" :style="styling" v-else>Vous disposez des permissions administrateur.</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
         </v-list>
-      </v-toolbar>
+      </v-app-bar>
       <v-list>
         <v-divider></v-divider>
-        <v-list-tile>
+        <v-list-item>
           <v-switch label="Mode nuit" color="red" v-model="isDark"></v-switch>
-        </v-list-tile>
+        </v-list-item>
         <v-divider></v-divider>
-        <v-list-tile v-on:click="$router.push({ name: 'home' })">
-          <v-list-tile-action>
+        <v-list-item v-on:click="$router.push({ name: 'home' })">
+          <v-list-item-action>
             <v-icon>home</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Accueil</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-        <v-list-tile v-on:click="$router.push({ name: 'rcr' })">
-          <v-list-tile-action>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Accueil</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item v-on:click="$router.push({ name: 'rcr' })">
+          <v-list-item-action>
             <v-icon>edit</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Modifier des exemplaires</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-        <v-list-tile v-on:click="$router.push({ name: 'tab' })">
-          <v-list-tile-action>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Modifier des exemplaires</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item v-on:click="$router.push({ name: 'tab' })">
+          <v-list-item-action>
             <v-icon>list</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Mes demandes de modification</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-        <v-list-tile v-on:click="$router.push({ name: 'archive' })">
-          <v-list-tile-action>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Mes demandes de modification</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item v-on:click="$router.push({ name: 'archive' })">
+          <v-list-item-action>
             <v-icon>archive</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Archives Modification</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-        <v-list-tile v-on:click="$router.push({ name: 'rcrEx' })">
-          <v-list-tile-action>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Archives Modification</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item v-on:click="$router.push({ name: 'rcrEx' })">
+          <v-list-item-action>
             <v-icon>add</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Créer des exemplaires</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-        <v-list-tile v-on:click="$router.push({ name: 'tabEx' })">
-          <v-list-tile-action>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Créer des exemplaires</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item v-on:click="$router.push({ name: 'tabEx' })">
+          <v-list-item-action>
             <v-icon>list</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Mes demandes d'exemplarisation</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-        <v-list-tile v-on:click="$router.push({ name: 'archiveEx' })">
-          <v-list-tile-action>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Mes demandes d'exemplarisation</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item v-on:click="$router.push({ name: 'archiveEx' })">
+          <v-list-item-action>
             <v-icon>archive</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Archives Exemplarisation</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-        <v-list-tile v-on:click="$router.push({ name: 'profil' })">
-          <v-list-tile-action>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Archives Exemplarisation</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item v-on:click="$router.push({ name: 'profil' })">
+          <v-list-item-action>
             <v-icon>face</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Modifier mon adresse mail</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Modifier mon adresse mail</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
     <!-- BARRE DE TITRE SUPERIEURE -->
-    <v-toolbar app color="primary" dark fixed>
-      <v-toolbar-side-icon @click.stop="drawer = !drawer" aria-label="menu latéral" v-if="authenticated"></v-toolbar-side-icon>
-      <v-toolbar-title></v-toolbar-title>
+    <v-app-bar color="primary" dark fixed>
+      <v-app-bar-side-icon @click.stop="drawer = !drawer" aria-label="menu latéral" v-if="authenticated"></v-app-bar-side-icon>
+      <v-app-bar-title></v-app-bar-title>
         <v-spacer></v-spacer>
         <v-tooltip left nudge-bottom="20">
           <span slot="activator"><a href="https://stp.abes.fr/node/3?origine=sudocpro" rel="noopener" target="_blank"><img alt="icone assistance" height="38px" href="https://stp.abes.fr/node/3?origine=sudocpro" src="@/assets/assistance.png" target="_blank" width="38px"></a></span>
@@ -102,7 +102,7 @@
           <span @click="logout()" slot="activator"><a><img alt="icone déconnexion" height="38px" src="@/assets/deconnexion.png" width="38px"></a></span>
           <span>Déconnexion</span>
         </v-tooltip>
-    </v-toolbar>
+    </v-app-bar>
     <v-content>
       <transition name="fade">
         <router-view @authenticated="setAuthenticated" @logout="logoutExpired" :darkMode="isDark"/>

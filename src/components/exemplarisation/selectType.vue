@@ -1,34 +1,34 @@
 <template>
-  <v-container grid-list-md>
-    <v-layout row wrap justify-center>
+  <v-container>
+    <v-row   justify="center">
       <loading :show="loading" label="Chargement en cours..."></loading>
-      <v-flex xs8>
+      <v-col cols="8">
         <!-- TODO : METTRE LE BON STEPPER UNE FOIS FAIT -->
         <!-- <stepper id="stepper" current="3"></stepper> -->
-      </v-flex>
-      <v-flex md5 id="flexBox">
+      </v-col>
+      <v-col md="5" id="flexBox">
         <v-card class="elevation-12">
-          <v-toolbar dark color="primary">
-            <v-toolbar-title>Choix du type d'exemplarisation</v-toolbar-title>
+          <v-app-bar dark color="primary">
+            <v-app-bar-title>Choix du type d'exemplarisation</v-app-bar-title>
             <v-spacer></v-spacer>
             <v-btn flat @click="popupDelete = true"><v-icon>delete</v-icon>Supprimer</v-btn>
-          </v-toolbar>
+          </v-app-bar>
           <v-card-text>
             <v-card raised hover v-for="exemp in listExemp" :key="exemp.numTypeExemp" @click="selected=exemp; selectType();" height="7.8em">
                     <v-card-title primary-title>
-                        <v-container grid-list-md>
-                            <v-layout row wrap align-center>
-                                <v-flex xs2>
+                        <v-container>
+                            <v-row   align="center">
+                                <v-col cols="2">
                                     <span class="group pa-3 secondary" style="height: 4.2em">
                                         <v-icon v-if="exemp.numTypeExemp == 1" x-large dark>chrome_reader_mode</v-icon>
                                         <v-icon v-else-if="exemp.numTypeExemp == 2" x-large dark>library_books</v-icon>
                                         <v-icon v-else x-large dark>import_contacts</v-icon>
                                     </span>
-                                </v-flex>
-                                <v-flex xs6 ml-4>
+                                </v-col>
+                                <v-col class="ml-4" cols="6" >
                                     <h3 class="headline">{{ exemp.libelle }}</h3>
-                                </v-flex>
-                            </v-layout>
+                                </v-col>
+                            </v-row>
                         </v-container>
                     </v-card-title>
                 </v-card>
@@ -41,7 +41,7 @@
         <br />
         <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span>
         </v-alert>
-      </v-flex>
+      </v-col>
       <v-dialog v-model="popupDelete" width="500">
         <v-card>
           <v-card-title class="headline" primary-title>Suppression</v-card-title>
@@ -57,7 +57,7 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-    </v-layout>
+    </v-row>
   </v-container>
 </template>
 

@@ -2,8 +2,8 @@
   <!-- PAGE DE SIMULATION -->
   <v-container fluid>
     <loading :show="loading" label="Chargement en cours..."></loading>
-    <v-layout justify-center align-center>
-      <v-flex text-xs-center>
+    <v-row justify="center" align="center">
+      <v-col class="text-center" >
         <!-- POPUP DE SUPPRESSION DE LA DEMANDE -->
         <v-dialog v-model="popupDelete" width="500">
         <v-card>
@@ -51,37 +51,37 @@
         <!-- INFOS GENERALES DE LA DEMANDE -->
         <v-card id="demInfos">
           <h3 style="padding-top: 15px; padding-left: 15px;" class="headline">Ma demande</h3>
-          <v-container grid-list-md>
-            <v-layout row wrap>
-              <v-flex xs3>
+          <v-container>
+            <v-row  >
+              <v-col cols="3">
                 <div style="padding: 15px;">
                   <span style="color: grey;">Numéro de Demande</span>
                   <br>
                   <span>{{ demande.numDemande }}</span>
                 </div>
-              </v-flex>
-              <v-flex xs3>
+              </v-col>
+              <v-col cols="3">
                 <div style="padding: 15px;">
                   <span style="color: grey;">Date de modification</span>
                   <br>
                   <span>{{ demande.dateModification | formatDate }}</span>
                 </div>
-              </v-flex>
-              <v-flex xs3>
+              </v-col>
+              <v-col cols="3">
                 <div style="padding: 15px;">
                   <span style="color: grey;">RCR</span>
                   <br>
                   <span>{{ demande.rcr }} - {{ demande.shortname }}</span>
                 </div>
-              </v-flex>
-              <v-flex xs3>
+              </v-col>
+              <v-col cols="3">
                 <div style="padding: 15px;">
                   <span style="color: grey;">Traitement</span>
                   <br>
                   <span>{{ demande.traitement.libelle }}</span>
                 </div>
-              </v-flex>
-            </v-layout>
+              </v-col>
+            </v-row>
           </v-container>
         </v-card>
         <v-alert :value="alert" :type="alertType" transition="scale-transition" dismissible>
@@ -89,12 +89,12 @@
         </v-alert>
         <!-- CONTENU SIMULATION -->
         <v-card>
-          <v-toolbar dark color="primary">
-            <v-toolbar-title>Ecran de simulation</v-toolbar-title>
+          <v-app-bar dark color="primary">
+            <v-app-bar-title>Ecran de simulation</v-app-bar-title>
             <v-spacer></v-spacer>
             <!-- supprimerDemande(numDem) est importée depuis le mixin delete.js (voir plus bas) -->
             <v-btn flat @click="popupDelete = true" aria-label="Supprimer cette demande"><v-icon>delete</v-icon>Supprimer</v-btn>
-          </v-toolbar>
+          </v-app-bar>
           <br />
           <span class="subheading">
             Cet écran n'est qu'une visualisation du traitement. <br />
@@ -102,27 +102,27 @@
             Il s'agit de la dernière étape avant de lancer le traitement en base de production.
           </span>
           <h3 class="headline mb-0" id="numLigne">Ligne de votre fichier : {{ noticeEnCours + 1 }} sur {{ numberLines }}</h3>
-          <v-container fluid grid-list-md>
+          <v-container fluid>
             <!--Ecran de simulation pour modification de masse-->
-            <v-layout v-if="exauto === false" row wrap>
-              <v-flex xs5>
-                <v-layout fill-height>
+            <v-row v-if="exauto === false"  >
+              <v-col cols="5">
+                <v-row class="fill-height" >
                   <v-card class="elevation-8">
-                    <v-container fill-height fluid pa-2>
-                      <v-layout fill-height>
-                        <v-flex xs12 align-end flexbox>
+                    <v-container class="fill-height pa-2" fluid >
+                      <v-row class="fill-height" >
+                        <v-col class="align-end flexbox" cols="12" >
                           <span class="headline --text">Avant traitement</span>
                           <div class="notice">
                             <pre>{{ noticeAvant }}</pre>
                           </div>
-                        </v-flex>
-                      </v-layout>
+                        </v-col>
+                      </v-row>
                     </v-container>
                   </v-card>
-                </v-layout>
-              </v-flex>
-              <v-flex xs2>
-                <v-layout align-center justify-center column fill-height>
+                </v-row>
+              </v-col>
+              <v-col cols="2">
+                <v-row class="fill-height" align="center" justify="center" >
                   <!--Bouton première notice-->
                   <v-btn v-if="noticeEnCours === 0" color="disabled" depressed fab large dark aria-label="Première notice" class="unhover">
                     <v-icon>first_page</v-icon>
@@ -159,47 +159,47 @@
                     <v-icon>last_page</v-icon>
                   </v-btn>
                   <span>Dernière Notice</span>
-                </v-layout>
-              </v-flex>
-              <v-flex xs5>
-                <v-layout fill-height xs5>
+                </v-row>
+              </v-col>
+              <v-col cols="5">
+                <v-row class="fill-height xs5" >
                   <v-card class="elevation-8">
-                    <v-container fill-height fluid pa-2>
-                      <v-layout fill-height>
-                        <v-flex xs12 align-end flexbox>
+                    <v-container class="fill-height pa-2" fluid >
+                      <v-row class="fill-height" >
+                        <v-col class="align-end flexbox" cols="12" >
                           <span class="headline --text">Après traitement</span>
                           <div class="notice">
                             <pre>{{ noticeApres }}</pre>
                           </div>
-                        </v-flex>
-                      </v-layout>
+                        </v-col>
+                      </v-row>
                     </v-container>
                   </v-card>
-                </v-layout>
-              </v-flex>
-            </v-layout>
+                </v-row>
+              </v-col>
+            </v-row>
 
             <!--Ecran de simulation pour exemplarisation automatique-->
-            <v-layout v-if="exauto === true" column wrap align-center justify-center>
-              <v-flex justify-center md6>
-                <v-layout fill-height>
+            <v-row v-if="exauto === true"  align="center" justify="center">
+              <v-col class="justify-center" md="6">
+                <v-row class="fill-height" >
                   <v-card class="elevation-8">
-                    <v-container fill-height fluid pa-2>
-                      <v-layout fill-height>
-                        <v-flex xs12 align-end flexbox>
+                    <v-container class="fill-height pa-2" fluid >
+                      <v-row class="fill-height" >
+                        <v-col class="align-end flexbox" cols="12" >
                           <span class="headline --text">Avant traitement</span>
                           <div class="notice">
                             <pre>{{ noticeAvant }}</pre>
                           </div>
-                        </v-flex>
-                      </v-layout>
+                        </v-col>
+                      </v-row>
                     </v-container>
                   </v-card>
-                </v-layout>
-              </v-flex>
-              <v-flex justify-center md6>
+                </v-row>
+              </v-col>
+              <v-col class="justify-center" md="6">
                 <!--Conteneur des 4 boutons les centrant et les alignant-->
-                <v-layout row wrap align-start justify-space-around>
+                <v-row   align="start" justify="space-around">
                   <!--Conteneur bouton 1-->
                   <div>
                     <v-btn v-if="noticeEnCours === 0" color="disabled" depressed large dark aria-label="Première notice" class="unhover">
@@ -243,17 +243,17 @@
                     </v-btn>
                     <div>Dernière <br>notice</div>
                   </div>
-                </v-layout>
-              </v-flex>
-            </v-layout>
+                </v-row>
+              </v-col>
+            </v-row>
           </v-container>
         </v-card>
         <br>
-        <v-layout justify-end id="layoutButtonOk">
+        <v-row justify="end" id="layoutButtonOk">
           <v-btn large color="info" @click="dialog = true" aria-label="Lancer le traitement en production">Lancer le traitement en production</v-btn>
-        </v-layout>
-      </v-flex>
-    </v-layout>
+        </v-row>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 <script>

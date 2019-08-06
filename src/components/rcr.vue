@@ -1,15 +1,15 @@
 <template>
   <!-- SELECTION DU RCR -->
-  <v-container fluid fill-height>
-    <v-layout justify-center align-center>
+  <v-container class="fill-height" fluid >
+    <v-row justify="center" align="center">
       <loading :show="show" :label="label"></loading>
-      <v-flex md7>
+      <v-col md="7">
         <stepper id="stepper" current="1"></stepper>
         <v-card class="elevation-12">
-          <v-toolbar dark color="primary">
-            <v-toolbar-title>Sélection du RCR</v-toolbar-title>
+          <v-app-bar dark color="primary">
+            <v-app-bar-title>Sélection du RCR</v-app-bar-title>
             <v-spacer></v-spacer>
-          </v-toolbar>
+          </v-app-bar>
           <v-card-text>
             <v-autocomplete
               :filter="searchRCR"
@@ -33,8 +33,8 @@
         <v-alert :value="alert" :type="alertType" transition="scale-transition">
           <span v-html="alertMessage"></span>
         </v-alert>
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
