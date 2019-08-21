@@ -81,7 +81,7 @@ export default {
   data() {
     return {
       json: '',
-      listTypeExemp: [],
+      listTraitements: [],
       selected: '',
       active: false,
       alert: false,
@@ -101,7 +101,7 @@ export default {
   },
   methods: {
     // Récupère la liste des traitements afin de les afficher
-    getListTypeExemp() {
+    getListTraitements() {
       this.loading = true;
       this.user = JSON.parse(sessionStorage.getItem('user'));
       if (this.user !== null && this.user.jwt !== null) {
