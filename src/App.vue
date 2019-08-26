@@ -227,7 +227,7 @@ export default {
     text-decoration: none;
     color: white;
   }
-  #stepper{
+  .stepper{
   margin-bottom: 20px;
   }
 

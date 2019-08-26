@@ -3,7 +3,7 @@
     <v-layout row wrap justify-center>
       <loading :show="loading" label="Chargement en cours..."></loading>
       <v-flex xs8>
-        <stepper id="stepper" current="3"></stepper>
+        <stepper class="stepper" current="3"></stepper>
       </v-flex>
       <v-flex md5 id="flexBox">
         <v-card class="elevation-12">
@@ -67,7 +67,7 @@
 <script>
 import axios from 'axios';
 import loading from 'vue-full-loading';
-import stepper from '@/components/utils/stepper.vue';
+import stepper from '@/components/utils/stepperModif.vue';
 import supprMixin from '@/mixins/delete';
 import constants from '@/components/utils/const';
 

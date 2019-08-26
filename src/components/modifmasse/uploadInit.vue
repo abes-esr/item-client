@@ -3,7 +3,7 @@
     <loading :show="loading" label="Envoi en cours. Ce traitement peut prendre plusieurs minutes."></loading>
     <v-layout align-center justify-center>
       <v-flex md7>
-        <stepper id="stepper" current="2"></stepper>
+        <stepper class="stepper" current="2"></stepper>
         <upload v-if="showForm" :loading="loading" :format=format :title=titleUpload :precedent="false" :text=textUpload v-on:upload="uploadFile" @precedent="precedentDemande(numDem)" @supprimer="supprimerDemande(numDem)"></upload>
         <v-card v-if="!showForm" class="elevation-12">
           <v-toolbar dark color="primary">
@@ -49,7 +49,7 @@
 import axios from 'axios';
 import loading from 'vue-full-loading';
 import upload from '@/components/utils/upload.vue';
-import stepper from '@/components/utils/stepper.vue';
+import stepper from '@/components/utils/stepperModif.vue';
 import supprMixin from '@/mixins/delete';
 import constants from '@/components/utils/const';
 

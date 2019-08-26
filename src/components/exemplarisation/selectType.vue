@@ -3,8 +3,7 @@
     <v-layout row wrap justify-center>
       <loading :show="loading" label="Chargement en cours..."></loading>
       <v-flex xs8>
-        <!-- TODO : METTRE LE BON STEPPER UNE FOIS FAIT -->
-        <!-- <stepper id="stepper" current="3"></stepper> -->
+        <stepper class="stepper" current="2" stepperExemp=false></stepper>
       </v-flex>
       <v-flex md5 id="flexBox">
         <v-card class="elevation-12">
@@ -64,7 +63,7 @@
 <script>
 import axios from 'axios';
 import loading from 'vue-full-loading';
-// import stepper from '@/components/utils/stepper.vue';
+import stepper from '@/components/utils/stepperExemp.vue';
 import supprMixin from '@/mixins/delete';
 import constants from '@/components/utils/const';
 
@@ -73,7 +72,7 @@ export default {
   mixins: [supprMixin],
   components: {
     loading,
-    // stepper,
+    stepper,
   },
   data() {
     return {
@@ -94,6 +93,7 @@ export default {
     // Modif de masse ou exemplarisation
     modif: {
       default: false,
+
     },
   },
   mounted() {

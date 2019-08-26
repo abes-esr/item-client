@@ -4,7 +4,8 @@
     <v-layout justify-center align-center>
       <loading :show="show" :label="label"></loading>
       <v-flex md7>
-        <stepper id="stepper" current="1"></stepper>
+        <stepper class="stepper" current="1" v-if="modif"></stepper>
+        <stepperexemp class="stepper" current="1" v-if="!modif"></stepperexemp>
         <v-card class="elevation-12">
           <v-toolbar dark color="primary">
             <v-toolbar-title>Sélection du RCR</v-toolbar-title>
@@ -41,7 +42,8 @@
 <script>
 import axios from 'axios';
 import loading from 'vue-full-loading';
-import stepper from '@/components/utils/stepper.vue';
+import stepper from '@/components/utils/stepperModif.vue';
+import stepperexemp from '@/components/utils/stepperExemp.vue';
 import constants from '@/components/utils/const';
 
 export default {
@@ -49,6 +51,7 @@ export default {
   components: {
     loading,
     stepper,
+    stepperexemp,
   },
   data() {
     return {

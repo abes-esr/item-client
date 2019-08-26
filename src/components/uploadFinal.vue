@@ -2,7 +2,8 @@
   <v-container fluid fill-height>
     <v-layout align-center justify-center>
       <v-flex md7>
-        <stepper id="stepper" current="4"></stepper>
+        <stepper class="stepper" current="4" v-if="modif"></stepper>
+        <stepperexemp class="stepper" current="4" v-if="!modif"></stepperexemp>
         <upload :loading="loading" :format=format :precedent="true" :title=titleUpload :text=textUpload v-on:upload="uploadFile" @precedent="precedentDemande(numDem)" @supprimer="supprimerDemande(numDem)"></upload>
         <br />
         <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span>
@@ -15,7 +16,8 @@
 <script>
 import axios from 'axios';
 import upload from '@/components/utils/upload.vue';
-import stepper from '@/components/utils/stepper.vue';
+import stepper from '@/components/utils/stepperModif.vue';
+import stepperexemp from '@/components/utils/stepperExemp.vue';
 import supprMixin from '@/mixins/delete';
 import constants from '@/components/utils/const';
 
@@ -26,6 +28,7 @@ export default {
   components: {
     upload,
     stepper,
+    stepperexemp,
   },
   data() {
     return {

@@ -47,7 +47,7 @@
           </v-card>
         </v-dialog>
         <!-- FIL D'ARIANE -->
-        <stepper id="stepper" current="5"></stepper> <!--TODO un autre component stepper avec v-if pour exauto, une fois que l'on connaitra le fil d'ariane-->
+        <stepper class="stepper" current="5"></stepper> <!--TODO un autre component stepper avec v-if pour exauto, une fois que l'on connaitra le fil d'ariane-->
         <!-- INFOS GENERALES DE LA DEMANDE -->
         <v-card id="demInfos">
           <h3 style="padding-top: 15px; padding-left: 15px;" class="headline">Ma demande</h3>
@@ -213,7 +213,7 @@
 <script>
 import loading from 'vue-full-loading';
 import axios from 'axios';
-import stepper from '@/components/utils/stepper.vue';
+import stepper from '@/components/utils/stepperModif.vue';
 import supprMixin from '@/mixins/delete';
 import moment from 'moment';
 import constants from '@/components/utils/const';
