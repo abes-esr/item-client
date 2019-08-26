@@ -4,9 +4,9 @@
     <v-stepper-header>
       <v-stepper-step step="1" :complete="current > 1">Sélection RCR</v-stepper-step>
       <v-divider></v-divider>
-      <v-stepper-step step="2" :complete="current > 2">Choix traitement</v-stepper-step>
+      <v-stepper-step step="2" :complete="current > 2">Choix du type</v-stepper-step>
       <v-divider></v-divider>
-      <v-stepper-step step="3" :complete="current > 3">Fichier complété</v-stepper-step>
+      <v-stepper-step step="3" :complete="current > 3">Fichier à envoyer</v-stepper-step>
       <v-divider></v-divider>
       <v-stepper-step step="4" :complete="current > 4">Production</v-stepper-step>
     </v-stepper-header>
