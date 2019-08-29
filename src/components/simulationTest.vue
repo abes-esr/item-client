@@ -110,7 +110,7 @@
                       <v-container fill-height fluid pa-2>
                         <v-layout fill-height>
                           <v-flex xs12 align-end flexbox>
-                            <span class="headline --text">Exemplaires existants</span>
+                            <span class="headline --text">Exemplaire(s) existant(s)</span>
                             <div class="notice">
                               <pre>{{ noticeAvant }}</pre>
                             </div>
@@ -123,7 +123,7 @@
                       <v-container fill-height fluid pa-2>
                         <v-layout fill-height>
                           <v-flex xs12 align-end flexbox>
-                            <span class="headline --text">Exemplaires existants</span>
+                            <span class="headline --text">Exemplaire(s) existant(s)</span>
                             <div class="notice">
                               <pre>{{ noticeAvant }}</pre>
                             </div>
@@ -239,7 +239,7 @@ export default {
       alertType: 'error',
       alert: false,
       user: {},
-      noticeAvant: 'Exemplaires existants en cours de chargement...',
+      noticeAvant: 'Exemplaire(s) existant(s) en cours de chargement...',
       noticeApres: 'Notice en cours de chargement...',
       dialog: false,
       dialogFinished: false,
