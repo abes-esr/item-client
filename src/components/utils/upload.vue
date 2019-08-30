@@ -22,6 +22,30 @@
                 </form>
             </v-card-text>
             <v-card-actions>
+              <v-container fluid>
+                <v-layout row>
+                  <v-flex xs11>
+                    <v-checkbox v-model="selected" value="exempMulti" id ="exempMulti" @click.native="getExemplairesMultiples()" label="Je souhaite créer des exemplaires supplémentaires"></v-checkbox>
+                  </v-flex>
+                  <v-flex xs1 style="padding-top: 1.3em">
+                  <v-dialog v-model="dialog" persistent max-width="400">
+                    <template v-slot:activator="{ on }">
+                      <v-btn text small icon v-on="on">
+                        <v-icon>info</v-icon>
+                      </v-btn>
+                    </template>
+                    <v-card>
+                      <v-card-title class="headline">Exemplaires multiples sur notices</v-card-title>
+                      <v-card-text>Si des exemplaires sont déjà présents sur les notices et que vous souhaitez en créer de nouveaux, cochez la case.</v-card-text>
+                      <v-card-actions>
+                        <div class="flex-grow-1"></div>
+                        <v-btn text @click="dialog = false">Compris</v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
+                  </v-flex>
+                </v-layout>
+              </v-container>
                 <v-spacer></v-spacer>
                 <v-btn color="info" v-if="precedent" @click="$emit('precedent')" aria-label="Annuler">Précédent</v-btn>
                 <!-- Lors du clic sur "Envoyer", on emet un évenement "upload" avec le contenu du fichier en paramètre, afin que le composant père puisse récupérer le fichier-->
@@ -90,6 +114,8 @@ export default {
       alertType: 'error',
       filename: '',
       popupDelete: false,
+      dialog: false,
+      exemplairesMultiples: false,
     };
   },
   methods: {
@@ -120,6 +146,10 @@ export default {
     getRefName() {
       // Obligatoire car $refs n'est plus réactif depuis Vue 2.0
       this.filename = this.$refs.fileInput.files[0].name;
+    },
+    getExemplairesMultiples() {
+      const elt = document.getElementById('exempMulti');
+      this.exemplairesMultiples = elt.checked;
     },
   },
 };

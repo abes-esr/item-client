@@ -62,7 +62,7 @@ export default {
       const formData = new FormData();
       formData.append('file', this.file);
       formData.append('numDemande', this.numDem);
-
+      console.log(exemplairesMultiples);
       this.user = JSON.parse(sessionStorage.getItem('user'));
       if (this.user !== null && this.user.jwt !== null) {
         axios
