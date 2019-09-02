@@ -137,6 +137,7 @@ export default {
       isAdmin: false,
       dialog: false,
       wrapped: '',
+      text: 'hello',
     };
   },
   computed: {

@@ -11,7 +11,7 @@
             <v-card-text>
                 <form enctype="multipart/form-data">
                     <div class="dropbox">
-                        <input type="file" :accept="format" aria-label="Dépôt du fichier" ref="fileInput" @click="fichierPresent = false;" @change="checkFile(); checkFormat(); getRefName();" class="input-file">
+                        <input type="file" :accept="format" aria-label="Dépôt du fichier" ref="fileInput" @click="fichierPresent = false" @change="checkFile(); checkFormat(); getRefName();" class="input-file">
                         <p v-if="!fichierPresent">
                             <span v-html="text"></span>
                         </p>
@@ -25,7 +25,7 @@
               <v-container fluid>
                 <v-layout row>
                   <v-flex xs11>
-                    <v-checkbox v-model="selected" value="exempMulti" id ="exempMulti" @click.native="getExemplairesMultiples()" label="Je souhaite créer des exemplaires supplémentaires"></v-checkbox>
+                    <v-checkbox value="exempMulti" id ="exempMulti" @click.native="getExemplairesMultiples()" label="Je souhaite créer des exemplaires supplémentaires"></v-checkbox>
                   </v-flex>
                   <v-flex xs1 style="padding-top: 1.3em">
                   <v-dialog v-model="dialog" persistent max-width="400">
@@ -115,7 +115,7 @@ export default {
       filename: '',
       popupDelete: false,
       dialog: false,
-      exemplairesMultiples: false,
+      exemplairesMultiplesChild: false,
     };
   },
   methods: {
@@ -149,7 +149,8 @@ export default {
     },
     getExemplairesMultiples() {
       const elt = document.getElementById('exempMulti');
-      this.exemplairesMultiples = elt.checked;
+      this.exemplairesMultiplesChild = elt.checked;
+      this.$emit('eventName', this.exemplairesMultiplesChild);
     },
   },
 };

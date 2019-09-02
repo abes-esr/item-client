@@ -4,7 +4,8 @@
       <v-flex md7>
         <stepper class="stepper" current="4" v-if="modif"></stepper>
         <stepperexemp class="stepper" current="4" v-if="!modif"></stepperexemp>
-        <upload :loading="loading" :format=format :precedent="true" :title=titleUpload :text=textUpload v-on:upload="uploadFile" @precedent="precedentDemande(numDem)" @supprimer="supprimerDemande(numDem)"></upload>
+        <upload :value="value" :loading="loading" :format=format :precedent="true" :title=titleUpload :text=textUpload v-on:upload="uploadFile"
+                @precedent="precedentDemande(numDem)" @supprimer="supprimerDemande(numDem)" @eventName="updateParent"></upload>
         <br />
         <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span>
         </v-alert>
@@ -42,6 +43,7 @@ export default {
       numDem: 0,
       titleUpload: 'Envoyer le fichier complété de la zone d\'exemplaire à traiter',
       textUpload: 'Cliquez ou faites glisser ici<br />pour charger votre fichier complété<br />(format txt ou csv)',
+      exemplairesMultiplesParent: false,
     };
   },
   props: {
@@ -62,11 +64,10 @@ export default {
       const formData = new FormData();
       formData.append('file', this.file);
       formData.append('numDemande', this.numDem);
-      console.log(exemplairesMultiples);
       this.user = JSON.parse(sessionStorage.getItem('user'));
       if (this.user !== null && this.user.jwt !== null) {
         axios
-          .post(`${process.env.VUE_APP_ROOT_API}uploadDemande?modif=${this.modif}`, formData, {
+          .post(`${process.env.VUE_APP_ROOT_API}uploadDemande?modif=${this.modif}&exempMulti=${this.exemplairesMultiplesParent}`, formData, {
             headers: {
               Authorization: this.user.jwt,
               'Content-Type': 'multipart/form-data',
@@ -101,6 +102,9 @@ export default {
         this.alert = true;
         this.loading = false;
       }
+    },
+    updateParent(variable) {
+      this.exemplairesMultiplesParent = variable;
     },
   },
 };
