@@ -39,10 +39,10 @@ export default {
       alertType: 'error',
       loading: false,
       user: {},
-      format: ['csv'],
+      format: ['csv', 'txt'],
       numDem: 0,
       titleUpload: 'Envoyer le fichier complété de la zone d\'exemplaire à traiter',
-      textUpload: 'Cliquez ou faites glisser ici<br />pour charger votre fichier complété<br />(format txt ou csv)',
+      textUpload: 'Cliquez ou faites glisser ici<br />pour charger votre fichier complété<br />(format .txt ou .csv obligatoire)',
       exemplairesMultiplesParent: false,
     };
   },

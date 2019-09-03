@@ -99,7 +99,7 @@ export default {
     },
     /** Extension de fichier acceptée par le composant upload */
     format: {
-      default: ['txt'],
+      default: ['csv, txt'],
     },
     /** Afficher le bouton précédent */
     precedent: {
@@ -134,9 +134,12 @@ export default {
          * Affiche une erreur si ce n'est pas le cas
          */
     checkFormat() {
+      console.log('salut');
+      console.log(this.format);
+      console.log(this.$refs.fileInput.files[0].name.split('.')[1]);
       this.alert = false;
       if (!(this.format.includes(this.$refs.fileInput.files[0].name.split('.')[1]))) {
-        this.alertMessage = `Le fichier doit être au format(s) ${this.format}`;
+        this.alertMessage = `Le fichier doit être au format(s) suivants : ${this.format}`;
         this.alertType = 'error';
         this.alert = true;
         this.fichierPresent = false;
