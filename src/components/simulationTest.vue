@@ -310,8 +310,20 @@ export default {
         }&numLigne=${this.noticeEnCours}`,
       }).then(
         (result) => {
-          this.noticeAvant = result.data[0];
-          this.noticeApres = result.data[1];
+          if (result.data[0] === '') {
+            this.noticeAvant = 'Il n\'y a pas d\'exemplaires '
+                + 'déjà existants pour cette notice sur ce RCR.';
+          } else {
+            this.noticeAvant = result.data[0]; // Exemplaires existants
+          }
+          if (result.data[1] === '') {
+            this.noticeApres = 'Vous n\'avez pas autorisé la création d\'exemplaires en cas '
+                + 'd\'exemplaires déja présents sur cette notice pour ce RCR, '
+                + 'lors de l\'Etape précédente de cette Demande.';
+          } else {
+            this.noticeApres = result.data[1]; // Exemplaires à créer
+          }
+
           if (result.data[0] === null) {
             this.exemplairesPresentsSurNoticeEnCours = true;
           }
