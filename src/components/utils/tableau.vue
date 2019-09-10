@@ -21,7 +21,7 @@
             class="elevation-1"
             item-key="num"
             :rows-per-page-items='[10,25, {"text":"Toutes","value":-1}]'
-          >
+            style="width: 100%;">
             <template slot="headers" slot-scope="props">
               <tr>
                 <th
@@ -29,7 +29,7 @@
                   :key="header.text"
                   :class="['column sortable', pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']"
                   @click="changeSort(header.value)"
-                >
+                  >
                   <v-icon small>arrow_upward</v-icon>
                   {{ header.text }}
                 </th>

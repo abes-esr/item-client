@@ -6,7 +6,7 @@
           <span v-html="alertMessage"></span>
         </v-alert>
         <v-card>
-          <v-card-title v-if="archive && modif" class="title" >Mes demandes de modification archivées</v-card-title>
+          <v-card-title v-if="archive && modif" class="title">Mes demandes de modification archivées</v-card-title>
           <v-card-title v-if="!archive && modif" class="title">Gérer mes demandes de modification</v-card-title>
           <v-card-title v-if="archive && !modif" class="title">Mes demandes d'exemplarisation archivées</v-card-title>
           <v-card-title v-if="!archive && !modif" class="title">Gérer mes demandes d'exemplarisation</v-card-title>
@@ -515,15 +515,31 @@ export default {
       }
     },
     initHeader() {
-      // TODO : Peut être faire ça mieux ?
+      // TODO : Peut être faire ça mieux ? probleme decriture de la condition reprendre
       // En générant le nom de la constante à partir des conditions ?
-      if (this.archive) {
-        if (this.user.role === 'ADMIN') {
-          if (this.modif) { this.headers = constants.headersArchiveAdminModif; } else { this.headers = constants.headerExempArchiveAdmin; }
-        } else if (this.modif) { this.headers = constants.headersArchiveModif; } else { this.headers = constants.headerExempArchive; }
+      if (this.archive) { // Si archive
+        if (this.user.role === 'ADMIN') { // Si admin
+          if (this.modif) { // si modification
+            this.headers = constants.headersArchiveAdminModif;
+          } else { // sinon exemplarisation
+            this.headers = constants.headerExempArchiveAdmin;
+          }
+        } else if (this.modif) { // si modification
+          this.headers = constants.headersArchiveModif;
+        } else { // Sinon exemplarisation
+          this.headers = constants.headerExempArchive;
+        }
       } else if (this.user.role === 'ADMIN') {
-        if (this.modif) { this.headers = constants.headerModifAdmin; } else { this.headers = constants.headerExempAdmin; }
-      } else if (this.modif) { this.headers = constants.headerModif; } else { this.headers = constants.headerExemp; }
+        if (this.modif) {
+          this.headers = constants.headerModifAdmin;
+        } else {
+          this.headers = constants.headerExempAdmin;
+        }
+      } else if (this.modif) {
+        this.headers = constants.headerModif;
+      } else {
+        this.headers = constants.headerExemp;
+      }
 
 
       this.searchCombo = Object.assign([], this.headers);
