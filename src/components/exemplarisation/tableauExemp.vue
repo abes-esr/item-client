@@ -47,7 +47,6 @@
                   <v-text-field
                     append-icon="search"
                     aria-label="Recherche par numéro"
-                    clearable
                     hide-details
                     single-line
                     v-model="searchNum"
@@ -67,7 +66,6 @@
                     <v-text-field
                       append-icon="search"
                       aria-label="Recherche par date"
-                      clearable
                       prepend-icon="event"
                       readonly
                       slot="activator"
@@ -93,18 +91,16 @@
                   <v-text-field
                     append-icon="search"
                     aria-label="Recherche par ILN"
-                    clearable
                     hide-details
                     single-line
                     v-model="searchILN"
                     v-on:keyup="computedItems('iln')"
                   ></v-text-field>
                 </th>
-                <th> <!-- Champ de recherche de RCR-->
+                <th> <!--Champ de recherche de RCR-->
                   <v-text-field
                     append-icon="search"
                     aria-label="Recherche par RCR"
-                    clearable
                     hide-details
                     single-line
                     v-model="searchRCR"
@@ -116,7 +112,6 @@
                     :items="listTypeExemp"
                     @change="computedItems('traitement')"
                     aria-label="Recherche par type d'exemplarisation"
-                    clearable
                     item-text="libelle"
                     item-value="libelle"
                     no-data-text="Aucun traitement trouvé."
@@ -127,19 +122,17 @@
                   <v-text-field
                     append-icon="search"
                     aria-label="Recherche par Index de Recherche"
-                    clearable
                     hide-details
                     single-line
                     v-model="searchIndexRecherche"
                     v-on:keyup="computedItems('indexRecherche')"
                   ></v-text-field>
                 </th>
-                <th class="smallTD" v-if="!archive"> <!-- Champ de recherche etat de la demande-->
+                <th class="smallTD" v-if="!archive"> <!--Champ de recherche etat de la demande-->
                   <v-select
                     :items="listStatut"
                     @change="computedItems('statut')"
                     aria-label="Recherche par statut"
-                    clearable
                     no-data-text="Aucun statut trouvé."
                     v-model="searchStatut"
                   ></v-select>
@@ -205,7 +198,7 @@
                          slot="activator" small>
                     <v-icon>cloud_download</v-icon>
                   </v-btn>
-                  <!-- FICHIERS MODIF -->
+                  <!--FICHIERS MODIF -->
                   <v-list v-if="props.item.codeStatut >= 3 && modif">
                     <v-list-tile @click="downloadFile(props.item.num, 'ppn')">
                       <v-list-tile-title>Télécharger le fichier initial des PPN</v-list-tile-title>
@@ -227,7 +220,7 @@
                       <v-list-tile-title>Télécharger le fichier résultat</v-list-tile-title>
                     </v-list-tile>
                   </v-list>
-                  <!-- FICHIERS EXEMPLARISATION -->
+                  <!--FICHIERS EXEMPLARISATION -->
                   <v-list v-if="props.item.codeStatut >= 3 && !modif">
                     <v-list-tile @click="downloadFile(props.item.num, 'initEx')">
                       <v-list-tile-title>Télécharger le fichier initial</v-list-tile-title>

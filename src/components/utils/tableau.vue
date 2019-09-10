@@ -10,7 +10,6 @@
           <v-card-title v-if="!archive && modif" class="title">Gérer mes demandes de modification</v-card-title>
           <v-card-title v-if="archive && !modif" class="title">Mes demandes d'exemplarisation archivées</v-card-title>
           <v-card-title v-if="!archive && !modif" class="title">Gérer mes demandes d'exemplarisation</v-card-title>
-
           <v-data-table
             :loading="tableLoading"
             :headers="headers"
@@ -43,7 +42,6 @@
                     append-icon="search"
                     single-line
                     hide-details
-                    clearable
                     v-on:keyup="computedItems('num')"
                   ></v-text-field>
                 </th>
@@ -63,7 +61,6 @@
                       aria-label="Recherche par date"
                       prepend-icon="event"
                       append-icon="search"
-                      clearable
                       readonly
                     ></v-text-field>
                     <v-date-picker
@@ -87,7 +84,6 @@
                     append-icon="search"
                     single-line
                     hide-details
-                    clearable
                     v-on:keyup="computedItems('iln')"
                   ></v-text-field>
                 </th>
@@ -98,7 +94,6 @@
                     aria-label="Recherche par RCR"
                     single-line
                     hide-details
-                    clearable
                     v-on:keyup="computedItems('rcr')"
                   ></v-text-field>
                 </th>
@@ -109,7 +104,6 @@
                     aria-label="Recherche par Zone et Sous-Zone"
                     single-line
                     hide-details
-                    clearable
                     v-on:keyup="computedItems('zoneSousZone')"
                   ></v-text-field>
                 </th>
@@ -122,7 +116,6 @@
                     item-text="libelle"
                     no-data-text="Aucun traitement trouvé."
                     @change="computedItems('traitement')"
-                    clearable
                   ></v-select>
                 </th>
                 <th v-if="!archive" class="smallTD">
@@ -132,7 +125,6 @@
                     :items="listStatut"
                     no-data-text="Aucun statut trouvé."
                     @change="computedItems('statut')"
-                    clearable
                   ></v-select>
                 </th>
                 <th></th>
