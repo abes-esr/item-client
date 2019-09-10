@@ -1,15 +1,15 @@
 <template>
   <!-- PAGE D'ACCUEIL -->
-  <v-row  class="container">
+  <v-row class="container" style="margin-top: 5em;">
     <v-col class="fill-height ma-2 pt-5" cols="12" md="5" >
-      <menu-cards titleName="Créer des exemplaires" iconType="add_circle_outline" routerLink="rcrEx" :cardHeight=7.8></menu-cards>
-      <menu-cards titleName="Supprimer des exemplaires" iconType="delete" routerLink="tab" :cardHeight=7.8></menu-cards>
-      <menu-cards titleName="Gérer mes demandes d'exemplarisation" iconType="sort" routerLink="tabEx" :cardHeight=7.8></menu-cards>
+      <menu-cards titleName="Créer des <br/>exemplaires" iconType="add_circle_outline" routerLink="rcrEx" :cardHeight=7.8></menu-cards>
+      <menu-cards titleName="Supprimer des <br/>exemplaires" iconType="delete" routerLink="tab" :cardHeight=7.8></menu-cards>
+      <menu-cards titleName="Gérer mes demandes <br/> d'exemplarisation" iconType="sort" routerLink="tabEx" :cardHeight=7.8></menu-cards>
     </v-col>
     <v-col class="fill-height ma-2 pt-5" cols="12" md="5" >
-      <menu-cards titleName="Modifier des exemplaires" iconType="edit" routerLink="rcr" :cardHeight=7.8></menu-cards>
-      <menu-cards titleName="Calculer mon taux de recouvrement" iconType="pie_chart" routerLink="tab" :cardHeight=7.8></menu-cards>
-      <menu-cards titleName="Gérer mes demandes de modification" iconType="sort" routerLink="tab" :cardHeight=7.8></menu-cards>
+      <menu-cards titleName="Modifier des <br/>exemplaires" iconType="edit" routerLink="rcr" :cardHeight=7.8></menu-cards>
+      <menu-cards titleName="Calculer mon taux <br/>de recouvrement" iconType="pie_chart" routerLink="tab" :cardHeight=7.8></menu-cards>
+      <menu-cards titleName="Gérer mes demandes <br/>de modification" iconType="sort" routerLink="tab" :cardHeight=7.8></menu-cards>
     </v-col>
   </v-row>
 </template>
