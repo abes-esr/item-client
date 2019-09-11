@@ -209,7 +209,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped src="../src/assets/global.css">
   .wrapped {
     hyphens: auto;
   }
@@ -226,9 +226,6 @@ export default {
   footer a {
     text-decoration: none;
     color: white;
-  }
-  #stepper{
-  margin-bottom: 20px;
   }
 
   .fade-enter-active, .fade-leave-active {

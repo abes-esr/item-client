@@ -1,0 +1,24 @@
+.item-primary-color{
+    color: #295494;
+}
+.item-secondary-color{
+    color: #252C61;
+}
+.item-accent-color{
+    color: #980827;
+}
+.item-error-color{
+    color: #a32525;
+}
+.item-warning-color{
+    color: #ec6839;
+}
+.item-info-color{
+    color: #326bb1;
+}
+.item-success-color{
+    color: #4da432;
+}
+.item-disabled-color{
+    color: #808080;
+}
