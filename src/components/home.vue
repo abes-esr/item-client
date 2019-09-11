@@ -1,6 +1,6 @@
 <template>
   <!-- PAGE D'ACCUEIL -->
-  <v-row class="container" style="margin-top: 5em;">
+  <v-row class="container">
     <v-col class="fill-height ma-2 pt-5" cols="12" md="5" >
       <menu-cards titleName="Créer des <br/>exemplaires" iconType="add_circle_outline" routerLink="rcrEx" :cardHeight=9></menu-cards>
       <menu-cards titleName="Gérer mes demandes <br/> d'exemplarisation" iconType="sort" routerLink="tabEx" :cardHeight=9></menu-cards>

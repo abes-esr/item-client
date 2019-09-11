@@ -34,6 +34,28 @@
       <div class="item-margin-right-app-bar"></div> <!--Marge à droite des icones de la barre de navigation-->
     </v-app-bar>
 
+    <v-menu bottom left>
+      <template v-slot:activator="{ on }">
+        <v-btn
+          dark
+          icon
+          v-on="on"
+        >
+          <v-icon>mdi-dots-vertical</v-icon>
+        </v-btn>
+      </template>
+
+      <v-list>
+        <v-list-item
+          v-for="(item, i) in items"
+          :key="i"
+          @click=""
+        >
+          <v-list-item-title>{{ item.title }}</v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
+
     <!-- MENU LATERAL
     <v-navigation-drawer app fixed v-if="authenticated" v-model="drawer">
 
