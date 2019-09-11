@@ -1,24 +1,49 @@
 .item-primary-color{
-    color: #295494;
+    color: #295494
+}
+.item-primary-color-background{
+    background-color: #295494
 }
 .item-secondary-color{
-    color: #252C61;
+    color: #252C61
+}
+.item-secondary-color-background{
+    background-color: #252C61
 }
 .item-accent-color{
-    color: #980827;
+    color: #980827
 }
 .item-error-color{
-    color: #a32525;
+    color: #a32525
 }
 .item-warning-color{
-    color: #ec6839;
+    color: #ec6839
 }
 .item-info-color{
-    color: #326bb1;
+    color: #326bb1
+}
+.item-info-color-background{
+    background-color: #326bb1;
 }
 .item-success-color{
-    color: #4da432;
+    color: #4da432
 }
 .item-disabled-color{
-    color: #808080;
+    color: #808080
 }
+.item-white-color{
+    color: #fafafa
+}
+.item-margin-around-single-icon{
+    margin: 0 1em 0 1em
+}
+.item-margin-left-icon{
+    margin: 1em
+}
+.item-margin-left-app-bar{
+    margin-left: 0.2em
+}
+.item-margin-right-app-bar{
+    margin-right: 1em
+}
+

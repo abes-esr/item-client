@@ -3,9 +3,9 @@
     <v-row align="center" justify="center">
       <v-col cols="12">
         <v-card>
-          <v-card-title primary-title>
+          <v-card-title>
             <div>
-              <h1 class="display-3">Données personnelles</h1>
+              <h1>Données personnelles</h1>
             </div>
           </v-card-title>
           <v-card-text>

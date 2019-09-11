@@ -3,7 +3,7 @@
         <loading :show="loading" :label="loadingMessage">
         </loading>
         <v-card class="elevation-12">
-            <v-app-bar dark color="primary">
+            <v-app-bar dark class="item-primary-color-background">
                 <v-app-bar-title>{{ title }}</v-app-bar-title>
                 <v-spacer></v-spacer>
                 <v-btn flat @click="popupDelete = true"><v-icon>delete</v-icon>Supprimer</v-btn>
@@ -125,7 +125,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped src="../../assets/global.css">
     .dropbox {
       outline: 2px dashed grey;
       outline-offset: -10px;

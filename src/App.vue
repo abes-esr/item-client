@@ -1,7 +1,42 @@
 <template>
   <v-app :dark="isDark" id="inspire">
-    <!-- MENU LATERAL -->
+
+    <v-app-bar
+      color="#295494" max-height="4.2em"
+    >
+      <div class="item-margin-left-app-bar"></div> <!--Marge à gauche des icones de la barre de navigation-->
+      <v-app-bar-nav-icon></v-app-bar-nav-icon>
+
+      <v-toolbar-title class="item-white-color item-margin-left-icon">Item</v-toolbar-title>
+
+      <div class="flex-grow-1"></div>
+
+      <v-btn icon class="item-margin-around-single-icon">
+        <v-tooltip>
+          <span slot="activator"><a href="https://stp.abes.fr/node/3?origine=sudocpro" rel="noopener" target="_blank"><img alt="icone assistance" height="38px" href="https://stp.abes.fr/node/3?origine=sudocpro" src="@/assets/assistance.png" target="_blank" width="38px"></a></span>
+          <span>Assistance</span>
+        </v-tooltip>
+      </v-btn>
+
+      <v-btn icon class="item-margin-around-single-icon">
+        <v-tooltip>
+          <span slot="activator"><a href="http://documentation.abes.fr/aideitem/index.html" rel="noopener" target="_blank"><img alt="icone documentation" height="38px" href="http://documentation.abes.fr/aideitem/index.html" src="@/assets/documentation.png" target="_blank" width="38px"></a></span>
+          <span>Documentation</span>
+        </v-tooltip>
+      </v-btn>
+
+      <v-btn icon class="item-margin-around-single-icon" v-if="authenticated">
+        <v-tooltip >
+          <span @click="logout()" slot="activator"><a><img alt="icone déconnexion" height="38px" src="@/assets/deconnexion.png" width="38px"></a></span>
+          <span>Déconnexion</span>
+        </v-tooltip>
+      </v-btn>
+      <div class="item-margin-right-app-bar"></div> <!--Marge à droite des icones de la barre de navigation-->
+    </v-app-bar>
+
+    <!-- MENU LATERAL
     <v-navigation-drawer app fixed v-if="authenticated" v-model="drawer">
+
       <v-app-bar class="transparent mb-4" flat>
         <v-list three-line dense fixed style="text-overflow: ellipsis !important; white-space: nowrap !important;">
           <v-list-item>
@@ -84,25 +119,28 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
-    </v-navigation-drawer>
-    <!-- BARRE DE TITRE SUPERIEURE -->
-    <v-app-bar color="primary" dark fixed>
-      <v-app-bar-side-icon @click.stop="drawer = !drawer" aria-label="menu latéral" v-if="authenticated"></v-app-bar-side-icon>
-      <v-app-bar-title></v-app-bar-title>
-        <v-spacer></v-spacer>
-        <v-tooltip left nudge-bottom="20">
+    </v-navigation-drawer>-->
+    <!-- BARRE DE TITRE SUPERIEURE
+    <v-app-bar class="item-primary-color-background" dark fixed>
+      <v-app-bar-side-icon @click.stop="drawer = !drawer" aria-label="menu latéral" v-if="authenticated">
+        <v-container style="margin-left:100%">
+          <v-col cols="12">
+        <v-tooltip left>
           <span slot="activator"><a href="https://stp.abes.fr/node/3?origine=sudocpro" rel="noopener" target="_blank"><img alt="icone assistance" height="38px" href="https://stp.abes.fr/node/3?origine=sudocpro" src="@/assets/assistance.png" target="_blank" width="38px"></a></span>
           <span>Assistance</span>
-        </v-tooltip>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <v-tooltip left nudge-bottom="20">
+        </v-tooltip>
+        <v-tooltip left class="ma-5">
           <span slot="activator"><a href="http://documentation.abes.fr/aideitem/index.html" rel="noopener" target="_blank"><img alt="icone documentation" height="38px" href="http://documentation.abes.fr/aideitem/index.html" src="@/assets/documentation.png" target="_blank" width="38px"></a></span>
           <span>Documentation</span>
-        </v-tooltip>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <v-tooltip left nudge-bottom="20" v-if="authenticated">
+        </v-tooltip>
+        <v-tooltip left class="ma-5" v-if="authenticated">
           <span @click="logout()" slot="activator"><a><img alt="icone déconnexion" height="38px" src="@/assets/deconnexion.png" width="38px"></a></span>
           <span>Déconnexion</span>
         </v-tooltip>
-    </v-app-bar>
+          </v-col>
+        </v-container>
+      </v-app-bar-side-icon>
+    </v-app-bar>-->
     <v-content>
       <transition name="fade">
         <router-view @authenticated="setAuthenticated" @logout="logoutExpired" :darkMode="isDark"/>
@@ -120,6 +158,7 @@
 import footerAbes from '@/components/footer/footer.vue';
 import footerDesc from '@/components/footer/desc.vue';
 import logout from '@/components/utils/logoutPopup.vue';
+import appBar from '@/components/utils/appBar.vue';
 
 export default {
   name: 'App',
@@ -127,6 +166,7 @@ export default {
     footerAbes,
     logout,
     footerDesc,
+    appBar,
   },
   data() {
     return {
