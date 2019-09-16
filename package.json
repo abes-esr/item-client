@@ -35,6 +35,7 @@
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
     "eslint-plugin-vuetify": "^1.0.0-beta.3",
+    "material-design-icons-iconfont": "^5.0.1",
     "sass": "^1.22.9",
     "style-loader": "^0.23.1",
     "stylus": "^0.54.5",

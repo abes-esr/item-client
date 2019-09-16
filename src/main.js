@@ -9,4 +9,7 @@ new Vue({
   vuetify,
   render: h => h(App),
   router,
+  icons: {
+    iconfont: 'mdiSvg', // 'mdi' || 'mdiSvg' || 'md' || 'fa' || 'fa4'
+  },
 }).$mount('#app');
