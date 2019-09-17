@@ -75,7 +75,7 @@ export default {
       loading: false,
       user: {},
       format: ['txt', 'csv'],
-      textUpload: 'Cliquez ou faites glisser ici<br />pour charger votre liste de PPN<br />(fichier PPN sur une colonne, format txt ou csv)',
+      textUpload: 'Cliquez pour charger votre liste de PPN (fichier PPN sur une colonne, format .txt ou .csv obligatoire)',
       titleUpload: '',
       disabledButton: true,
       popupDelete: false,

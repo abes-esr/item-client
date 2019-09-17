@@ -35,10 +35,10 @@
 </template>
 
 <script>
-import { showAt, hideAt } from 'vue-breakpoints';
+import { hideAt } from 'vue-breakpoints';
 
 export default {
-  components: { hideAt, showAt },
+  components: { hideAt },
 };
 </script>
 

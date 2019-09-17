@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container class="item-vertical-center-element">
     <v-row   justify="center">
       <loading :show="loading" label="Chargement en cours..."></loading>
       <v-col cols="8">
@@ -8,13 +8,13 @@
       </v-col>
       <v-col md="5" id="flexBox">
         <v-card class="elevation-12">
-          <v-app-bar dark color="primary">
+          <v-app-bar dark class="item-primary-color-background">
             <v-app-bar-title>Choix du type d'exemplarisation</v-app-bar-title>
             <v-spacer></v-spacer>
             <v-btn flat @click="popupDelete = true"><v-icon>delete</v-icon>Supprimer</v-btn>
           </v-app-bar>
           <v-card-text>
-            <v-card raised hover v-for="exemp in listExemp" :key="exemp.numTypeExemp" @click="selected=exemp; selectType();" height="7.8em">
+            <v-card v-for="exemp in listExemp" :key="exemp.numTypeExemp" @click="selected=exemp; selectType();" class="item-global-margin-bottom">
                     <v-card-title primary-title>
                         <v-container>
                             <v-row   align="center">
@@ -189,10 +189,7 @@ export default {
 };
 </script>
 
-<style scoped>
-.v-card {
-      margin-top: 10px;
-    }
+<style scoped src="../../assets/global.css">
     .group {
       border-radius: 5%;
       display: flex;

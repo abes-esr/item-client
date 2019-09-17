@@ -3,9 +3,9 @@
     <v-row align="center" justify="center">
       <v-col md="7">
         <stepper id="stepper" current="4"></stepper>
-        <upload :loading="loading" :format=format :precedent="true" :title=titleUpload :text=textUpload v-on:upload="uploadFile" @precedent="precedentDemande(numDem)" @supprimer="supprimerDemande(numDem)"></upload>
-        <br />
-        <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span>
+          <upload :loading="loading" :format=format :precedent="true" :title=titleUpload :text=textUpload v-on:upload="uploadFile" @precedent="precedentDemande(numDem)" @supprimer="supprimerDemande(numDem)"></upload>
+            <br />
+          <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span>
         </v-alert>
       </v-col>
     </v-row>
@@ -38,7 +38,7 @@ export default {
       format: ['csv'],
       numDem: 0,
       titleUpload: 'Envoyer le fichier complété de la zone d\'exemplaire à traiter',
-      textUpload: 'Cliquez ou faites glisser ici<br />pour charger votre fichier complété<br />(format txt ou csv)',
+      textUpload: 'Cliquez pour charger votre fichier complété (format .txt ou .csv obligatoire)',
     };
   },
   props: {

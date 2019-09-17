@@ -46,4 +46,13 @@
 .item-margin-right-app-bar{
     margin-right: 1em
 }
-
+.item-stepper-bottom-margin{
+    margin-bottom: 1em
+}
+.item-global-margin-bottom{
+    margin-bottom: 1em
+}
+.item-vertical-center-element{
+    margin-top: 20vh;
+    transform: translateY(-20%)
+}
