@@ -6,10 +6,12 @@
             <v-app-bar dark class="item-primary-color-background">
                 <v-app-bar-title>{{ title }}</v-app-bar-title>
                 <v-spacer></v-spacer>
-                <v-btn flat @click="popupDelete = true"><v-icon>delete</v-icon>Supprimer</v-btn>
+              <show-at breakpoint="mediumAndAbove">
+                <v-btn flat @click="popupDelete = true"><v-icon>delete</v-icon>Supprimer cette demande</v-btn>
+              </show-at>
             </v-app-bar>
-            <v-card-text>
-                 <v-file-input for="files" show-size outlined prepend-icon="attachment" type="file" aria-label="Dépôt du fichier" v-model="fichierCharge" ref="fileInput" @change="fichierPresent = true" class="input-file" :label="text"></v-file-input>
+            <v-card-text style="margin-bottom: -2.8em">
+                 <v-file-input :rules="rules" for="files" show-size outlined prepend-icon="attachment" type="file" aria-label="Dépôt du fichier" v-model="fichierCharge" ref="fileInput" @change="fichierPresent = true" class="input-file" :label="text"></v-file-input>
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
@@ -40,16 +42,22 @@
 
 <script>
 import loading from 'vue-full-loading';
+import { showAt } from 'vue-breakpoints';
 
 export default {
   name: 'upload',
   components: {
     loading,
+    showAt,
   },
   props: {
     /** Titre de la carte vuetify */
     title: {
       default: 'Envoi de votre fichier',
+    },
+    /** Text que contient le champ d'uload de fichier */
+    text: {
+      default: 'Cliquez ici pour charger votre fichier (obligatoirement au format .csv ou .txt)',
     },
     /** Active le chargement (plein écran) */
     loading: {
@@ -77,6 +85,9 @@ export default {
       filename: '',
       popupDelete: false,
       fichierCharge: [],
+      rules: [
+        value => ((value.type === 'text/csv') || (value.type === 'text/plain')) || 'Le fichier chargé n\'est pas dans un format autorisé (.txt ou .csv)',
+      ],
     };
   },
 };

@@ -2,15 +2,15 @@
   <!-- Card de menu cliquable réutilisable -->
   <v-card hover @click="route()" :height="cardHeight + 'em'">
     <v-card-title class="primary-title">
-      <v-container class="grid-list-md">
+      <v-container class="grid-list-md" style="display: flex; flex-direction: column; justify-content: center">
         <v-row class="row wrap align-center" style="margin-left: 1em">
-          <hide-at :breakpoints="{small: 620, medium: 1500, large: 1600}" breakpoint="mediumAndBelow">
+          <show-at breakpoint="mediumAndAbove">
           <v-col cols="12" sm="12" md="12" lg="3">
             <span class="group">
               <v-icon x-large class="item-primary-color">{{ iconType }}</v-icon>
             </span>
           </v-col>
-          </hide-at>
+          </show-at>
           <v-col cols="12" sm="12" md="12" lg="9">
             <h3 v-html="titleName"></h3>
           </v-col>
@@ -21,12 +21,12 @@
 </template>
 
 <script>
-import { hideAt } from 'vue-breakpoints';
+import { showAt } from 'vue-breakpoints';
 
 export default {
   name: 'menuCards',
 
-  components: { hideAt },
+  components: { showAt },
 
   props: {
     titleName: String,
