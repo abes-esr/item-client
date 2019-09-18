@@ -155,7 +155,7 @@
       </v-list>
     </v-navigation-drawer>
     <v-content>
-      <transition name="fade">
+      <transition>
         <router-view @authenticated="setAuthenticated" @logout="logoutExpired" :darkMode="isDark"/>
       </transition>
     </v-content>

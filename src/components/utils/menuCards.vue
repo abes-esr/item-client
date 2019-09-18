@@ -1,10 +1,10 @@
 <template>
   <!-- Card de menu cliquable réutilisable -->
-  <v-card hover @click="route()" :height="cardHeight + 'em'">
+  <v-card hover @click="route()" :height="cardHeight + 'em'" class="item-flexbox-vertical-align-for-parent">
     <v-card-title class="primary-title">
-      <v-container class="grid-list-md" style="display: flex; flex-direction: column; justify-content: center">
+      <v-container class="grid-list-md">
         <v-row class="row wrap align-center" style="margin-left: 1em">
-          <show-at breakpoint="mediumAndAbove">
+          <show-at :breakpoints="{small: 1300, medium: 1400, large: 1600}" breakpoint="mediumAndAbove">
           <v-col cols="12" sm="12" md="12" lg="3">
             <span class="group">
               <v-icon x-large class="item-primary-color">{{ iconType }}</v-icon>
