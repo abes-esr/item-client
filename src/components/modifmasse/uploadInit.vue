@@ -9,7 +9,7 @@
           <v-app-bar dark color="primary">
             <v-app-bar-title>Récupération du fichier de correspondances PPN / EPN</v-app-bar-title>
             <v-spacer></v-spacer>
-            <v-btn flat @click="popupDelete = true"><v-icon>delete</v-icon>Supprimer</v-btn>
+            <v-btn depressed @click="popupDelete = true"><v-icon>delete</v-icon>Supprimer</v-btn>
           </v-app-bar>
           <v-card-text>
             <v-col class="text-center align justify fill-height">
@@ -36,8 +36,8 @@
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" flat @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
-            <v-btn color="primary" flat @click="supprimerDemande(numDem)" aria-label="Confirmer">Confirmer</v-btn>
+            <v-btn color="primary" text @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
+            <v-btn color="primary" text @click="supprimerDemande(numDem)" aria-label="Confirmer">Confirmer</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>

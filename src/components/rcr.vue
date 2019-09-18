@@ -6,7 +6,7 @@
       <v-col md="7">
         <stepper id="stepper" current="1" class="item-stepper-bottom-margin"></stepper>
         <v-card class="elevation-12">
-          <v-app-bar dark class="item-primary-color-background">
+          <v-app-bar dark color="primary">
             <v-app-bar-title>Sélection du RCR</v-app-bar-title>
             <v-spacer></v-spacer>
           </v-app-bar>

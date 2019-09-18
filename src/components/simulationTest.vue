@@ -14,8 +14,8 @@
             <v-divider></v-divider>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="primary" flat @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
-              <v-btn color="primary" flat @click="supprimerDemande(numDem)" aria-label="Confirmer">Confirmer</v-btn>
+              <v-btn color="primary" text @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
+              <v-btn color="primary" text @click="supprimerDemande(numDem)" aria-label="Confirmer">Confirmer</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -27,8 +27,8 @@
             <v-divider></v-divider>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="primary" flat @click="dialog = false" aria-label="Annuler">Annuler</v-btn>
-              <v-btn color="primary" flat @click="dialog = false, confirm()" aria-label="Valider">Valider</v-btn>
+              <v-btn color="primary" text @click="dialog = false" aria-label="Annuler">Annuler</v-btn>
+              <v-btn color="primary" text @click="dialog = false, confirm()" aria-label="Valider">Valider</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -42,7 +42,7 @@
             <v-divider></v-divider>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="primary" flat @click="dialog = false, $router.push({ name: 'tab' })" aria-label="OK">OK</v-btn>
+              <v-btn color="primary" text @click="dialog = false, $router.push({ name: 'tab' })" aria-label="OK">OK</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -93,7 +93,7 @@
             <v-app-bar-title>Ecran de simulation</v-app-bar-title>
             <v-spacer></v-spacer>
             <!-- supprimerDemande(numDem) est importée depuis le mixin delete.js (voir plus bas) -->
-            <v-btn flat @click="popupDelete = true" aria-label="Supprimer cette demande"><v-icon>delete</v-icon>Supprimer</v-btn>
+            <v-btn depressed @click="popupDelete = true" aria-label="Supprimer cette demande"><v-icon>delete</v-icon>Supprimer</v-btn>
           </v-app-bar>
           <span class="subheading">
             Cet écran n'est qu'une visualisation du traitement. <br />

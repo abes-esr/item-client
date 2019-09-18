@@ -1,7 +1,7 @@
 <template>
     <!-- DESCRIPTION
     APPARAIT DANS LE FOOTER AGGRANDIT SUR LA PAGE DE LOGIN UNIQUEMENT -->
-    <v-card flat tile class="item-primary-color-background">
+    <v-card flat tile color="primary">
         <v-container>
             <v-row  >
                 <v-col cols="12" sm="12" md="12" lg="5">

@@ -10,7 +10,7 @@
           <v-app-bar dark color="primary">
             <v-app-bar-title>Choix du type de traitement</v-app-bar-title>
             <v-spacer></v-spacer>
-            <v-btn flat @click="popupDelete = true"><v-icon>delete</v-icon>Supprimer</v-btn>
+            <v-btn depressed @click="popupDelete = true"><v-icon>delete</v-icon>Supprimer</v-btn>
           </v-app-bar>
           <v-card-text>
             <v-card raised hover v-for="traitement in listTraitements" :key="traitement.numTraitement" @click="selected=traitement; selectTraitement();" height="7.8em">
@@ -54,9 +54,9 @@
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" flat @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
+            <v-btn color="primary" text @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
             <!-- supprimerDemande(numDem) est contenue dans le mixin delete.js importé plus bas -->
-            <v-btn color="primary" flat @click="supprimerDemande(numDem)" aria-label="Confirmer">Confirmer</v-btn>
+            <v-btn color="primary" text @click="supprimerDemande(numDem)" aria-label="Confirmer">Confirmer</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>

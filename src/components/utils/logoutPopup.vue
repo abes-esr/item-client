@@ -11,7 +11,7 @@
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" flat @click="$emit('closePopup')">
+          <v-btn color="primary" text @click="$emit('closePopup')">
             OK
           </v-btn>
         </v-card-actions>

@@ -7,7 +7,7 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" aria-label="menu latéral" v-if="authenticated">
         <v-icon large>menu</v-icon>
       </v-app-bar-nav-icon>
-      <v-toolbar-title class="item-white-color item-margin-left-icon">Item</v-toolbar-title>
+      <v-toolbar-title class="item-margin-left-icon">Item</v-toolbar-title>
 
       <div class="flex-grow-1"></div>
 
@@ -260,7 +260,7 @@ export default {
 };
 </script>
 
-<style scoped src="../src/assets/global.css">
+<style src="../src/assets/global.css">
   .wrapped {
     hyphens: auto;
   }

@@ -8,10 +8,10 @@
       </v-col>
       <v-col md="5" id="flexBox">
         <v-card class="elevation-12">
-          <v-app-bar dark class="item-primary-color-background">
+          <v-app-bar dark color="primary">
             <v-app-bar-title>Choix du type d'exemplarisation</v-app-bar-title>
             <v-spacer></v-spacer>
-            <v-btn flat @click="popupDelete = true"><v-icon>delete</v-icon>Supprimer</v-btn>
+            <v-btn depressed @click="popupDelete = true" color="primary"><v-icon>delete</v-icon>Supprimer</v-btn>
           </v-app-bar>
           <v-card-text>
             <v-card v-for="exemp in listExemp" :key="exemp.numTypeExemp" @click="selected=exemp; selectType();" class="item-global-margin-bottom">
@@ -51,9 +51,9 @@
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" flat @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
+            <v-btn color="primary" text @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
             <!-- supprimerDemande(numDem) est contenue dans le mixin delete.js importé plus bas -->
-            <v-btn color="primary" flat @click="supprimerDemande(numDem)" aria-label="Confirmer">Confirmer</v-btn>
+            <v-btn color="primary" text @click="supprimerDemande(numDem)" aria-label="Confirmer">Confirmer</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>

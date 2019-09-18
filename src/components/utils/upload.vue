@@ -3,11 +3,11 @@
         <loading :show="loading" :label="loadingMessage">
         </loading>
         <v-card class="elevation-12">
-            <v-app-bar dark class="item-primary-color-background">
+            <v-app-bar dark color="primary">
                 <v-app-bar-title>{{ title }}</v-app-bar-title>
                 <v-spacer></v-spacer>
               <show-at breakpoint="mediumAndAbove">
-                <v-btn flat @click="popupDelete = true"><v-icon>delete</v-icon>Supprimer cette demande</v-btn>
+                <v-btn depressed color="primary" @click="popupDelete = true"><v-icon>delete</v-icon>Supprimer cette demande</v-btn>
               </show-at>
             </v-app-bar>
             <v-card-text style="margin-bottom: -2.8em">
@@ -32,8 +32,8 @@
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" flat @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
-            <v-btn color="primary" flat @click="$emit('supprimer')" aria-label="Confirmer">Confirmer</v-btn>
+            <v-btn color="primary" text @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
+            <v-btn color="primary" text @click="$emit('supprimer')" aria-label="Confirmer">Confirmer</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>

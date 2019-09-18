@@ -4,7 +4,7 @@
     <v-row align="center" justify="center">
       <v-col sm="8" md="4">
         <v-card>
-          <v-app-bar dark class="item-primary-color-background">
+          <v-app-bar dark color="primary">
             <v-app-bar-title><strong>Connexion</strong></v-app-bar-title>
             <v-spacer></v-spacer>
           </v-app-bar>
@@ -34,7 +34,7 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn :loading="loading" :disabled="loading" v-on:click="login()">Se connecter</v-btn>
+            <v-btn :loading="loading" :disabled="loading" color="primary" v-on:click="login()">Se connecter</v-btn>
           </v-card-actions>
         </v-card>
         <v-alert :value="alert" type="error" transition="scale-transition">{{ alertMessage }}</v-alert>
