@@ -1,16 +1,20 @@
 <template>
   <!-- PAGE D'ACCUEIL -->
-  <v-row class="container" style="margin-top: 3em;">
-    <v-col class="fill-height ma-2 pt-5" cols="12" md="5" >
-      <menu-cards titleName="Créer des exemplaires" iconType="add_circle_outline" routerLink="rcrEx" :cardHeight=9></menu-cards>
-      <menu-cards titleName="Gérer mes demandes <br/> d'exemplarisation" iconType="sort" routerLink="tabEx" :cardHeight=9></menu-cards>
+  <v-row class="container">
+  <v-row justify="center">
+    <menu-cards :cardHeight=9 iconType="pie_chart" routerLink="tab" titleName="Calculer mon taux de recouvrement" class="item-horizontal-align menu-card"></menu-cards>
+  </v-row>
+  <v-row>
+    <v-col>
+      <menu-cards :cardHeight=9 iconType="add_circle_outline" routerLink="rcrEx" titleName="Créer des exemplaires" class="item-horizontal-align"></menu-cards>
+      <menu-cards :cardHeight=9 iconType="sort" routerLink="tabEx" titleName="Gérer mes demandes d'exemplarisation" class="item-horizontal-align"></menu-cards>
     </v-col>
-    <v-col class="fill-height ma-2 pt-5" cols="12" md="5" >
-      <menu-cards titleName="Modifier des <br/>exemplaires" iconType="edit" routerLink="rcr" :cardHeight=9></menu-cards>
-      <menu-cards titleName="Gérer mes demandes <br/>de modification" iconType="sort" routerLink="tab" :cardHeight=9></menu-cards>
-      <menu-cards style="margin-top: 2em;" titleName="Calculer mon taux <br/>de recouvrement" iconType="pie_chart" routerLink="tab" :cardHeight=9></menu-cards>
+    <v-col>
+      <menu-cards :cardHeight=9 iconType="edit" routerLink="rcr" titleName="Modifier des exemplaires" class="item-horizontal-align"></menu-cards>
+      <menu-cards :cardHeight=9 iconType="sort" routerLink="tab" titleName="Gérer mes demandes de modification" class="item-horizontal-align"></menu-cards>
     </v-col>
   </v-row>
+</v-row>
 </template>
 
 <script>
@@ -36,16 +40,23 @@ export default {
   }
 
   .container {
+    margin-top: 3em;
     margin-left: auto;
     margin-right: auto;
     width: 80%;
     display: flex;
-    justify-content: center
+    justify-content: center;
+    flex-direction: column;
   }
 
   @media all and (max-width: 6em) {
     .container {
       width: 100%
+    }
+  }
+  @media screen and (max-width: 600px){
+    .menu-card {
+      max-width: 22.4em;
     }
   }
 </style>

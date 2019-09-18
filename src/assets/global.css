@@ -20,9 +20,11 @@
     margin-top: 20vh;
     transform: translateY(-20%)
 }
-.item-vertical-flexbox-align-parent{
-    display: flex; /* contexte sur le parent : container */
+.item-flexbox-vertical-align-for-parent{
+    display: flex;
+    flex-direction: column;
+    justify-content: center
 }
-.item-vertical-flexbox-align-child{
-    margin: auto /* contexte sur l'enfant : items */
+.item-horizontal-align{
+    margin:auto
 }
