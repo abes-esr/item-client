@@ -73,6 +73,24 @@
       <v-list dense nav>
         <v-list-item>
           <v-list-item-title class="title">
+            Taux de recouvrement
+          </v-list-item-title>
+        </v-list-item>
+        <v-list-item v-on:click="$router.push({ name: 'tab' })">
+          <v-list-item-action>
+            <v-icon>pie_chart</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Calculer mon taux <br>de recouvrement</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+
+      <v-divider></v-divider>
+
+      <v-list dense nav>
+        <v-list-item>
+          <v-list-item-title class="title">
             Exemplarisations
           </v-list-item-title>
         </v-list-item>
@@ -132,24 +150,6 @@
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>Mes demandes <br>de modification archivées</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-
-      <v-divider></v-divider>
-
-      <v-list dense nav>
-        <v-list-item>
-          <v-list-item-title class="title">
-            Taux de recouvrement
-          </v-list-item-title>
-        </v-list-item>
-        <v-list-item v-on:click="$router.push({ name: 'tab' })">
-          <v-list-item-action>
-            <v-icon>pie_chart</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>Calculer mon taux <br>de recouvrement</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>

@@ -49,34 +49,34 @@
         <!-- FIL D'ARIANE -->
         <stepper id="stepper" current="5"></stepper> <!--TODO un autre component stepper avec v-if pour exauto, une fois que l'on connaitra le fil d'ariane-->
         <!-- INFOS GENERALES DE LA DEMANDE -->
-        <v-card id="demInfos">
-          <h3 style="padding-top: 15px; padding-left: 15px;" class="headline">Ma demande</h3>
+        <v-card id="demInfos" class="item-global-margin-bottom">
+          <h3 style="padding-top: 15px; padding-left: 15px;" class="headline"><span class="item-break-words">Ma demande</span></h3>
           <v-container>
-            <v-row  >
-              <v-col cols="3">
-                <div style="padding: 15px;">
-                  <span style="color: grey;">Numéro de Demande</span>
+            <v-row>
+              <v-col class="item-text-align-center item-break-words">
+                <div>
+                  <span>Numéro de Demande</span>
                   <br>
                   <span>{{ demande.numDemande }}</span>
                 </div>
               </v-col>
-              <v-col cols="3">
-                <div style="padding: 15px;">
-                  <span style="color: grey;">Date de modification</span>
+              <v-col class="item-text-align-center item-break-words">
+                <div>
+                  <span>Date de modification</span>
                   <br>
                   <span>{{ demande.dateModification | formatDate }}</span>
                 </div>
               </v-col>
-              <v-col cols="3">
-                <div style="padding: 15px;">
-                  <span style="color: grey;">RCR</span>
+              <v-col class="item-text-align-center item-break-words">
+                <div>
+                  <span>RCR</span>
                   <br>
                   <span>{{ demande.rcr }} - {{ demande.shortname }}</span>
                 </div>
               </v-col>
-              <v-col cols="3">
-                <div style="padding: 15px;">
-                  <span style="color: grey;">Type d'exemplarisation</span>
+              <v-col class="item-text-align-center item-break-words">
+                <div>
+                  <span>Type d'exemplarisation</span>
                   <br>
                   <span>{{ demande.typeExemp.libelle }}</span>
                 </div>
@@ -201,6 +201,48 @@
           </v-container>
         </v-card>
         <br>
+
+        <!--TEMPLATE DE TEST-->
+        <v-container>
+          <v-row no-gutters>
+            <v-col :key="1" cols="12" sm="12" md="7" lg="7"> <!--Message de visualisation de la simulation-->
+              <v-card class="pa-2" outlined tile>
+              </v-card>
+            </v-col>
+            <v-col :key="2" cols="12" sm="12" md="5" lg="5"> <!--Ligne du fichier-->
+              <v-card class="pa-2" outlined tile>
+              </v-card>
+            </v-col>
+          </v-row>
+
+          <v-row no-gutters>
+            <v-col :key="1" cols="12" sm="12" md="5"> <!--Exemplaires existants-->
+              <v-card class="pa-2" outlined tile>
+              </v-card>
+            </v-col>
+            <v-col :key="2" cols="12" sm="12" md="2"> <!--Boutons de navigation-->
+              <v-card>
+
+              </v-card>
+              <v-card>
+              </v-card>
+              <v-card>
+              </v-card>
+              <v-card>
+              </v-card>
+              <v-card>
+
+              </v-card>
+            </v-col>
+            <v-col :key="3" cols="12" sm="12" md="5"> <!--Exemplaire à créer-->
+              <v-card class="pa-2" outlined tile>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-container>
+        <!--FIN TEMPLATE TEST-->
+
+
         <v-row justify="end" id="layoutButtonOk">
           <v-btn large color="info" @click="dialog = true" aria-label="Lancer le traitement en production">Lancer le traitement en production</v-btn>
         </v-row>
@@ -415,7 +457,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped src="../assets/global.css">
   pre {
     text-align: left !important;
     white-space: pre-wrap; /* Since CSS 2.1 */
