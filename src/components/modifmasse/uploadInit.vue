@@ -7,19 +7,19 @@
         <upload v-if="showForm" :loading="loading" :format=format :title=titleUpload :precedent="false" :text=textUpload v-on:upload="uploadFile" @precedent="precedentDemande(numDem)" @supprimer="supprimerDemande(numDem)"></upload>
         <v-card v-if="!showForm" class="elevation-12">
           <v-app-bar dark color="primary">
-            <v-app-bar-title>Récupération du fichier de correspondances PPN / EPN</v-app-bar-title>
+            <v-toolbar-title>Récupération du fichier de correspondances PPN / EPN</v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-btn flat @click="popupDelete = true"><v-icon>delete</v-icon>Supprimer</v-btn>
+            <v-btn depressed color="primary" @click="popupDelete = true"><v-icon>delete</v-icon>Supprimer</v-btn>
           </v-app-bar>
           <v-card-text>
             <v-col class="text-center align justify fill-height">
-              <v-btn round large color="primary" ref="fileLinkBtn" @click="disabledButton = false;" :href="fileLink" :download="blobName">Télécharger le fichier de correspondances PPN/EPN <v-icon right dark>cloud_download</v-icon>
+              <v-btn rounded large color="primary" ref="fileLinkBtn" @click="disabledButton = false;" :href="fileLink" :download="blobName">Télécharger le fichier de correspondances PPN/EPN <v-icon right dark>cloud_download</v-icon>
               </v-btn>
             </v-col>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="info" v-on:click="precedentDemande(numDem); showForm = true;" aria-label="Annuler">Précédent</v-btn>
+            <v-btn color="info" v-on:click="precedentDemande(numDem, true); showForm = true;" aria-label="Annuler">Précédent</v-btn>
             <v-btn color="info" :disabled="disabledButton" v-on:click="$router.replace({ name: 'traitement' })" aria-label="Suivant">Suivant</v-btn>
           </v-card-actions>
         </v-card>
@@ -36,8 +36,8 @@
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" flat @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
-            <v-btn color="primary" flat @click="supprimerDemande(numDem)" aria-label="Confirmer">Confirmer</v-btn>
+            <v-btn color="primary" text @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
+            <v-btn color="primary" text @click="supprimerDemande(numDem, true)" aria-label="Confirmer">Confirmer</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>

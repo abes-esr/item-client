@@ -8,9 +8,9 @@
       <v-col md="5" id="flexBox">
         <v-card class="elevation-12">
           <v-app-bar dark color="primary">
-            <v-app-bar-title>Choix du type de traitement</v-app-bar-title>
+            <v-toolbar-title>Choix du type de traitement</v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-btn flat @click="popupDelete = true"><v-icon>delete</v-icon>Supprimer</v-btn>
+            <v-btn depressed color="primary" @click="popupDelete = true"><v-icon>delete</v-icon>Supprimer</v-btn>
           </v-app-bar>
           <v-card-text>
             <v-card raised hover v-for="traitement in listTraitements" :key="traitement.numTraitement" @click="selected=traitement; selectTraitement();" height="7.8em">
@@ -38,7 +38,7 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <!-- precedentDemande(numDem) est contenue dans le mixin delete.js importé plus bas -->
-            <v-btn color="info" v-on:click="precedentDemande(numDem)">Précédent</v-btn>
+            <v-btn color="info" v-on:click="precedentDemande(numDem, true)">Précédent</v-btn>
           </v-card-actions>
         </v-card>
         <br />
@@ -54,9 +54,9 @@
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" flat @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
+            <v-btn color="primary" text @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
             <!-- supprimerDemande(numDem) est contenue dans le mixin delete.js importé plus bas -->
-            <v-btn color="primary" flat @click="supprimerDemande(numDem)" aria-label="Confirmer">Confirmer</v-btn>
+            <v-btn color="primary" text @click="supprimerDemande(numDem, true)" aria-label="Confirmer">Confirmer</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -81,7 +81,7 @@ export default {
   data() {
     return {
       json: '',
-      listTypeExemp: [],
+      listTraitements: [],
       selected: '',
       active: false,
       alert: false,
@@ -101,7 +101,7 @@ export default {
   },
   methods: {
     // Récupère la liste des traitements afin de les afficher
-    getListTypeExemp() {
+    getListTraitements() {
       this.loading = true;
       this.user = JSON.parse(sessionStorage.getItem('user'));
       if (this.user !== null && this.user.jwt !== null) {

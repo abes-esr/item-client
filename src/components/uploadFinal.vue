@@ -3,7 +3,7 @@
     <v-row align="center" justify="center">
       <v-col md="7">
         <stepper id="stepper" current="4"></stepper>
-          <upload :loading="loading" :format=format :precedent="true" :title=titleUpload :text=textUpload v-on:upload="uploadFile" @precedent="precedentDemande(numDem)" @supprimer="supprimerDemande(numDem)"></upload>
+          <upload :loading="loading" :format=format :precedent="true" :title=titleUpload :text=textUpload v-on:upload="uploadFile" @precedent="precedentDemande(numDem, modif)" @supprimer="supprimerDemande(numDem)"></upload>
             <br />
           <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span>
         </v-alert>
@@ -75,7 +75,11 @@ export default {
               this.alertType = 'success';
               this.alert = true;
               this.loading = false;
-              this.$router.replace({ name: 'simulationTest' });
+              if(this.modif) {
+                this.$router.replace({ name: 'simulation' });
+              } else {
+                this.$router.replace({ name: 'simulationTest' });
+              }
             },
             (error) => {
               this.alertMessage = constants.erreurUpload;

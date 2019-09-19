@@ -7,29 +7,19 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" aria-label="menu latéral" v-if="authenticated">
         <v-icon large>menu</v-icon>
       </v-app-bar-nav-icon>
-      <v-toolbar-title class="item-white-color item-margin-left-icon">Item</v-toolbar-title>
+      <v-toolbar-title class="item-margin-left-icon">Item</v-toolbar-title>
 
       <div class="flex-grow-1"></div>
-
       <v-btn icon class="item-margin-around-single-icon">
-        <v-tooltip>
-          <span slot="activator"><a href="https://stp.abes.fr/node/3?origine=sudocpro" rel="noopener" target="_blank"><img alt="icone assistance" height="38px" href="https://stp.abes.fr/node/3?origine=sudocpro" src="@/assets/assistance.png" target="_blank" width="38px"></a></span>
-          <span>Assistance</span>
-        </v-tooltip>
+          <span><a href="https://stp.abes.fr/node/3?origine=sudocpro" title="Assistance" rel="noopener" target="_blank"><img alt="icone assistance" height="38px" href="https://stp.abes.fr/node/3?origine=sudocpro" src="@/assets/assistance.png" target="_blank" width="38px"></a></span>
       </v-btn>
 
       <v-btn icon class="item-margin-around-single-icon">
-        <v-tooltip>
-          <span slot="activator"><a href="http://documentation.abes.fr/aideitem/index.html" rel="noopener" target="_blank"><img alt="icone documentation" height="38px" href="http://documentation.abes.fr/aideitem/index.html" src="@/assets/documentation.png" target="_blank" width="38px"></a></span>
-          <span>Documentation</span>
-        </v-tooltip>
+          <span><a href="http://documentation.abes.fr/aideitem/index.html" title="Documentation" rel="noopener" target="_blank"><img alt="icone documentation" height="38px" href="http://documentation.abes.fr/aideitem/index.html" src="@/assets/documentation.png" target="_blank" width="38px"></a></span>
       </v-btn>
 
       <v-btn icon class="item-margin-around-single-icon" v-if="authenticated">
-        <v-tooltip >
-          <span @click="logout()" slot="activator"><a><img alt="icone déconnexion" height="38px" src="@/assets/deconnexion.png" width="38px"></a></span>
-          <span>Déconnexion</span>
-        </v-tooltip>
+          <span @click="logout()" title="Déconnexion"><a><img alt="icone déconnexion" height="38px" src="@/assets/deconnexion.png" width="38px"></a></span>
       </v-btn>
       <div class="item-margin-right-app-bar"></div> <!--Marge à droite des icones de la barre de navigation-->
     </v-app-bar>
@@ -260,7 +250,7 @@ export default {
 };
 </script>
 
-<style scoped src="../src/assets/global.css">
+<style src="../src/assets/global.css">
   .wrapped {
     hyphens: auto;
   }

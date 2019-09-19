@@ -14,12 +14,8 @@
             <v-divider></v-divider>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="primary" flat @click="popupDelete = false" aria-label="Annuler">
-                Annuler
-              </v-btn>
-              <v-btn color="primary" flat @click="supprimerDemande(numDem)" aria-label="Confirmer">
-                Confirmer
-              </v-btn>
+              <v-btn color="primary" text @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
+              <v-btn color="primary" text @click="supprimerDemande(numDem)" aria-label="Confirmer">Confirmer</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -34,11 +30,8 @@
             <v-divider></v-divider>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="primary" flat @click="dialog = false" aria-label="Annuler">Annuler
-              </v-btn>
-              <v-btn color="primary" flat @click="dialog = false, confirm()" aria-label="Valider">
-                Valider
-              </v-btn>
+              <v-btn color="primary" text @click="dialog = false" aria-label="Annuler">Annuler</v-btn>
+              <v-btn color="primary" text @click="dialog = false, confirm()" aria-label="Valider">Valider</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -54,9 +47,7 @@
             <v-divider></v-divider>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="primary" flat @click="dialog = false, $router.push({ name: 'tab' })"
-                     aria-label="OK">OK
-              </v-btn>
+              <v-btn color="primary" text @click="dialog = false, $router.push({ name: 'tab' })" aria-label="OK">OK</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -110,13 +101,10 @@
         <!-- CONTENU SIMULATION -->
         <v-card>
           <v-app-bar dark color="primary">
-            <v-app-bar-title>Ecran de simulation</v-app-bar-title>
+            <v-toolbar-title>Ecran de simulation</v-toolbar-title>
             <v-spacer></v-spacer>
             <!-- supprimerDemande(numDem) est importée depuis le mixin delete.js (voir plus bas) -->
-            <v-btn flat @click="popupDelete = true" aria-label="Supprimer cette demande">
-              <v-icon>delete</v-icon>
-              Supprimer
-            </v-btn>
+            <v-btn depressed color="primary" @click="popupDelete = true" aria-label="Supprimer cette demande"><v-icon>delete</v-icon>Supprimer</v-btn>
           </v-app-bar>
           <!--TEMPLATE DE SIMULATION-->
           <v-container>
@@ -228,6 +216,7 @@
         </v-row>
       </v-col>
     </v-row>
+
   </v-container>
 </template>
 
