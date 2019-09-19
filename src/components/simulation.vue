@@ -15,7 +15,7 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="primary" text @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
-            <v-btn color="primary" text @click="supprimerDemande(numDem)" aria-label="Confirmer">Confirmer</v-btn>
+            <v-btn color="primary" text @click="supprimerDemande(numDem, true)" aria-label="Confirmer">Confirmer</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -90,10 +90,10 @@
         <!-- CONTENU SIMULATION -->
         <v-card>
           <v-app-bar dark color="primary">
-            <v-app-bar-title>Ecran de simulation</v-app-bar-title>
+            <v-toolbar-title>Ecran de simulation</v-toolbar-title>
             <v-spacer></v-spacer>
             <!-- supprimerDemande(numDem) est importée depuis le mixin delete.js (voir plus bas) -->
-            <v-btn depressed @click="popupDelete = true" aria-label="Supprimer cette demande"><v-icon>delete</v-icon>Supprimer</v-btn>
+            <v-btn depressed color="primary" @click="popupDelete = true" aria-label="Supprimer cette demande"><v-icon>delete</v-icon>Supprimer</v-btn>
           </v-app-bar>
           <br />
           <span class="subheading">

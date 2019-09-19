@@ -4,7 +4,7 @@
         </loading>
         <v-card class="elevation-12">
             <v-app-bar dark color="primary">
-                <v-app-bar-title>{{ title }}</v-app-bar-title>
+                <v-toolbar-title>{{ title }}</v-toolbar-title>
                 <v-spacer></v-spacer>
               <show-at breakpoint="mediumAndAbove">
                 <v-btn depressed color="primary" @click="popupDelete = true"><v-icon>delete</v-icon>Supprimer cette demande</v-btn>

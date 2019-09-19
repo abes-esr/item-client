@@ -90,10 +90,10 @@
         <!-- CONTENU SIMULATION -->
         <v-card>
           <v-app-bar dark color="primary">
-            <v-app-bar-title>Ecran de simulation</v-app-bar-title>
+            <v-toolbar-title>Ecran de simulation</v-toolbar-title>
             <v-spacer></v-spacer>
             <!-- supprimerDemande(numDem) est importée depuis le mixin delete.js (voir plus bas) -->
-            <v-btn depressed @click="popupDelete = true" aria-label="Supprimer cette demande"><v-icon>delete</v-icon>Supprimer</v-btn>
+            <v-btn depressed color="primary" @click="popupDelete = true" aria-label="Supprimer cette demande"><v-icon>delete</v-icon>Supprimer</v-btn>
           </v-app-bar>
           <span class="subheading">
             Cet écran n'est qu'une visualisation du traitement. <br />

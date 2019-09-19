@@ -5,7 +5,7 @@
       <v-col sm="8" md="4">
         <v-card>
           <v-app-bar dark color="primary">
-            <v-app-bar-title><strong>Connexion</strong></v-app-bar-title>
+            <v-toolbar-title><strong>Connexion</strong></v-toolbar-title>
             <v-spacer></v-spacer>
           </v-app-bar>
           <v-card-text>

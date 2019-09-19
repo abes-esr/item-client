@@ -5,8 +5,8 @@
       <v-col md="7">
         <v-card class="elevation-12">
           <v-app-bar dark color="primary">
-            <v-app-bar-title v-if="user.email === null || user.email === ''">Première connexion</v-app-bar-title>
-            <v-app-bar-title v-else>Modifier les informations de votre compte</v-app-bar-title>
+            <v-toolbar-title v-if="user.email === null || user.email === ''">Première connexion</v-toolbar-title>
+            <v-toolbar-title v-else>Modifier les informations de votre compte</v-toolbar-title>
             <v-spacer></v-spacer>
           </v-app-bar>
           <v-card-text>
