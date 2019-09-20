@@ -16,14 +16,14 @@
             <v-card raised hover v-for="traitement in listTraitements" :key="traitement.numTraitement" @click="selected=traitement; selectTraitement();" height="7.8em">
                     <v-card-title primary-title>
                         <v-container>
-                            <v-row   align="center">
+                            <v-row align="center">
                                 <v-col cols="2">
                                     <span class="group pa-3 secondary" style="height: 4.2em">
-                                        <v-icon v-if="traitement.numTraitement == 1" x-large dark>add</v-icon>
-                                        <v-icon v-else-if="traitement.numTraitement == 2" x-large dark>edit</v-icon>
-                                        <v-icon v-else-if="traitement.numTraitement == 3" x-large dark>redo</v-icon>
-                                        <v-icon v-else-if="traitement.numTraitement == 4" x-large dark>clear</v-icon>
-                                        <v-icon v-else-if="traitement.numTraitement == 5" x-large dark>delete</v-icon>
+                                        <v-icon v-if="traitement.numTraitement == 1">add</v-icon>
+                                        <v-icon v-else-if="traitement.numTraitement == 2">edit</v-icon>
+                                        <v-icon v-else-if="traitement.numTraitement == 3">redo</v-icon>
+                                        <v-icon v-else-if="traitement.numTraitement == 4">clear</v-icon>
+                                        <v-icon v-else-if="traitement.numTraitement == 5">delete</v-icon>
                                         <v-icon v-else x-large dark>edit</v-icon>
                                     </span>
                                 </v-col>
