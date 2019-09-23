@@ -17,8 +17,8 @@ const CGUComponent = () => import('@/components/footer/cgu.vue');
 const DonneesComponent = () => import('@/components/footer/donnees.vue');
 const MentionsComponent = () => import('@/components/footer/mentions.vue');
 const uploadFinalComponent = () => import('@/components/uploadFinal.vue');
-const simulationComponent = () => import('@/components/simulation.vue');
-const simulationTest = () => import('@/components/simulationTest.vue');
+const simulationComponent = () => import('@/components/simulationModif.vue');
+const simulationTest = () => import('@/components/simulationExemp.vue');
 const homeComponent = () => import('@/components/home.vue');
 const typeComponent = () => import('@/components/exemplarisation/selectType.vue');
 

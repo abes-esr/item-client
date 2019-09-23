@@ -3,30 +3,27 @@
   <v-container fluid>
     <loading :show="loading" label="Chargement en cours..."></loading>
     <v-row justify="center" align="center">
-      <v-col class="text-center">
+      <v-col class="text-center" >
         <!-- POPUP DE SUPPRESSION DE LA DEMANDE -->
         <v-dialog v-model="popupDelete" width="500">
-          <v-card>
-            <v-card-title class="headline" primary-title>Suppression</v-card-title>
-            <v-card-text>
-              Êtes-vous certain de vouloir supprimer définitivement cette demande ?
-            </v-card-text>
-            <v-divider></v-divider>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="primary" text @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
-              <v-btn color="primary" text @click="supprimerDemande(numDem)" aria-label="Confirmer">Confirmer</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
+        <v-card>
+          <v-card-title class="headline" primary-title>Suppression</v-card-title>
+          <v-card-text>
+            Êtes-vous certain de vouloir supprimer définitivement cette demande ?
+          </v-card-text>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" text @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
+            <v-btn color="primary" text @click="supprimerDemande(numDem, this.modif)" aria-label="Confirmer">Confirmer</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
         <!-- POPUP DE LANCEMENT DU TRAITEMENT-->
         <v-dialog v-model="dialog" width="500">
           <v-card>
-            <v-card-title class="headline" primary-title>Lancement du traitement en production
-            </v-card-title>
-            <v-card-text>Êtes-vous sûr de vouloir lancer le traitement en production ?<br/> Aucune
-              annulation n'est possible.
-            </v-card-text>
+            <v-card-title class="headline" primary-title>Lancement du traitement en production</v-card-title>
+            <v-card-text>Êtes-vous sûr de vouloir lancer le traitement en production ?<br /> Aucune annulation n'est possible.</v-card-text>
             <v-divider></v-divider>
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -40,7 +37,7 @@
           <v-card>
             <v-card-title class="headline" primary-title>Traitement validé</v-card-title>
             <v-card-text>Votre demande est en cours de traitement, elle sera traitée dès que
-              possible.<br/>Un mail vous sera envoyé une fois le traitement terminé.
+              possible.<br />Un mail vous sera envoyé une fois le traitement terminé.
               <br>Vous pouvez retrouver l'ensemble de vos demandes depuis la page "Gérer mes
               demandes".
             </v-card-text>
@@ -53,13 +50,12 @@
         </v-dialog>
         <!-- FIL D'ARIANE -->
         <stepper id="stepper" current="5"></stepper>
-        <!--TODO un autre component stepper avec v-if pour exauto, une fois que l'on connaitra le fil d'ariane-->
         <!-- INFOS GENERALES DE LA DEMANDE -->
         <v-card id="demInfos" class="item-global-margin-bottom">
           <h3 style="padding-top: 15px; padding-left: 15px;" class="headline"><span
             class="item-break-words">Ma demande</span></h3>
           <v-container>
-            <v-row>
+            <v-row  >
               <v-col class="item-text-align-center item-break-words">
                 <div>
                   <span>Numéro de Demande</span>
@@ -81,23 +77,12 @@
                   <span>{{ demande.rcr }} - {{ demande.shortname }}</span>
                 </div>
               </v-col>
-              <v-col class="item-text-align-center item-break-words">
-                <div>
-                  <span>Type d'exemplarisation</span>
-                  <br>
-                  <span>{{ demande.typeExemp.libelle }}</span>
-                </div>
-              </v-col>
             </v-row>
           </v-container>
         </v-card>
         <v-alert :value="alert" :type="alertType" transition="scale-transition" dismissible>
           <span v-html="alertMessage"></span>
         </v-alert>
-
-        <!--FIN TEMPLATE TEST-->
-
-
         <!-- CONTENU SIMULATION -->
         <v-card>
           <v-app-bar dark color="primary">
@@ -126,81 +111,68 @@
                 </v-card>
               </v-col>
             </v-row>
-
             <v-row>
-              <v-col :key="1" cols="12" sm="12" md="5"> <!--Exemplaires existants-->
-                <!--Carte grisée si absence d'exemplaires pour cette notice-->
-                <v-card dark class="pa-1" outlined tile v-if="exemplairesPresentsSurNoticeEnCours">
-                  <span class="headline --text">Exemplaires existants</span>
+              <v-col :key="1" cols="12" sm="12" md="5"> <!--Exemplaires avant traitement-->
+                <v-card class="pa-1" outlined tile>
+                  <span class="headline --text">Avant traitement</span>
                   <div class="notice">
-                    <pre>Pas d'exemplaires pour cette notice avec ce RCR</pre>
+                    <pre>{{ noticeAvant }}</pre>
                   </div>
                 </v-card>
-                <!--Carte activée si présence exemplaires pour cette notice-->
-                <v-card class="pa-1" outlined tile v-if="!exemplairesPresentsSurNoticeEnCours">
-                  <span class="headline --text">Exemplaires existants</span>
-                  <v-container id="scroll-target" style="max-height: 400px" class="overflow-y-auto">
-                    <div class="notice">
-                      <pre style="text-align: left; padding-top: 1em">
-                        <span class="inner-pre" style="font-size: 12px">{{ noticeAvant }}</span>
-                      </pre>
-                    </div>
-                  </v-container>
-                </v-card>
               </v-col>
-              <v-col :key="2" cols="12" sm="12" md="2"> <!--Boutons de navigation-->
-                <!--Conteneur bouton 1-->
-                <v-card flat class="item-vertical-padding">
-                  <v-btn v-if="noticeEnCours === 0" color="disabled" depressed large dark
-                         aria-label="Première notice" class="unhover">
-                    <v-icon>first_page</v-icon>
-                  </v-btn>
-                  <v-btn v-if="noticeEnCours > 0" color="success" large dark @click="getFirstSimu()"
-                         aria-label="Première notice">
-                    <v-icon>first_page</v-icon>
-                  </v-btn>
-                  <div>Première <br>notice</div>
-                </v-card>
-                <!--Conteneur bouton 2-->
-                <v-card flat class="item-vertical-padding">
-                  <v-btn v-if="noticeEnCours === 0" color="disabled" depressed large dark
-                         aria-label="Notice précédente" class="unhover">
-                    <v-icon>navigate_before</v-icon>
-                  </v-btn>
-                  <v-btn v-if="noticeEnCours > 0" color="success" large dark
-                         @click="getPreviousSimu()" aria-label="Notice précédente">
-                    <v-icon>navigate_before</v-icon>
-                  </v-btn>
-                  <div>Notice <br>précédente</div>
-                </v-card>
-                <!--Conteneur bouton 3-->
-                <v-card flat class="item-vertical-padding">
-                  <v-btn v-if="noticeEnCours === numberLines - 1" color="disabled" depressed large
-                         dark aria-label="Notice suivante" class="unhover">
-                    <v-icon>navigate_next</v-icon>
-                  </v-btn>
-                  <v-btn v-if="noticeEnCours !== numberLines - 1" color="success" large dark
-                         @click="getNextSimu()" aria-label="Notice suivante">
-                    <v-icon>navigate_next</v-icon>
-                  </v-btn>
-                  <div>Notice <br>suivante</div>
-                </v-card>
-                <!--Conteneur bouton 4-->
-                <v-card flat class="item-vertical-padding">
-                  <v-btn v-if="noticeEnCours === numberLines - 1" color="disabled" depressed large
-                         dark aria-label="Dernière notice" class="unhover">
-                    <v-icon>last_page</v-icon>
-                  </v-btn>
-                  <v-btn v-if="noticeEnCours !== numberLines - 1" color="success" large dark
-                         @click="getLastSimu()" aria-label="Dernière notice">
-                    <v-icon>last_page</v-icon>
-                  </v-btn>
-                  <div>Dernière <br>notice</div>
-                </v-card>
-              </v-col>
-              <v-col :key="3" cols="12" sm="12" md="5"> <!--Exemplaire à créer-->
+            <v-col :key="2" cols="12" sm="12" md="2"> <!--Boutons de navigation-->
+              <!--Conteneur bouton 1-->
+              <v-card flat class="item-vertical-padding">
+                <v-btn v-if="noticeEnCours === 0" color="disabled" depressed large dark
+                       aria-label="Première notice" class="unhover">
+                  <v-icon>first_page</v-icon>
+                </v-btn>
+                <v-btn v-if="noticeEnCours > 0" color="success" large dark @click="getFirstSimu()"
+                       aria-label="Première notice">
+                  <v-icon>first_page</v-icon>
+                </v-btn>
+                <div>Première <br>notice</div>
+              </v-card>
+              <!--Conteneur bouton 2-->
+              <v-card flat class="item-vertical-padding">
+                <v-btn v-if="noticeEnCours === 0" color="disabled" depressed large dark
+                       aria-label="Notice précédente" class="unhover">
+                  <v-icon>navigate_before</v-icon>
+                </v-btn>
+                <v-btn v-if="noticeEnCours > 0" color="success" large dark
+                       @click="getPreviousSimu()" aria-label="Notice précédente">
+                  <v-icon>navigate_before</v-icon>
+                </v-btn>
+                <div>Notice <br>précédente</div>
+              </v-card>
+              <!--Conteneur bouton 3-->
+              <v-card flat class="item-vertical-padding">
+                <v-btn v-if="noticeEnCours === numberLines - 1" color="disabled" depressed large
+                       dark aria-label="Notice suivante" class="unhover">
+                  <v-icon>navigate_next</v-icon>
+                </v-btn>
+                <v-btn v-if="noticeEnCours !== numberLines - 1" color="success" large dark
+                       @click="getNextSimu()" aria-label="Notice suivante">
+                  <v-icon>navigate_next</v-icon>
+                </v-btn>
+                <div>Notice <br>suivante</div>
+              </v-card>
+              <!--Conteneur bouton 4-->
+              <v-card flat class="item-vertical-padding">
+                <v-btn v-if="noticeEnCours === numberLines - 1" color="disabled" depressed large
+                       dark aria-label="Dernière notice" class="unhover">
+                  <v-icon>last_page</v-icon>
+                </v-btn>
+                <v-btn v-if="noticeEnCours !== numberLines - 1" color="success" large dark
+                       @click="getLastSimu()" aria-label="Dernière notice">
+                  <v-icon>last_page</v-icon>
+                </v-btn>
+                <div>Dernière <br>notice</div>
+              </v-card>
+            </v-col>
+              <v-col :key="3" cols="12" sm="12" md="5"> <!--Après traitement-->
                 <v-card class="pa-1" outlined tile>
-                  <span class="headline --text">Exemplaire à créer</span>
+                  <span class="headline --text">Après traitement</span>
                   <div class="notice">
                     <pre>{{ noticeApres }}</pre>
                   </div>
@@ -209,17 +181,14 @@
             </v-row>
           </v-container>
         </v-card>
-        <v-row justify="end" id="layoutButtonOk" style="margin : 1em 0 0 0">
-          <v-btn large color="info" @click="dialog = true"
-                 aria-label="Lancer le traitement en production">Lancer le traitement en production
-          </v-btn>
+        <br>
+        <v-row justify="end" id="layoutButtonOk">
+          <v-btn large color="info" @click="dialog = true" aria-label="Lancer le traitement en production">Lancer le traitement en production</v-btn>
         </v-row>
       </v-col>
     </v-row>
-
   </v-container>
 </template>
-
 <script>
 import loading from 'vue-full-loading';
 import axios from 'axios';
@@ -241,7 +210,7 @@ export default {
       numberLines: 0,
       loading: false,
       demande: {
-        typeExemp: {
+        traitement: {
           libelle: '',
         },
       },
@@ -249,20 +218,21 @@ export default {
       alertType: 'error',
       alert: false,
       user: {},
-      noticeAvant: 'Exemplaires existants en cours de chargement...',
+      noticeAvant: 'Notice en cours de chargement...',
       noticeApres: 'Notice en cours de chargement...',
+      exauto: false,
+      /* exauto a false pour modif de masse, true pour exauto */
       dialog: false,
       dialogFinished: false,
       derniereNotice: false,
       numDem: 0,
       popupDelete: false,
-      exemplairesPresentsSurNoticeEnCours: false,
     };
   },
   props: {
     // Modif de masse ou exemplarisation
     modif: {
-      default: false,
+      default: true,
     },
   },
   mounted() {
@@ -290,7 +260,7 @@ export default {
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
-        url: `${process.env.VUE_APP_ROOT_API}demandes/${this.numDem}?modif=${this.modif}`,
+        url: `${process.env.VUE_APP_ROOT_API}demandes/${this.numDem}`,
       }).then(
         (result) => {
           this.demande = result.data;
@@ -315,21 +285,18 @@ export default {
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
-        url: `${process.env.VUE_APP_ROOT_API}simulerLigne?modif=${this.modif}&numDemande=${
+        url: `${process.env.VUE_APP_ROOT_API}simulerLigne?numDemande=${
           this.demande.numDemande
         }&numLigne=${this.noticeEnCours}`,
       }).then(
         (result) => {
           this.noticeAvant = result.data[0];
           this.noticeApres = result.data[1];
-          if (result.data[0] === null) {
-            this.exemplairesPresentsSurNoticeEnCours = true;
-          }
           this.loading = false;
         },
         (error) => {
           this.noticeAvant = '';
-          // this.noticeApres = '';
+          this.noticeApres = '';
           this.loading = false;
           this.alert = true;
           this.alertType = 'error';
@@ -344,7 +311,7 @@ export default {
           } else if (error.response.status === 400 && error.response.data.message.includes('Fin du fichier')) {
             this.alert = true;
             this.alertType = 'info';
-            this.alertMessage = "Vous êtes à la Dernière notice de votre demande, impossible d'aller plus loin.";
+            this.alertMessage = "Vous êtes à la dernière notice de votre demande, impossible d'aller plus loin.";
             this.derniereNotice = true;
             this.noticeEnCours -= 1;
           }
@@ -379,7 +346,7 @@ export default {
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
-        url: `${process.env.VUE_APP_ROOT_API}getNbLigneFichier/${this.numDem}`,
+        url: `${process.env.VUE_APP_ROOT_API}getNbLigneFichier/${this.numDem}?modif=${this.modif}`,
       }).then(
         (result) => {
           this.numberLines = result.data;
@@ -425,52 +392,39 @@ export default {
 };
 </script>
 
-<style scoped src="../assets/global.css">
+<style scoped>
   pre {
     text-align: left !important;
     white-space: pre-wrap; /* Since CSS 2.1 */
     white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
     word-wrap: break-word; /* Internet Explorer 5.5+ */
   }
-
   .v-card {
     width: 100%;
   }
-
   .notice {
     padding-top: 20px;
   }
-
   #demInfos {
     margin-bottom: 10px;
     text-align: left;
   }
-
   #numLigne {
     text-align: left !important;
     padding-top: 20px;
     padding-left: 20px;
   }
-
   #layoutButtonOk {
     padding-right: 8%;
   }
-
-  .unhover {
+  .unhover{
     pointer-events: none;
   }
-
-  .subheading {
+  .subheading{
     display: block;
     margin-top: 1em
   }
-
-  #numLigne {
+  #numLigne{
     display: inline-block;
-  }
-
-  .scroll {
-    overflow-y: auto;
-    overflow-x: hidden;
   }
 </style>

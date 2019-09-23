@@ -13,21 +13,23 @@
             <v-btn depressed color="primary" @click="popupDelete = true"><v-icon>delete</v-icon>Supprimer</v-btn>
           </v-app-bar>
           <v-card-text>
-            <v-card raised hover v-for="traitement in listTraitements" :key="traitement.numTraitement" @click="selected=traitement; selectTraitement();" height="7.8em">
+            <v-card raised hover v-for="traitement in listTraitements" :key="traitement.numTraitement" @click="selected=traitement; selectTraitement();">
                     <v-card-title primary-title>
                         <v-container>
                             <v-row align="center">
-                                <v-col cols="2">
-                                    <span class="group pa-3 secondary" style="height: 4.2em">
-                                        <v-icon v-if="traitement.numTraitement == 1">add</v-icon>
-                                        <v-icon v-else-if="traitement.numTraitement == 2">edit</v-icon>
-                                        <v-icon v-else-if="traitement.numTraitement == 3">redo</v-icon>
-                                        <v-icon v-else-if="traitement.numTraitement == 4">clear</v-icon>
-                                        <v-icon v-else-if="traitement.numTraitement == 5">delete</v-icon>
-                                        <v-icon v-else x-large dark>edit</v-icon>
+                              <show-at :breakpoints="{small: 1300, medium: 1400, large: 1600}" breakpoint="mediumAndAbove">
+                                <v-col cols="12" sm="3" md="2">
+                                    <span>
+                                        <v-icon large v-if="traitement.numTraitement == 1">add</v-icon>
+                                        <v-icon large v-else-if="traitement.numTraitement == 2">edit</v-icon>
+                                        <v-icon large v-else-if="traitement.numTraitement == 3">redo</v-icon>
+                                        <v-icon large v-else-if="traitement.numTraitement == 4">clear</v-icon>
+                                        <v-icon large v-else-if="traitement.numTraitement == 5">delete</v-icon>
+                                        <v-icon large v-else x-large dark>edit</v-icon>
                                     </span>
                                 </v-col>
-                                <v-col class="ml-4" cols="6" >
+                              </show-at>
+                                <v-col cols="12" sm="9" md="10">
                                     <h3 class="headline">{{ traitement.libelle }}</h3>
                                 </v-col>
                             </v-row>
@@ -70,6 +72,7 @@ import loading from 'vue-full-loading';
 import stepper from '@/components/utils/stepper.vue';
 import supprMixin from '@/mixins/delete';
 import constants from '@/components/utils/const';
+import { showAt } from 'vue-breakpoints';
 
 export default {
   // Import du mixin contenant les méthodes suppression et de précédent
@@ -77,6 +80,7 @@ export default {
   components: {
     loading,
     stepper,
+    showAt,
   },
   data() {
     return {
