@@ -159,7 +159,7 @@
                   <!-- FICHIERS EXEMPLARISATION -->
                   <v-list v-if="item.codeStatut >= 3 && !modif">
                     <v-list-item-content @click="downloadFile(item.num, 'initEx')">
-                      <v-list-item-title>Télécharger le fichier initial</v-list-item-title>
+                      <v-list-item-title>Télécharger le fichier déposé</v-list-item-title>
                     </v-list-item-content>
                     <v-list-item-content
                       @click="downloadFile(item.num, 'resultatEx')"
@@ -181,7 +181,7 @@
                     <v-icon>delete</v-icon>
                   </v-btn>
                 </span>
-                <span v-else-if="props.item.codeStatut == 7 && user.iln == item.iln">
+                <span v-else-if="item.codeStatut == 7 && user.iln == item.iln">
                   <v-btn icon @click="current = item.num; popupArchive = true;" aria-label="Supprimer">
                     <v-icon>archive</v-icon>
                   </v-btn>
@@ -197,13 +197,13 @@
         <v-card>
           <v-card-title class="headline" primary-title>Téléchargement du fichier</v-card-title>
           <v-card-text>
-            <div v-if="fileReady">Votre fichier est en cours de téléchargement, veuillez patienter.
+            <div v-if="!fileReady">Votre fichier est en cours de téléchargement, veuillez patienter.
               <v-progress-linear :indeterminate="true"></v-progress-linear>
             </div>
-            <div v-if="!fileReady">
+            <div v-if="fileReady">
               <v-col class="text-center align justify fill-height">
                 <v-btn
-                  outline
+                  outlined
                   large
                   color="secondary"
                   ref="fileLinkBtn"
@@ -357,6 +357,9 @@ export default {
       let filename = '';
       switch (type) {
         case 'initEx':
+          filename = `fichier_enrichi_${numDem}.csv?id=${numDem}`;
+          this.blobName = `fichier_enrichi_${numDem}.csv`;
+          break;
         case 'ppn':
           filename = `fichier_initial_${numDem}.txt?id=${numDem}`;
           this.blobName = `fichier_initial_${numDem}.txt`;
@@ -386,10 +389,10 @@ export default {
           url: `${process.env.VUE_APP_ROOT_API}files/${filename}`,
         }).then(
           (result) => {
+            this.fileReady = true;
             const blob = new Blob([result.data], { type: 'application/csv' });
             this.fileLink = window.URL.createObjectURL(blob);
             this.$refs.fileLinkBtn.click();
-            this.fileReady = true;
           },
           (error) => {
             this.fileReady = false;

@@ -275,7 +275,7 @@
             <div v-if="!fileReady">
               <v-col class="text-center align justify fill-height">
                 <v-btn
-                  outline
+                  outlined
                   large
                   color="secondary"
                   ref="fileLinkBtn"
