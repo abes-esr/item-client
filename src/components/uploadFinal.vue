@@ -3,7 +3,8 @@
     <v-row align="center" justify="center">
       <v-col md="7">
         <stepper id="stepper" current="4"></stepper>
-          <upload :loading="loading" :format=format :precedent="true" :title=titleUpload :text=textUpload v-on:upload="uploadFile" @precedent="precedentDemande(numDem, modif)" @supprimer="supprimerDemande(numDem)"></upload>
+        <!--modif : true, exemp :false-->
+          <upload :loading="loading" :format=format :precedent="true" :title=titleUpload :text=textUpload v-on:upload="uploadFile" @precedent="precedentDemande(numDem, modif)" @supprimer="supprimerDemande(numDem, modif)"></upload>
             <br />
           <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span>
         </v-alert>
@@ -50,6 +51,7 @@ export default {
   // On récupère le numéro de demande enregistré en session
   created() {
     this.numDem = sessionStorage.getItem('dem');
+    console.log(`MODIF${this.modif}`);
   },
   methods: {
     // Upload du fichier enrichi
@@ -75,7 +77,7 @@ export default {
               this.alertType = 'success';
               this.alert = true;
               this.loading = false;
-              if(this.modif) {
+              if (this.modif) {
                 this.$router.replace({ name: 'simulation' });
               } else {
                 this.$router.replace({ name: 'simulationTest' });

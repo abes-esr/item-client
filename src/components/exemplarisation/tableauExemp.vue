@@ -10,260 +10,85 @@
           <v-card-title v-if="!archive && modif" class="title">Gérer mes demandes de modification</v-card-title>
           <v-card-title v-if="archive && !modif" class="title">Mes demandes d'exemplarisation archivées</v-card-title>
           <v-card-title v-if="!archive && !modif" class="title">Gérer mes demandes d'exemplarisation</v-card-title>
+          <!--Ligne d'entête du tableau-->
+          <v-data-table :headers="headers" :items="computedItems('guess')" :items-per-page="8"
+                        class="elevation-1" fixed-header loading-text="chargement.."
+                        no-results-text="Aucun resultat trouvé" no-data-text="Aucune demande trouvée"
+                        multi-sort>
+            <!--Ligne de recherche sur chaque colonne-->
+<!--            <template v-slot:body.append>-->
+<!--              <tr>-->
+<!--                <td>-->
+<!--                  <v-text-field-->
+<!--                    v-model="searchNum"-->
+<!--                    aria-label="Recherche par numéro"-->
+<!--                    append-icon="search"-->
+<!--                    label="SearchNum"-->
+<!--                    single-line-->
+<!--                    hide-details-->
+<!--                    v-on:keyup="computedItems('num')"-->
+<!--                  ></v-text-field>-->
+<!--                </td>-->
+<!--              </tr>-->
+<!--            </template>-->
+            <!--Lignes de résultats (les demandes)-->
 
-          <v-data-table
-            :loading="tableLoading"
-            :headers="headers"
-            :items="computedItems('guess')"
-            rows-per-page-text="Lignes par page"
-            :pagination.sync="pagination"
-            no-data-text="Aucune demande"
-            class="elevation-1"
-            item-key="num"
-            :rows-per-page-items='[10,25, {"text":"Toutes","value":-1}]'
-          >
-            <template slot="headers" slot-scope="props">
+            <template v-slot:top>
+              <v-text-field v-model="search" label="Search (UPPER CASE ONLY)" class="mx-4"></v-text-field>
+            </template>
+
+            <template v-slot:body="{ items }">
+              <tbody>
+              <tr v-for="item in items" :key="item.name">
+                <td>expand</td>
+                <td>{{ item.num }}</td>
+                <td>{{ item.dateModification }}</td>
+                <td>{{ item.iln }}</td>
+                <td>{{ item.rcr }}</td>
+                <td>{{ item.indexRecherche }}</td>
+                <td>{{ item.typeExemp }}</td>
+                <td>{{ item.statut }}</td>
+                <td>downl</td>
+                <td>arch</td>
+              </tr>
+              </tbody>
+            </template>
+
+            <template v-slot:footer>
               <tr>
-                <th
-                  v-for="header in props.headers"
-                  :key="header.text"
-                  :class="['column sortable', pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']"
-                  @click="changeSort(header.value)"
+                <td></td>
+                <td><v-text-field v-model="searchNum" label="n° Demande" v-on:keyup="computedItems('num')"></v-text-field></td>
+                <td><v-menu
+                  ref="menu1"
+                  v-model="menu1"
+                  :close-on-content-click="false"
+                  transition="scale-transition"
+                  offset-y
+                  full-width
+                  max-width="290px"
+                  min-width="290px"
                 >
-                  <v-icon small>arrow_upward</v-icon>
-                  {{ header.text }}
-                </th>
-              </tr>
-              <tr>
-                <th></th>
-                <th class="smallTD">
-                  <v-text-field
-                    v-model="searchNum"
-                    aria-label="Recherche par numéro"
-                    append-icon="search"
-                    single-line
-                    hide-details
-                    clearable
-                    v-on:keyup="computedItems('num')"
-                  ></v-text-field>
-                </th>
-                <th class="smallTD">
-                  <v-menu
-                    :close-on-content-click="false"
-                    v-model="calendar2"
-                    lazy
-                    transition="scale-transition"
-                    offset-y
-                    full-width
-                    min-width="290px"
-                  >
+                  <template v-slot:activator="{ on }">
                     <v-text-field
-                      slot="activator"
-                      v-model="searchDateModification"
-                      aria-label="Recherche par date"
+                      v-model="dateFormatted"
+                      label="Date"
+                      persistent-hint
                       prepend-icon="event"
-                      append-icon="search"
-                      clearable
-                      readonly
+                      @blur="date = parseDate(dateFormatted)"
+                      v-on="on"
                     ></v-text-field>
-                    <v-date-picker
-                      v-model="searchDateModification"
-                      @input="calendar2 = false"
-                      locale="fr-fr"
-                      first-day-of-week="1"
-                      no-title
-                      scrollable
-                      @change="computedItems('dateModification')"
-                    >
-                      <v-spacer></v-spacer>
-                      <v-btn text color="primary" @click="calendar2 = false" aria-label="Annuler">Annuler</v-btn>
-                    </v-date-picker>
-                  </v-menu>
-                </th>
-                <th v-if="user.role == 'ADMIN'" class="smallTD">
-                  <v-text-field
-                    v-model="searchILN"
-                    aria-label="Recherche par ILN"
-                    append-icon="search"
-                    single-line
-                    hide-details
-                    clearable
-                    v-on:keyup="computedItems('iln')"
-                  ></v-text-field>
-                </th>
-                <th>
-                  <v-text-field
-                    v-model="searchRCR"
-                    append-icon="search"
-                    aria-label="Recherche par RCR"
-                    single-line
-                    hide-details
-                    clearable
-                    v-on:keyup="computedItems('rcr')"
-                  ></v-text-field>
-                </th>
-                <th>
-                  <v-text-field
-                    v-model="searchIndexRecherche"
-                    append-icon="search"
-                    aria-label="Recherche par Index de Recherche"
-                    single-line
-                    hide-details
-                    clearable
-                    v-on:keyup="computedItems('indexRecherche')"
-                  ></v-text-field>
-                </th>
-                <th>
-                  <v-select
-                    v-model="searchTypeExemp"
-                    :items="listTypeExemp"
-                    aria-label="Recherche par type d'exemplarisation"
-                    item-value="libelle"
-                    item-text="libelle"
-                    no-data-text="Aucun traitement trouvé."
-                    @change="computedItems('traitement')"
-                    clearable
-                  ></v-select>
-                </th>
-                <th v-if="!archive" class="smallTD">
-                  <v-select
-                    v-model="searchStatut"
-                    aria-label="Recherche par statut"
-                    :items="listStatut"
-                    no-data-text="Aucun statut trouvé."
-                    @change="computedItems('statut')"
-                    clearable
-                  ></v-select>
-                </th>
-                <th></th>
-                <th v-if="!archive"></th>
+                  </template>
+                  <v-date-picker v-model="date" no-title @input="menu1 = false"></v-date-picker>
+                </v-menu></td>
               </tr>
             </template>
-            <template slot="items" slot-scope="props">
-              <td @click="props.expanded = !props.expanded; tableExpanded = props.expanded;">
-                <v-icon v-if="props.expanded" :color='props.item.commentaire !== null && props.item.commentaire !== "" ? "white" : "default"' :class="{colored: props.item.commentaire}">keyboard_arrow_up</v-icon>
-                <v-icon v-else :color='props.item.commentaire !== null && props.item.commentaire !== "" ? "white" : "default"' :class="{colored: props.item.commentaire}">keyboard_arrow_down</v-icon>
-              </td>
-              <td
-                class="text-left"
-                @click="clickRow(props.item.num,props.item.codeStatut)"
-              >{{ props.item.num }}</td>
-              <td
-                class="text-left"
-                @click="clickRow(props.item.num,props.item.codeStatut)"
-              >{{ props.item.dateModification | formatDate }}</td>
-              <td
-                v-if="user.role == 'ADMIN'"
-                class="text-left"
-                @click="clickRow(props.item.num,props.item.codeStatut)"
-              >{{ props.item.iln }}</td>
-              <td
-                class="text-left"
-                @click="clickRow(props.item.num,props.item.codeStatut)"
-              ><abbr v-bind:title="props.item.rcr">
-                {{ props.item.rcr }}</abbr>
-              </td>
-              <td
-                class="text-left"
-                @click="clickRow(props.item.num,props.item.codeStatut)"
-              >
-                <span>{{ props.item.indexRecherche }}</span>
-              </td>
-              <td
-                class="text-left"
-                @click="clickRow(props.item.num,props.item.codeStatut)"
-              >{{ props.item.typeExemp }}</td>
-              <td v-if="!archive"
-                  class="text-left"
-                  v-bind:class="props.item.color"
-                  @click="clickRow(props.item.num,props.item.codeStatut)"
-              >{{ props.item.statut }}</td>
-              <td class="text-center">
-                <v-menu bottom left v-if="props.item.codeStatut >= 2">
-                  <v-btn slot="activator" color="info" small aria-label="Télécharger les fichiers" class="cloudButton">
-                    <v-icon>cloud_download</v-icon>
-                  </v-btn>
-                  <!-- FICHIERS MODIF -->
-                  <v-list v-if="props.item.codeStatut >= 3 && modif">
-                    <v-list-tile @click="downloadFile(props.item.num, 'ppn')">
-                      <v-list-tile-title>Télécharger le fichier initial des PPN</v-list-tile-title>
-                    </v-list-tile>
-                    <v-list-tile @click="downloadFile(props.item.num, 'epn')">
-                      <v-list-tile-title>Télécharger le fichier de correspondance PPN/EPN</v-list-tile-title>
-                    </v-list-tile>
-                    <v-list-tile
-                      @click="downloadFile(props.item.num, 'enrichi')"
-                      v-if="props.item.codeStatut >= 4"
-                    >
-                      <v-list-tile-title>Télécharger le fichier enrichi</v-list-tile-title>
-                    </v-list-tile>
-                    <v-list-tile
-                      @click="downloadFile(props.item.num, 'resultat')"
-                      v-if="props.item.codeStatut >= 7"
-                    >
-                      <v-list-tile-title>Télécharger le fichier résultat</v-list-tile-title>
-                    </v-list-tile>
-                  </v-list>
-                  <!-- FICHIERS EXEMPLARISATION -->
-                  <v-list v-if="props.item.codeStatut >= 3 && !modif">
-                    <v-list-tile @click="downloadFile(props.item.num, 'initEx')">
-                      <v-list-tile-title>Télécharger le fichier initial</v-list-tile-title>
-                    </v-list-tile>
-                    <v-list-tile
-                      @click="downloadFile(props.item.num, 'resultatEx')"
-                      v-if="props.item.codeStatut >= 7"
-                    >
-                      <v-list-tile-title>Télécharger le fichier résultat</v-list-tile-title>
-                    </v-list-tile>
-                  </v-list>
-                </v-menu>
-                <span v-if="props.item.codeStatut == 1">
-                  <v-btn slot="activator" color="info" aria-label="Téléchargement impossible" small disabled class="cloudButton">
-                    <v-icon>cloud_download</v-icon>
-                  </v-btn>
-                </span>
-              </td>
-              <td v-if="!archive" class="text-center">
-                <span v-if="props.item.codeStatut < 5 && user.iln == props.item.iln">
-                  <v-btn icon @click="current = props.item.num; popupDelete = true;" aria-label="Supprimer">
-                    <v-icon>delete</v-icon>
-                  </v-btn>
-                </span>
-                <span v-else-if="props.item.codeStatut == 7 && user.iln == props.item.iln">
-                  <v-btn icon @click="current = props.item.num; popupArchive = true;" aria-label="Supprimer">
-                    <v-icon>archive</v-icon>
-                  </v-btn>
-                </span>
-              </td>
-            </template>
-            <template v-slot:expand="props">
-              <v-card flat>
-                <v-card-text class="text-left">
-                  <v-textarea
-                    solo
-                    name="comment"
-                    label="Commentaire (150 caractères maximum)"
-                    :disabled="props.item.iln != user.iln"
-                    v-model="props.item.commentaire"
-                    maxlength="150"
-                  ></v-textarea>
-                  <v-btn v-if="user.iln == props.item.iln" color="info" :loading="commentButton" @click="saveComment(props.item.num, props.item.commentaire); props.expanded = false;">Enregistrer</v-btn>
-                </v-card-text>
-              </v-card>
-            </template>
-            <template
-              slot="pageText"
-              slot-scope="props"
-            >Lignes {{ props.pageStart }} - {{ props.pageStop }} de {{ props.itemsLength }}</template>
-            <v-alert
-              slot="no-results"
-              :value="true"
-              color="error"
-              icon="warning"
-            >Votre recherche sur "{{ search }}" ne donne aucun résultat.</v-alert>
+
           </v-data-table>
         </v-card>
       </v-col>
+
+
+
       <v-dialog v-model="dialog" width="500">
         <v-card>
           <v-card-title class="headline" primary-title>Téléchargement du fichier</v-card-title>
@@ -856,19 +681,8 @@ export default {
       );
     },
     getColor(statut) {
-      if (statut === 'Terminée') {
-        if (this.darkMode) {
-          return 'colorGreenDark';
-        }
-        return 'colorGreen';
-      }
-      if (statut === 'En erreur') {
-        if (this.darkMode) {
-          return 'colorRedDark';
-        }
-        return 'colorRed';
-      }
-      return '';
+      if (statut === 'En saisie') return 'green';
+      return 'orange';
     },
   },
 };

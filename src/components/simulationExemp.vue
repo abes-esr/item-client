@@ -15,7 +15,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="primary" text @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
-              <v-btn color="primary" text @click="supprimerDemande(numDem, this.modif)" aria-label="Confirmer">Confirmer</v-btn>
+              <v-btn color="primary" text @click="supprimerDemande(numDem, exauto)" aria-label="Confirmer">Confirmer</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -248,6 +248,8 @@ export default {
           libelle: '',
         },
       },
+      exauto: false,
+      /* exauto a true pour modif de masse, false pour exauto */
       alertMessage: 'Erreur.',
       alertType: 'error',
       alert: false,

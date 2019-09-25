@@ -4,7 +4,7 @@
     <v-row align="center" justify="center">
       <v-col md="7">
         <stepper id="stepper" current="2"></stepper>
-        <upload v-if="showForm" :loading="loading" :format=format :title=titleUpload :precedent="false" :text=textUpload v-on:upload="uploadFile" @precedent="precedentDemande(numDem)" @supprimer="supprimerDemande(numDem)"></upload>
+        <upload v-if="showForm" :loading="loading" :format=format :title=titleUpload :precedent="false" :text=textUpload v-on:upload="uploadFile" @precedent="precedentDemande(numDem)" @supprimer="supprimerDemande(numDem, true)"></upload>
         <v-card v-if="!showForm" class="elevation-12">
           <v-app-bar dark color="primary">
             <v-toolbar-title>Récupération du fichier de correspondances PPN / EPN</v-toolbar-title>
@@ -79,6 +79,7 @@ export default {
       titleUpload: '',
       disabledButton: true,
       popupDelete: false,
+      exauto: false,
     };
   },
   // Récupération des infos utilisateur et du numéro de demande en session
@@ -93,10 +94,11 @@ export default {
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
-        url: `${process.env.VUE_APP_ROOT_API}demandes/${this.numDem}`,
+        url: `${process.env.VUE_APP_ROOT_API}demandes/${this.numDem}?modif=false`,
       }).then(
         (result) => { // L'objet result contient le numero de RCR, qui n'est pas accessible via sessionStorage
-          this.titleUpload = `RCR n°${result.data.rcr} : obtenir correspondance PPN / EPN`;
+          console.log(result.data);
+          this.exauto = true;
         },
       );
     },
