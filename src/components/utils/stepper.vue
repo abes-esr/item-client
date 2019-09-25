@@ -1,6 +1,6 @@
 <template>
   <!-- FIL D'ARIANE -->
-  <v-stepper :value="current" :alt-labels=true>
+  <v-stepper :value="current" :alt-labels=true style="margin-bottom: 1em">
     <v-stepper-header>
       <v-stepper-step step="1" :complete="current > 1">Sélection RCR</v-stepper-step>
       <v-divider></v-divider>
@@ -24,3 +24,5 @@ export default {
   },
 };
 </script>
+
+<style scoped src="../../assets/global.css"></style>

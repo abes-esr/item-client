@@ -11,7 +11,7 @@
               </show-at>
             </v-app-bar>
             <v-card-text style="margin-bottom: -2.8em">
-                 <v-file-input :rules="rules" for="files" show-size outlined prepend-icon="attachment" type="file" aria-label="Dépôt du fichier" v-model="fichierCharge" ref="fileInput" @change="fichierPresent = true" class="input-file" :label="text"></v-file-input>
+                 <v-file-input :rules="rules" for="files" show-size outlined prepend-icon="attachment" type="file" aria-label="Dépôt du fichier" v-model="fichierCharge" @change="autorisationEnvoi" ref="fileInput" class="input-file" :label="text"></v-file-input>
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
@@ -82,13 +82,27 @@ export default {
       alert: false,
       alertMessage: 'Erreur.',
       alertType: 'error',
-      filename: '',
       popupDelete: false,
       fichierCharge: [],
       rules: [
         value => ((value.type === 'text/csv') || (value.type === 'text/plain')) || 'Le fichier chargé n\'est pas dans un format autorisé (.txt ou .csv)',
       ],
+      typeFile: [
+        value => value.type,
+      ],
     };
+  },
+  methods: {
+    // changement statut bouton envoyer
+    autorisationEnvoi() {
+      if ((this.fichierCharge.type === 'text/csv') || (this.fichierCharge.type === 'text/plain')) {
+        this.fichierPresent = true;
+        console.log(this.fichierPresent);
+      } else {
+        this.fichierPresent = false;
+        console.log(this.fichierPresent);
+      }
+    },
   },
 };
 </script>

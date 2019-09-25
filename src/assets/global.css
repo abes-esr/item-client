@@ -28,3 +28,19 @@
 .item-horizontal-align{
     margin:auto
 }
+.item-text-align-center{
+    text-align: center;
+}
+.item-vertical-padding{
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+
+@media all and (max-width: 10em){
+    .item-back{
+        background-color: #d50b52;
+    }
+    .item-break-words{
+        word-break: break-all;
+    }
+}
