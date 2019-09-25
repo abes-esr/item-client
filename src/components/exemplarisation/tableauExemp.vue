@@ -121,13 +121,13 @@
 
               <tr v-for="item in items" :key="item.name">
                 <td></td>
-                <td>{{ item.num }}</td>
-                <td>{{ item.dateModification }}</td>
-                <td>{{ item.iln }}</td>
-                <td>{{ item.rcr }}</td>
-                <td>{{ item.indexRecherche }}</td>
-                <td>{{ item.typeExemp }}</td>
-                <td>{{ item.statut }}</td>
+                <td @click="clickRow(item.num, item.codeStatut)">{{ item.num }}</td>
+                <td @click="clickRow(item.num, item.codeStatut)">{{ item.dateModification }}</td>
+                <td @click="clickRow(item.num, item.codeStatut)">{{ item.iln }}</td>
+                <td @click="clickRow(item.num, item.codeStatut)">{{ item.rcr }}</td>
+                <td @click="clickRow(item.num, item.codeStatut)">{{ item.indexRecherche }}</td>
+                <td @click="clickRow(item.num, item.codeStatut)">{{ item.typeExemp }}</td>
+                <td @click="clickRow(item.num, item.codeStatut)">{{ item.statut }}</td>
                 <td>
                   <v-menu bottom left v-if="item.codeStatut >= 2">
                   <template v-slot:activator="{ on }">
