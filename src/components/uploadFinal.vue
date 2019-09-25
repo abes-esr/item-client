@@ -38,7 +38,7 @@ export default {
       format: ['csv'],
       numDem: 0,
       titleUpload: 'Envoyer le fichier complété de la zone d\'exemplaire à traiter',
-      textUpload: 'Cliquez ou faites glisser ici<br />pour charger votre fichier complété<br />(format txt ou csv)',
+      textUpload: 'Cliquez ou faites glisser ici<br />pour charger votre fichier complété<br />(format csv)',
     };
   },
   // On récupère le numéro de demande enregistré en session
