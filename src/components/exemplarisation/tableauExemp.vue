@@ -52,6 +52,7 @@
                   locale="fr-fr"
                   first-day-of-week="1"
                   v-model="searchDateModification"
+                   @change="computedItems('dateModification')"
                   ></v-date-picker>
                 </v-menu>
               </th>
@@ -182,7 +183,7 @@
                   </v-btn>
                 </span>
                 <span v-else-if="item.codeStatut == 7 && user.iln == item.iln">
-                  <v-btn icon @click="current = item.num; popupArchive = true;" aria-label="Supprimer">
+                  <v-btn icon @click="current = item.num; popupArchive = true;" aria-label="Archiver">
                     <v-icon>archive</v-icon>
                   </v-btn>
                 </span>
@@ -739,7 +740,7 @@ export default {
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'DELETE',
-        url: `${process.env.VUE_APP_ROOT_API}demandes/${this.current}`,
+        url: `${process.env.VUE_APP_ROOT_API}demandes/${this.current}?modif=false`,
       }).then(
         () => {
           this.alertMessage = 'Demande supprimée.';
@@ -766,7 +767,7 @@ export default {
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
-        url: `${process.env.VUE_APP_ROOT_API}archiverDemande?numDemande=${this.current}`,
+        url: `${process.env.VUE_APP_ROOT_API}archiverDemande?numDemande=${this.current}?modif=false`,
       }).then(
         () => {
           this.alertMessage = 'Demande archivée.';
