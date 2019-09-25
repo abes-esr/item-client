@@ -75,7 +75,7 @@ export default {
               this.alertType = 'success';
               this.alert = true;
               this.loading = false;
-              if(this.modif) {
+              if (this.modif) {
                 this.$router.replace({ name: 'simulation' });
               } else {
                 this.$router.replace({ name: 'simulationTest' });

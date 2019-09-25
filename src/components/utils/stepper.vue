@@ -17,7 +17,7 @@
 
 <script>
 export default {
-  name: 'upload',
+  name: 'stepper',
   props: {
     /** Numéro de l'étape courante */
     current: { type: String, default: '5' },
