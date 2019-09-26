@@ -1,23 +1,24 @@
 <template>
     <v-footer height="auto" color="secondary">
-      <v-layout>
-          <v-btn color="white" flat round href="http://abes.fr/">&copy; 2019 — <strong>ABES</strong></v-btn>
+      <v-row>
+        <!--Pour adaptation responsive du component au besoin se baser sur le component menuCards.vue-->
+          <v-btn text rounded color="#fafafa" href="http://abes.fr/">&copy; 2019 — <strong>ABES</strong></v-btn>
            <v-spacer></v-spacer>
-          <v-btn color="white" flat round @click="$router.push({ name: 'donnees' })">
+          <v-btn text color="#fafafa" rounded @click="$router.push({ name: 'donnees' })">
             Données Personnelles
           </v-btn>
-          <v-btn color="white" flat round @click="$router.push({ name: 'cgu' })">
+          <v-btn text color="#fafafa" rounded @click="$router.push({ name: 'cgu' })">
             Conditions Générales d'Utilisation (CGU)
           </v-btn>
-          <v-btn color="white" flat round @click="$router.push({ name: 'mentions' })">
+          <v-btn text color="#fafafa" rounded @click="$router.push({ name: 'mentions' })">
             Mentions Légales
           </v-btn>
-      </v-layout>
+      </v-row>
     </v-footer>
+
 </template>
 
 <script>
-/** import axios from 'axios';* */
 
 export default {
   name: 'footerComponent',

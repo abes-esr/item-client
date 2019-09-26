@@ -1,32 +1,32 @@
 <template>
-  <v-container fluid fill-height>
+  <v-container class="fill-height" fluid >
     <loading :show="loading" label="Envoi en cours. Ce traitement peut prendre plusieurs minutes."></loading>
-    <v-layout align-center justify-center>
-      <v-flex md7>
-        <stepper class="stepper" current="2"></stepper>
-        <upload v-if="showForm" :loading="loading" :format=format :title=titleUpload :precedent="false" :text=textUpload v-on:upload="uploadFile" @precedent="precedentDemande(numDem)" @supprimer="supprimerDemande(numDem)"></upload>
+    <v-row align="center" justify="center">
+      <v-col md="7">
+        <stepper id="stepper" current="2"></stepper>
+        <upload v-if="showForm" :loading="loading" :format=format :title=titleUpload :precedent="false" :text=textUpload v-on:upload="uploadFile" @precedent="precedentDemande(numDem)" @supprimer="supprimerDemande(numDem, true)"></upload>
         <v-card v-if="!showForm" class="elevation-12">
-          <v-toolbar dark color="primary">
+          <v-app-bar dark color="primary">
             <v-toolbar-title>Récupération du fichier de correspondances PPN / EPN</v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-btn flat @click="popupDelete = true"><v-icon>delete</v-icon>Supprimer</v-btn>
-          </v-toolbar>
+            <v-btn depressed color="primary" @click="popupDelete = true"><v-icon>delete</v-icon>Supprimer</v-btn>
+          </v-app-bar>
           <v-card-text>
-            <v-flex align-center justify-center fill-height class="text-xs-center">
-              <v-btn round large color="primary" ref="fileLinkBtn" @click="disabledButton = false;" :href="fileLink" :download="blobName">Télécharger le fichier de correspondances PPN/EPN <v-icon right dark>cloud_download</v-icon>
+            <v-col class="text-center align justify fill-height">
+              <v-btn rounded large color="primary" ref="fileLinkBtn" @click="disabledButton = false;" :href="fileLink" :download="blobName">Télécharger le fichier de correspondances PPN/EPN <v-icon right dark>cloud_download</v-icon>
               </v-btn>
-            </v-flex>
+            </v-col>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="info" v-on:click="precedentDemande(numDem); showForm = true;" aria-label="Annuler">Précédent</v-btn>
+            <v-btn color="info" v-on:click="precedentDemande(numDem, true); showForm = true;" aria-label="Annuler">Précédent</v-btn>
             <v-btn color="info" :disabled="disabledButton" v-on:click="$router.replace({ name: 'traitement' })" aria-label="Suivant">Suivant</v-btn>
           </v-card-actions>
         </v-card>
         <br />
         <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span>
         </v-alert>
-      </v-flex>
+      </v-col>
       <v-dialog v-model="popupDelete" width="500">
         <v-card>
           <v-card-title class="headline" primary-title>Suppression</v-card-title>
@@ -36,12 +36,12 @@
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" flat @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
-            <v-btn color="primary" flat @click="supprimerDemande(numDem)" aria-label="Confirmer">Confirmer</v-btn>
+            <v-btn color="primary" text @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
+            <v-btn color="primary" text @click="supprimerDemande(numDem, true)" aria-label="Confirmer">Confirmer</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
-    </v-layout>
+    </v-row>
   </v-container>
 </template>
 
@@ -75,10 +75,11 @@ export default {
       loading: false,
       user: {},
       format: ['txt', 'csv'],
-      textUpload: 'Cliquez ou faites glisser ici<br />pour charger votre liste de PPN<br />(fichier PPN sur une colonne, format txt ou csv)',
+      textUpload: 'Cliquez pour charger votre liste de PPN (fichier PPN sur une colonne, format .txt ou .csv obligatoire)',
       titleUpload: '',
       disabledButton: true,
       popupDelete: false,
+      exauto: false,
     };
   },
   // Récupération des infos utilisateur et du numéro de demande en session
@@ -93,10 +94,11 @@ export default {
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
-        url: `${process.env.VUE_APP_ROOT_API}demandes/${this.numDem}`,
+        url: `${process.env.VUE_APP_ROOT_API}demandes/${this.numDem}?modif=false`,
       }).then(
         (result) => { // L'objet result contient le numero de RCR, qui n'est pas accessible via sessionStorage
-          this.titleUpload = `RCR n°${result.data.rcr} : obtenir correspondance PPN / EPN`;
+          console.log(result.data);
+          this.exauto = true;
         },
       );
     },

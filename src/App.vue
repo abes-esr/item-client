@@ -1,110 +1,151 @@
 <template>
   <v-app :dark="isDark" id="inspire">
-    <!-- MENU LATERAL -->
-    <v-navigation-drawer app fixed v-if="authenticated" v-model="drawer">
-      <v-toolbar class="transparent mb-4" flat>
-        <v-list three-line dense fixed style="text-overflow: ellipsis !important; white-space: nowrap !important;">
-          <v-list-tile>
-            <v-list-tile-content>
-              <v-list-tile-sub-title :class="wrapped" :style="styling">Bienvenue {{ user.username }}</v-list-tile-sub-title>
-              <v-list-tile-sub-title :class="wrapped" :style="styling" v-if="!isAdmin">Vous êtes habilité à intervenir sur les exemplaires des RCR de l'ILN {{ user.iln }}</v-list-tile-sub-title>
-              <v-list-tile-sub-title :class="wrapped" :style="styling" v-else>Vous disposez des permissions administrateur.</v-list-tile-sub-title>
-            </v-list-tile-content>
-          </v-list-tile>
-        </v-list>
-      </v-toolbar>
-      <v-list>
-        <v-divider></v-divider>
-        <v-list-tile>
-          <v-switch label="Mode nuit" color="red" v-model="isDark"></v-switch>
-        </v-list-tile>
-        <v-divider></v-divider>
-        <v-list-tile v-on:click="$router.push({ name: 'home' })">
-          <v-list-tile-action>
+    <v-app-bar
+      color="#295494" max-height="4.2em" dark
+    >
+      <div class="item-margin-left-app-bar"></div> <!--Marge à gauche des icones de la barre de navigation-->
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer" aria-label="menu latéral" v-if="authenticated">
+        <v-icon large>menu</v-icon>
+      </v-app-bar-nav-icon>
+      <v-toolbar-title class="item-margin-left-icon">Item</v-toolbar-title>
+
+      <div class="flex-grow-1"></div>
+      <v-btn icon class="item-margin-around-single-icon">
+          <span><a href="https://stp.abes.fr/node/3?origine=sudocpro" title="Assistance" rel="noopener" target="_blank"><img alt="icone assistance" height="38px" href="https://stp.abes.fr/node/3?origine=sudocpro" src="@/assets/assistance.png" target="_blank" width="38px"></a></span>
+      </v-btn>
+
+      <v-btn icon class="item-margin-around-single-icon">
+          <span><a href="http://documentation.abes.fr/aideitem/index.html" title="Documentation" rel="noopener" target="_blank"><img alt="icone documentation" height="38px" href="http://documentation.abes.fr/aideitem/index.html" src="@/assets/documentation.png" target="_blank" width="38px"></a></span>
+      </v-btn>
+
+      <v-btn icon class="item-margin-around-single-icon" v-if="authenticated">
+          <span @click="logout()" title="Déconnexion"><a><img alt="icone déconnexion" height="38px" src="@/assets/deconnexion.png" width="38px"></a></span>
+      </v-btn>
+      <div class="item-margin-right-app-bar"></div> <!--Marge à droite des icones de la barre de navigation-->
+    </v-app-bar>
+
+    <v-navigation-drawer app v-if="authenticated" v-model="drawer" temporary>
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title class="title">
+            {{ user.username }}
+          </v-list-item-title>
+          <v-list-item-subtitle>
+            <span v-if="!isAdmin">Vous êtes habilité à intervenir<br> sur les exemplaires des RCR de<br> l'ILN {{ user.iln }}</span>
+            <span v-else>Vous disposez des permissions <br>administrateur</span>
+          </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-divider></v-divider>
+
+      <v-list dense nav>
+        <v-list-item v-on:click="$router.push({ name: 'home' })">
+          <v-list-item-action>
             <v-icon>home</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Accueil</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-        <v-list-tile v-on:click="$router.push({ name: 'rcr' })">
-          <v-list-tile-action>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Accueil</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item v-on:click="$router.push({ name: 'profil' })">
+          <v-list-item-action>
+            <v-icon>mail_outline</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Modifier mon adresse mail</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+
+      <v-divider></v-divider>
+
+      <v-list dense nav>
+        <v-list-item>
+          <v-list-item-title class="title">
+            Taux de recouvrement
+          </v-list-item-title>
+        </v-list-item>
+        <v-list-item v-on:click="$router.push({ name: 'tab' })">
+          <v-list-item-action>
+            <v-icon>pie_chart</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Calculer mon taux <br>de recouvrement</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+
+      <v-divider></v-divider>
+
+      <v-list dense nav>
+        <v-list-item>
+          <v-list-item-title class="title">
+            Exemplarisations
+          </v-list-item-title>
+        </v-list-item>
+        <v-list-item v-on:click="$router.push({ name: 'rcrEx' })">
+          <v-list-item-action>
             <v-icon>edit</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Modifier des exemplaires</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-        <v-list-tile v-on:click="$router.push({ name: 'tab' })">
-          <v-list-tile-action>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Créer des exemplaires</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item v-on:click="$router.push({ name: 'tabEx' })">
+          <v-list-item-action>
             <v-icon>list</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Mes demandes de modification</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-        <v-list-tile v-on:click="$router.push({ name: 'archive' })">
-          <v-list-tile-action>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Gérer mes demandes<br> d'exemplarisation</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item v-on:click="$router.push({ name: 'archiveEx' })">
+          <v-list-item-action>
             <v-icon>archive</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Archives Modification</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-        <v-list-tile v-on:click="$router.push({ name: 'rcrEx' })">
-          <v-list-tile-action>
-            <v-icon>add</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Créer des exemplaires</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-        <v-list-tile v-on:click="$router.push({ name: 'tabEx' })">
-          <v-list-tile-action>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Mes demandes <br>d'exemplarisation archivées</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+
+      <v-divider></v-divider>
+
+      <v-list dense nav>
+        <v-list-item>
+          <v-list-item-title class="title">
+            Modifications
+          </v-list-item-title>
+        </v-list-item>
+        <v-list-item v-on:click="$router.push({ name: 'rcr' })">
+          <v-list-item-action>
+            <v-icon>edit</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Modifier des exemplaires</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item v-on:click="$router.push({ name: 'tab' })">
+          <v-list-item-action>
             <v-icon>list</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Mes demandes d'exemplarisation</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-        <v-list-tile v-on:click="$router.push({ name: 'archiveEx' })">
-          <v-list-tile-action>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Gérer mes demandes<br> de modification</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item v-on:click="$router.push({ name: 'archive' })">
+          <v-list-item-action>
             <v-icon>archive</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Archives Exemplarisation</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-        <v-list-tile v-on:click="$router.push({ name: 'profil' })">
-          <v-list-tile-action>
-            <v-icon>face</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Modifier mon adresse mail</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Mes demandes <br>de modification archivées</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <!-- BARRE DE TITRE SUPERIEURE -->
-    <v-toolbar app color="primary" dark fixed>
-      <v-toolbar-side-icon @click.stop="drawer = !drawer" aria-label="menu latéral" v-if="authenticated"></v-toolbar-side-icon>
-      <v-toolbar-title></v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-tooltip left nudge-bottom="20">
-          <span slot="activator"><a href="https://stp.abes.fr/node/3?origine=sudocpro" rel="noopener" target="_blank"><img alt="icone assistance" height="38px" href="https://stp.abes.fr/node/3?origine=sudocpro" src="@/assets/assistance.png" target="_blank" width="38px"></a></span>
-          <span>Assistance</span>
-        </v-tooltip>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <v-tooltip left nudge-bottom="20">
-          <span slot="activator"><a href="http://documentation.abes.fr/aideitem/index.html" rel="noopener" target="_blank"><img alt="icone documentation" height="38px" href="http://documentation.abes.fr/aideitem/index.html" src="@/assets/documentation.png" target="_blank" width="38px"></a></span>
-          <span>Documentation</span>
-        </v-tooltip>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <v-tooltip left nudge-bottom="20" v-if="authenticated">
-          <span @click="logout()" slot="activator"><a><img alt="icone déconnexion" height="38px" src="@/assets/deconnexion.png" width="38px"></a></span>
-          <span>Déconnexion</span>
-        </v-tooltip>
-    </v-toolbar>
     <v-content>
-      <transition name="fade">
+      <transition>
         <router-view @authenticated="setAuthenticated" @logout="logoutExpired" :darkMode="isDark"/>
       </transition>
     </v-content>
@@ -137,7 +178,6 @@ export default {
       isAdmin: false,
       dialog: false,
       wrapped: '',
-      text: 'hello',
     };
   },
   computed: {
@@ -228,10 +268,6 @@ export default {
     text-decoration: none;
     color: white;
   }
-  .stepper{
-  margin-bottom: 20px;
-  }
-
   .fade-enter-active, .fade-leave-active {
   transition: opacity .2s;
   }

@@ -1,6 +1,6 @@
 <template>
-  <!-- FIL D'ARIANE DES DEMANDES DE MODIFICATION-->
-  <v-stepper :value="current" :alt-labels=true>
+  <!-- FIL D'ARIANE -->
+  <v-stepper :value="current" :alt-labels=true style="margin-bottom: 1em">
     <v-stepper-header>
       <v-stepper-step step="1" :complete="current > 1">Sélection RCR</v-stepper-step>
       <v-divider></v-divider>
@@ -17,10 +17,12 @@
 
 <script>
 export default {
-  name: 'upload',
+  name: 'stepper',
   props: {
     /** Numéro de l'étape courante */
     current: { type: String, default: '5' },
   },
 };
 </script>
+
+<style scoped src="../../assets/global.css"></style>

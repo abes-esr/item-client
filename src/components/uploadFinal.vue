@@ -1,16 +1,17 @@
 <template>
-  <v-container fluid fill-height>
-    <v-layout align-center justify-center>
-      <v-flex md7>
-        <stepper class="stepper" current="4" v-if="modif"></stepper>
+  <v-container class="fill-height" fluid >
+    <v-row align="center" justify="center">
+      <v-col md="7">
+        <stepper id="stepper" current="4"></stepper>
         <stepperexemp class="stepper" current="4" v-if="!modif"></stepperexemp>
+        <!--modif : true, exemp :false-->
         <upload :value="value" :loading="loading" :format=format :precedent="true" :title=titleUpload :text=textUpload v-on:upload="uploadFile"
                 @precedent="precedentDemande(numDem)" @supprimer="supprimerDemande(numDem)" @eventName="updateParent"></upload>
         <br />
-        <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span>
+          <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span>
         </v-alert>
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -55,6 +56,7 @@ export default {
   // On récupère le numéro de demande enregistré en session
   created() {
     this.numDem = sessionStorage.getItem('dem');
+    console.log(`MODIF${this.modif}`);
   },
   methods: {
     // Upload du fichier enrichi
@@ -79,7 +81,11 @@ export default {
               this.alertType = 'success';
               this.alert = true;
               this.loading = false;
-              this.$router.replace({ name: 'simulationTest' });
+              if (this.modif) {
+                this.$router.replace({ name: 'simulation' });
+              } else {
+                this.$router.replace({ name: 'simulationTest' });
+              }
             },
             (error) => {
               this.alertMessage = constants.erreurUpload;

@@ -1,16 +1,15 @@
 <template>
   <!-- SELECTION DU RCR -->
-  <v-container fluid fill-height>
-    <v-layout justify-center align-center>
+  <v-container class="fill-height" fluid >
+    <v-row justify="center" align="center">
       <loading :show="show" :label="label"></loading>
-      <v-flex md7>
-        <stepper class="stepper" current="1" v-if="modif"></stepper>
-        <stepperexemp class="stepper" current="1" v-if="!modif"></stepperexemp>
+      <v-col md="7">
+        <stepper id="stepper" current="1" class="item-stepper-bottom-margin"></stepper>
         <v-card class="elevation-12">
-          <v-toolbar dark color="primary">
+          <v-app-bar dark color="primary">
             <v-toolbar-title>Sélection du RCR</v-toolbar-title>
             <v-spacer></v-spacer>
-          </v-toolbar>
+          </v-app-bar>
           <v-card-text>
             <v-autocomplete
               :filter="searchRCR"
@@ -34,16 +33,15 @@
         <v-alert :value="alert" :type="alertType" transition="scale-transition">
           <span v-html="alertMessage"></span>
         </v-alert>
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
 <script>
 import axios from 'axios';
 import loading from 'vue-full-loading';
-import stepper from '@/components/utils/stepperModif.vue';
-import stepperexemp from '@/components/utils/stepperExemp.vue';
+import stepper from '@/components/utils/stepper.vue';
 import constants from '@/components/utils/const';
 
 export default {
@@ -51,7 +49,6 @@ export default {
   components: {
     loading,
     stepper,
-    stepperexemp,
   },
   data() {
     return {
@@ -173,3 +170,5 @@ export default {
   },
 };
 </script>
+
+<style scoped src="../assets/global.css"></style>

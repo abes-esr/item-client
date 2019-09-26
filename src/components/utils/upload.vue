@@ -3,23 +3,15 @@
         <loading :show="loading" :label="loadingMessage">
         </loading>
         <v-card class="elevation-12">
-            <v-toolbar dark color="primary">
+            <v-app-bar dark color="primary">
                 <v-toolbar-title>{{ title }}</v-toolbar-title>
                 <v-spacer></v-spacer>
-                <v-btn flat @click="popupDelete = true"><v-icon>delete</v-icon>Supprimer</v-btn>
-            </v-toolbar>
-            <v-card-text>
-                <form enctype="multipart/form-data">
-                    <div class="dropbox">
-                        <input type="file" :accept="format" aria-label="Dépôt du fichier" ref="fileInput" @click="fichierPresent = false" @change="checkFile(); checkFormat(); getRefName();" class="input-file">
-                        <p v-if="!fichierPresent">
-                            <span v-html="text"></span>
-                        </p>
-                        <p v-else>
-                            <v-icon>file_copy</v-icon> Fichier : {{ filename }}
-                        </p>
-                    </div>
-                </form>
+              <show-at breakpoint="mediumAndAbove">
+                <v-btn depressed color="primary" @click="popupDelete = true"><v-icon>delete</v-icon>Supprimer cette demande</v-btn>
+              </show-at>
+            </v-app-bar>
+            <v-card-text style="margin-bottom: -2.8em">
+                 <v-file-input :rules="rules" for="files" show-size outlined prepend-icon="attachment" type="file" aria-label="Dépôt du fichier" v-model="fichierCharge" @change="autorisationEnvoi" ref="fileInput" class="input-file" :label="text"></v-file-input>
             </v-card-text>
             <v-card-actions>
               <v-container fluid>
@@ -49,7 +41,7 @@
                 <v-spacer></v-spacer>
                 <v-btn color="info" v-if="precedent" @click="$emit('precedent')" aria-label="Annuler">Précédent</v-btn>
                 <!-- Lors du clic sur "Envoyer", on emet un évenement "upload" avec le contenu du fichier en paramètre, afin que le composant père puisse récupérer le fichier-->
-                <v-btn color="info" :disabled="!fichierPresent" @click="$emit('upload', $refs.fileInput.files[0])" aria-label="Envoyer">Envoyer</v-btn>
+                <v-btn color="info" :disabled="!fichierPresent" @click="$emit('upload', fichierCharge)" aria-label="Envoyer">Envoyer</v-btn>
             </v-card-actions>
         </v-card>
         <br />
@@ -64,8 +56,8 @@
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" flat @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
-            <v-btn color="primary" flat @click="$emit('supprimer')" aria-label="Confirmer">Confirmer</v-btn>
+            <v-btn color="primary" text @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
+            <v-btn color="primary" text @click="$emit('supprimer')" aria-label="Confirmer">Confirmer</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -74,20 +66,22 @@
 
 <script>
 import loading from 'vue-full-loading';
+import { showAt } from 'vue-breakpoints';
 
 export default {
   name: 'upload',
   components: {
     loading,
+    showAt,
   },
   props: {
     /** Titre de la carte vuetify */
     title: {
       default: 'Envoi de votre fichier',
     },
-    /** Texte dans le carré ou l'on dépose le fichier */
+    /** Text que contient le champ d'uload de fichier */
     text: {
-      default: 'Faites glisser votre fichier<br> ou cliquez ici pour le rechercher',
+      default: 'Cliquez ici pour charger votre fichier (obligatoirement au format .csv ou .txt)',
     },
     /** Active le chargement (plein écran) */
     loading: {
@@ -112,21 +106,27 @@ export default {
       alert: false,
       alertMessage: 'Erreur.',
       alertType: 'error',
-      filename: '',
       popupDelete: false,
       dialog: false,
       exemplairesMultiplesChild: false,
+      fichierCharge: [],
+      rules: [
+        value => ((value.type === 'text/csv') || (value.type === 'text/plain')) || 'Le fichier chargé n\'est pas dans un format autorisé (.txt ou .csv)',
+      ],
+      typeFile: [
+        value => value.type,
+      ],
     };
   },
   methods: {
-    /**
-         * Modifie l'attribut fichierPresent à true/false selon si l'utilisateur a ajouté un fichier au formulaire ou non
-         */
-    checkFile() {
-      if (this.$refs.fileInput.files[0].size > 0) {
+    // changement statut bouton envoyer
+    autorisationEnvoi() {
+      if ((this.fichierCharge.type === 'text/csv') || (this.fichierCharge.type === 'text/plain')) {
         this.fichierPresent = true;
+        console.log(this.fichierPresent);
       } else {
         this.fichierPresent = false;
+        console.log(this.fichierPresent);
       }
     },
     /**
@@ -159,7 +159,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped src="../../assets/global.css">
     .dropbox {
       outline: 2px dashed grey;
       outline-offset: -10px;
@@ -168,9 +168,6 @@ export default {
       padding: 10px 10px;
       position: relative;
       cursor: pointer;
-    }
-    .dropbox:hover {
-      background: lightblue; /* when mouse over to the drop zone, change color */
     }
     .dropbox p {
       font-size: 1.2em;

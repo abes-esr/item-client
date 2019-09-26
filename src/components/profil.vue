@@ -1,14 +1,14 @@
 <template>
   <!-- MODIFICATION DE L'ADRESSE MAIL -->
-  <v-container fluid fill-height>
-    <v-layout align-center justify-center>
-      <v-flex md7>
+  <v-container class="fill-height" fluid >
+    <v-row align="center" justify="center">
+      <v-col md="7">
         <v-card class="elevation-12">
-          <v-toolbar dark color="primary">
+          <v-app-bar dark color="primary">
             <v-toolbar-title v-if="user.email === null || user.email === ''">Première connexion</v-toolbar-title>
             <v-toolbar-title v-else>Modifier les informations de votre compte</v-toolbar-title>
             <v-spacer></v-spacer>
-          </v-toolbar>
+          </v-app-bar>
           <v-card-text>
             <v-form ref="form" v-model="valid" lazy-validation>
               <span v-if="user.email === null || user.email === ''">
@@ -28,8 +28,8 @@
         <v-alert :value="alert" type="error" transition="scale-transition">
           Adresse mail vide ou différente
         </v-alert>
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 

@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
-    <v-layout align-center justify-center>
-      <v-flex xs12>
+    <v-row align="center" justify="center">
+      <v-col cols="12">
         <v-card>
           <v-card-title primary-title>
             <div>
@@ -47,8 +47,8 @@
             <p>Les présentes Conditions Générales d'Utilisation sont régies par la loi française. En cas de différend et à défaut d'accord amiable, le litige sera porté devant les tribunaux français conformément aux règles de compétence en vigueur.</p>
           </v-card-text>
         </v-card>
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
