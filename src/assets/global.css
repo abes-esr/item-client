@@ -29,18 +29,26 @@
     margin:auto
 }
 .item-text-align-center{
-    text-align: center;
+    text-align: center
 }
 .item-vertical-padding{
     padding-top: 1em;
-    padding-bottom: 1em;
+    padding-bottom: 1em
+}
+.item-table-body-header-elements-vertical-align{
+    display: inline-block;
+    margin-bottom: 1.3em
+}
+.item-table-body-header-elements-vertical-align-list{
+    display: inline-block;
+    margin-bottom: 1.4em
 }
 
 @media all and (max-width: 10em){
     .item-back{
-        background-color: #d50b52;
+        background-color: #d50b52
     }
     .item-break-words{
-        word-break: break-all;
+        word-break: break-all
     }
 }

@@ -1,126 +1,36 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <v-container fluid>
-    <v-row justify="center" align="center">
+    <v-row align="center" justify="center">
       <v-col class="text-center" >
-        <v-alert :value="alert" :type="alertType" dismissible transition="scale-transition">
+        <v-alert :type="alertType" :value="alert" dismissible transition="scale-transition">
           <span v-html="alertMessage"></span>
         </v-alert>
         <v-card>
-          <v-card-title v-if="archive && modif" class="title" >Mes demandes de modification archivées</v-card-title>
-          <v-card-title v-if="!archive && modif" class="title">Gérer mes demandes de modification</v-card-title>
-          <v-card-title v-if="archive && !modif" class="title">Mes demandes d'exemplarisation archivées</v-card-title>
-          <v-card-title v-if="!archive && !modif" class="title">Gérer mes demandes d'exemplarisation</v-card-title>
+          <v-card-title class="title" v-if="archive && modif" >Mes demandes de modification archivées</v-card-title>
+          <v-card-title class="title" v-if="!archive && modif">Gérer mes demandes de modification</v-card-title>
+          <v-card-title class="title" v-if="archive && !modif">Mes demandes d'exemplarisation archivées</v-card-title>
+          <v-card-title class="title" v-if="!archive && !modif">Gérer mes demandes d'exemplarisation</v-card-title>
           <!--Ligne d'entête du tableau-->
-          <v-data-table :headers="headers" :items="computedItems('guess')" :items-per-page="25"
-                        class="elevation-1" fixed-header loading-text="chargement.."
-                        no-results-text="Aucun resultat trouvé" no-data-text="Aucune demande trouvée"
-                        item-key="num"
-                        multi-sort>
+          <v-data-table :headers="headers" :items="computedItems('guess')" :items-per-page="8" class="elevation-1" fixed-header item-key="num" loading-text="chargement.." multi-sort no-data-text="Aucune demande trouvée" no-results-text="Aucun resultat trouvé" headers-length="3" :sort-desc="[false, true]" :footer-props="{showFirstLastPage: true,firstIcon: 'mdi-arrow-collapse-left',lastIcon: 'mdi-arrow-collapse-right',prevIcon: 'mdi-minus',nextIcon: 'mdi-plus'}">
             <template v-slot:body="{ items }">
-              <tbody>
+              <!--Ligne avec les champs de recherche-->
+              <thead>
+                <tr>
                 <th></th>
-              <th>
-                <v-text-field
-                    v-model="searchNum"
-                    aria-label="Recherche par numéro"
-                    append-icon="search"
-                    single-line
-                    hide-details
-                    v-on:keyup="computedItems('num')"
-                    clearable
-                    clear-icon='clear'
-                >
-                </v-text-field>
-              </th>
-              <th class="smallTD">
-                <v-menu
-                ref="menu"
-                v-model="menu"
-                :close-on-content-click="true"
-                >
-                <template v-slot:activator="{ on }">
-                  <v-text-field
-                      v-model="searchDateModification"
-                      label="Date"
-                      persistent-hint
-                      prepend-icon="event"
-                      v-on="on"
-                    ></v-text-field>
-                </template>
-                  <v-date-picker
-                  no-title
-                  locale="fr-fr"
-                  first-day-of-week="1"
-                  v-model="searchDateModification"
-                   @change="computedItems('dateModification')"
-                  ></v-date-picker>
-                </v-menu>
-              </th>
-              <th v-if="user.role == 'ADMIN'" class="smallTD">
-                  <v-text-field
-                    v-model="searchILN"
-                    aria-label="Recherche par ILN"
-                    append-icon="search"
-                    single-line
-                    hide-details
-                    v-on:keyup="computedItems('iln')"
-                    clearable
-                    clear-icon='clear'
-                  ></v-text-field>
-              </th>
-              <th>
-                  <v-text-field
-                    v-model="searchRCR"
-                    append-icon="search"
-                    aria-label="Recherche par RCR"
-                    single-line
-                    hide-details
-                    v-on:keyup="computedItems('rcr')"
-                    clearable
-                    clear-icon='clear'
-                  ></v-text-field>
-                </th>
-                <th>
-                  <v-text-field
-                    v-model="searchIndexRecherche"
-                    append-icon="search"
-                    aria-label="Recherche par Index"
-                    single-line
-                    hide-details
-                    v-on:keyup="computedItems('indexRecherche')"
-                    clearable
-                    clear-icon='clear'
-                  ></v-text-field>
-                </th>
-                <th>
-                  <v-select
-                    v-model="searchTypeExemp"
-                    :items="listTypeExemp"
-                    aria-label="Recherche par type d'exemplarisation"
-                    item-value="libelle"
-                    item-text="libelle"
-                    no-data-text="Aucun type trouvé."
-                    @change="computedItems('typeExemp')"
-                    clearable
-                    clear-icon='clear'
-                  ></v-select>
-                </th>
-                <th v-if="!archive" class="smallTD">
-                  <v-select
-                    v-model="searchStatut"
-                    aria-label="Recherche par statut"
-                    :items="listStatut"
-                    no-data-text="Aucun statut trouvé."
-                    @change="computedItems('statut')"
-                    clearable
-                    clear-icon='clear'
-                  ></v-select>
-                </th>
+                <th><v-text-field append-icon="search" aria-label="Recherche par numéro" class="item-table-body-header-elements-vertical-align" clear-icon='clear' clearable hide-details single-line v-model="searchNum" v-on:keyup="computedItems('num')"></v-text-field></th>
+                <th class="smallTD"><v-menu :close-on-content-click="true" ref="menu" v-model="menu"><template v-slot:activator="{ on }"><v-text-field class="item-table-body-header-elements-vertical-align" label="Date" persistent-hint v-model="searchDateModification" v-on="on"></v-text-field></template><v-date-picker @change="computedItems('dateModification')" first-day-of-week="1" locale="fr-fr" no-title v-model="searchDateModification"></v-date-picker></v-menu></th>
+                <th class="smallTD" v-if="user.role == 'ADMIN'"><v-text-field append-icon="search" aria-label="Recherche par ILN" class="item-table-body-header-elements-vertical-align" clear-icon='clear' clearable hide-details single-line v-model="searchILN" v-on:keyup="computedItems('iln')"></v-text-field></th>
+                <th><v-text-field append-icon="search" aria-label="Recherche par RCR" class="item-table-body-header-elements-vertical-align" clear-icon='clear' clearable hide-details single-line v-model="searchRCR" v-on:keyup="computedItems('rcr')"></v-text-field></th>
+                <th><v-text-field append-icon="search" aria-label="Recherche par Index" class="item-table-body-header-elements-vertical-align" clear-icon='clear' clearable hide-details single-line v-model="searchIndexRecherche" v-on:keyup="computedItems('indexRecherche')"></v-text-field></th>
+                <th><v-select :items="listTypeExemp" @change="computedItems('typeExemp')" aria-label="Recherche par type d'exemplarisation" class="item-table-body-header-elements-vertical-align-list" clear-icon='clear' clearable item-text="libelle" item-value="libelle" no-data-text="Aucun type trouvé." v-model="searchTypeExemp"></v-select></th>
+                <th class="smallTD" v-if="!archive"><v-select :items="listStatut" @change="computedItems('statut')" aria-label="Recherche par statut" class="item-table-body-header-elements-vertical-align-list" clear-icon='clear' clearable no-data-text="Aucun statut trouvé." v-model="searchStatut"></v-select></th>
                 <th></th>
                 <th v-if="!archive"></th>
-
-
-              <tr v-for="item in items" :key="item.name">
+                </tr>
+              </thead>
+              <!--Lignes de données-->
+              <tbody>
+                <tr :key="item.name" v-for="item in items">
                 <td></td>
                 <td @click="clickRow(item.num, item.codeStatut)">{{ item.num }}</td>
                 <td @click="clickRow(item.num, item.codeStatut)">{{ item.dateModification }}</td>
@@ -130,62 +40,30 @@
                 <td @click="clickRow(item.num, item.codeStatut)">{{ item.typeExemp }}</td>
                 <td @click="clickRow(item.num, item.codeStatut)">{{ item.statut }}</td>
                 <td>
-                  <v-menu bottom left v-if="item.codeStatut >= 2">
-                  <template v-slot:activator="{ on }">
-                  <v-btn v-on="on" color="info" small aria-label="Télécharger les fichiers" class="cloudButton">
-                    <v-icon>cloud_download</v-icon>
-                  </v-btn>
-                    </template>
+                  <v-menu bottom left v-if="item.codeStatut >= 2"><template v-slot:activator="{ on }"><v-btn aria-label="Télécharger les fichiers" class="cloudButton" color="info" small v-on="on"><v-icon>cloud_download</v-icon></v-btn></template>
                   <!-- FICHIERS MODIF -->
                   <v-list v-if="item.codeStatut >= 3 && modif">
-                    <v-list-item-content @click="downloadFile(item.num, 'ppn')">
-                      <v-list-item-title>Télécharger le fichier initial des PPN</v-list-item-title>
-                    </v-list-item-content>
-                    <v-list-item-content @click="downloadFile(item.num, 'epn')">
-                      <v-list-item-title>Télécharger le fichier de correspondance PPN/EPN</v-list-item-title>
-                    </v-list-item-content>
-                    <v-list-item-content
-                      @click="downloadFile(item.num, 'enrichi')"
-                      v-if="item.codeStatut >= 4"
-                    >
-                      <v-list-item-title>Télécharger le fichier enrichi</v-list-item-title>
-                    </v-list-item-content>
-                    <v-list-item-content
-                      @click="downloadFile(item.num, 'resultat')"
-                      v-if="item.codeStatut >= 7"
-                    >
-                      <v-list-item-title>Télécharger le fichier résultat</v-list-item-title>
-                    </v-list-item-content>
+                    <v-list-item-content @click="downloadFile(item.num, 'ppn')"><v-list-item-title>Télécharger le fichier initial des PPN</v-list-item-title></v-list-item-content>
+                    <v-list-item-content @click="downloadFile(item.num, 'epn')"><v-list-item-title>Télécharger le fichier de correspondance PPN/EPN</v-list-item-title></v-list-item-content>
+                    <v-list-item-content @click="downloadFile(item.num, 'enrichi')" v-if="item.codeStatut >= 4"><v-list-item-title>Télécharger le fichier enrichi</v-list-item-title></v-list-item-content>
+                    <v-list-item-content @click="downloadFile(item.num, 'resultat')" v-if="item.codeStatut >= 7"><v-list-item-title>Télécharger le fichier résultat</v-list-item-title></v-list-item-content>
                   </v-list>
                   <!-- FICHIERS EXEMPLARISATION -->
                   <v-list v-if="item.codeStatut >= 3 && !modif">
-                    <v-list-item-content @click="downloadFile(item.num, 'initEx')">
-                      <v-list-item-title>Télécharger le fichier déposé</v-list-item-title>
-                    </v-list-item-content>
-                    <v-list-item-content
-                      @click="downloadFile(item.num, 'resultatEx')"
-                      v-if="item.codeStatut >= 7"
-                    >
-                      <v-list-item-title>Télécharger le fichier résultat</v-list-item-title>
-                    </v-list-item-content>
+                    <v-list-item-content @click="downloadFile(item.num, 'initEx')"><v-list-item-title>Télécharger le fichier déposé</v-list-item-title></v-list-item-content>
+                    <v-list-item-content @click="downloadFile(item.num, 'resultatEx')" v-if="item.codeStatut >= 7"><v-list-item-title>Télécharger le fichier résultat</v-list-item-title></v-list-item-content>
                   </v-list>
                 </v-menu>
                 <span v-if="item.codeStatut == 1">
-                  <v-btn color="info" aria-label="Téléchargement impossible" small disabled class="cloudButton">
-                    <v-icon>cloud_download</v-icon>
-                  </v-btn>
+                  <v-btn aria-label="Téléchargement impossible" class="cloudButton" color="info" disabled small><v-icon>cloud_download</v-icon></v-btn>
                 </span>
                 </td>
-                <td v-if="!archive" class="text-center">
+                <td class="text-center" v-if="!archive">
                 <span v-if="item.codeStatut < 5 && user.iln == item.iln">
-                  <v-btn icon @click="current = item.num; popupDelete = true;" aria-label="Supprimer">
-                    <v-icon>delete</v-icon>
-                  </v-btn>
+                  <v-btn @click="current = item.num; popupDelete = true;" aria-label="Supprimer" icon><v-icon>delete</v-icon></v-btn>
                 </span>
                 <span v-else-if="item.codeStatut == 7 && user.iln == item.iln">
-                  <v-btn icon @click="current = item.num; popupArchive = true;" aria-label="Archiver">
-                    <v-icon>archive</v-icon>
-                  </v-btn>
+                  <v-btn @click="current = item.num; popupArchive = true;" aria-label="Archiver" icon><v-icon>archive</v-icon></v-btn>
                 </span>
               </td>
               </tr>
@@ -202,24 +80,13 @@
               <v-progress-linear :indeterminate="true"></v-progress-linear>
             </div>
             <div v-if="fileReady">
-              <v-col class="text-center align justify fill-height">
-                <v-btn
-                  outlined
-                  large
-                  color="secondary"
-                  ref="fileLinkBtn"
-                  :href="fileLink"
-                  :download="blobName"
-                >Télécharger le fichier
-                  <v-icon right dark>cloud_download</v-icon>
-                </v-btn>
-              </v-col>
+              <v-col class="text-center align justify fill-height"><v-btn :download="blobName" :href="fileLink" color="secondary" large outlined ref="fileLinkBtn">Télécharger le fichier<v-icon dark right>cloud_download</v-icon></v-btn></v-col>
             </div>
           </v-card-text>
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn text @click="dialog = false" aria-label="Fermer">Fermer</v-btn>
+            <v-btn @click="dialog = false" aria-label="Fermer" text>Fermer</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -232,8 +99,8 @@
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn text @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
-            <v-btn text :loading="deleteLoading" :disabled="deleteLoading"  @click="deleteDem" aria-label="Confirmer">Confirmer</v-btn>
+            <v-btn @click="popupDelete = false" aria-label="Annuler" text>Annuler</v-btn>
+            <v-btn :disabled="deleteLoading" :loading="deleteLoading" @click="deleteDem"  aria-label="Confirmer" text>Confirmer</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -246,8 +113,8 @@
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" text @click="popupArchive = false" aria-label="Annuler">Annuler</v-btn>
-            <v-btn color="primary" text :loading="deleteLoading" :disabled="deleteLoading" @click="archiveDem" aria-label="Confirmer">Confirmer</v-btn>
+            <v-btn @click="popupArchive = false" aria-label="Annuler" color="primary" text>Annuler</v-btn>
+            <v-btn :disabled="deleteLoading" :loading="deleteLoading" @click="archiveDem" aria-label="Confirmer" color="primary" text>Confirmer</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -449,8 +316,7 @@ export default {
       }
     },
     initHeader() {
-      // TODO : Peut être faire ça mieux ?
-      // En générant le nom de la constante à partir des conditions ?
+      /* Initialisation des en-têtes du tableau */
       if (this.archive) {
         if (this.user.role === 'ADMIN') {
           if (this.modif) { this.headers = constants.headersArchiveAdminModif; } else { this.headers = constants.headerExempArchiveAdmin; }
