@@ -2,8 +2,8 @@
   <v-container class="fill-height" fluid >
     <v-row align="center" justify="center">
       <v-col md="7">
-        <stepper id="stepper" current="4"></stepper>
-        <stepperexemp class="stepper" current="4" v-if="!modif"></stepperexemp>
+        <stepper class="item-stepper-bottom-margin" current="3" v-if="modif"></stepper>
+        <stepperexemp class="item-stepper-bottom-margin" current="3" v-if="!modif"></stepperexemp>
         <!--modif : true, exemp :false-->
         <upload :value="value" :loading="loading" :format=format :precedent="true" :title=titleUpload :text=textUpload v-on:upload="uploadFile"
                 @precedent="precedentDemande(numDem)" @supprimer="supprimerDemande(numDem)" @eventName="updateParent"></upload>
