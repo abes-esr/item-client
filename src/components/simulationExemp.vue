@@ -426,7 +426,7 @@ export default {
         method: 'GET',
         url: `${process.env.VUE_APP_ROOT_API}passerEnAttente?numDemande=${
           this.demande.numDemande
-        }`,
+        }&modif=false`,
       }).then(
         () => {
           this.loading = false;
