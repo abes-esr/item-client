@@ -1,5 +1,6 @@
 <template>
   <v-app :dark="isDark" id="inspire">
+    <!--BARRE DU HAUT DE L'APP-->
     <v-app-bar color="primary" max-height="4.2em" dark>
       <div class="item-margin-left-app-bar"></div> <!--Marge à gauche des icones de la barre de navigation-->
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" aria-label="menu latéral" v-if="authenticated">
@@ -26,7 +27,7 @@
       </div>
       <div class="item-margin-right-app-bar"></div> <!--Marge à droite des icones de la barre de navigation-->
     </v-app-bar>
-
+    <!--BARRE LATERALE DE MENU-->
     <v-navigation-drawer app v-if="authenticated" v-model="drawer" temporary>
       <v-list-item>
         <v-list-item-content>
@@ -147,7 +148,7 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <!--COMPOSANTS DE CONTENU-->
+    <!--COMPOSANTS IMBRIQUES CREES-->
     <v-content>
       <transition>
         <router-view @authenticated="setAuthenticated" @logout="logoutExpired" :darkMode="isDark"/>

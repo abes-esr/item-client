@@ -1,21 +1,19 @@
 <template>
     <v-footer height="auto" color="secondary">
       <v-row>
-        <!--Pour adaptation responsive du component au besoin se baser sur le component menuCards.vue-->
-          <v-btn text rounded color="#fafafa" href="http://abes.fr/">&copy; 2019 — <strong>ABES</strong></v-btn>
+          <v-chip color="secondary" href="http://abes.fr/">&copy; 2019 — ABES</v-chip>
            <v-spacer></v-spacer>
-          <v-btn text color="#fafafa" rounded @click="$router.push({ name: 'donnees' })">
+          <v-chip color="secondary" @click="$router.push({ name: 'donnees' })">
             Données Personnelles
-          </v-btn>
-          <v-btn text color="#fafafa" rounded @click="$router.push({ name: 'cgu' })">
+          </v-chip>
+          <v-chip color="secondary" @click="$router.push({ name: 'cgu' })">
             Conditions Générales d'Utilisation (CGU)
-          </v-btn>
-          <v-btn text color="#fafafa" rounded @click="$router.push({ name: 'mentions' })">
+          </v-chip>
+          <v-chip color="secondary" @click="$router.push({ name: 'mentions' })">
             Mentions Légales
-          </v-btn>
+          </v-chip>
       </v-row>
     </v-footer>
-
 </template>
 
 <script>
@@ -52,5 +50,6 @@ export default {
 <style scoped>
  .v-btn {
      text-transform: none !important;
+      background: transparent;
  }
  </style>
