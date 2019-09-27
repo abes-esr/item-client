@@ -335,6 +335,13 @@ export default {
   .item-button:hover{
     background-color: red;
   }
+  .item-flexbox-for-checkbox{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-right: 1em;
+    align-items: center
+  }
 
   @media all and (max-width: 10em){
     .item-back{

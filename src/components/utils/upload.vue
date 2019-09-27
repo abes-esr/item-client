@@ -1,67 +1,68 @@
 <template>
-    <v-container>
-        <loading :show="loading" :label="loadingMessage">
-        </loading>
-        <v-card class="elevation-12">
-            <v-app-bar dark color="primary">
-                <v-toolbar-title>{{ title }}</v-toolbar-title>
-                <v-spacer></v-spacer>
-              <show-at breakpoint="mediumAndAbove">
-                <v-btn depressed color="primary" @click="popupDelete = true"><v-icon>delete</v-icon>Supprimer cette demande</v-btn>
-              </show-at>
-            </v-app-bar>
-            <v-card-text style="margin-bottom: -2.8em">
-                 <v-file-input :rules="rules" for="files" show-size outlined prepend-icon="attachment" type="file" aria-label="Dépôt du fichier" v-model="fichierCharge" @change="autorisationEnvoi" ref="fileInput" class="input-file" :label="text"></v-file-input>
-            </v-card-text>
-            <v-card-actions>
-              <v-container fluid>
-                <v-layout row>
-                  <v-flex xs11>
-                    <v-checkbox value="exempMulti" id ="exempMulti" @click.native="getExemplairesMultiples()" label="Je souhaite créer des exemplaires supplémentaires"></v-checkbox>
-                  </v-flex>
-                  <v-flex xs1 style="padding-top: 1.3em">
-                  <v-dialog v-model="dialog" persistent max-width="400">
-                    <template v-slot:activator="{ on }">
-                      <v-btn text small icon v-on="on">
-                        <v-icon>info</v-icon>
-                      </v-btn>
-                    </template>
-                    <v-card>
-                      <v-card-title class="headline">Exemplaires multiples sur notices</v-card-title>
-                      <v-card-text>Si des exemplaires sont déjà présents sur les notices et que vous souhaitez en créer de nouveaux, cochez la case.</v-card-text>
-                      <v-card-actions>
-                        <div class="flex-grow-1"></div>
-                        <v-btn text @click="dialog = false">Compris</v-btn>
-                      </v-card-actions>
-                    </v-card>
-                  </v-dialog>
-                  </v-flex>
-                </v-layout>
-              </v-container>
-                <v-spacer></v-spacer>
-                <v-btn color="info" v-if="precedent" @click="$emit('precedent')" aria-label="Annuler">Précédent</v-btn>
-                <!-- Lors du clic sur "Envoyer", on emet un évenement "upload" avec le contenu du fichier en paramètre, afin que le composant père puisse récupérer le fichier-->
-                <v-btn color="info" :disabled="!fichierPresent" @click="$emit('upload', fichierCharge)" aria-label="Envoyer">Envoyer</v-btn>
-            </v-card-actions>
-        </v-card>
-        <br />
-        <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span>
-        </v-alert>
-        <v-dialog v-model="popupDelete" width="500">
-        <v-card>
-          <v-card-title class="headline" primary-title>Suppression</v-card-title>
-          <v-card-text>
-            Êtes-vous certain de vouloir supprimer définitivement cette demande ?
-          </v-card-text>
-          <v-divider></v-divider>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="primary" text @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
-            <v-btn color="primary" text @click="$emit('supprimer')" aria-label="Confirmer">Confirmer</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-container>
+  <v-container>
+    <loading :show="loading" :label="loadingMessage">
+    </loading>
+    <v-card class="elevation-12">
+      <v-app-bar dark color="primary">
+        <v-toolbar-title>{{ title }}</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <show-at breakpoint="mediumAndAbove">
+          <v-btn depressed color="primary" @click="popupDelete = true"><v-icon>delete</v-icon>Supprimer cette demande</v-btn>
+        </show-at>
+      </v-app-bar>
+      <!--Nouveau composant d'upload vuetify 2-->
+      <v-card-text style="margin-bottom: -2.8em">
+        <v-file-input :rules="rules" for="files" show-size outlined prepend-icon="attachment" type="file" aria-label="Dépôt du fichier" v-model="fichierCharge" @change="autorisationEnvoi" ref="fileInput" :label="text"></v-file-input>
+      </v-card-text>
+      <!--Zone de Choix d'exemplarisation multiple ne s'affiche pas si modif = true (en modification)-->
+      <div v-if="!this.modif" class="item-flexbox-for-checkbox">
+        <div class="item-margin-right-app-bar">
+              <v-checkbox value="exempMulti" id ="exempMulti" @click.native="getExemplairesMultiples()" label="Je souhaite créer des exemplaires supplémentaires"></v-checkbox>
+        </div>
+        <div class="item-margin-right-app-bar" style="margin-bottom: 0.5em">
+              <v-dialog v-model="dialog" persistent max-width="400">
+                <template v-slot:activator="{ on }">
+                  <v-btn text small icon v-on="on">
+                    <v-icon>info</v-icon>
+                  </v-btn>
+                </template>
+                <v-card>
+                  <v-card-title class="headline">Exemplaires multiples sur notice</v-card-title>
+                  <v-card-text>Si des exemplaires sont déjà présents sur les notices et que vous souhaitez en créer de nouveaux, cochez la case.</v-card-text>
+                  <v-card-actions>
+                    <div class="flex-grow-1"></div>
+                    <v-btn text @click="dialog = false">Compris</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+        </div>
+      </div>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="info" v-if="precedent" @click="$emit('precedent')" aria-label="Annuler">Précédent</v-btn>
+        <!-- Lors du clic sur "Envoyer", on emet un évenement "upload" avec le contenu du fichier en paramètre, afin que le composant père puisse récupérer le fichier-->
+        <v-btn color="info" :disabled="!fichierPresent" @click="$emit('upload', fichierCharge)" aria-label="Envoyer">Envoyer</v-btn>
+      </v-card-actions>
+    </v-card>
+    <!--Message d'alerte quand l'utilisateur clique sur supprimer demande-->
+    <br />
+    <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span>
+    </v-alert>
+    <v-dialog v-model="popupDelete" width="500">
+      <v-card>
+        <v-card-title class="headline" primary-title>Suppression</v-card-title>
+        <v-card-text>
+          Êtes-vous certain de vouloir supprimer définitivement cette demande ?
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" text @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
+          <v-btn color="primary" text @click="$emit('supprimer')" aria-label="Confirmer">Confirmer</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-container>
 </template>
 
 <script>
@@ -98,6 +99,10 @@ export default {
     /** Afficher le bouton précédent */
     precedent: {
       default: false,
+    },
+    // Modif de masse ou exemplarisation
+    modif: {
+      default: true,
     },
   },
   data() {

@@ -133,7 +133,7 @@
                   <v-container id="scroll-target" style="max-height: 400px" class="overflow-y-auto">
                     <div class="notice">
                       <pre style="text-align: left; padding-top: 1em">
-                        <span class="inner-pre" style="font-size: 12px">
+                        <span class="inner-pre">
 {{ noticeAvant }}
                         </span>
                       </pre>
@@ -195,7 +195,10 @@
                 <v-card class="pa-1" outlined tile>
                   <span class="headline --text">Exemplaire à créer</span>
                   <div class="notice">
-                    <pre>{{ noticeApres }}</pre>
+                    <br>
+                    <pre style="text-align: left; padding-top: 1em">
+{{ noticeApres }}
+                    </pre>
                   </div>
                 </v-card>
               </v-col>
@@ -444,4 +447,4 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped></style>

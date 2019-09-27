@@ -5,9 +5,7 @@
         <stepper class="item-stepper-bottom-margin" current="3" v-if="modif"></stepper>
         <stepperexemp class="item-stepper-bottom-margin" current="3" v-if="!modif"></stepperexemp>
         <!--modif : true, exemp :false-->
-        <upload :value="value" :loading="loading" :format=format :precedent="true" :title=titleUpload :text=textUpload v-on:upload="uploadFile"
-                @precedent="precedentDemande(numDem)" @supprimer="supprimerDemande(numDem)" @eventName="updateParent"></upload>
-        <br />
+        <upload :modif="modif" :loading="loading" :format=format :precedent="true" :title=titleUpload :text=textUpload v-on:upload="uploadFile" @precedent="precedentDemande(numDem, modif)" @supprimer="supprimerDemande(numDem, modif)" @eventName="updateParent"></upload>
           <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span>
         </v-alert>
       </v-col>
@@ -43,7 +41,7 @@ export default {
       format: ['csv', 'txt'],
       numDem: 0,
       titleUpload: 'Envoyer le fichier complété de la zone d\'exemplaire à traiter',
-      textUpload: 'Cliquez ou faites glisser ici<br />pour charger votre fichier complété<br />(format .txt ou .csv obligatoire)',
+      textUpload: 'Cliquez pour charger votre fichier complété (format .txt ou .csv obligatoire)',
       exemplairesMultiplesParent: false,
     };
   },
@@ -61,6 +59,7 @@ export default {
   methods: {
     // Upload du fichier enrichi
     uploadFile(file) {
+      console.log(`VARIABLE${this.exemplairesMultiplesParent}`);
       this.loading = true;
       this.file = file;
       const formData = new FormData();
