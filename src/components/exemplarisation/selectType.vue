@@ -2,16 +2,9 @@
   <v-container class="item-vertical-center-element">
     <v-row   justify="center">
       <loading :show="loading" label="Chargement en cours..."></loading>
-      <v-col cols="8">
-        <!-- TODO : METTRE LE BON STEPPER UNE FOIS FAIT -->
-        <!-- <stepper id="stepper" current="3"></stepper> -->
-      </v-col>
-      <v-col md="5" id="flexBox">
-      <v-flex xs8>
-        <stepper class="stepper" current="2" stepperExemp=false></stepper>
-      </v-flex>
-      <v-flex md5 id="flexBox">
-        <v-card class="elevation-12">
+      <v-col md="7">
+        <stepper class="item-stepper-bottom-margin" current="2" stepperExemp=false></stepper>
+        <v-card>
           <v-app-bar dark color="primary">
             <v-toolbar-title>Choix du type d'exemplarisation</v-toolbar-title>
             <v-spacer></v-spacer>
@@ -19,22 +12,22 @@
           </v-app-bar>
           <v-card-text>
             <v-card v-for="exemp in listExemp" :key="exemp.numTypeExemp" @click="selected=exemp; selectType();" class="item-global-margin-bottom">
-                    <v-card-title primary-title>
+                    <v-card elevation="0" primary-title>
                         <v-container>
-                            <v-row   align="center">
-                                <v-col cols="2">
-                                    <span class="group pa-3 secondary" style="height: 4.2em">
-                                        <v-icon v-if="exemp.numTypeExemp == 1" x-large dark>chrome_reader_mode</v-icon>
-                                        <v-icon v-else-if="exemp.numTypeExemp == 2" x-large dark>library_books</v-icon>
-                                        <v-icon v-else x-large dark>import_contacts</v-icon>
+                            <v-row align="center">
+                                <v-col cols="12" sm="3">
+                                    <span class="group pa-3 white">
+                                        <v-icon v-if="exemp.numTypeExemp == 1" large dark color="primary">chrome_reader_mode</v-icon>
+                                        <v-icon v-else-if="exemp.numTypeExemp == 2" large dark color="primary">library_books</v-icon>
+                                        <v-icon v-else large dark color="primary">import_contacts</v-icon>
                                     </span>
                                 </v-col>
-                                <v-col class="ml-4" cols="6" >
+                                <v-col cols="12" sm="9">
                                     <h3 class="headline">{{ exemp.libelle }}</h3>
                                 </v-col>
                             </v-row>
                         </v-container>
-                    </v-card-title>
+                    </v-card>
                 </v-card>
           </v-card-text>
           <!--<v-card-actions>
@@ -45,7 +38,6 @@
         <br />
         <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span>
         </v-alert>
-      </v-flex>
       </v-col>
       <v-dialog v-model="popupDelete" width="500">
         <v-card>

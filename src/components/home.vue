@@ -3,7 +3,7 @@
   <v-row class="container">
   <v-row justify="center">
     <v-col cols="12" sm="12" md="12" lg="6">
-      <menu-cards :cardHeight=9 iconType="pie_chart" routerLink="tab" titleName='Calculer mon taux de <span style="white-space: nowrap;">recouvrement</span>' class="item-horizontal-align"></menu-cards>
+      <menu-cards :cardHeight=9 iconType="pie_chart" routerLink="home" titleName='Calculer mon taux de <span style="white-space: nowrap;">recouvrement</span>' class="item-horizontal-align"></menu-cards>
     </v-col>
   </v-row>
   <v-row>
