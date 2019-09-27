@@ -2,16 +2,18 @@
   <!-- PAGE D'ACCUEIL -->
   <v-row class="container">
   <v-row justify="center">
-    <menu-cards :cardHeight=9 iconType="pie_chart" routerLink="tab" titleName="Calculer mon taux de recouvrement" class="item-horizontal-align menu-card"></menu-cards>
+    <v-col cols="12" sm="12" md="12" lg="6">
+      <menu-cards :cardHeight=9 iconType="pie_chart" routerLink="tab" titleName='Calculer mon taux de <span style="white-space: nowrap;">recouvrement</span>' class="item-horizontal-align"></menu-cards>
+    </v-col>
   </v-row>
   <v-row>
-    <v-col>
-      <menu-cards :cardHeight=9 iconType="add_circle_outline" routerLink="rcrEx" titleName="Créer des exemplaires" class="item-horizontal-align"></menu-cards>
-      <menu-cards :cardHeight=9 iconType="sort" routerLink="tabEx" titleName="Gérer mes demandes d'exemplarisation" class="item-horizontal-align"></menu-cards>
+    <v-col cols="12" sm="12" md="12" lg="6">
+      <menu-cards :cardHeight=9 iconType="add_circle_outline" routerLink="rcrEx" titleName='Créer des exemplaires' class="item-horizontal-align"></menu-cards>
+      <menu-cards :cardHeight=9 iconType="sort" routerLink="tabEx" titleName='Gérer mes demandes de <span style="white-space: nowrap;">creation</span>' class="item-horizontal-align"></menu-cards>
     </v-col>
-    <v-col>
-      <menu-cards :cardHeight=9 iconType="edit" routerLink="rcr" titleName="Modifier des exemplaires" class="item-horizontal-align"></menu-cards>
-      <menu-cards :cardHeight=9 iconType="sort" routerLink="tab" titleName="Gérer mes demandes de modification" class="item-horizontal-align"></menu-cards>
+    <v-col cols="12" sm="12" md="12" lg="6">
+      <menu-cards :cardHeight=9 iconType="edit" routerLink="rcr" titleName='Modifier des <span style="white-space: nowrap;">exemplaires</span>' class="item-horizontal-align"></menu-cards>
+      <menu-cards :cardHeight=9 iconType="sort" routerLink="tab" titleName='Gérer mes demandes de <span style="white-space: nowrap;">modification</span>' class="item-horizontal-align"></menu-cards>
     </v-col>
   </v-row>
 </v-row>

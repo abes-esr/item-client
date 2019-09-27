@@ -63,7 +63,7 @@
       <v-list dense nav>
         <v-list-item>
           <v-list-item-title class="title">
-            Taux de recouvrement
+            Recouvrement
           </v-list-item-title>
         </v-list-item>
         <v-list-item v-on:click="$router.push({ name: 'tab' })">
@@ -81,7 +81,7 @@
       <v-list dense nav>
         <v-list-item>
           <v-list-item-title class="title">
-            Exemplarisations
+            Creations
           </v-list-item-title>
         </v-list-item>
         <v-list-item v-on:click="$router.push({ name: 'rcrEx' })">
@@ -144,6 +144,7 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
+    <!--COMPOSANTS DE CONTENU-->
     <v-content>
       <transition>
         <router-view @authenticated="setAuthenticated" @logout="logoutExpired" :darkMode="isDark"/>
