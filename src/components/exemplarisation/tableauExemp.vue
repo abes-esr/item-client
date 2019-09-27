@@ -5,25 +5,25 @@
         <v-alert :type="alertType" :value="alert" dismissible transition="scale-transition">
           <span v-html="alertMessage"></span>
         </v-alert>
-        <v-card>
+        <v-card :loading="tableLoading">
           <v-card-title class="title" v-if="archive && modif" >Mes demandes de modification archivées</v-card-title>
           <v-card-title class="title" v-if="!archive && modif">Gérer mes demandes de modification</v-card-title>
           <v-card-title class="title" v-if="archive && !modif">Mes demandes d'exemplarisation archivées</v-card-title>
           <v-card-title class="title" v-if="!archive && !modif">Gérer mes demandes d'exemplarisation</v-card-title>
           <!--Ligne d'entête du tableau-->
-          <v-data-table :headers="headers" :items="computedItems('guess')" :items-per-page="8" class="elevation-1" fixed-header item-key="num" loading-text="chargement.." multi-sort no-data-text="Aucune demande trouvée" no-results-text="Aucun resultat trouvé" headers-length="3" :sort-desc="[false, true]" :footer-props="{showFirstLastPage: true,firstIcon: 'mdi-arrow-collapse-left',lastIcon: 'mdi-arrow-collapse-right',prevIcon: 'mdi-minus',nextIcon: 'mdi-plus'}">
+          <v-data-table :headers="headers" :items="computedItems('guess')" :items-per-page="8" class="elevation-1" item-key="num" loading-text="chargement.." multi-sort no-data-text="Aucune demande trouvée" no-results-text="Aucun resultat trouvé" headers-length="3" :sort-desc="[false, true]" :footer-props="{showFirstLastPage: true,firstIcon: 'mdi-arrow-collapse-left',lastIcon: 'mdi-arrow-collapse-right',prevIcon: 'mdi-minus',nextIcon: 'mdi-plus'}">
             <template v-slot:body="{ items }">
               <!--Ligne avec les champs de recherche-->
               <thead>
                 <tr>
                 <th></th>
-                <th><v-text-field append-icon="search" aria-label="Recherche par numéro" class="item-table-body-header-elements-vertical-align" clear-icon='clear' clearable hide-details single-line v-model="searchNum" v-on:keyup="computedItems('num')"></v-text-field></th>
-                <th class="smallTD"><v-menu :close-on-content-click="true" ref="menu" v-model="menu"><template v-slot:activator="{ on }"><v-text-field class="item-table-body-header-elements-vertical-align" label="Date" persistent-hint v-model="searchDateModification" v-on="on"></v-text-field></template><v-date-picker @change="computedItems('dateModification')" first-day-of-week="1" locale="fr-fr" no-title v-model="searchDateModification"></v-date-picker></v-menu></th>
-                <th class="smallTD" v-if="user.role == 'ADMIN'"><v-text-field append-icon="search" aria-label="Recherche par ILN" class="item-table-body-header-elements-vertical-align" clear-icon='clear' clearable hide-details single-line v-model="searchILN" v-on:keyup="computedItems('iln')"></v-text-field></th>
-                <th><v-text-field append-icon="search" aria-label="Recherche par RCR" class="item-table-body-header-elements-vertical-align" clear-icon='clear' clearable hide-details single-line v-model="searchRCR" v-on:keyup="computedItems('rcr')"></v-text-field></th>
-                <th><v-text-field append-icon="search" aria-label="Recherche par Index" class="item-table-body-header-elements-vertical-align" clear-icon='clear' clearable hide-details single-line v-model="searchIndexRecherche" v-on:keyup="computedItems('indexRecherche')"></v-text-field></th>
-                <th><v-select :items="listTypeExemp" @change="computedItems('typeExemp')" aria-label="Recherche par type d'exemplarisation" class="item-table-body-header-elements-vertical-align-list" clear-icon='clear' clearable item-text="libelle" item-value="libelle" no-data-text="Aucun type trouvé." v-model="searchTypeExemp"></v-select></th>
-                <th class="smallTD" v-if="!archive"><v-select :items="listStatut" @change="computedItems('statut')" aria-label="Recherche par statut" class="item-table-body-header-elements-vertical-align-list" clear-icon='clear' clearable no-data-text="Aucun statut trouvé." v-model="searchStatut"></v-select></th>
+                <th><v-text-field append-icon="search" aria-label="Recherche par numéro" clear-icon='clear' clearable hide-details single-line v-model="searchNum" v-on:keyup="computedItems('num')"></v-text-field></th>
+                <th class="smallTD"><v-menu :close-on-content-click="true" ref="menu" v-model="menu"><template v-slot:activator="{ on }"><v-text-field class="item-calendar-searchfield-item" label="recherche par date" persistent-hint v-model="searchDateModification" v-on="on"></v-text-field></template><v-date-picker @change="computedItems('dateModification')" first-day-of-week="1" locale="fr-fr" no-title v-model="searchDateModification"></v-date-picker></v-menu></th>
+                <th class="smallTD" v-if="user.role == 'ADMIN'"><v-text-field append-icon="search" aria-label="Recherche par ILN"  clear-icon='clear' clearable hide-details single-line v-model="searchILN" v-on:keyup="computedItems('iln')"></v-text-field></th>
+                <th><v-text-field append-icon="search" aria-label="Recherche par RCR"  clear-icon='clear' clearable hide-details single-line v-model="searchRCR" v-on:keyup="computedItems('rcr')"></v-text-field></th>
+                <th><v-text-field append-icon="search" aria-label="Recherche par Index"  clear-icon='clear' clearable hide-details single-line v-model="searchIndexRecherche" v-on:keyup="computedItems('indexRecherche')"></v-text-field></th>
+                <th><v-select :items="listTypeExemp" @change="computedItems('typeExemp')" aria-label="Recherche par type d'exemplarisation" clear-icon='clear' clearable item-text="libelle" item-value="libelle" no-data-text="Aucun type trouvé." v-model="searchTypeExemp"></v-select></th>
+                <th class="smallTD" v-if="!archive"><v-select :items="listStatut" @change="computedItems('statut')" aria-label="Recherche par statut" clear-icon='clear' clearable no-data-text="Aucun statut trouvé." v-model="searchStatut"></v-select></th>
                 <th></th>
                 <th v-if="!archive"></th>
                 </tr>
@@ -33,7 +33,7 @@
                 <tr :key="item.name" v-for="item in items">
                 <td></td>
                 <td @click="clickRow(item.num, item.codeStatut)">{{ item.num }}</td>
-                <td @click="clickRow(item.num, item.codeStatut)">{{ item.dateModification }}</td>
+                <td @click="clickRow(item.num, item.codeStatut)">{{ item.dateModification | formatDate }}</td>
                 <td @click="clickRow(item.num, item.codeStatut)">{{ item.iln }}</td>
                 <td @click="clickRow(item.num, item.codeStatut)">{{ item.rcr }}</td>
                 <td @click="clickRow(item.num, item.codeStatut)">{{ item.indexRecherche }}</td>

@@ -342,6 +342,9 @@ export default {
     margin-right: 1em;
     align-items: center
   }
+  .item-calendar-searchfield-item{
+    max-height: 2.8em
+  }
 
   @media all and (max-width: 10em){
     .item-back{

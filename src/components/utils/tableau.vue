@@ -517,8 +517,6 @@ export default {
       }
     },
     initHeader() {
-      // TODO : Peut être faire ça mieux ?
-      // En générant le nom de la constante à partir des conditions ?
       if (this.archive) {
         if (this.user.role === 'ADMIN') {
           if (this.modif) { this.headers = constants.headersArchiveAdminModif; } else { this.headers = constants.headerExempArchiveAdmin; }
