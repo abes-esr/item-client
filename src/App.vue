@@ -1,26 +1,29 @@
 <template>
   <v-app :dark="isDark" id="inspire">
-    <v-app-bar
-      color="#295494" max-height="4.2em" dark
-    >
+    <v-app-bar color="primary" max-height="4.2em" dark>
       <div class="item-margin-left-app-bar"></div> <!--Marge à gauche des icones de la barre de navigation-->
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" aria-label="menu latéral" v-if="authenticated">
         <v-icon large>menu</v-icon>
       </v-app-bar-nav-icon>
       <v-toolbar-title class="item-margin-left-icon">Item</v-toolbar-title>
 
+      <!--Icones de la barre de menu à droite-->
       <div class="flex-grow-1"></div>
-      <v-btn icon class="item-margin-around-single-icon">
-          <span><a href="https://stp.abes.fr/node/3?origine=sudocpro" title="Assistance" rel="noopener" target="_blank"><img alt="icone assistance" height="38px" href="https://stp.abes.fr/node/3?origine=sudocpro" src="@/assets/assistance.png" target="_blank" width="38px"></a></span>
+      <div class="item-margin-around-single-icon">
+        <v-btn class="mx-2 item-margin-around-single-icon" fab dark small color="primary">
+            <span><a href="https://stp.abes.fr/node/3?origine=sudocpro" title="Assistance" rel="noopener" target="_blank"><img alt="icone assistance" height="41px" href="https://stp.abes.fr/node/3?origine=sudocpro" src="@/assets/assistance.png" target="_blank" width="41px"></a></span>
+        </v-btn>
+      </div>
+      <div class="item-margin-around-single-icon">
+        <v-btn class="mx-2 item-margin-around-single-icon" fab dark small color="primary">
+            <span><a href="http://documentation.abes.fr/aideitem/index.html" title="Documentation" rel="noopener" target="_blank"><img alt="icone documentation" height="41px" href="http://documentation.abes.fr/aideitem/index.html" src="@/assets/documentation.png" target="_blank" width="41px"></a></span>
+        </v-btn>
+      </div>
+      <div class="item-margin-around-single-icon">
+      <v-btn class="mx-2 item-margin-around-single-icon" fab dark small color="primary" v-if="authenticated">
+          <span @click="logout()" title="Déconnexion"><a><img alt="icone déconnexion" height="41px" src="@/assets/deconnexion.png" width="41px"></a></span>
       </v-btn>
-
-      <v-btn icon class="item-margin-around-single-icon">
-          <span><a href="http://documentation.abes.fr/aideitem/index.html" title="Documentation" rel="noopener" target="_blank"><img alt="icone documentation" height="38px" href="http://documentation.abes.fr/aideitem/index.html" src="@/assets/documentation.png" target="_blank" width="38px"></a></span>
-      </v-btn>
-
-      <v-btn icon class="item-margin-around-single-icon" v-if="authenticated">
-          <span @click="logout()" title="Déconnexion"><a><img alt="icone déconnexion" height="38px" src="@/assets/deconnexion.png" width="38px"></a></span>
-      </v-btn>
+      </div>
       <div class="item-margin-right-app-bar"></div> <!--Marge à droite des icones de la barre de navigation-->
     </v-app-bar>
 
@@ -286,9 +289,6 @@ export default {
     margin: 0 1em 0 1em
   }
 
-  .item-margin-around-single-icon{
-    margin: 0 1em 0 1em
-  }
   .item-margin-left-icon{
     margin: 1em
   }
@@ -330,6 +330,9 @@ export default {
   .item-table-body-header-elements-vertical-align-list{
     display: inline-block;
     margin-bottom: 1.4em
+  }
+  .item-button:hover{
+    background-color: red;
   }
 
   @media all and (max-width: 10em){
