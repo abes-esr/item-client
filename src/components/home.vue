@@ -51,14 +51,5 @@ export default {
     flex-direction: column;
   }
 
-  @media all and (max-width: 6em) {
-    .container {
-      width: 100%
-    }
-  }
-  @media screen and (max-width: 600px){
-    .menu-card {
-      max-width: 22.4em;
-    }
-  }
+
 </style>

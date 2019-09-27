@@ -45,12 +45,11 @@ export default {
 };
 </script>
 
-<style scoped src="../../assets/global.css"> //Utiliser ce scope pour faire des imports globaux de propriétés css dans chaque component
+<style> //Utiliser ce scope pour faire des imports globaux de propriétés css dans chaque component
   .group {
     border-radius: 5%;
     display: flex;
     flex: 1;
     justify-content: space-around;
   }
-
 </style>

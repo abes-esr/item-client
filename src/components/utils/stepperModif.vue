@@ -25,4 +25,4 @@ export default {
 };
 </script>
 
-<style scoped src="../../assets/global.css"></style>
+<style scoped></style>

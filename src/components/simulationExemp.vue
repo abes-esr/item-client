@@ -444,44 +444,4 @@ export default {
 };
 </script>
 
-<style scoped src="../assets/global.css">
-  pre {
-    text-align: left !important;
-    white-space: pre-wrap; /* Since CSS 2.1 */
-    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
-    word-wrap: break-word; /* Internet Explorer 5.5+ */
-  }
-
-  .v-card {
-    width: 100%;
-  }
-  .notice {
-    padding-top: 20px;
-  }
-  #demInfos {
-    margin-bottom: 10px;
-    text-align: left;
-  }
-  #numLigne {
-    text-align: left !important;
-    padding-top: 20px;
-    padding-left: 20px;
-  }
-  #layoutButtonOk {
-    padding-right: 8%;
-  }
-  .unhover{
-    pointer-events: none;
-  }
-  .subheading{
-    display: block;
-    margin-top: 1em
-  }
-  #numLigne{
-    display: inline-block;
-  }
-  .scroll {
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-</style>
+<style scoped>

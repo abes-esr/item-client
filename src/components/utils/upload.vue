@@ -159,7 +159,7 @@ export default {
 };
 </script>
 
-<style scoped src="../../assets/global.css">
+<style scoped>
     .dropbox {
       outline: 2px dashed grey;
       outline-offset: -10px;

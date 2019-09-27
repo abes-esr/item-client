@@ -45,6 +45,7 @@
         <br />
         <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span>
         </v-alert>
+      </v-flex>
       </v-col>
       <v-dialog v-model="popupDelete" width="500">
         <v-card>
@@ -193,7 +194,7 @@ export default {
 };
 </script>
 
-<style scoped src="../../assets/global.css">
+<style scoped>
     .group {
       border-radius: 5%;
       display: flex;
