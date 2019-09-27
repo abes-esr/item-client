@@ -41,7 +41,7 @@
 <script>
 import axios from 'axios';
 import loading from 'vue-full-loading';
-import stepper from '@/components/utils/stepper.vue';
+import stepper from '@/components/utils/stepperExemp.vue';
 import constants from '@/components/utils/const';
 
 export default {

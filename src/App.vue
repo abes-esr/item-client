@@ -278,4 +278,7 @@ export default {
     background-color: #ec6839 !important;
     border-color: #ec6839 !important;
   }
+  .item-text-center{
+    text-align: center;
+  }
 </style>
