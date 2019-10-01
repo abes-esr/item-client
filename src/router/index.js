@@ -137,6 +137,7 @@ const router = new Router({
       path: '/tableauEx',
       name: 'tabEx',
       component: GererExComponent,
+      props: { modif: false },
       meta: {
         requiresAuth: true,
       },
