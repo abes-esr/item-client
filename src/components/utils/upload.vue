@@ -1,69 +1,88 @@
 <template>
-    <v-container>
-        <loading :show="loading" :label="loadingMessage">
-        </loading>
-        <v-card class="elevation-12">
-            <v-toolbar dark color="primary">
-                <v-toolbar-title>{{ title }}</v-toolbar-title>
-                <v-spacer></v-spacer>
-                <v-btn flat @click="popupDelete = true"><v-icon>delete</v-icon>Supprimer</v-btn>
-            </v-toolbar>
-            <v-card-text>
-                <form enctype="multipart/form-data">
-                    <div class="dropbox">
-                        <input type="file" :accept="format" aria-label="Dépôt du fichier" ref="fileInput" @click="fichierPresent = false;" @change="checkFile(); checkFormat(); getRefName();" class="input-file">
-                        <p v-if="!fichierPresent">
-                            <span v-html="text"></span>
-                        </p>
-                        <p v-else>
-                            <v-icon>file_copy</v-icon> Fichier : {{ filename }}
-                        </p>
-                    </div>
-                </form>
-            </v-card-text>
-            <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="info" v-if="precedent" @click="$emit('precedent')" aria-label="Annuler">Précédent</v-btn>
-                <!-- Lors du clic sur "Envoyer", on emet un évenement "upload" avec le contenu du fichier en paramètre, afin que le composant père puisse récupérer le fichier-->
-                <v-btn color="info" :disabled="!fichierPresent" @click="$emit('upload', $refs.fileInput.files[0])" aria-label="Envoyer">Envoyer</v-btn>
-            </v-card-actions>
-        </v-card>
-        <br />
-        <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span>
-        </v-alert>
-        <v-dialog v-model="popupDelete" width="500">
-        <v-card>
-          <v-card-title class="headline" primary-title>Suppression</v-card-title>
-          <v-card-text>
-            Êtes-vous certain de vouloir supprimer définitivement cette demande ?
-          </v-card-text>
-          <v-divider></v-divider>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="primary" flat @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
-            <v-btn color="primary" flat @click="$emit('supprimer')" aria-label="Confirmer">Confirmer</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-container>
+  <v-container>
+    <loading :show="loading" :label="loadingMessage">
+    </loading>
+    <v-card class="elevation-12">
+      <v-app-bar dark color="primary">
+        <v-toolbar-title>{{ title }}</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <show-at breakpoint="mediumAndAbove">
+          <v-btn depressed color="primary" @click="popupDelete = true"><v-icon>delete</v-icon>Supprimer cette demande</v-btn>
+        </show-at>
+      </v-app-bar>
+      <!--Nouveau composant d'upload vuetify 2-->
+      <v-card-text style="margin-bottom: -2.8em">
+        <v-file-input :rules="rules" for="files" show-size outlined prepend-icon="attachment" type="file" aria-label="Dépôt du fichier" v-model="fichierCharge" @change="autorisationEnvoi" ref="fileInput" :label="text"></v-file-input>
+      </v-card-text>
+      <!--Zone de Choix d'exemplarisation multiple ne s'affiche pas si modif = true (en modification)-->
+      <div v-if="!this.modif" class="item-flexbox-for-checkbox">
+        <div class="item-margin-right-app-bar">
+              <v-checkbox value="exempMulti" id ="exempMulti" @click.native="getExemplairesMultiples()" label="Je souhaite créer des exemplaires supplémentaires"></v-checkbox>
+        </div>
+        <div class="item-margin-right-app-bar" style="margin-bottom: 0.5em">
+              <v-dialog v-model="dialog" persistent max-width="400">
+                <template v-slot:activator="{ on }">
+                  <v-btn text small icon v-on="on">
+                    <v-icon>info</v-icon>
+                  </v-btn>
+                </template>
+                <v-card>
+                  <v-card-title class="headline">Exemplaires multiples sur notice</v-card-title>
+                  <v-card-text>Si des exemplaires sont déjà présents sur les notices et que vous souhaitez en créer de nouveaux, cochez la case.</v-card-text>
+                  <v-card-actions>
+                    <div class="flex-grow-1"></div>
+                    <v-btn text @click="dialog = false">Compris</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+        </div>
+      </div>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="info" v-if="precedent" @click="$emit('precedent')" aria-label="Annuler">Précédent</v-btn>
+        <!-- Lors du clic sur "Envoyer", on emet un évenement "upload" avec le contenu du fichier en paramètre, afin que le composant père puisse récupérer le fichier-->
+        <v-btn color="info" :disabled="!fichierPresent" @click="$emit('upload', fichierCharge)" aria-label="Envoyer">Envoyer</v-btn>
+      </v-card-actions>
+    </v-card>
+    <!--Message d'alerte quand l'utilisateur clique sur supprimer demande-->
+    <br />
+    <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span>
+    </v-alert>
+    <v-dialog v-model="popupDelete" width="500">
+      <v-card>
+        <v-card-title class="headline" primary-title>Suppression</v-card-title>
+        <v-card-text>
+          Êtes-vous certain de vouloir supprimer définitivement cette demande ?
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" text @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
+          <v-btn color="primary" text @click="$emit('supprimer')" aria-label="Confirmer">Confirmer</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-container>
 </template>
 
 <script>
 import loading from 'vue-full-loading';
+import { showAt } from 'vue-breakpoints';
 
 export default {
   name: 'upload',
   components: {
     loading,
+    showAt,
   },
   props: {
     /** Titre de la carte vuetify */
     title: {
       default: 'Envoi de votre fichier',
     },
-    /** Texte dans le carré ou l'on dépose le fichier */
+    /** Text que contient le champ d'uload de fichier */
     text: {
-      default: 'Faites glisser votre fichier<br> ou cliquez ici pour le rechercher',
+      default: 'Cliquez ici pour charger votre fichier (obligatoirement au format .csv ou .txt)',
     },
     /** Active le chargement (plein écran) */
     loading: {
@@ -75,11 +94,15 @@ export default {
     },
     /** Extension de fichier acceptée par le composant upload */
     format: {
-      default: ['txt'],
+      default: ['csv, txt'],
     },
     /** Afficher le bouton précédent */
     precedent: {
       default: false,
+    },
+    // Modif de masse ou exemplarisation
+    modif: {
+      default: true,
     },
   },
   data() {
@@ -88,19 +111,27 @@ export default {
       alert: false,
       alertMessage: 'Erreur.',
       alertType: 'error',
-      filename: '',
       popupDelete: false,
+      dialog: false,
+      exemplairesMultiplesChild: false,
+      fichierCharge: [],
+      rules: [
+        value => ((value.type === 'text/csv') || (value.type === 'text/plain')) || 'Le fichier chargé n\'est pas dans un format autorisé (.txt ou .csv)',
+      ],
+      typeFile: [
+        value => value.type,
+      ],
     };
   },
   methods: {
-    /**
-         * Modifie l'attribut fichierPresent à true/false selon si l'utilisateur a ajouté un fichier au formulaire ou non
-         */
-    checkFile() {
-      if (this.$refs.fileInput.files[0].size > 0) {
+    // changement statut bouton envoyer
+    autorisationEnvoi() {
+      if ((this.fichierCharge.type === 'text/csv') || (this.fichierCharge.type === 'text/plain')) {
         this.fichierPresent = true;
+        console.log(this.fichierPresent);
       } else {
         this.fichierPresent = false;
+        console.log(this.fichierPresent);
       }
     },
     /**
@@ -108,9 +139,12 @@ export default {
          * Affiche une erreur si ce n'est pas le cas
          */
     checkFormat() {
+      console.log('salut');
+      console.log(this.format);
+      console.log(this.$refs.fileInput.files[0].name.split('.')[1]);
       this.alert = false;
       if (!(this.format.includes(this.$refs.fileInput.files[0].name.split('.')[1]))) {
-        this.alertMessage = `Le fichier doit être au format(s) ${this.format}`;
+        this.alertMessage = `Le fichier doit être au format(s) suivants : ${this.format}`;
         this.alertType = 'error';
         this.alert = true;
         this.fichierPresent = false;
@@ -120,6 +154,11 @@ export default {
     getRefName() {
       // Obligatoire car $refs n'est plus réactif depuis Vue 2.0
       this.filename = this.$refs.fileInput.files[0].name;
+    },
+    getExemplairesMultiples() {
+      const elt = document.getElementById('exempMulti');
+      this.exemplairesMultiplesChild = elt.checked;
+      this.$emit('eventName', this.exemplairesMultiplesChild);
     },
   },
 };
@@ -134,9 +173,6 @@ export default {
       padding: 10px 10px;
       position: relative;
       cursor: pointer;
-    }
-    .dropbox:hover {
-      background: lightblue; /* when mouse over to the drop zone, change color */
     }
     .dropbox p {
       font-size: 1.2em;

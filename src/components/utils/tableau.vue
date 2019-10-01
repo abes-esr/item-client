@@ -1,13 +1,15 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <v-container fluid>
-    <v-layout justify-center align-center>
-      <v-flex text-xs-center>
+    <v-row justify="center" align="center">
+      <v-col class="text-center" >
         <v-alert :value="alert" :type="alertType" dismissible transition="scale-transition">
           <span v-html="alertMessage"></span>
         </v-alert>
         <v-card>
-          <v-card-title v-if="archive" class="title" >Mes demandes archivées</v-card-title>
-          <v-card-title v-else class="title">Gérer mes demandes</v-card-title>
+          <v-card-title v-if="archive && modif" class="title" >Mes demandes de modification archivées</v-card-title>
+          <v-card-title v-if="!archive && modif" class="title">Gérer mes demandes de modification</v-card-title>
+          <v-card-title v-if="archive && !modif" class="title">Mes demandes d'exemplarisation archivées</v-card-title>
+          <v-card-title v-if="!archive && !modif" class="title">Gérer mes demandes d'exemplarisation</v-card-title>
           <v-data-table
             :loading="tableLoading"
             :headers="headers"
@@ -18,7 +20,7 @@
             class="elevation-1"
             item-key="num"
             :rows-per-page-items='[10,25, {"text":"Toutes","value":-1}]'
-          >
+            style="width: 100%;">
             <template slot="headers" slot-scope="props">
               <tr>
                 <th
@@ -26,7 +28,7 @@
                   :key="header.text"
                   :class="['column sortable', pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']"
                   @click="changeSort(header.value)"
-                >
+                  >
                   <v-icon small>arrow_upward</v-icon>
                   {{ header.text }}
                 </th>
@@ -40,7 +42,6 @@
                     append-icon="search"
                     single-line
                     hide-details
-                    clearable
                     v-on:keyup="computedItems('num')"
                   ></v-text-field>
                 </th>
@@ -60,7 +61,6 @@
                       aria-label="Recherche par date"
                       prepend-icon="event"
                       append-icon="search"
-                      clearable
                       readonly
                     ></v-text-field>
                     <v-date-picker
@@ -73,18 +73,17 @@
                       @change="computedItems('dateModification')"
                     >
                       <v-spacer></v-spacer>
-                      <v-btn flat color="primary" @click="calendar2 = false" aria-label="Annuler">Annuler</v-btn>
+                      <v-btn text color="primary" @click="calendar2 = false" aria-label="Annuler">Annuler</v-btn>
                     </v-date-picker>
                   </v-menu>
                 </th>
                 <th v-if="user.role == 'ADMIN'" class="smallTD">
-                   <v-text-field
+                  <v-text-field
                     v-model="searchILN"
                     aria-label="Recherche par ILN"
                     append-icon="search"
                     single-line
                     hide-details
-                    clearable
                     v-on:keyup="computedItems('iln')"
                   ></v-text-field>
                 </th>
@@ -95,7 +94,6 @@
                     aria-label="Recherche par RCR"
                     single-line
                     hide-details
-                    clearable
                     v-on:keyup="computedItems('rcr')"
                   ></v-text-field>
                 </th>
@@ -106,7 +104,6 @@
                     aria-label="Recherche par Zone et Sous-Zone"
                     single-line
                     hide-details
-                    clearable
                     v-on:keyup="computedItems('zoneSousZone')"
                   ></v-text-field>
                 </th>
@@ -119,7 +116,6 @@
                     item-text="libelle"
                     no-data-text="Aucun traitement trouvé."
                     @change="computedItems('traitement')"
-                    clearable
                   ></v-select>
                 </th>
                 <th v-if="!archive" class="smallTD">
@@ -129,7 +125,6 @@
                     :items="listStatut"
                     no-data-text="Aucun statut trouvé."
                     @change="computedItems('statut')"
-                    clearable
                   ></v-select>
                 </th>
                 <th></th>
@@ -142,43 +137,47 @@
                 <v-icon v-else :color='props.item.commentaire !== null && props.item.commentaire !== "" ? "white" : "default"' :class="{colored: props.item.commentaire}">keyboard_arrow_down</v-icon>
               </td>
               <td
-                class="text-xs-left"
+                class="text-left"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
               >{{ props.item.num }}</td>
               <td
-                class="text-xs-left"
+                class="text-left"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
               >{{ props.item.dateModification | formatDate }}</td>
               <td
                 v-if="user.role == 'ADMIN'"
-                class="text-xs-left"
+                class="text-left"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
               >{{ props.item.iln }}</td>
               <td
-                class="text-xs-left"
+                class="text-left"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
-              ><abbr v-bind:title="props.item.rcr.slice(11, 200)">
-                {{ props.item.rcr.slice(0,9) }}</abbr>
+              ><abbr v-bind:title="props.item.rcr">
+                {{ props.item.rcr }}</abbr>
               </td>
               <td
-                class="text-xs-left"
+                class="text-left"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
-              >{{ props.item.zoneSousZone }}</td>
+              >
+                <span v-if="modif">{{ props.item.zoneSousZone }}</span>
+                <span v-else>{{ props.item.index }}</span>
+              </td>
               <td
-                class="text-xs-left"
+                class="text-left"
                 @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
               >{{ props.item.traitement }}</td>
               <td v-if="!archive"
-                class="text-xs-left"
-                v-bind:class="props.item.color"
-                @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
+                  class="text-left"
+                  v-bind:class="props.item.color"
+                  @click="clickRow(props.item.num, props.item.codeStatut, props.item.traitement)"
               >{{ props.item.statut }}</td>
-              <td class="text-xs-center">
+              <td class="text-center">
                 <v-menu bottom left v-if="props.item.codeStatut >= 2">
                   <v-btn slot="activator" color="info" small aria-label="Télécharger les fichiers" class="cloudButton">
                     <v-icon>cloud_download</v-icon>
                   </v-btn>
-                  <v-list v-if="props.item.codeStatut >= 3">
+                  <!-- FICHIERS MODIF -->
+                  <v-list v-if="props.item.codeStatut >= 3 && modif">
                     <v-list-tile @click="downloadFile(props.item.num, 'ppn')">
                       <v-list-tile-title>Télécharger le fichier initial des PPN</v-list-tile-title>
                     </v-list-tile>
@@ -198,6 +197,18 @@
                       <v-list-tile-title>Télécharger le fichier résultat</v-list-tile-title>
                     </v-list-tile>
                   </v-list>
+                  <!-- FICHIERS EXEMPLARISATION -->
+                  <v-list v-if="props.item.codeStatut >= 3 && !modif">
+                    <v-list-tile @click="downloadFile(props.item.num, 'initEx')">
+                      <v-list-tile-title>Télécharger le fichier initial</v-list-tile-title>
+                    </v-list-tile>
+                    <v-list-tile
+                      @click="downloadFile(props.item.num, 'resultatEx')"
+                      v-if="props.item.codeStatut >= 7"
+                    >
+                      <v-list-tile-title>Télécharger le fichier résultat</v-list-tile-title>
+                    </v-list-tile>
+                  </v-list>
                 </v-menu>
                 <span v-if="props.item.codeStatut == 1">
                   <v-btn slot="activator" color="info" aria-label="Téléchargement impossible" small disabled class="cloudButton">
@@ -205,7 +216,7 @@
                   </v-btn>
                 </span>
               </td>
-              <td v-if="!archive" class="text-xs-center">
+              <td v-if="!archive" class="text-center">
                 <span v-if="props.item.codeStatut < 5 && user.iln == props.item.iln">
                   <v-btn icon @click="current = props.item.num; popupDelete = true;" aria-label="Supprimer">
                     <v-icon>delete</v-icon>
@@ -220,18 +231,18 @@
             </template>
             <template v-slot:expand="props">
               <v-card flat>
-              <v-card-text class="text-xs-left">
-                <v-textarea
-                  solo
-                  name="comment"
-                  label="Commentaire (150 caractères maximum)"
-                  :disabled="props.item.iln != user.iln"
-                  v-model="props.item.commentaire"
-                  maxlength="150"
-                ></v-textarea>
-                <v-btn v-if="user.iln == props.item.iln" color="info" :loading="commentButton" @click="saveComment(props.item.num, props.item.commentaire); props.expanded = false;">Enregistrer</v-btn>
-              </v-card-text>
-            </v-card>
+                <v-card-text class="text-left">
+                  <v-textarea
+                    solo
+                    name="comment"
+                    label="Commentaire (150 caractères maximum)"
+                    :disabled="props.item.iln != user.iln"
+                    v-model="props.item.commentaire"
+                    maxlength="150"
+                  ></v-textarea>
+                  <v-btn v-if="user.iln == props.item.iln" color="info" :loading="commentButton" @click="saveComment(props.item.num, props.item.commentaire); props.expanded = false;">Enregistrer</v-btn>
+                </v-card-text>
+              </v-card>
             </template>
             <template
               slot="pageText"
@@ -245,7 +256,7 @@
             >Votre recherche sur "{{ search }}" ne donne aucun résultat.</v-alert>
           </v-data-table>
         </v-card>
-      </v-flex>
+      </v-col>
       <v-dialog v-model="dialog" width="500">
         <v-card>
           <v-card-title class="headline" primary-title>Téléchargement du fichier</v-card-title>
@@ -254,9 +265,9 @@
               <v-progress-linear :indeterminate="true"></v-progress-linear>
             </div>
             <div v-if="!fileReady">
-              <v-flex align-center justify-center fill-height class="text-xs-center">
+              <v-col class="text-center align justify fill-height">
                 <v-btn
-                  outline
+                  outlined
                   large
                   color="secondary"
                   ref="fileLinkBtn"
@@ -265,13 +276,13 @@
                 >Télécharger le fichier
                   <v-icon right dark>cloud_download</v-icon>
                 </v-btn>
-              </v-flex>
+              </v-col>
             </div>
           </v-card-text>
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" flat @click="dialog = false" aria-label="Fermer">Fermer</v-btn>
+            <v-btn color="primary" text @click="dialog = false" aria-label="Fermer">Fermer</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -284,8 +295,8 @@
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" flat @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
-            <v-btn color="primary" :loading="deleteLoading" :disabled="deleteLoading" flat @click="deleteDem" aria-label="Confirmer">Confirmer</v-btn>
+            <v-btn color="primary" text @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
+            <v-btn color="primary" text :loading="deleteLoading" :disabled="deleteLoading" @click="deleteDem" aria-label="Confirmer">Confirmer</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -298,12 +309,12 @@
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" flat @click="popupArchive = false" aria-label="Annuler">Annuler</v-btn>
-            <v-btn color="primary" :loading="deleteLoading" :disabled="deleteLoading" flat @click="archiveDem" aria-label="Confirmer">Confirmer</v-btn>
+            <v-btn color="primary" text @click="popupArchive = false" aria-label="Annuler">Annuler</v-btn>
+            <v-btn color="primary" text :loading="deleteLoading" :disabled="deleteLoading"  @click="archiveDem" aria-label="Confirmer">Confirmer</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
-    </v-layout>
+    </v-row>
   </v-container>
 </template>
 
@@ -345,7 +356,7 @@ export default {
       fileReady: false,
       menu: false,
       calendar2: false,
-      listTraitements: [],
+      listTypeExemp: [],
       listStatut: [],
       listStatutSorted: new Map(),
       tableLoading: true,
@@ -361,11 +372,18 @@ export default {
   props: {
     darkMode: Boolean,
     /** Tableau d'archive ou non ?
-     * Si oui, on affiche uniquement les demandes archivées et désactive certaines fonctions
-     * Si non, on affiche le tableau de gestion classique
-     */
+       * Si oui, on affiche uniquement les demandes archivées et désactive certaines fonctions
+       * Si non, on affiche le tableau de gestion classique
+       */
     archive: {
       default: false,
+    },
+    /** Modifdemasse ou exemplarisation ?
+       *  L'intitulé et les colonnes varient
+       *  Les paramètres des appels WS également
+       */
+    modif: {
+      default: true,
     },
   },
   filters: {
@@ -386,7 +404,7 @@ export default {
     this.fetchData();
     // Rafraichissement des données toutes les 10 sec
     this.polling = setInterval(() => { this.conditionalFetch(); }, 10000);
-    this.getListTraitements();
+    this.getListTypeExemp();
     if (!this.archive) {
       this.getListStatus();
     }
@@ -401,6 +419,7 @@ export default {
       this.dialog = true;
       let filename = '';
       switch (type) {
+        case 'initEx':
         case 'ppn':
           filename = `fichier_initial_${numDem}.txt?id=${numDem}`;
           this.blobName = `fichier_initial_${numDem}.txt`;
@@ -414,6 +433,7 @@ export default {
           this.blobName = `fichier_enrichi_${numDem}.csv`;
           break;
         case 'resultat':
+        case 'resultatEx':
           filename = `fichier_resultat_${numDem}.csv?id=${numDem}`;
           this.blobName = `fichier_resultat_${numDem}.csv`;
           break;
@@ -448,16 +468,22 @@ export default {
       }
       return '';
     },
-    getListTraitements() {
+    getListTypeExemp() {
+      let addr;
+      if (this.modif) {
+        addr = `${process.env.VUE_APP_ROOT_API}traitements`;
+      } else {
+        addr = `${process.env.VUE_APP_ROOT_API}typeExemp`;
+      }
       if (this.user !== null && this.user.jwt !== null) {
         axios({
           headers: { Authorization: this.user.jwt },
           method: 'GET',
-          url: `${process.env.VUE_APP_ROOT_API}traitements`,
+          url: addr,
         }).then(
           (result) => {
             this.listTraitements = result.data;
-            this.listTraitements.push({ libelle: 'Non défini' });
+            this.listTypeExemp.push({ libelle: 'Non défini' });
           },
           (error) => {
             this.alertMessage = constants.erreurListeTraitements;
@@ -493,53 +519,11 @@ export default {
     initHeader() {
       if (this.archive) {
         if (this.user.role === 'ADMIN') {
-          this.headers = [
-            { text: ' ', value: 'expand' },
-            { text: 'Demande', value: 'num' },
-            { text: 'Modification', value: 'dateModification' },
-            { text: 'ILN', value: 'iln' },
-            { text: 'RCR', value: 'rcr' },
-            { text: 'Zones', value: 'zoneSousZone' },
-            { text: 'Traitement', value: 'traitement' },
-            { text: 'Résultat', value: 'codeStatut' },
-          ];
-        } else {
-          this.headers = [
-            { text: ' ', value: 'expand' },
-            { text: 'Demande', value: 'num' },
-            { text: 'Modification', value: 'dateModification' },
-            { text: 'RCR', value: 'rcr' },
-            { text: 'Zones', value: 'zoneSousZone' },
-            { text: 'Traitement', value: 'traitement' },
-            { text: 'Résultat', value: 'codeStatut' },
-          ];
-        }
+          if (this.modif) { this.headers = constants.headersArchiveAdminModif; } else { this.headers = constants.headerExempArchiveAdmin; }
+        } else if (this.modif) { this.headers = constants.headersArchiveModif; } else { this.headers = constants.headerExempArchive; }
       } else if (this.user.role === 'ADMIN') {
-        this.headers = [
-          { text: ' ', value: 'expand' },
-          { text: 'Demande', value: 'num' },
-          { text: 'Modification', value: 'dateModification' },
-          { text: 'ILN', value: 'iln' },
-          { text: 'RCR', value: 'rcr' },
-          { text: 'Zones', value: 'zoneSousZone' },
-          { text: 'Traitement', value: 'traitement' },
-          { text: 'Statut', value: 'statut' },
-          { text: 'Résultat', value: 'codeStatut' },
-          { text: '', value: 'delete' },
-        ];
-      } else {
-        this.headers = [
-          { text: ' ', value: 'expand' },
-          { text: 'Demande', value: 'num' },
-          { text: 'Modification', value: 'dateModification' },
-          { text: 'RCR', value: 'rcr' },
-          { text: 'Zones', value: 'zoneSousZone' },
-          { text: 'Traitement', value: 'traitement' },
-          { text: 'Statut', value: 'statut' },
-          { text: 'Résultat', value: 'codeStatut' },
-          { text: '', value: 'delete' },
-        ];
-      }
+        if (this.modif) { this.headers = constants.headerModifAdmin; } else { this.headers = constants.headerExempAdmin; }
+      } else if (this.modif) { this.headers = constants.headerModif; } else { this.headers = constants.headerExemp; }
 
 
       this.searchCombo = Object.assign([], this.headers);
@@ -561,15 +545,15 @@ export default {
         if (this.archive) {
           url = `${process.env.VUE_APP_ROOT_API}chercherArchives?userNum=${
             this.user.userNum
-          }`;
+          }&modif=${this.modif}`;
         } else if (this.user.role === 'ADMIN') {
           url = `${process.env.VUE_APP_ROOT_API}demandes?userNum=${
             this.user.userNum
-          }`;
+          }&modif=${this.modif}`;
         } else {
           url = `${process.env.VUE_APP_ROOT_API}chercherDemandes?userNum=${
             this.user.userNum
-          }`;
+          }&modif=${this.modif}`;
         }
 
 
@@ -587,9 +571,9 @@ export default {
               let tempSousZone;
               let tempStatus;
               if (result.data[key].etatDemande.libelle === 'A compléter'
-                || result.data[key].etatDemande.libelle === 'En saisie'
-                || result.data[key].etatDemande.libelle === 'En simulation'
-                || result.data[key].etatDemande.libelle === 'En préparation'
+                  || result.data[key].etatDemande.libelle === 'En saisie'
+                  || result.data[key].etatDemande.libelle === 'En simulation'
+                  || result.data[key].etatDemande.libelle === 'En préparation'
               ) {
                 tempStatus = 'En saisie';
               } else {
@@ -606,19 +590,21 @@ export default {
               } else {
                 tempSousZone = result.data[key].sousZone;
               }
+
               // pour éviter les erreurs si null
               if (
                 result.data[key].traitement == null
-                || result.data[key].traitement === undefined
+                  || result.data[key].traitement === undefined
               ) {
                 this.items.push({
                   dateCreation: result.data[key].dateCreation,
                   dateModification: result.data[key].dateModification,
-                  rcr: `${result.data[key].rcr} - ${result.data[key].shortname}`,
+                  rcr: `${result.data[key].rcr}`,
                   iln: result.data[key].iln,
                   num: result.data[key].numDemande,
                   zoneSousZone: `${tempZone} ${tempSousZone}`,
-                  traitement: 'Non défini',
+                  // index: result.data[key].indexRecherche.libelle,
+                  traitement: 'non défini',
                   statut: tempStatus,
                   color: this.getColor(result.data[key].etatDemande.libelle),
                   codeStatut: result.data[key].etatDemande.numEtat,
@@ -628,10 +614,11 @@ export default {
                 this.items.push({
                   dateCreation: result.data[key].dateCreation,
                   dateModification: result.data[key].dateModification,
-                  rcr: `${result.data[key].rcr} - ${result.data[key].shortname}`,
+                  rcr: `${result.data[key].rcr}`,
                   iln: result.data[key].iln,
                   num: result.data[key].numDemande,
                   zoneSousZone: `${tempZone} ${tempSousZone}`,
+                  // index: result.data[key].indexRecherche.libelle,
                   traitement: result.data[key].traitement.libelle,
                   statut: tempStatus,
                   color: this.getColor(result.data[key].etatDemande.libelle),
@@ -664,15 +651,15 @@ export default {
       if (this.typeSearch !== 'search') {
         this.search = '';
         /* fonction callback qui permet selon le choix dans la liste déroulante de ne récupérer que certaines demandes
-           @param currentValue: objet représentant une ligne de demande de le tableau, acceder à son statut via
-           la variable d'instance .statut
-           @param searchStatut: le statut correspondant au choix dans la liste déroulante
-         */
+             @param currentValue: objet représentant une ligne de demande de le tableau, acceder à son statut via
+             la variable d'instance .statut
+             @param searchStatut: le statut correspondant au choix dans la liste déroulante
+           */
         return this.items.filter((currentValue) => {
           let statut = '';
           if (currentValue.statut === 'A compléter'
-            || currentValue.statut === 'En simulation' || currentValue.statut === 'En saisie'
-            || currentValue.statut === 'Préparée' || currentValue.statut === 'En préparation') {
+              || currentValue.statut === 'En simulation' || currentValue.statut === 'En saisie'
+              || currentValue.statut === 'Préparée' || currentValue.statut === 'En préparation') {
             statut = 'En saisie';
           } else if (currentValue.statut === 'En cours de traitement') {
             statut = 'En cours de traitement';
@@ -688,42 +675,42 @@ export default {
               .toString()
               .toLowerCase()
               .indexOf(this.searchDateCreation) > -1
-              || this.searchDateCreation == null)
-            && (currentValue.dateModification
-              .toString()
-              .toLowerCase()
-              .indexOf(this.searchDateModification) > -1
-            || this.searchDateModification == null)
-            && (currentValue.iln
-              .toString()
-              .toLowerCase()
-              .indexOf(this.searchILN) > -1
-            || this.searchRCR == null)
-            && (this.searchRCR == null || currentValue.rcr
-              .toString()
-              .toLowerCase()
-              .indexOf(this.searchRCR.toLowerCase()) > -1)
-            && (this.searchZoneSousZone == null || currentValue.zoneSousZone
-              .toString()
-              .toLowerCase()
-              .indexOf(this.searchZoneSousZone.toLowerCase()) > -1)
-            && (currentValue.num
-              .toString()
-              .toLowerCase()
-              .indexOf(this.searchNum) > -1
-            || this.searchNum == null)
-            && (this.searchTraitement == null
-            || currentValue.traitement
-              .toString()
-              .toLowerCase()
-              .indexOf(this.searchTraitement.toLowerCase()) > -1)
-            && (this.searchStatut == null || statut
-              .toString()
-              .toLowerCase()
-              .indexOf(this.searchStatut.toLowerCase()) > -1)
-            && (this.searchCodeStatut.toString().indexOf(currentValue.codeStatut)
-            > -1
-            || this.searchCodeStatut.toString() === '')
+                || this.searchDateCreation == null)
+              && (currentValue.dateModification
+                .toString()
+                .toLowerCase()
+                .indexOf(this.searchDateModification) > -1
+              || this.searchDateModification == null)
+              && (currentValue.iln
+                .toString()
+                .toLowerCase()
+                .indexOf(this.searchILN) > -1
+              || this.searchRCR == null)
+              && (this.searchRCR == null || currentValue.rcr
+                .toString()
+                .toLowerCase()
+                .indexOf(this.searchRCR.toLowerCase()) > -1)
+              && (this.searchZoneSousZone == null || currentValue.zoneSousZone
+                .toString()
+                .toLowerCase()
+                .indexOf(this.searchZoneSousZone.toLowerCase()) > -1)
+              && (currentValue.num
+                .toString()
+                .toLowerCase()
+                .indexOf(this.searchNum) > -1
+              || this.searchNum == null)
+              && (this.searchTraitement == null
+              || currentValue.traitement
+                .toString()
+                .toLowerCase()
+                .indexOf(this.searchTraitement.toLowerCase()) > -1)
+              && (this.searchStatut == null || statut
+                .toString()
+                .toLowerCase()
+                .indexOf(this.searchStatut.toLowerCase()) > -1)
+              && (this.searchCodeStatut.toString().indexOf(currentValue.codeStatut)
+              > -1
+              || this.searchCodeStatut.toString() === '')
           ) {
             return true;
           }
@@ -776,10 +763,10 @@ export default {
           for (let i = 0; i < result.data.length; i++) {
             if (
               result.data[i].libelle === 'Preparée'
-              || result.data[i].libelle === 'Archivée'
-              || result.data[i].libelle === 'A compléter'
-              || result.data[i].libelle === 'En simulation'
-              || result.data[i].libelle === 'En saisie'
+                || result.data[i].libelle === 'Archivée'
+                || result.data[i].libelle === 'A compléter'
+                || result.data[i].libelle === 'En simulation'
+                || result.data[i].libelle === 'En saisie'
             ) {
               this.listStatutSorted.set(1, 'En saisie');
             } else if (result.data[i].libelle === 'En attente') {
@@ -890,7 +877,8 @@ export default {
           return 'colorGreenDark';
         }
         return 'colorGreen';
-      } if (statut === 'En erreur') {
+      }
+      if (statut === 'En erreur') {
         if (this.darkMode) {
           return 'colorRedDark';
         }

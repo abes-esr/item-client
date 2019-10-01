@@ -1,11 +1,11 @@
 <template>
   <v-container fluid>
-    <v-layout align-center justify-center>
-      <v-flex xs12>
+    <v-row align="center" justify="center">
+      <v-col cols="12">
         <v-card>
-          <v-card-title primary-title>
+          <v-card-title>
             <div>
-              <h1 class="display-3">Données personnelles</h1>
+              <h1>Données personnelles</h1>
             </div>
           </v-card-title>
           <v-card-text>
@@ -65,8 +65,8 @@
             <p>Vous pouvez choisir de refuser les cookies et l’analyse statistique de vos données de navigation.</p>
           </v-card-text>
         </v-card>
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 

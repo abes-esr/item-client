@@ -1,21 +1,23 @@
 <template>
-  <v-container fluid fill-height>
-    <v-layout align-center justify-center>
-      <v-flex md7>
-        <stepper id="stepper" current="4"></stepper>
-        <upload :loading="loading" :format=format :precedent="true" :title=titleUpload :text=textUpload v-on:upload="uploadFile" @precedent="precedentDemande(numDem)" @supprimer="supprimerDemande(numDem)"></upload>
-        <br />
-        <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span>
+  <v-container class="fill-height" fluid >
+    <v-row align="center" justify="center">
+      <v-col md="7">
+        <stepper class="item-stepper-bottom-margin" current="3" v-if="modif"></stepper>
+        <stepperexemp class="item-stepper-bottom-margin" current="3" v-if="!modif"></stepperexemp>
+        <!--modif : true, exemp :false-->
+        <upload :modif="modif" :loading="loading" :format=format :precedent="true" :title=titleUpload :text=textUpload v-on:upload="uploadFile" @precedent="precedentDemande(numDem, modif)" @supprimer="supprimerDemande(numDem, modif)" @eventName="updateParent"></upload>
+          <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span>
         </v-alert>
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
 <script>
 import axios from 'axios';
 import upload from '@/components/utils/upload.vue';
-import stepper from '@/components/utils/stepper.vue';
+import stepper from '@/components/utils/stepperModif.vue';
+import stepperexemp from '@/components/utils/stepperExemp.vue';
 import supprMixin from '@/mixins/delete';
 import constants from '@/components/utils/const';
 
@@ -26,6 +28,7 @@ export default {
   components: {
     upload,
     stepper,
+    stepperexemp,
   },
   data() {
     return {
@@ -35,29 +38,37 @@ export default {
       alertType: 'error',
       loading: false,
       user: {},
-      format: ['csv'],
+      format: ['csv', 'txt'],
       numDem: 0,
       titleUpload: 'Envoyer le fichier complété de la zone d\'exemplaire à traiter',
-      textUpload: 'Cliquez ou faites glisser ici<br />pour charger votre fichier complété<br />(format txt ou csv)',
+      textUpload: 'Cliquez pour charger votre fichier complété (format .txt ou .csv obligatoire)',
+      exemplairesMultiplesParent: false,
     };
+  },
+  props: {
+    // Modif de masse ou exemplarisation
+    modif: {
+      default: true,
+    },
   },
   // On récupère le numéro de demande enregistré en session
   created() {
     this.numDem = sessionStorage.getItem('dem');
+    console.log(`MODIF${this.modif}`);
   },
   methods: {
     // Upload du fichier enrichi
     uploadFile(file) {
+      console.log(`VARIABLE${this.exemplairesMultiplesParent}`);
       this.loading = true;
       this.file = file;
       const formData = new FormData();
       formData.append('file', this.file);
       formData.append('numDemande', this.numDem);
-
       this.user = JSON.parse(sessionStorage.getItem('user'));
       if (this.user !== null && this.user.jwt !== null) {
         axios
-          .post(`${process.env.VUE_APP_ROOT_API}uploadDemande`, formData, {
+          .post(`${process.env.VUE_APP_ROOT_API}uploadDemande?modif=${this.modif}&exempMulti=${this.exemplairesMultiplesParent}`, formData, {
             headers: {
               Authorization: this.user.jwt,
               'Content-Type': 'multipart/form-data',
@@ -69,7 +80,11 @@ export default {
               this.alertType = 'success';
               this.alert = true;
               this.loading = false;
-              this.$router.replace({ name: 'simulation' });
+              if (this.modif) {
+                this.$router.replace({ name: 'simulation' });
+              } else {
+                this.$router.replace({ name: 'simulationTest' });
+              }
             },
             (error) => {
               this.alertMessage = constants.erreurUpload;
@@ -92,6 +107,9 @@ export default {
         this.alert = true;
         this.loading = false;
       }
+    },
+    updateParent(variable) {
+      this.exemplairesMultiplesParent = variable;
     },
   },
 };

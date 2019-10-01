@@ -5,7 +5,7 @@ import constants from '@/components/utils/const';
 export default {
   methods: {
     // Suppression d'une demande
-    supprimerDemande(numDemande) {
+    supprimerDemande(numDemande, modif) {
       // Nécessite d'avoir le composant vue-full-loading dans le composant appelant
       this.loading = true;
       // Récupération des infos utilisateur et appel du WS
@@ -13,7 +13,7 @@ export default {
       axios({
         headers: { Authorization: user.jwt },
         method: 'DELETE',
-        url: `${process.env.VUE_APP_ROOT_API}demandes/${numDemande}`,
+        url: `${process.env.VUE_APP_ROOT_API}demandes/${numDemande}?modif=${modif}`,
       }).then(
         () => {
           this.loading = false;
@@ -28,22 +28,28 @@ export default {
       );
     },
     // Retour arrière
-    precedentDemande(numDemande) {
+    precedentDemande(numDemande, modif) {
       // Nécessite d'avoir le composant vue-full-loading dans le composant appelant
       this.loading = true;
       const user = JSON.parse(sessionStorage.getItem('user'));
       axios({
         headers: { Authorization: user.jwt },
         method: 'GET',
-        url: `${process.env.VUE_APP_ROOT_API}etapePrecedente/${numDemande}`,
+        url: `${process.env.VUE_APP_ROOT_API}etapePrecedente/${numDemande}?modif=${modif}`,
       }).then(
         () => {
           this.loading = false;
-          // Redirection après précédent
-          if (this.$router.currentRoute.name === 'uploadFinal') {
-            this.$router.replace('/traitement');
+          if (modif === true) {
+            // Redirection après précédent
+            if (this.$router.currentRoute.name === 'uploadFinal') {
+              this.$router.replace('/traitement');
+            } else {
+              this.$router.replace('/fichier');
+            }
+          } else if (this.$router.currentRoute.name === 'type') {
+            this.$router.replace('rcr');
           } else {
-            this.$router.replace('/fichier');
+            this.$router.replace('type');
           }
         },
         () => {

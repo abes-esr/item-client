@@ -1,15 +1,16 @@
 <template>
   <!-- SELECTION DU RCR -->
-  <v-container fluid fill-height>
-    <v-layout justify-center align-center>
+  <v-container class="fill-height" fluid >
+    <v-row justify="center" align="center">
       <loading :show="show" :label="label"></loading>
-      <v-flex md7>
-        <stepper id="stepper" current="1"></stepper>
+      <v-col md="7">
+        <stepper class="item-stepper-bottom-margin" current="1" v-if="modif"></stepper>
+        <stepperexemp class="item-stepper-bottom-margin" current="1" v-if="!modif"></stepperexemp>
         <v-card class="elevation-12">
-          <v-toolbar dark color="primary">
+          <v-app-bar dark color="primary">
             <v-toolbar-title>Sélection du RCR</v-toolbar-title>
             <v-spacer></v-spacer>
-          </v-toolbar>
+          </v-app-bar>
           <v-card-text>
             <v-autocomplete
               :filter="searchRCR"
@@ -33,22 +34,24 @@
         <v-alert :value="alert" :type="alertType" transition="scale-transition">
           <span v-html="alertMessage"></span>
         </v-alert>
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
 <script>
 import axios from 'axios';
 import loading from 'vue-full-loading';
-import stepper from '@/components/utils/stepper.vue';
 import constants from '@/components/utils/const';
+import stepper from '@/components/utils/stepperModif.vue';
+import stepperexemp from '@/components/utils/stepperExemp.vue';
 
 export default {
   name: 'Rcr',
   components: {
     loading,
     stepper,
+    stepperexemp,
   },
   data() {
     return {
@@ -64,6 +67,12 @@ export default {
       label: 'Initialisation de la demande en cours...',
       isEditing: false,
     };
+  },
+  props: {
+    // Modif de masse ou exemplarisation
+    modif: {
+      default: true,
+    },
   },
   mounted() {
     // On récupère les infos utilisateur en session car on a besoin du jwt afin d'appeler les WS REST
@@ -130,13 +139,19 @@ export default {
               }creerdemande?rcr=${
                 this.selected
               }&userNum=${
-                this.user.userNum}`,
+                this.user.userNum}
+                &modif=${this.modif}`,
         }).then(
           (result) => {
             // On stocke le numéro de la demande en session, utilisé par d'autres composants
             sessionStorage.setItem('dem', result.data.numDemande);
             // Passage à l'étape suivante
-            this.$router.replace({ name: 'upload' });
+            if (this.modif) {
+              this.$router.replace({ name: 'upload' });
+            } else {
+              // TODO : REMPLACER PAR LA BONNE ROUTE
+              this.$router.replace({ name: 'type' });
+            }
           },
           (error) => {
             this.alertMessage = constants.erreur500;
@@ -173,3 +188,5 @@ export default {
   },
 };
 </script>
+
+<style scoped></style>

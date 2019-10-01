@@ -1,26 +1,32 @@
 <template>
   <!-- Card de menu cliquable réutilisable -->
-  <v-card raised hover @click="route()" :height="cardHeight + 'em'">
+  <v-card hover @click="route()" :height="cardHeight + 'em'" class="item-flexbox-vertical-align-for-parent">
     <v-card-title class="primary-title">
       <v-container class="grid-list-md">
-        <v-layout class="row wrap align-center">
-          <v-flex class="xs2">
-            <span class="group pa-3 secondary" :style="{'height': cardHeight-3.6 + 'em'}">
-              <v-icon style="margin-top: -7px" x-large dark color="white">{{ iconType }}</v-icon>
+        <v-row class="row align-center" style="margin-left: 1em">
+          <show-at :breakpoints="{small: 1300, medium: 1400, large: 1600}" breakpoint="mediumAndAbove">
+          <v-col cols="12" sm="12" md="12" lg="3">
+            <span class="group">
+              <v-icon x-large class="item-primary-color">{{ iconType }}</v-icon>
             </span>
-          </v-flex>
-          <v-flex class="xs9 ml-3">
-            <h3 class="headline">{{ titleName }}</h3>
-          </v-flex>
-        </v-layout>
+          </v-col>
+          </show-at>
+          <v-col cols="12" sm="12" md="12" lg="9">
+            <h3 v-html="titleName"></h3>
+          </v-col>
+        </v-row>
       </v-container>
     </v-card-title>
   </v-card>
 </template>
 
 <script>
+import { showAt } from 'vue-breakpoints';
+
 export default {
   name: 'menuCards',
+
+  components: { showAt },
 
   props: {
     titleName: String,
@@ -39,7 +45,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style> //Utiliser ce scope pour faire des imports globaux de propriétés css dans chaque component
   .group {
     border-radius: 5%;
     display: flex;

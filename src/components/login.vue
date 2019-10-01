@@ -1,13 +1,13 @@
 <template>
   <!-- PAGE DE LOGIN -->
-  <v-container fluid fill-height>
-    <v-layout align-center justify-center>
-      <v-flex sm8 md4>
-        <v-card class="elevation-12">
-          <v-toolbar dark color="primary">
-            <v-toolbar-title>Connexion</v-toolbar-title>
+  <v-container class="fill-height" fluid >
+    <v-row align="center" justify="center">
+      <v-col sm="8" md="4">
+        <v-card>
+          <v-app-bar dark color="primary">
+            <v-toolbar-title><strong>Connexion</strong></v-toolbar-title>
             <v-spacer></v-spacer>
-          </v-toolbar>
+          </v-app-bar>
           <v-card-text>
             <v-form ref="form">
               <v-text-field
@@ -34,12 +34,12 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="info" :loading="loading" :disabled="loading" v-on:click="login()">Login</v-btn>
+            <v-btn :loading="loading" :disabled="loading" color="primary" v-on:click="login()">Se connecter</v-btn>
           </v-card-actions>
         </v-card>
         <v-alert :value="alert" type="error" transition="scale-transition">{{ alertMessage }}</v-alert>
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -128,3 +128,5 @@ export default {
   },
 };
 </script>
+
+<style scoped></style>

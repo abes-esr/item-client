@@ -1,36 +1,38 @@
 <template>
-  <v-container grid-list-md>
-    <v-layout row wrap justify-center>
+  <v-container>
+    <v-row   justify="center">
       <loading :show="loading" label="Chargement en cours..."></loading>
-      <v-flex xs8>
+      <v-col cols="8">
         <stepper id="stepper" current="3"></stepper>
-      </v-flex>
-      <v-flex md5 id="flexBox">
+      </v-col>
+      <v-col md="5" id="flexBox">
         <v-card class="elevation-12">
-          <v-toolbar dark color="primary">
+          <v-app-bar dark color="primary">
             <v-toolbar-title>Choix du type de traitement</v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-btn flat @click="popupDelete = true"><v-icon>delete</v-icon>Supprimer</v-btn>
-          </v-toolbar>
+            <v-btn depressed color="primary" @click="popupDelete = true"><v-icon>delete</v-icon>Supprimer</v-btn>
+          </v-app-bar>
           <v-card-text>
-            <v-card raised hover v-for="traitement in listTraitements" :key="traitement.numTraitement" @click="selected=traitement; selectTraitement();" height="7.8em">
+            <v-card raised hover v-for="traitement in listTraitements" :key="traitement.numTraitement" @click="selected=traitement; selectTraitement();">
                     <v-card-title primary-title>
-                        <v-container grid-list-md>
-                            <v-layout row wrap align-center>
-                                <v-flex xs2>
-                                    <span class="group pa-3 secondary" style="height: 4.2em">
-                                        <v-icon v-if="traitement.numTraitement == 1" x-large dark>add</v-icon>
-                                        <v-icon v-else-if="traitement.numTraitement == 2" x-large dark>edit</v-icon>
-                                        <v-icon v-else-if="traitement.numTraitement == 3" x-large dark>redo</v-icon>
-                                        <v-icon v-else-if="traitement.numTraitement == 4" x-large dark>clear</v-icon>
-                                        <v-icon v-else-if="traitement.numTraitement == 5" x-large dark>delete</v-icon>
-                                        <v-icon v-else x-large dark>edit</v-icon>
+                        <v-container>
+                            <v-row align="center">
+                              <show-at :breakpoints="{small: 1300, medium: 1400, large: 1600}" breakpoint="mediumAndAbove">
+                                <v-col cols="12" sm="3" md="2">
+                                    <span>
+                                        <v-icon large v-if="traitement.numTraitement == 1">add</v-icon>
+                                        <v-icon large v-else-if="traitement.numTraitement == 2">edit</v-icon>
+                                        <v-icon large v-else-if="traitement.numTraitement == 3">redo</v-icon>
+                                        <v-icon large v-else-if="traitement.numTraitement == 4">clear</v-icon>
+                                        <v-icon large v-else-if="traitement.numTraitement == 5">delete</v-icon>
+                                        <v-icon large v-else x-large dark>edit</v-icon>
                                     </span>
-                                </v-flex>
-                                <v-flex xs6 ml-4>
+                                </v-col>
+                              </show-at>
+                                <v-col cols="12" sm="9" md="10">
                                     <h3 class="headline">{{ traitement.libelle }}</h3>
-                                </v-flex>
-                            </v-layout>
+                                </v-col>
+                            </v-row>
                         </v-container>
                     </v-card-title>
                 </v-card>
@@ -38,13 +40,13 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <!-- precedentDemande(numDem) est contenue dans le mixin delete.js importé plus bas -->
-            <v-btn color="info" v-on:click="precedentDemande(numDem)">Précédent</v-btn>
+            <v-btn color="info" v-on:click="precedentDemande(numDem, true)">Précédent</v-btn>
           </v-card-actions>
         </v-card>
         <br />
         <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span>
         </v-alert>
-      </v-flex>
+      </v-col>
       <v-dialog v-model="popupDelete" width="500">
         <v-card>
           <v-card-title class="headline" primary-title>Suppression</v-card-title>
@@ -54,22 +56,23 @@
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" flat @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
+            <v-btn color="primary" text @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
             <!-- supprimerDemande(numDem) est contenue dans le mixin delete.js importé plus bas -->
-            <v-btn color="primary" flat @click="supprimerDemande(numDem)" aria-label="Confirmer">Confirmer</v-btn>
+            <v-btn color="primary" text @click="supprimerDemande(numDem, true)" aria-label="Confirmer">Confirmer</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
-    </v-layout>
+    </v-row>
   </v-container>
 </template>
 
 <script>
 import axios from 'axios';
 import loading from 'vue-full-loading';
-import stepper from '@/components/utils/stepper.vue';
+import stepper from '@/components/utils/stepperModif.vue';
 import supprMixin from '@/mixins/delete';
 import constants from '@/components/utils/const';
+import { showAt } from 'vue-breakpoints';
 
 export default {
   // Import du mixin contenant les méthodes suppression et de précédent
@@ -77,6 +80,7 @@ export default {
   components: {
     loading,
     stepper,
+    showAt,
   },
   data() {
     return {

@@ -6,18 +6,22 @@ import axios from 'axios';
 // import comme une fonction afin de permettre le lazy loading
 const LoginComponent = () => import('@/components/login.vue');
 const RcrComponent = () => import('@/components/rcr.vue');
-const uploadComponent = () => import('@/components/uploadInit.vue');
-const traitementComponent = () => import('@/components/selectTraitement.vue');
-const GererComponent = () => import('@/components/gerer.vue');
-const ArchiveComponent = () => import('@/components/archive.vue');
+const uploadComponent = () => import('@/components/modifmasse/uploadInit.vue');
+const traitementComponent = () => import('@/components/modifmasse/selectTraitement.vue');
+const GererModifComponent = () => import('@/components/modifmasse/gererModif.vue');
+const ArchiveModifComponent = () => import('@/components/modifmasse/archiveModif.vue');
+const GererExComponent = () => import('@/components/exemplarisation/gererEx.vue');
+const ArchiveExComponent = () => import('@/components/exemplarisation/archiveEx.vue');
 const ProfilComponent = () => import('@/components/profil.vue');
 const CGUComponent = () => import('@/components/footer/cgu.vue');
 const DonneesComponent = () => import('@/components/footer/donnees.vue');
 const MentionsComponent = () => import('@/components/footer/mentions.vue');
-const NotFoundComponent = () => import('@/components/errors/notFound.vue');
 const uploadFinalComponent = () => import('@/components/uploadFinal.vue');
-const simulationComponent = () => import('@/components/simulation.vue');
+const simulationComponent = () => import('@/components/simulationModif.vue');
+const simulationTest = () => import('@/components/simulationExemp.vue');
 const homeComponent = () => import('@/components/home.vue');
+const typeComponent = () => import('@/components/exemplarisation/selectType.vue');
+
 
 Vue.use(Router);
 
@@ -48,6 +52,15 @@ const router = new Router({
       },
     },
     {
+      path: '/rcrEx',
+      name: 'rcrEx',
+      component: RcrComponent,
+      props: { modif: false },
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
       path: '/fichier',
       name: 'upload',
       component: uploadComponent,
@@ -64,9 +77,26 @@ const router = new Router({
       },
     },
     {
+      path: '/fichierExemplarisation',
+      name: 'fichierExemp',
+      component: uploadFinalComponent,
+      props: { modif: false },
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
       path: '/traitement',
       name: 'traitement',
       component: traitementComponent,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/type',
+      name: 'type',
+      component: typeComponent,
       meta: {
         requiresAuth: true,
       },
@@ -90,7 +120,7 @@ const router = new Router({
     {
       path: '/tableau',
       name: 'tab',
-      component: GererComponent,
+      component: GererModifComponent,
       meta: {
         requiresAuth: true,
       },
@@ -98,7 +128,23 @@ const router = new Router({
     {
       path: '/archive',
       name: 'archive',
-      component: ArchiveComponent,
+      component: ArchiveModifComponent,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/tableauEx',
+      name: 'tabEx',
+      component: GererExComponent,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/archiveEx',
+      name: 'archiveEx',
+      component: ArchiveExComponent,
       meta: {
         requiresAuth: true,
       },
@@ -120,6 +166,14 @@ const router = new Router({
       },
     },
     {
+      path: '/simulationTest',
+      name: 'simulationTest',
+      component: simulationTest,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
       path: '/cgu',
       name: 'cgu',
       component: CGUComponent,
@@ -134,12 +188,14 @@ const router = new Router({
       name: 'mentions',
       component: MentionsComponent,
     },
-    // Gestion de la 404
+    // Gestion de la 404, redirection vers la page d'accueil
     {
-      path: '*', component: NotFoundComponent,
+      path: '*',
+      /* component: NotFoundComponent, */
+      redirect: '/',
     },
   ],
-  // Autorise le retour arrière via le navigateur
+  // Autorise le retour arrière via le navigateur + url propres
   mode: 'history',
 });
 

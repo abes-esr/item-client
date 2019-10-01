@@ -1,36 +1,34 @@
 <template>
     <v-footer height="auto" color="secondary">
-      <v-layout>
-          <v-btn color="white" flat round href="http://abes.fr/">&copy; 2019 — <strong>ABES</strong></v-btn>
-          <span>{{this.applicationVersion}}</span>
+      <v-row>
+          <v-chip color="secondary" href="http://abes.fr/">&copy; 2019 — ABES</v-chip>
            <v-spacer></v-spacer>
-          <v-btn color="white" flat round @click="$router.push({ name: 'donnees' })">
+          <v-chip color="secondary" @click="$router.push({ name: 'donnees' })">
             Données Personnelles
-          </v-btn>
-          <v-btn color="white" flat round @click="$router.push({ name: 'cgu' })">
+          </v-chip>
+          <v-chip color="secondary" @click="$router.push({ name: 'cgu' })">
             Conditions Générales d'Utilisation (CGU)
-          </v-btn>
-          <v-btn color="white" flat round @click="$router.push({ name: 'mentions' })">
+          </v-chip>
+          <v-chip color="secondary" @click="$router.push({ name: 'mentions' })">
             Mentions Légales
-          </v-btn>
-      </v-layout>
+          </v-chip>
+      </v-row>
     </v-footer>
 </template>
 
 <script>
-/**import axios from 'axios';**/
 
 export default {
   name: 'footerComponent',
   data() {
     return {
       user: {},
-      /**applicationVersion: '',**/
+      /** applicationVersion: '',* */
     };
   },
   created() {
     this.user = JSON.parse(sessionStorage.getItem('user'));
-    /**this.getApplicationVersion();**/
+    /** this.getApplicationVersion();* */
   },
   /**
   methods: {
@@ -45,12 +43,13 @@ export default {
       );
     },
   },
-  **/
+  * */
 };
 </script>
 
 <style scoped>
  .v-btn {
      text-transform: none !important;
+      background: transparent;
  }
  </style>

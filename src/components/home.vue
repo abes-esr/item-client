@@ -1,20 +1,22 @@
 <template>
   <!-- PAGE D'ACCUEIL -->
-  <v-layout row class="container">
-    <v-flex xs12 md5 fill-height ma-2 pt-5>
-      <!--<menu-cards titleName="Créer des exemplaires" iconType="add_circle_outline" routerLink="tab"
-                  :cardHeight=7.8></menu-cards>-->
-      <menu-cards titleName="Modifier des exemplaires" iconType="edit" routerLink="rcr" :cardHeight=7.8></menu-cards>
-      <menu-cards titleName="Gérer mes demandes" iconType="sort" routerLink="tab" :cardHeight=7.8></menu-cards>
-      <!--<menu-cards titleName="Supprimer des exemplaires" iconType="delete" routerLink="tab" cardHeight=7.8></menu-cards>-->
-    </v-flex>
-    <!-- <v-flex xs12 md5 fill-height ma-2 pt-5>
-    </v-flex>
-    <v-flex xs12 md5 fill-height ma-2 pt-5>
-      <menu-cards titleName="Calculer mon taux de recouvrement" iconType="pie_chart" routerLink="tab"
-                  :cardHeight=7.8></menu-cards>
-    </v-flex> -->
-  </v-layout>
+  <v-row class="container">
+  <v-row justify="center">
+    <v-col cols="12" sm="12" md="12" lg="6">
+      <menu-cards :cardHeight=9 iconType="pie_chart" routerLink="home" titleName='Calculer mon taux de <span style="white-space: nowrap;">recouvrement</span>' class="item-horizontal-align"></menu-cards>
+    </v-col>
+  </v-row>
+  <v-row>
+    <v-col cols="12" sm="12" md="12" lg="6">
+      <menu-cards :cardHeight=9 iconType="add_circle_outline" routerLink="rcrEx" titleName='Créer des exemplaires' class="item-horizontal-align"></menu-cards>
+      <menu-cards :cardHeight=9 iconType="sort" routerLink="tabEx" titleName='Gérer mes demandes de <span style="white-space: nowrap;">création</span>' class="item-horizontal-align"></menu-cards>
+    </v-col>
+    <v-col cols="12" sm="12" md="12" lg="6">
+      <menu-cards :cardHeight=9 iconType="edit" routerLink="rcr" titleName='Modifier des <span style="white-space: nowrap;">exemplaires</span>' class="item-horizontal-align"></menu-cards>
+      <menu-cards :cardHeight=9 iconType="sort" routerLink="tab" titleName='Gérer mes demandes de <span style="white-space: nowrap;">modification</span>' class="item-horizontal-align"></menu-cards>
+    </v-col>
+  </v-row>
+</v-row>
 </template>
 
 <script>
@@ -40,16 +42,14 @@ export default {
   }
 
   .container {
+    margin-top: 3em;
     margin-left: auto;
     margin-right: auto;
     width: 80%;
     display: flex;
-    justify-content: center
+    justify-content: center;
+    flex-direction: column;
   }
 
-  @media all and (max-width: 6em) {
-    .container {
-      width: 100%
-    }
-  }
+
 </style>
