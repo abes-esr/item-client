@@ -116,7 +116,7 @@ export default {
       exemplairesMultiplesChild: false,
       fichierCharge: [],
       rules: [
-        value => ((value.type === 'text/csv') || (value.type === 'text/plain')) || 'Le fichier chargé n\'est pas dans un format autorisé (.txt ou .csv)',
+        value => ((value.type === 'text/csv') || (value.type === 'application/vnd.ms-excel') || (value.type === 'text/plain')) || 'Le fichier chargé n\'est pas dans un format autorisé (.txt ou .csv)',
       ],
       typeFile: [
         value => value.type,
@@ -126,12 +126,10 @@ export default {
   methods: {
     // changement statut bouton envoyer
     autorisationEnvoi() {
-      if ((this.fichierCharge.type === 'text/csv') || (this.fichierCharge.type === 'text/plain')) {
+      if ((this.fichierCharge.type === 'text/csv') || (this.fichierCharge.type === 'application/vnd.ms-excel') || (this.fichierCharge.type === 'text/plain')) {
         this.fichierPresent = true;
-        console.log(this.fichierPresent);
       } else {
         this.fichierPresent = false;
-        console.log(this.fichierPresent);
       }
     },
     /**
