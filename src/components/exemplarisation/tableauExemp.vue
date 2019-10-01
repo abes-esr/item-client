@@ -22,7 +22,7 @@
                 <!--COM--><th></th>
                 <!--DEM--><th><v-text-field append-icon="search" aria-label="Recherche par numéro" clear-icon='clear' clearable hide-details single-line v-model="searchNum" v-on:keyup="computedItems('num')"></v-text-field></th>
                 <!--MAJ--><th class="smallTD"><v-menu :close-on-content-click="true" ref="menu" v-model="menu"><template v-slot:activator="{ on }"><v-text-field class="item-calendar-searchfield-item" label="recherche par date" persistent-hint v-model="searchDateModification" v-on="on"></v-text-field></template><v-date-picker @change="computedItems('dateModification')" first-day-of-week="1" locale="fr-fr" no-title v-model="searchDateModification"></v-date-picker></v-menu></th>
-                <!--ILN--><th class="smallTD" v-if="user.role == 'ADMIN'"><v-text-field append-icon="search" aria-label="Recherche par ILN"  clear-icon='clear' clearable hide-details single-line v-model="searchILN" v-on:keyup="computedItems('iln')"></v-text-field></th>
+                <!--ILN--><th class="smallTD" v-if="user.role === 'ADMIN'"><v-text-field append-icon="search" aria-label="Recherche par ILN" clear-icon='clear' clearable hide-details single-line v-model="searchILN" v-on:keyup="computedItems('iln')"></v-text-field></th>
                 <!--RCR--><th><v-text-field append-icon="search" aria-label="Recherche par RCR"  clear-icon='clear' clearable hide-details single-line v-model="searchRCR" v-on:keyup="computedItems('rcr')"></v-text-field></th>
                 <!--IND--><th><v-text-field append-icon="search" aria-label="Recherche par Index"  clear-icon='clear' clearable hide-details single-line v-model="searchIndexRecherche" v-on:keyup="computedItems('indexRecherche')"></v-text-field></th>
                 <!--TYP--><th><v-select :items="listTypeExemp" @change="computedItems('typeExemp')" aria-label="Recherche par type d'exemplarisation" clear-icon='clear' clearable item-text="libelle" item-value="libelle" no-data-text="Aucun type trouvé." v-model="searchTypeExemp"></v-select></th>
@@ -57,15 +57,15 @@
                     <v-list-item-content @click="downloadFile(item.num, 'resultatEx')" v-if="item.codeStatut >= 7"><v-list-item-title>Télécharger le fichier résultat</v-list-item-title></v-list-item-content>
                   </v-list>
                 </v-menu>
-                <span v-if="item.codeStatut == 1">
+                <span v-if="item.codeStatut === 1">
                   <v-btn aria-label="Téléchargement impossible" class="cloudButton" color="info" disabled small><v-icon>cloud_download</v-icon></v-btn>
                 </span>
               </td>
                 <!--AR2--><td class="text-center" v-if="!archive">
-                <span v-if="item.codeStatut < 5 && user.iln == item.iln">
+                <span v-if="item.codeStatut < 5 && user.iln === item.iln">
                   <v-btn @click="current = item.num; popupDelete = true;" aria-label="Supprimer" icon><v-icon>delete</v-icon></v-btn>
                 </span>
-                <span v-else-if="item.codeStatut == 7 && user.iln == item.iln">
+                <span v-else-if="item.codeStatut === 7 && user.iln === item.iln">
                   <v-btn @click="current = item.num; popupArchive = true;" aria-label="Archiver" icon><v-icon>archive</v-icon></v-btn>
                 </span>
               </td>
@@ -82,7 +82,7 @@
                 <!--COM--><th></th>
                 <!--DEM--><th><v-text-field append-icon="search" aria-label="Recherche par numéro" clear-icon='clear' clearable hide-details single-line v-model="searchNum" v-on:keyup="computedItems('num')"></v-text-field></th>
                 <!--MAJ--><th class="smallTD"><v-menu :close-on-content-click="true" ref="menu" v-model="menu"><template v-slot:activator="{ on }"><v-text-field class="item-calendar-searchfield-item" label="recherche par date" persistent-hint v-model="searchDateModification" v-on="on"></v-text-field></template><v-date-picker @change="computedItems('dateModification')" first-day-of-week="1" locale="fr-fr" no-title v-model="searchDateModification"></v-date-picker></v-menu></th>
-                <!--ILN--><th class="smallTD" v-if="user.role == 'ADMIN'"><v-text-field append-icon="search" aria-label="Recherche par ILN"  clear-icon='clear' clearable hide-details single-line v-model="searchILN" v-on:keyup="computedItems('iln')"></v-text-field></th>
+                <!--ILN--><th class="smallTD" v-if="user.role === 'ADMIN'"><v-text-field append-icon="search" aria-label="Recherche par ILN" clear-icon='clear' clearable hide-details single-line v-model="searchILN" v-on:keyup="computedItems('iln')"></v-text-field></th>
                 <!--RCR--><th><v-text-field append-icon="search" aria-label="Recherche par RCR"  clear-icon='clear' clearable hide-details single-line v-model="searchRCR" v-on:keyup="computedItems('rcr')"></v-text-field></th>
                 <!--ZON--><th><v-text-field append-icon="search" aria-label="Recherche par zone et sous-zone" clear-icon='clear' clearable hide-details single-line v-model="searchZoneSousZone" v-on:keyup="computedItems('zoneSousZone')"></v-text-field></th>
                 <!--TRT--><th><v-select :items="listTraitements" @change="computedItems('traitement')" aria-label="Recherche par type de traitement" clear-icon='clear' clearable item-text="libelle" item-value="libelle" no-data-text="Aucun type trouvé." v-model="searchTraitement"></v-select></th>
@@ -207,6 +207,7 @@ export default {
       searchStatut: '',
       searchIndexRecherche: '',
       searchCodeStatut: ['1', '2'],
+      searchZoneSousZone: '',
       listCodeStatut: ['1', '2'],
       typeSearch: 'search',
       searchCombo: [],
@@ -235,6 +236,7 @@ export default {
       commentButton: false,
       tableExpanded: false,
       expanded: [],
+      listTraitements: ['pomme', 'raisin'],
     };
   },
   props: {
@@ -351,6 +353,7 @@ export default {
         }).then(
           (result) => {
             this.listTypeExemp = result.data;
+            this.listTraitements = result.data;
             this.listTypeExemp.push({ libelle: 'Non défini' });
           },
           (error) => {
@@ -432,9 +435,13 @@ export default {
             this.itemsUnaltered = result.data;
             for (const key in result.data) {
               // Controle que la zone et la sous zone on déjà été selectionnée afin d'eviter d'afficher null
-              let tempIndexRecherche;
-              let tempTypeExemp;
-              let tempStatus;
+              let tempIndexRecherche = '';
+              let tempTypeExemp = '';
+              let tempStatus = '';
+
+              // En cas de modification
+              let tempZone = '';
+              let tempSousZone = '';
 
               if (result.data[key].etatDemande.libelle === 'A compléter'
                                     || result.data[key].etatDemande.libelle === 'En saisie'
@@ -446,18 +453,34 @@ export default {
                 tempStatus = result.data[key].etatDemande.libelle;
               }
 
-              if (result.data[key].indexRecherche === null) {
-                tempIndexRecherche = '';
-              } else {
-                tempIndexRecherche = result.data[key].indexRecherche.libelle;
+              // Si l'on est en modification
+              if (this.modif) {
+                if (result.data[key].zone === null) {
+                  tempZone = '';
+                } else {
+                  tempZone = result.data[key].zone;
+                }
+                if (result.data[key].sousZone === null) {
+                  tempSousZone = '';
+                } else {
+                  tempSousZone = result.data[key].sousZone;
+                }
               }
 
-              if (result.data[key].typeExemp === null) {
-                tempTypeExemp = 'Non défini';
-              } else {
-                tempTypeExemp = result.data[key].typeExemp.libelle;
-              }
+              // Si l'on est en exemplarisation
+              if (!this.modif) {
+                if (result.data[key].indexRecherche === null) {
+                  tempIndexRecherche = '';
+                } else {
+                  tempIndexRecherche = result.data[key].indexRecherche.libelle;
+                }
 
+                if (result.data[key].typeExemp === null) {
+                  tempTypeExemp = 'Non défini';
+                } else {
+                  tempTypeExemp = result.data[key].typeExemp.libelle;
+                }
+              }
 
               // pour éviter les erreurs si null
               this.items.push({
@@ -466,6 +489,7 @@ export default {
                 rcr: `${result.data[key].rcr}`,
                 iln: result.data[key].iln,
                 num: result.data[key].numDemande,
+                zoneSousZone: `${tempZone} ${tempSousZone}`,
                 indexRecherche: `${tempIndexRecherche}`,
                 // index: result.data[key].indexRecherche.libelle,
                 typeExemp: tempTypeExemp,
@@ -539,6 +563,10 @@ export default {
                               .toString()
                               .toLowerCase()
                               .indexOf(this.searchRCR.toLowerCase()) > -1)
+                            && (this.searchZoneSousZone == null || currentValue.zoneSousZone
+                              .toString()
+                              .toLowerCase()
+                              .indexOf(this.searchZoneSousZone.toLowerCase()) > -1)
                             && (this.searchIndexRecherche == null || currentValue.indexRecherche
                               .toString()
                               .toLowerCase()
@@ -573,6 +601,7 @@ export default {
       this.searchILN = '';
       this.searchRCR = '';
       this.searchNum = '';
+      this.searchZoneSousZone = '';
       this.searchIndexRecherche = '';
       this.searchTypeExemp = '';
       this.searchStatut = '';

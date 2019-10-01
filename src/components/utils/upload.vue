@@ -128,10 +128,8 @@ export default {
     autorisationEnvoi() {
       if ((this.fichierCharge.type === 'text/csv') || (this.fichierCharge.type === 'text/plain')) {
         this.fichierPresent = true;
-        console.log(this.fichierPresent);
       } else {
         this.fichierPresent = false;
-        console.log(this.fichierPresent);
       }
     },
     /**
