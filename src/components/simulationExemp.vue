@@ -229,9 +229,9 @@
 <script>
 import loading from 'vue-full-loading';
 import axios from 'axios';
+import moment from 'moment';
 import stepper from '@/components/utils/stepperModif.vue';
 import supprMixin from '@/mixins/delete';
-import moment from 'moment';
 import constants from '@/components/utils/const';
 
 export default {

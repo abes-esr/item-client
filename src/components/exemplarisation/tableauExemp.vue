@@ -88,7 +88,7 @@
                 <!--ILN--><th v-if="user.role === 'ADMIN'"><v-text-field append-icon="search" aria-label="Recherche par ILN" clear-icon='clear' clearable hide-details single-line v-model="searchILN" v-on:keyup="computedItems('iln')"></v-text-field></th>
                 <!--RCR--><th><v-text-field append-icon="search" aria-label="Recherche par RCR"  clear-icon='clear' clearable hide-details single-line v-model="searchRCR" v-on:keyup="computedItems('rcr')"></v-text-field></th>
                 <!--ZON--><th><v-text-field append-icon="search" aria-label="Recherche par zone et sous-zone" clear-icon='clear' clearable hide-details single-line v-model="searchZoneSousZone" v-on:keyup="computedItems('zoneSousZone')"></v-text-field></th>
-                <!--TRT--><th><v-select :items="listTraitements" @change="computedItems('traitement')" aria-label="Recherche par type de traitement" clear-icon='clear' clearable item-text="libelle" item-value="libelle" no-data-text="Aucun type trouvé." v-model="searchTraitement"></v-select></th>
+                <!--TRT--><th><v-select :items="listTraitements" @change="computedItems('traitement')" aria-label="Recherche par type de traitement" clear-icon='clear' clearable item-text="libelle" item-value="libelle" no-data-text="Aucun type trouvé." v-model="searchTypeExemp"></v-select></th>
                 <!--STA--><th v-if="!archive"><v-select :items="listStatut" @change="computedItems('statut')" aria-label="Recherche par statut" clear-icon='clear' clearable no-data-text="Aucun statut trouvé." v-model="searchStatut"></v-select></th>
                 <!--TL1--><th></th>
                 <!--AR2--><th v-if="!archive"></th>
@@ -103,7 +103,7 @@
                 <!--ILN--><td @click="clickRow(item.num, item.codeStatut)">{{ item.iln }}</td>
                 <!--RCR--><td @click="clickRow(item.num, item.codeStatut)">{{ item.rcr }}</td>
                 <!--ZON--><td @click="clickRow(item.num, item.codeStatut)">{{ item.zoneSousZone }}</td>
-                <!--TRT--><td @click="clickRow(item.num, item.codeStatut)">{{ item.traitement }}</td>
+                <!--TRT--><td @click="clickRow(item.num, item.codeStatut)">{{ item.typeExemp }}</td>
                 <!--STA--><td @click="clickRow(item.num, item.codeStatut)">{{ item.statut }}</td>
                 <!--TL1--><td>
                 <v-menu bottom left v-if="item.codeStatut >= 2"><template v-slot:activator="{ on }"><v-btn aria-label="Télécharger les fichiers" class="cloudButton" color="info" small v-on="on"><v-icon>cloud_download</v-icon></v-btn></template>
@@ -213,6 +213,7 @@ export default {
       searchZoneSousZone: '',
       listCodeStatut: ['1', '2'],
       typeSearch: 'search',
+      searchTraitement: '',
       searchCombo: [],
       headers: [],
       items: [],
@@ -345,7 +346,12 @@ export default {
       return '';
     },
     getListTypeExemp() {
-      const addr = `${process.env.VUE_APP_ROOT_API}typeExemp`;
+      let addr;
+      if (this.modif) {
+        addr = `${process.env.VUE_APP_ROOT_API}traitements`;
+      } else {
+        addr = `${process.env.VUE_APP_ROOT_API}typeExemp`;
+      }
       if (this.user !== null && this.user.jwt !== null) {
         axios({
           headers: { Authorization: this.user.jwt },
@@ -481,9 +487,12 @@ export default {
                 } else {
                   tempTypeExemp = result.data[key].typeExemp.libelle;
                 }
+              } else if (result.data[key].traitement === null) {
+                tempTypeExemp = 'Non défini';
+              } else {
+                tempTypeExemp = result.data[key].traitement.libelle;
               }
 
-              // pour éviter les erreurs si null
               this.items.push({
                 dateCreation: result.data[key].dateCreation,
                 dateModification: result.data[key].dateModification,
