@@ -11,11 +11,11 @@
           <v-card-title class="title" v-if="archive && !modif">Mes demandes d'exemplarisation archivées</v-card-title>
           <v-card-title class="title" v-if="!archive && !modif">Gérer mes demandes d'exemplarisation</v-card-title>
           <!--Ligne d'entête du tableau-->
-          <v-data-table :headers="headers" :items="computedItems('guess')" :items-per-page="8" class="elevation-1" item-key="num" loading-text="chargement.." multi-sort no-data-text="Aucune demande trouvée" no-results-text="Aucun resultat trouvé" headers-length="3" :sort-desc="[false, true]" :footer-props="{showFirstLastPage: true,firstIcon: 'mdi-arrow-collapse-left',lastIcon: 'mdi-arrow-collapse-right',prevIcon: 'mdi-minus',nextIcon: 'mdi-plus'}">
+          <v-data-table v-if="!modif" :headers="headers" :items="computedItems('guess')" :items-per-page="8" class="elevation-1" item-key="num" loading-text="chargement.." multi-sort no-data-text="Aucune demande trouvée" no-results-text="Aucun resultat trouvé" headers-length="3" :sort-desc="[false, true]" :footer-props="{showFirstLastPage: true,firstIcon: 'mdi-arrow-collapse-left',lastIcon: 'mdi-arrow-collapse-right',prevIcon: 'mdi-minus',nextIcon: 'mdi-plus'}">
             <!--
             Tableau d'exemplarisation
             -->
-            <template v-slot:body="{ items }" v-if="!modif">
+            <template v-slot:body="{ items }">
               <!--Ligne avec les champs de recherche : EXEMPLARISATION-->
               <thead>
               <tr>
@@ -72,12 +72,14 @@
               </tr>
               </tbody>
             </template>
+          </v-data-table>
+          <v-data-table v-if="modif" :headers="headers" :items="computedItems('guess')" :items-per-page="8" class="elevation-1" item-key="num" loading-text="chargement.." multi-sort no-data-text="Aucune demande trouvée" no-results-text="Aucun resultat trouvé" headers-length="3" :sort-desc="[false, true]" :footer-props="{showFirstLastPage: true,firstIcon: 'mdi-arrow-collapse-left',lastIcon: 'mdi-arrow-collapse-right',prevIcon: 'mdi-minus',nextIcon: 'mdi-plus'}">
             <!--
             Tableau de modification
             -->
-            <template v-if="modif">
+            <template v-slot:body="{ items }">
               <!--Ligne avec les champs de recherche : MODIFICATION-->
-              <thead v-if="modif">
+              <thead>
               <tr>
                 <!--COM--><th></th>
                 <!--DEM--><th><v-text-field append-icon="search" aria-label="Recherche par numéro" clear-icon='clear' clearable hide-details single-line v-model="searchNum" v-on:keyup="computedItems('num')"></v-text-field></th>
@@ -92,7 +94,7 @@
               </tr>
               </thead>
               <!--Lignes de données : MODIFICATION-->
-              <tbody v-if="modif">
+              <tbody>
               <tr :key="item.name" v-for="item in items">
                 <!--COM--><td></td>
                 <!--DEM--><td @click="clickRow(item.num, item.codeStatut)">{{ item.num }}</td>
@@ -524,10 +526,10 @@ export default {
       if (this.typeSearch !== 'search') {
         this.search = '';
         /* fonction callback qui permet selon le choix dans la liste déroulante de ne récupérer que certaines demandes
-                         @param currentValue: objet représentant une ligne de demande de le tableau, acceder à son statut via
-                         la variable d'instance .statut
-                         @param searchStatut: le statut correspondant au choix dans la liste déroulante
-                       */
+                                     @param currentValue: objet représentant une ligne de demande de le tableau, acceder à son statut via
+                                     la variable d'instance .statut
+                                     @param searchStatut: le statut correspondant au choix dans la liste déroulante
+                                   */
         return this.items.filter((currentValue) => {
           let statut = '';
           if (currentValue.statut === 'A compléter'
