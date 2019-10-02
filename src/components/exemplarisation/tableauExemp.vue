@@ -10,8 +10,8 @@
           <v-card-title class="title" v-if="!archive && modif">Gérer mes demandes de modification</v-card-title>
           <v-card-title class="title" v-if="archive && !modif">Mes demandes d'exemplarisation archivées</v-card-title>
           <v-card-title class="title" v-if="!archive && !modif">Gérer mes demandes d'exemplarisation</v-card-title>
-          <!--Ligne d'entête du tableau-->
-          <v-data-table v-if="!modif" :headers="headers" :items="computedItems('guess')" :items-per-page="8" class="elevation-1" item-key="num" loading-text="chargement.." multi-sort no-data-text="Aucune demande trouvée" no-results-text="Aucun resultat trouvé" headers-length="3" :sort-desc="[false, true]" :footer-props="{showFirstLastPage: true,firstIcon: 'mdi-arrow-collapse-left',lastIcon: 'mdi-arrow-collapse-right',prevIcon: 'mdi-minus',nextIcon: 'mdi-plus'}">
+          <!--Ligne d'entête du tableau d'EXEMPLARISATION-->
+          <v-data-table v-if="!modif" :headers="headers" :items="computedItems('guess')" :items-per-page="8" class="elevation-1" item-key="num" loading-text="chargement.." multi-sort no-data-text="Aucune demande trouvée" no-results-text="Aucun resultat trouvé" headers-length='3' :sort-desc="[false, true]" :footer-props="{showFirstLastPage: true,firstIcon: 'mdi-arrow-collapse-left',lastIcon: 'mdi-arrow-collapse-right',prevIcon: 'mdi-minus',nextIcon: 'mdi-plus'}">
             <!--
             Tableau d'exemplarisation
             -->
@@ -73,6 +73,7 @@
               </tbody>
             </template>
           </v-data-table>
+          <!--Ligne d'entête du tableau de MODIFICATION-->
           <v-data-table v-if="modif" :headers="headers" :items="computedItems('guess')" :items-per-page="8" class="elevation-1" item-key="num" loading-text="chargement.." multi-sort no-data-text="Aucune demande trouvée" no-results-text="Aucun resultat trouvé" headers-length="3" :sort-desc="[false, true]" :footer-props="{showFirstLastPage: true,firstIcon: 'mdi-arrow-collapse-left',lastIcon: 'mdi-arrow-collapse-right',prevIcon: 'mdi-minus',nextIcon: 'mdi-plus'}">
             <!--
             Tableau de modification
