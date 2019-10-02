@@ -54,12 +54,10 @@ export default {
   // On récupère le numéro de demande enregistré en session
   created() {
     this.numDem = sessionStorage.getItem('dem');
-    console.log(`MODIF${this.modif}`);
   },
   methods: {
     // Upload du fichier enrichi
     uploadFile(file) {
-      console.log(`VARIABLE${this.exemplairesMultiplesParent}`);
       this.loading = true;
       this.file = file;
       const formData = new FormData();
