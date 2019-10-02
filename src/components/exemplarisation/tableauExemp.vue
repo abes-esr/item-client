@@ -546,50 +546,16 @@ export default {
             statut = 'En erreur';
           }
           if (
-            (currentValue.dateCreation
-              .toString()
-              .toLowerCase()
-              .indexOf(this.searchDateCreation) > -1
-                                || this.searchDateCreation == null)
-                            && (currentValue.dateModification
-                              .toString()
-                              .toLowerCase()
-                              .indexOf(this.searchDateModification) > -1
-                            || this.searchDateModification == null)
-                            && (currentValue.iln
-                              .toString()
-                              .toLowerCase()
-                              .indexOf(this.searchILN) > -1
-                            || this.searchRCR == null)
-                            && (this.searchRCR == null || currentValue.rcr
-                              .toString()
-                              .toLowerCase()
-                              .indexOf(this.searchRCR.toLowerCase()) > -1)
-                            && (this.searchZoneSousZone == null || currentValue.zoneSousZone
-                              .toString()
-                              .toLowerCase()
-                              .indexOf(this.searchZoneSousZone.toLowerCase()) > -1)
-                            && (this.searchIndexRecherche == null || currentValue.indexRecherche
-                              .toString()
-                              .toLowerCase()
-                              .indexOf(this.searchIndexRecherche.toLowerCase()) > -1)
-                            && (currentValue.num
-                              .toString()
-                              .toLowerCase()
-                              .indexOf(this.searchNum) > -1
-                            || this.searchNum == null)
-                            && (this.searchTypeExemp == null
-                            || currentValue.typeExemp
-                              .toString()
-                              .toLowerCase()
-                              .indexOf(this.searchTypeExemp.toLowerCase()) > -1)
-                            && (this.searchStatut == null || statut
-                              .toString()
-                              .toLowerCase()
-                              .indexOf(this.searchStatut.toLowerCase()) > -1)
-                            && (this.searchCodeStatut.toString().indexOf(currentValue.codeStatut)
-                            > -1
-                            || this.searchCodeStatut.toString() === '')
+            (currentValue.dateCreation.toString().toLowerCase().indexOf(this.searchDateCreation) > -1 || this.searchDateCreation == null)
+            && (currentValue.dateModification.toString().toLowerCase().indexOf(this.searchDateModification) > -1 || this.searchDateModification == null)
+            && (currentValue.iln.toString().toLowerCase().indexOf(this.searchILN) > -1 || this.searchILN == null)
+            && (currentValue.rcr.toString().toLowerCase().indexOf(this.searchRCR.toLowerCase()) > -1 || this.searchRCR == null)
+            && (currentValue.zoneSousZone.toString().toLowerCase().indexOf(this.searchZoneSousZone.toLowerCase()) > -1 || this.searchZoneSousZone == null)
+            && (currentValue.indexRecherche.toString().toLowerCase().indexOf(this.searchIndexRecherche.toLowerCase()) > -1 || this.searchIndexRecherche == null)
+            && (currentValue.num.toString().toLowerCase().indexOf(this.searchNum) > -1 || this.searchNum == null)
+            && (currentValue.typeExemp.toString().toLowerCase().indexOf(this.searchTypeExemp.toLowerCase()) > -1 || this.searchTypeExemp == null)
+            && (statut.toString().toLowerCase().indexOf(this.searchStatut.toLowerCase()) > -1 || this.searchStatut == null)
+            && (this.searchCodeStatut.toString().indexOf(currentValue.codeStatut) > -1 || this.searchCodeStatut.toString() === '')
           ) {
             return true;
           }
