@@ -10,12 +10,12 @@
           <v-card-title class="title" v-if="!archive && modif">Gérer mes demandes de modification</v-card-title>
           <v-card-title class="title" v-if="archive && !modif">Mes demandes d'exemplarisation archivées</v-card-title>
           <v-card-title class="title" v-if="!archive && !modif">Gérer mes demandes d'exemplarisation</v-card-title>
-          <!--Ligne d'entête du tableau-->
-          <v-data-table :headers="headers" :items="computedItems('guess')" :items-per-page="10" class="elevation-1" item-key="num" loading-text="chargement.." multi-sort no-data-text="Aucune demande trouvée" no-results-text="Aucun resultat trouvé" :headers-length="3" :sort-desc="[false, true]" :footer-props="{showFirstLastPage: true, itemsPerPageOptions:[10,15,20,-1], itemsPerPageAllText:'Toutes', itemsPerPageText:'Lignes par page'}">
+          <!--Ligne d'entête du tableau d'EXEMPLARISATION-->
+          <v-data-table v-if="!modif" :headers="headers" :items="computedItems('guess')" :items-per-page="10" class="elevation-1" item-key="num" loading-text="chargement.." multi-sort no-data-text="Aucune demande trouvée" no-results-text="Aucun resultat trouvé" :headers-length="3" :sort-desc="[false, true]" :footer-props="{showFirstLastPage: true, itemsPerPageOptions:[10,15,20,-1], itemsPerPageAllText:'Toutes', itemsPerPageText:'Lignes par page'}">
             <!--
             Tableau d'exemplarisation
             -->
-            <template v-slot:body="{ items }" v-if="!modif">
+            <template v-slot:body="{ items }">
               <!--Ligne avec les champs de recherche : EXEMPLARISATION-->
               <thead>
               <tr>
@@ -72,16 +72,19 @@
               </tr>
               </tbody>
             </template>
+          </v-data-table>
+          <!--Ligne d'entête du tableau de MODIFICATION-->
+          <v-data-table v-if="modif" :headers="headers" :items="computedItems('guess')" :items-per-page="10" class="elevation-1" item-key="num" loading-text="chargement.." multi-sort no-data-text="Aucune demande trouvée" no-results-text="Aucun resultat trouvé" :headers-length="3" :sort-desc="[false, true]" :footer-props="{showFirstLastPage: true, itemsPerPageOptions:[10,15,20,-1], itemsPerPageAllText:'Toutes', itemsPerPageText:'Lignes par page'}">
             <!--
             Tableau de modification
             -->
-            <template v-if="modif">
+            <template v-slot:body="{ items }">
               <!--Ligne avec les champs de recherche : MODIFICATION-->
-              <thead v-if="modif">
+              <thead>
               <tr>
                 <!--COM--><th></th>
                 <!--DEM--><th><v-text-field append-icon="search" aria-label="Recherche par numéro" clear-icon='clear' clearable hide-details single-line v-model="searchNum" v-on:keyup="computedItems('num')"></v-text-field></th>
-                <!--MAJ--><th><v-menu :close-on-content-click="true" ref="menu" v-model="menu"><template v-slot:activator="{ on }"><v-text-field class="item-calendar-searchfield-item" label="recherche par date" persistent-hint v-model="searchDateModification" v-on="on"></v-text-field></template><v-date-picker @change="computedItems('dateModification')" first-day-of-week="1" locale="fr-fr" no-title v-model="searchDateModification"></v-date-picker></v-menu></th>
+                <!--MAJ--><th><v-menu :close-on-content-click="true" ref="menu" v-model="menu"><template v-slot:activator="{ on }"><v-text-field class="item-calendar-searchfield-item" aria-label="recherche par date" persistent-hint v-model="searchDateModification" v-on="on"></v-text-field></template><v-date-picker @change="computedItems('dateModification')" first-day-of-week="1" locale="fr-fr" no-title v-model="searchDateModification"></v-date-picker></v-menu></th>
                 <!--ILN--><th v-if="user.role === 'ADMIN'"><v-text-field append-icon="search" aria-label="Recherche par ILN" clear-icon='clear' clearable hide-details single-line v-model="searchILN" v-on:keyup="computedItems('iln')"></v-text-field></th>
                 <!--RCR--><th><v-text-field append-icon="search" aria-label="Recherche par RCR"  clear-icon='clear' clearable hide-details single-line v-model="searchRCR" v-on:keyup="computedItems('rcr')"></v-text-field></th>
                 <!--ZON--><th><v-text-field append-icon="search" aria-label="Recherche par zone et sous-zone" clear-icon='clear' clearable hide-details single-line v-model="searchZoneSousZone" v-on:keyup="computedItems('zoneSousZone')"></v-text-field></th>
@@ -92,7 +95,7 @@
               </tr>
               </thead>
               <!--Lignes de données : MODIFICATION-->
-              <tbody v-if="modif">
+              <tbody>
               <tr :key="item.name" v-for="item in items">
                 <!--COM--><td></td>
                 <!--DEM--><td @click="clickRow(item.num, item.codeStatut)">{{ item.num }}</td>
@@ -522,10 +525,10 @@ export default {
       if (this.typeSearch !== 'search') {
         this.search = '';
         /* fonction callback qui permet selon le choix dans la liste déroulante de ne récupérer que certaines demandes
-                         @param currentValue: objet représentant une ligne de demande de le tableau, acceder à son statut via
-                         la variable d'instance .statut
-                         @param searchStatut: le statut correspondant au choix dans la liste déroulante
-                       */
+                                     @param currentValue: objet représentant une ligne de demande de le tableau, acceder à son statut via
+                                     la variable d'instance .statut
+                                     @param searchStatut: le statut correspondant au choix dans la liste déroulante
+                                   */
         return this.items.filter((currentValue) => {
           let statut = '';
           if (currentValue.statut === 'A compléter'
@@ -542,50 +545,16 @@ export default {
             statut = 'En erreur';
           }
           if (
-            (currentValue.dateCreation
-              .toString()
-              .toLowerCase()
-              .indexOf(this.searchDateCreation) > -1
-                                || this.searchDateCreation == null)
-                            && (currentValue.dateModification
-                              .toString()
-                              .toLowerCase()
-                              .indexOf(this.searchDateModification) > -1
-                            || this.searchDateModification == null)
-                            && (currentValue.iln
-                              .toString()
-                              .toLowerCase()
-                              .indexOf(this.searchILN) > -1
-                            || this.searchRCR == null)
-                            && (this.searchRCR == null || currentValue.rcr
-                              .toString()
-                              .toLowerCase()
-                              .indexOf(this.searchRCR.toLowerCase()) > -1)
-                            && (this.searchZoneSousZone == null || currentValue.zoneSousZone
-                              .toString()
-                              .toLowerCase()
-                              .indexOf(this.searchZoneSousZone.toLowerCase()) > -1)
-                            && (this.searchIndexRecherche == null || currentValue.indexRecherche
-                              .toString()
-                              .toLowerCase()
-                              .indexOf(this.searchIndexRecherche.toLowerCase()) > -1)
-                            && (currentValue.num
-                              .toString()
-                              .toLowerCase()
-                              .indexOf(this.searchNum) > -1
-                            || this.searchNum == null)
-                            && (this.searchTypeExemp == null
-                            || currentValue.typeExemp
-                              .toString()
-                              .toLowerCase()
-                              .indexOf(this.searchTypeExemp.toLowerCase()) > -1)
-                            && (this.searchStatut == null || statut
-                              .toString()
-                              .toLowerCase()
-                              .indexOf(this.searchStatut.toLowerCase()) > -1)
-                            && (this.searchCodeStatut.toString().indexOf(currentValue.codeStatut)
-                            > -1
-                            || this.searchCodeStatut.toString() === '')
+            (currentValue.dateCreation.toString().toLowerCase().indexOf(this.searchDateCreation) > -1 || this.searchDateCreation == null)
+            && (currentValue.dateModification.toString().toLowerCase().indexOf(this.searchDateModification) > -1 || this.searchDateModification == null)
+            && (currentValue.iln.toString().toLowerCase().indexOf(this.searchILN) > -1 || this.searchILN == null)
+            && (currentValue.rcr.toString().toLowerCase().indexOf(this.searchRCR.toLowerCase()) > -1 || this.searchRCR == null)
+            && (currentValue.zoneSousZone.toString().toLowerCase().indexOf(this.searchZoneSousZone.toLowerCase()) > -1 || this.searchZoneSousZone == null)
+            && (currentValue.indexRecherche.toString().toLowerCase().indexOf(this.searchIndexRecherche.toLowerCase()) > -1 || this.searchIndexRecherche == null)
+            && (currentValue.num.toString().toLowerCase().indexOf(this.searchNum) > -1 || this.searchNum == null)
+            && (currentValue.typeExemp.toString().toLowerCase().indexOf(this.searchTypeExemp.toLowerCase()) > -1 || this.searchTypeExemp == null)
+            && (statut.toString().toLowerCase().indexOf(this.searchStatut.toLowerCase()) > -1 || this.searchStatut == null)
+            && (this.searchCodeStatut.toString().indexOf(currentValue.codeStatut) > -1 || this.searchCodeStatut.toString() === '')
           ) {
             return true;
           }
