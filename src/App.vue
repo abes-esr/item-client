@@ -96,7 +96,7 @@
             <v-list-item-title>Créer des exemplaires</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item v-on:click="$router.push({ name: 'tabEx' })">
+        <v-list-item v-on:click="$router.push({ name: 'tabExemp' })">
           <v-list-item-action>
             <v-icon>list</v-icon>
           </v-list-item-action>
@@ -130,7 +130,7 @@
             <v-list-item-title>Modifier des exemplaires</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item v-on:click="$router.push({ name: 'tab' })">
+        <v-list-item v-on:click="$router.push({ name: 'tabModif' })">
           <v-list-item-action>
             <v-icon>list</v-icon>
           </v-list-item-action>
