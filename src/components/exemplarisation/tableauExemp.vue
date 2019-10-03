@@ -6,12 +6,12 @@
           <span v-html="alertMessage"></span>
         </v-alert>
         <v-card :loading="tableLoading">
-          <v-card-title class="title" v-if="archive && modif" >Mes demandes de modification archivées</v-card-title>
+          <v-card-title class="title" v-if="archive && modif">Mes demandes de modification archivées</v-card-title>
           <v-card-title class="title" v-if="!archive && modif">Gérer mes demandes de modification</v-card-title>
-          <v-card-title class="title" v-if="archive && !modif">Mes demandes d'exemplarisation archivées</v-card-title>
-          <v-card-title class="title" v-if="!archive && !modif">Gérer mes demandes d'exemplarisation</v-card-title>
+          <v-card-title class="title" v-if="archive && !modif">Mes demandes de création archivées</v-card-title>
+          <v-card-title class="title" v-if="!archive && !modif">Gérer mes demandes de création</v-card-title>
           <!--Ligne d'entête du tableau d'EXEMPLARISATION-->
-          <v-data-table v-if="!modif" :headers="headers" :items="computedItems('guess')" :items-per-page="8" class="elevation-1" item-key="num" loading-text="chargement.." multi-sort no-data-text="Aucune demande trouvée" no-results-text="Aucun resultat trouvé" headers-length='3' :sort-desc="[false, true]" :footer-props="{showFirstLastPage: true,firstIcon: 'mdi-arrow-collapse-left',lastIcon: 'mdi-arrow-collapse-right',prevIcon: 'mdi-minus',nextIcon: 'mdi-plus'}">
+          <v-data-table v-if="!modif" :headers="headers" :items="computedItems('guess')" :items-per-page="8" class="elevation-1" item-key="num" loading-text="chargement.." multi-sort no-data-text="Aucune demande trouvée" no-results-text="Aucun resultat trouvé" :sort-desc="[false, true]" :footer-props="{showFirstLastPage: true,firstIcon: 'mdi-arrow-collapse-left',lastIcon: 'mdi-arrow-collapse-right',prevIcon: 'mdi-minus',nextIcon: 'mdi-plus'}">
             <!--
             Tableau d'exemplarisation
             -->
@@ -271,8 +271,6 @@ export default {
     clearInterval(this.polling);
   },
   mounted() {
-    console.log(this.modif);
-
     this.user = JSON.parse(sessionStorage.getItem('user'));
 
     this.initHeader();
@@ -426,7 +424,6 @@ export default {
             this.user.userNum
           }&modif=${this.modif}`;
         }
-
 
         axios({
           headers: { Authorization: this.user.jwt },
