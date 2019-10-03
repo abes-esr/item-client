@@ -9,7 +9,7 @@ const RcrComponent = () => import('@/components/rcr.vue');
 const uploadComponent = () => import('@/components/modifmasse/uploadInit.vue');
 const traitementComponent = () => import('@/components/modifmasse/selectTraitement.vue');
 const ArchiveModifComponent = () => import('@/components/modifmasse/archiveModif.vue');
-const GererTableauComponent = () => import('@/components/exemplarisation/gererTableau.vue');
+const GererTableauComponent = () => import('@/components/utils/gererTableau.vue');
 const ArchiveExComponent = () => import('@/components/exemplarisation/archiveEx.vue');
 const ProfilComponent = () => import('@/components/profil.vue');
 const CGUComponent = () => import('@/components/footer/cgu.vue');

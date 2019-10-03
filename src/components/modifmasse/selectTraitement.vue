@@ -69,10 +69,10 @@
 <script>
 import axios from 'axios';
 import loading from 'vue-full-loading';
+import { showAt } from 'vue-breakpoints';
 import stepper from '@/components/utils/stepperModif.vue';
 import supprMixin from '@/mixins/delete';
 import constants from '@/components/utils/const';
-import { showAt } from 'vue-breakpoints';
 
 export default {
   // Import du mixin contenant les méthodes suppression et de précédent
