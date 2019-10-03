@@ -33,14 +33,12 @@ export default {
   .v-card {
     margin-top: 10px;
   }
-
   .group {
     border-radius: 5%;
     display: flex;
     flex: 1;
     justify-content: space-around;
   }
-
   .container {
     margin-top: 3em;
     margin-left: auto;
@@ -50,9 +48,4 @@ export default {
     justify-content: center;
     flex-direction: column;
   }
-
-  .item-horizontal-align{
-    margin:auto
-  }
-
 </style>
