@@ -21,11 +21,12 @@
               <tr>
                 <!--COM--><th></th>
                 <!--DEM--><th><v-text-field append-icon="search" aria-label="Recherche par numéro" clear-icon='clear' clearable hide-details single-line v-model="searchNum" v-on:keyup="computedItems('num')"></v-text-field></th>
-                <!--MAJ--><th><v-menu :close-on-content-click="true" ref="menu" v-model="menu"><template v-slot:activator="{ on }"><v-text-field class="item-calendar-searchfield-item" persistent-hint v-model="searchDateModification" v-on="on"></v-text-field></template><v-date-picker @change="computedItems('dateModification')" first-day-of-week="1" locale="fr-fr" no-title v-model="searchDateModification"></v-date-picker></v-menu></th>
+                <!--CRE--><th><v-menu :close-on-content-click="true" ref="menu" v-model="menuCreation"><template v-slot:activator="{ on }"><v-text-field clearable class="item-calendar-searchfield-item" append-icon="search" persistent-hint v-model="searchDateCreation" v-on="on"></v-text-field></template><v-date-picker @change="computedItems('dateCreation')" first-day-of-week="1" locale="fr-fr" no-title v-model="searchDateCreation"></v-date-picker></v-menu></th>
+                <!--MAJ--><th><v-menu :close-on-content-click="true" ref="menu" v-model="menuModification"><template v-slot:activator="{ on }"><v-text-field clearable class="item-calendar-searchfield-item" append-icon="search" persistent-hint v-model="searchDateModification" v-on="on"></v-text-field></template><v-date-picker @change="computedItems('dateModification')" first-day-of-week="1" locale="fr-fr" no-title v-model="searchDateModification"></v-date-picker></v-menu></th>
                 <!--ILN--><th v-if="user.role === 'ADMIN'"><v-text-field append-icon="search" aria-label="Recherche par ILN" clear-icon='clear' clearable hide-details single-line v-model="searchILN" v-on:keyup="computedItems('iln')"></v-text-field></th>
                 <!--RCR--><th><v-text-field append-icon="search" aria-label="Recherche par RCR"  clear-icon='clear' clearable hide-details single-line v-model="searchRCR" v-on:keyup="computedItems('rcr')"></v-text-field></th>
-                <!--IND--><th><v-text-field append-icon="search" aria-label="Recherche par Index"  clear-icon='clear' clearable hide-details single-line v-model="searchIndexRecherche" v-on:keyup="computedItems('indexRecherche')"></v-text-field></th>
                 <!--TYP--><th><v-select :items="listTypeExemp" @change="computedItems('typeExemp')" aria-label="Recherche par type d'exemplarisation" clear-icon='clear' clearable item-text="libelle" item-value="libelle" no-data-text="Aucun type trouvé." v-model="searchTypeExemp"></v-select></th>
+                <!--IND--><th><v-text-field append-icon="search" aria-label="Recherche par Index"  clear-icon='clear' clearable hide-details single-line v-model="searchIndexRecherche" v-on:keyup="computedItems('indexRecherche')"></v-text-field></th>
                 <!--STA--><th v-if="!archive"><v-select :items="listStatut" @change="computedItems('statut')" aria-label="Recherche par statut" clear-icon='clear' clearable no-data-text="Aucun statut trouvé." v-model="searchStatut"></v-select></th>
                 <!--TL1--><th></th>
                 <!--AR2--><th v-if="!archive"></th>
@@ -36,11 +37,12 @@
               <tr :key="item.name" v-for="item in items">
                 <!--COM--><td></td>
                 <!--DEM--><td @click="clickRow(item.num, item.codeStatut)">{{ item.num }}</td>
+                <!--CRE--><td @click="clickRow(item.num, item.dateCreation)">{{ item.dateCreation | formatDate }}</td>
                 <!--MAJ--><td @click="clickRow(item.num, item.codeStatut)">{{ item.dateModification | formatDate }}</td>
                 <!--ILN--><td @click="clickRow(item.num, item.codeStatut)">{{ item.iln }}</td>
                 <!--RCR--><td @click="clickRow(item.num, item.codeStatut)">{{ item.rcr }}</td>
-                <!--IND--><td @click="clickRow(item.num, item.codeStatut)">{{ item.indexRecherche }}</td>
                 <!--TYP--><td @click="clickRow(item.num, item.codeStatut)">{{ item.typeExemp }}</td>
+                <!--IND--><td @click="clickRow(item.num, item.codeStatut)">{{ item.indexRecherche }}</td>
                 <!--STA--><td @click="clickRow(item.num, item.codeStatut)">{{ item.statut }}</td>
                 <!--TL1--><td>
                 <v-menu bottom left v-if="item.codeStatut >= 2"><template v-slot:activator="{ on }"><v-btn aria-label="Télécharger les fichiers" class="cloudButton" color="info" small v-on="on"><v-icon>cloud_download</v-icon></v-btn></template>
@@ -84,7 +86,7 @@
               <tr>
                 <!--COM--><th></th>
                 <!--DEM--><th><v-text-field append-icon="search" aria-label="Recherche par numéro" clear-icon='clear' clearable hide-details single-line v-model="searchNum" v-on:keyup="computedItems('num')"></v-text-field></th>
-                <!--MAJ--><th><v-menu :close-on-content-click="true" ref="menu" v-model="menu"><template v-slot:activator="{ on }"><v-text-field class="item-calendar-searchfield-item" aria-label="recherche par date" persistent-hint v-model="searchDateModification" v-on="on"></v-text-field></template><v-date-picker @change="computedItems('dateModification')" first-day-of-week="1" locale="fr-fr" no-title v-model="searchDateModification"></v-date-picker></v-menu></th>
+                <!--MAJ--><th><v-menu :close-on-content-click="true" ref="menu" v-model="menuModification"><template v-slot:activator="{ on }"><v-text-field class="item-calendar-searchfield-item" label="recherche par date" persistent-hint v-model="searchDateModification" v-on="on"></v-text-field></template><v-date-picker @change="computedItems('dateModification')" first-day-of-week="1" locale="fr-fr" no-title v-model="searchDateModification"></v-date-picker></v-menu></th>
                 <!--ILN--><th v-if="user.role === 'ADMIN'"><v-text-field append-icon="search" aria-label="Recherche par ILN" clear-icon='clear' clearable hide-details single-line v-model="searchILN" v-on:keyup="computedItems('iln')"></v-text-field></th>
                 <!--RCR--><th><v-text-field append-icon="search" aria-label="Recherche par RCR"  clear-icon='clear' clearable hide-details single-line v-model="searchRCR" v-on:keyup="computedItems('rcr')"></v-text-field></th>
                 <!--ZON--><th><v-text-field append-icon="search" aria-label="Recherche par zone et sous-zone" clear-icon='clear' clearable hide-details single-line v-model="searchZoneSousZone" v-on:keyup="computedItems('zoneSousZone')"></v-text-field></th>
@@ -202,6 +204,7 @@ export default {
       },
       search: '',
       selectedColumns: [],
+      searchDateCreation: '',
       searchDateModification: '',
       searchILN: '',
       searchRCR: '',
@@ -226,7 +229,8 @@ export default {
       blobName: 'demande.csv',
       dialog: false,
       fileReady: false,
-      menu: false,
+      menuCreation: false,
+      menuModification: false,
       calendar2: false,
       listTypeExemp: [],
       listStatut: [],
@@ -430,7 +434,6 @@ export default {
             this.user.userNum
           }&modif=${this.modif}`;
         }
-
 
         axios({
           headers: { Authorization: this.user.jwt },
