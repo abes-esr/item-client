@@ -183,4 +183,11 @@ export default {
       top: 0;
       left: 0;
     }
+    .item-flexbox-for-checkbox{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-right: 1em;
+    align-items: center
+    }
 </style>

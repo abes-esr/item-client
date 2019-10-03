@@ -51,5 +51,8 @@ export default {
     flex-direction: column;
   }
 
+  .item-horizontal-align{
+    margin:auto
+  }
 
 </style>

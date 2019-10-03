@@ -1,5 +1,5 @@
 <template>
-    <tableau :archive=false :darkMode="darkMode" :modif=true></tableau>
+    <tableau :archive=false :darkMode="darkMode" :modif=this.modif></tableau>
 </template>
 
 <script>
@@ -8,7 +8,12 @@ import tableau from '@/components/utils/tableau.vue';
 export default {
   name: 'gerer',
   props: {
-    darkMode: Boolean,
+    darkMode: {
+      default: false,
+    },
+    modif: {
+      default: true,
+    },
   },
   components: {
     tableau,

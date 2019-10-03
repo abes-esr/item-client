@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import tableau from '@/components/exemplarisation/tableauExemp.vue';
+import tableau from '@/components/utils/tableau.vue';
 
 export default {
   name: 'archive',

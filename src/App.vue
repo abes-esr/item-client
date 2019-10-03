@@ -150,7 +150,7 @@
     </v-navigation-drawer>
     <!--COMPOSANTS IMBRIQUES CREES-->
     <v-content>
-      <transition>
+      <transition name="fade">
         <router-view @authenticated="setAuthenticated" @logout="logoutExpired" :darkMode="isDark"/>
       </transition>
     </v-content>
@@ -271,10 +271,9 @@ export default {
   }
   footer a {
     text-decoration: none;
-    color: white;
   }
   .fade-enter-active, .fade-leave-active {
-  transition: opacity .2s;
+  transition: opacity .3s;
   }
   .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
@@ -283,13 +282,9 @@ export default {
     background-color: #ec6839 !important;
     border-color: #ec6839 !important;
   }
-  .item-text-center{
-    text-align: center;
-  }
   .item-margin-around-single-icon{
     margin: 0 1em 0 1em
   }
-
   .item-margin-left-icon{
     margin: 1em
   }
@@ -314,9 +309,6 @@ export default {
     flex-direction: column;
     justify-content: center
   }
-  .item-horizontal-align{
-    margin:auto
-  }
   .item-text-align-center{
     text-align: center
   }
@@ -324,37 +316,17 @@ export default {
     padding-top: 1em;
     padding-bottom: 1em
   }
-  .item-table-body-header-elements-vertical-align{
-    display: inline-block;
-    margin-bottom: 1.3em
-  }
-  .item-table-body-header-elements-vertical-align-list{
-    display: inline-block;
-    margin-bottom: 1.4em
-  }
   .item-button:hover{
     background-color: red;
-  }
-  .item-flexbox-for-checkbox{
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    margin-right: 1em;
-    align-items: center
   }
   .item-calendar-searchfield-item{
     max-height: 2.8em
   }
-
   @media all and (max-width: 10em){
-    .item-back{
-      background-color: #d50b52
-    }
     .item-break-words{
       word-break: break-all
     }
   }
-
   @media all and (max-width: 6em) {
     .container {
       width: 100%
