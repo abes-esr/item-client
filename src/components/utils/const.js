@@ -52,6 +52,7 @@ export default {
   headerExempAdmin: [
     { text: ' ', value: 'expand', width: '1%' },
     { text: 'Numéro de la Demande', value: 'num', width: '1%' },
+    { text: 'Date de création de la demande', value: 'dateCreation', width: '1%' },
     { text: 'Date de dernière mise à jour de la Demande', value: 'dateModification', width: '1%' },
     { text: 'ILN', value: 'iln', width: '1%' },
     { text: 'RCR', value: 'rcr', width: '1%' },
@@ -64,6 +65,7 @@ export default {
   headerExemp: [
     { text: ' ', value: 'expand', width: '1%' },
     { text: 'Numéro de la Demande', value: 'num', width: '1%' },
+    { text: 'Date de création de la demande', value: 'dateCreation', width: '1%' },
     { text: 'Date de dernière mise à jour de la Demande', value: 'dateModification', width: '1%' },
     { text: 'RCR', value: 'rcr', width: '1%' },
     { text: 'Index de recherche', value: 'indexRecherche', width: '1%' },
@@ -75,6 +77,7 @@ export default {
   headerExempArchiveAdmin: [
     { text: ' ', value: 'expand', width: '1%' },
     { text: 'Numéro de la Demande', value: 'num', width: '1%' },
+    { text: 'Date de création de la demande', value: 'dateCreation', width: '1%' },
     { text: 'Date de dernière mise à jour de la Demande', value: 'dateModification', width: '1%' },
     { text: 'ILN', value: 'iln', width: '1%' },
     { text: 'RCR', value: 'rcr', width: '1%' },
@@ -85,6 +88,7 @@ export default {
   headerExempArchive: [
     { text: ' ', value: 'expand', width: '1%' },
     { text: 'Numéro de la Demande', value: 'num', width: '1%' },
+    { text: 'Date de création de la demande', value: 'dateCreation', width: '1%' },
     { text: 'Date de dernière mise à jour de la Demande', value: 'dateModification', width: '1%' },
     { text: 'RCR', value: 'rcr', width: '1%' },
     { text: 'Index de recherche', value: 'indexRecherche', width: '1%' },
