@@ -134,7 +134,7 @@
                     <div class="notice">
                       <pre style="text-align: left; padding-top: 1em">
                         <span class="inner-pre">
-                          {{ noticeAvant }}
+{{ noticeAvant }}
                         </span>
                       </pre>
                     </div>
@@ -197,7 +197,7 @@
                   <div class="notice">
                     <br>
                     <pre style="text-align: left; padding-top: 1em">
-                      {{ noticeApres }}
+{{ noticeApres }}
                     </pre>
                   </div>
                 </v-card>

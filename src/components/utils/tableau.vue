@@ -6,10 +6,41 @@
           <span v-html="alertMessage"></span>
         </v-alert>
         <v-card :loading="tableLoading">
-          <v-card-title class="title" v-if="archive && modif">Mes demandes de modification archivées</v-card-title>
-          <v-card-title class="title" v-if="!archive && modif">Gérer mes demandes de modification</v-card-title>
-          <v-card-title class="title" v-if="archive && !modif">Mes demandes de création archivées</v-card-title>
-          <v-card-title class="title" v-if="!archive && !modif">Gérer mes demandes de création</v-card-title>
+          <v-container>
+            <v-row no-gutters>
+              <v-col cols="12" sm="12" md="6">
+                <v-card-title class="title" v-if="archive && modif" >Mes demandes de modification archivées</v-card-title>
+                <v-card-title class="title" v-if="!archive && modif">Gérer mes demandes de modification</v-card-title>
+                <v-card-title class="title" v-if="archive && !modif">Mes demandes d'exemplarisation archivées</v-card-title>
+                <v-card-title class="title" v-if="!archive && !modif">Gérer mes demandes d'exemplarisation</v-card-title>
+              </v-col>
+              <!--Zone de case à cocher pour affichage restrictif si administrateur-->
+              <v-col cols="12" sm="12" md="6">
+                <div v-if="user.role === 'ADMIN'" class="item-flexbox-for-checkbox">
+                  <div class="item-margin-right-app-bar">
+                    <v-checkbox value="restrictDisplay" id="restrictDisplay" @click.native="switchRestrictionAffichage()" label="Afficher uniquement les demandes terminées / erreur pour les autres utilisateurs"></v-checkbox>
+                  </div>
+                  <div class="item-margin-right-app-bar" style="margin-bottom: 0.5em">
+                    <v-dialog v-model="dialog" persistent max-width="600">
+                      <template v-slot:activator="{ on }">
+                        <v-btn text small icon v-on="on">
+                          <v-icon>info</v-icon>
+                        </v-btn>
+                      </template>
+                      <v-card>
+                        <v-card-title class="headline">Affichage restrictif</v-card-title>
+                        <v-card-text>Permet en tant qu'administrateur de ne voir que les demandes en cours de saisie et en erreur des autres utilisateurs rattachés à son ILN.</v-card-text>
+                        <v-card-actions>
+                          <div class="flex-grow-1"></div>
+                          <v-btn text @click="dialog = false">Compris</v-btn>
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
+                  </div>
+                </div>
+              </v-col>
+            </v-row>
+          </v-container>
           <!--Ligne d'entête du tableau d'EXEMPLARISATION-->
           <v-data-table v-if="!modif" :headers="headers" :items="computedItems('guess')" :items-per-page="10" class="elevation-1" item-key="num" loading-text="chargement.." multi-sort no-data-text="Aucune demande trouvée" no-results-text="Aucun resultat trouvé" :headers-length="3" :sort-desc="[false, true]" :footer-props="{showFirstLastPage: true, itemsPerPageOptions:[10,15,20,-1], itemsPerPageAllText:'Toutes', itemsPerPageText:'Lignes par page'}">
             <!--
@@ -244,7 +275,8 @@ export default {
       commentButton: false,
       tableExpanded: false,
       expanded: [],
-      listTraitements: ['pomme', 'raisin'],
+      listTraitements: [],
+      affichageRestrictifAdmin: false,
     };
   },
   props: {
@@ -428,7 +460,7 @@ export default {
         } else if (this.user.role === 'ADMIN') {
           url = `${process.env.VUE_APP_ROOT_API}demandes?userNum=${
             this.user.userNum
-          }&modif=${this.modif}`;
+          }&modif=${this.modif}&restriction=${this.affichageRestrictifAdmin}`;
         } else {
           url = `${process.env.VUE_APP_ROOT_API}chercherDemandes?userNum=${
             this.user.userNum
@@ -731,6 +763,11 @@ export default {
     getColor(statut) {
       if (statut === 'En saisie') return 'green';
       return 'orange';
+    },
+    switchRestrictionAffichage() {
+      const elt = document.getElementById('restrictDisplay');
+      this.affichageRestrictifAdmin = elt.checked;
+      this.fetchData();
     },
   },
 };
