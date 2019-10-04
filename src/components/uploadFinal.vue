@@ -43,6 +43,7 @@ export default {
       titleUpload: 'Envoyer le fichier complété de la zone d\'exemplaire à traiter',
       textUpload: 'Cliquez pour charger votre fichier complété (format .txt ou .csv obligatoire)',
       exemplairesMultiplesParent: false,
+      codePebParent: '',
     };
   },
   props: {
@@ -60,6 +61,7 @@ export default {
     // Upload du fichier enrichi
     uploadFile(file) {
       console.log(`VARIABLE${this.exemplairesMultiplesParent}`);
+      console.log(`VARIABLE${this.codePebParent}`);
       this.loading = true;
       this.file = file;
       const formData = new FormData();

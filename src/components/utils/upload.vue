@@ -36,7 +36,13 @@
                 </v-card>
               </v-dialog>
         </div>
+        <!-- liste de sélection du code PEB ne s'affiche pas si modif = true -->
+        <div class="item-margin-left-app-bar" style="margin-bottom: 0.5em">
+            <v-select id="codesPebList" :items="codesPeb">
+            </v-select>
+        </div>
       </div>
+      
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="info" v-if="precedent" @click="$emit('precedent')" aria-label="Annuler">Précédent</v-btn>
@@ -68,6 +74,7 @@
 <script>
 import loading from 'vue-full-loading';
 import { showAt } from 'vue-breakpoints';
+import axios from 'axios';
 
 export default {
   name: 'upload',
@@ -113,7 +120,11 @@ export default {
       alertType: 'error',
       popupDelete: false,
       dialog: false,
+      user: {},
       exemplairesMultiplesChild: false,
+      codesPeb: [
+      ],
+      codesPebChild: '',
       fichierCharge: [],
       rules: [
         value => ((value.type === 'text/csv') || (value.type === 'application/vnd.ms-excel') || (value.type === 'text/plain')) || 'Le fichier chargé n\'est pas dans un format autorisé (.txt ou .csv)',
@@ -122,6 +133,12 @@ export default {
         value => value.type,
       ],
     };
+  },
+  mounted () {
+    // On récupère les infos utilisateur en session car on a besoin du jwt afin d'appeler les WS REST
+    this.user = JSON.parse(sessionStorage.getItem('user'));
+    //on récupère la liste des codes PEB
+    this.getCodesPeb()
   },
   methods: {
     // changement statut bouton envoyer
@@ -137,7 +154,6 @@ export default {
          * Affiche une erreur si ce n'est pas le cas
          */
     checkFormat() {
-      console.log('salut');
       console.log(this.format);
       console.log(this.$refs.fileInput.files[0].name.split('.')[1]);
       this.alert = false;
@@ -158,6 +174,25 @@ export default {
       this.exemplairesMultiplesChild = elt.checked;
       this.$emit('eventName', this.exemplairesMultiplesChild);
     },
+    getCodesPeb() {
+      this.loading = true;
+      axios({
+        headers: { Authorization: this.user.jwt },
+        method: 'GET',
+        url: `${process.env.VUE_APP_ROOT_API}codesPeb`,
+      }).then(
+        (result) => {
+          this.codesPeb = result.data;
+          this.loading = false;
+        },
+        (error) => {
+          this.alert = true;
+          this.alertType = 'error';
+          this.alertMessage = `impossible de charger la liste des codes PEB ${error.response.data.message} <br /> Veuillez réessayer ultérieurement. Si le problème persiste merci de contacter l'assistance.`;
+          this.loading = false;
+        }
+      );
+    }
   },
 };
 </script>
