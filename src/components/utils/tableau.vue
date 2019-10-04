@@ -8,14 +8,14 @@
         <v-card :loading="tableLoading">
           <v-container>
             <v-row no-gutters>
-              <v-col cols="12" sm="12" md="6">
+              <v-col cols="12" sm="12" md="4">
                 <v-card-title class="title" v-if="archive && modif" >Mes demandes de modification archivées</v-card-title>
                 <v-card-title class="title" v-if="!archive && modif">Gérer mes demandes de modification</v-card-title>
                 <v-card-title class="title" v-if="archive && !modif">Mes demandes d'exemplarisation archivées</v-card-title>
                 <v-card-title class="title" v-if="!archive && !modif">Gérer mes demandes d'exemplarisation</v-card-title>
               </v-col>
               <!--Zone de case à cocher pour affichage restrictif si administrateur-->
-              <v-col cols="12" sm="12" md="6">
+              <v-col cols="12" sm="12" md="8">
                 <div v-if="user.role === 'ADMIN'" class="item-flexbox-for-checkbox">
                   <div class="item-margin-right-app-bar">
                     <v-checkbox value="restrictDisplay" id="restrictDisplay" @click.native="switchRestrictionAffichage()" label="Afficher uniquement les demandes terminées / erreur pour les autres utilisateurs"></v-checkbox>
@@ -811,5 +811,12 @@ export default {
   .colored{
     background-color: #326BB1;
     border-radius: 50%;
+  }
+  .item-flexbox-for-checkbox{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-right: 1em;
+    align-items: center
   }
 </style>
