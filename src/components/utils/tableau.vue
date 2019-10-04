@@ -706,7 +706,7 @@ export default {
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
-        url: `${process.env.VUE_APP_ROOT_API}archiverDemande?numDemande=${this.current}?modif=false`,
+        url: `${process.env.VUE_APP_ROOT_API}archiverDemande?numDemande=${this.current}&modif=${this.modif}`,
       }).then(
         () => {
           this.alertMessage = 'Demande archivée.';
