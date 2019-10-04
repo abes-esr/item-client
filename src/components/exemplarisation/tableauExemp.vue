@@ -18,7 +18,7 @@
               <v-col cols="12" sm="12" md="6">
                 <div v-if="user.role === 'ADMIN'" class="item-flexbox-for-checkbox">
                   <div class="item-margin-right-app-bar">
-                    <v-checkbox value="restrictDisplay" id="restrictDisplay" @click.native="switchRestrictionAffichage()" label="Afficher uniquement les demandes en saisie / erreur pour les autres utilisateurs"></v-checkbox>
+                    <v-checkbox value="restrictDisplay" id="restrictDisplay" @click.native="switchRestrictionAffichage()" label="Afficher uniquement les demandes terminées / erreur pour les autres utilisateurs"></v-checkbox>
                   </div>
                   <div class="item-margin-right-app-bar" style="margin-bottom: 0.5em">
                     <v-dialog v-model="dialog" persistent max-width="600">
@@ -452,7 +452,7 @@ export default {
         } else if (this.user.role === 'ADMIN') {
           url = `${process.env.VUE_APP_ROOT_API}demandes?userNum=${
             this.user.userNum
-          }&modif=${this.modif}`;
+          }&modif=${this.modif}&restriction=${this.affichageRestrictifAdmin}`;
         } else {
           url = `${process.env.VUE_APP_ROOT_API}chercherDemandes?userNum=${
             this.user.userNum
@@ -757,7 +757,7 @@ export default {
     switchRestrictionAffichage() {
       const elt = document.getElementById('restrictDisplay');
       this.affichageRestrictifAdmin = elt.checked;
-      console.log(this.affichageRestrictifAdmin);
+      this.fetchData();
     },
   },
 };
