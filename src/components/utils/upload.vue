@@ -36,10 +36,11 @@
                 </v-card>
               </v-dialog>
         </div>
-        <!-- liste de sélection du code PEB ne s'affiche pas si modif = true -->
+      </div>
+      <!-- liste de sélection du code PEB ne s'affiche pas si modif = true -->
+      <div v-if="!this.modif" class="item-flexbox-for-checkbox">
         <div class="item-margin-left-app-bar" style="margin-bottom: 0.5em">
-            <v-select id="codesPebList" :items="codesPeb" v-model="defaultCodePebChild" @change="getCodePebSelected()">
-            </v-select>
+          <v-select label="Code peb selectionné" id="codesPebList" :items="codesPeb" v-model="defaultCodePebChild" @change="getCodePebSelected()"></v-select>
         </div>
       </div>
       <v-card-actions>
@@ -224,8 +225,8 @@ export default {
     .item-flexbox-for-checkbox{
     display: flex;
     flex-direction: row;
-    justify-content: flex-end;
-    margin-right: 1em;
+    justify-content: flex-start;
+    margin-left: 1em;
     align-items: center
     }
 </style>
