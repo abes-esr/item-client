@@ -17,7 +17,7 @@
       <!--Zone de Choix d'exemplarisation multiple ne s'affiche pas si modif = true (en modification)-->
       <div v-if="!this.modif" class="item-flexbox-for-checkbox">
         <div class="item-margin-right-app-bar">
-              <v-checkbox value="exempMulti" id ="exempMulti" @click.native="getExemplairesMultiples()" label="Je souhaite créer des exemplaires supplémentaires"></v-checkbox>
+              <v-checkbox value="exempMulti" id="exempMulti" @click.native="getExemplairesMultiples()" label="Je souhaite créer des exemplaires supplémentaires"></v-checkbox>
         </div>
         <div class="item-margin-right-app-bar" style="margin-bottom: 0.5em">
               <v-dialog v-model="dialog" persistent max-width="400">
@@ -38,11 +38,10 @@
         </div>
         <!-- liste de sélection du code PEB ne s'affiche pas si modif = true -->
         <div class="item-margin-left-app-bar" style="margin-bottom: 0.5em">
-            <v-select id="codesPebList" :items="codesPeb">
+            <v-select id="codesPebList" :items="codesPeb" v-model="defaultCodePebChild" @change="getCodePebSelected()">
             </v-select>
         </div>
       </div>
-      
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="info" v-if="precedent" @click="$emit('precedent')" aria-label="Annuler">Précédent</v-btn>
@@ -124,7 +123,9 @@ export default {
       exemplairesMultiplesChild: false,
       codesPeb: [
       ],
+      defaultCodePebChild: {},
       codesPebChild: '',
+      codePebSelected: '',
       fichierCharge: [],
       rules: [
         value => ((value.type === 'text/csv') || (value.type === 'application/vnd.ms-excel') || (value.type === 'text/plain')) || 'Le fichier chargé n\'est pas dans un format autorisé (.txt ou .csv)',
@@ -134,11 +135,11 @@ export default {
       ],
     };
   },
-  mounted () {
+  mounted() {
     // On récupère les infos utilisateur en session car on a besoin du jwt afin d'appeler les WS REST
     this.user = JSON.parse(sessionStorage.getItem('user'));
-    //on récupère la liste des codes PEB
-    this.getCodesPeb()
+    // on récupère la liste des codes PEB
+    this.getCodesPeb();
   },
   methods: {
     // changement statut bouton envoyer
@@ -154,8 +155,6 @@ export default {
          * Affiche une erreur si ce n'est pas le cas
          */
     checkFormat() {
-      console.log(this.format);
-      console.log(this.$refs.fileInput.files[0].name.split('.')[1]);
       this.alert = false;
       if (!(this.format.includes(this.$refs.fileInput.files[0].name.split('.')[1]))) {
         this.alertMessage = `Le fichier doit être au format(s) suivants : ${this.format}`;
@@ -172,10 +171,12 @@ export default {
     getExemplairesMultiples() {
       const elt = document.getElementById('exempMulti');
       this.exemplairesMultiplesChild = elt.checked;
-      this.$emit('eventName', this.exemplairesMultiplesChild);
+      this.$emit('eventName', this.exemplairesMultiplesChild, this.defaultCodePebChild);
+    },
+    getCodePebSelected() {
+      this.$emit('eventName', this.exemplairesMultiplesChild, this.defaultCodePebChild);
     },
     getCodesPeb() {
-      this.loading = true;
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
@@ -183,16 +184,15 @@ export default {
       }).then(
         (result) => {
           this.codesPeb = result.data;
-          this.loading = false;
+          this.defaultCodePebChild = result.data[0];
         },
         (error) => {
           this.alert = true;
           this.alertType = 'error';
           this.alertMessage = `impossible de charger la liste des codes PEB ${error.response.data.message} <br /> Veuillez réessayer ultérieurement. Si le problème persiste merci de contacter l'assistance.`;
-          this.loading = false;
-        }
+        },
       );
-    }
+    },
   },
 };
 </script>

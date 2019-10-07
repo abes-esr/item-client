@@ -55,13 +55,10 @@ export default {
   // On récupère le numéro de demande enregistré en session
   created() {
     this.numDem = sessionStorage.getItem('dem');
-    console.log(`MODIF${this.modif}`);
   },
   methods: {
     // Upload du fichier enrichi
     uploadFile(file) {
-      console.log(`VARIABLE${this.exemplairesMultiplesParent}`);
-      console.log(`VARIABLE${this.codePebParent}`);
       this.loading = true;
       this.file = file;
       const formData = new FormData();
@@ -70,7 +67,7 @@ export default {
       this.user = JSON.parse(sessionStorage.getItem('user'));
       if (this.user !== null && this.user.jwt !== null) {
         axios
-          .post(`${process.env.VUE_APP_ROOT_API}uploadDemande?modif=${this.modif}&exempMulti=${this.exemplairesMultiplesParent}`, formData, {
+          .post(`${process.env.VUE_APP_ROOT_API}uploadDemande?modif=${this.modif}&exempMulti=${this.exemplairesMultiplesParent}&codePeb=${this.codePebParent}`, formData, {
             headers: {
               Authorization: this.user.jwt,
               'Content-Type': 'multipart/form-data',
@@ -110,8 +107,9 @@ export default {
         this.loading = false;
       }
     },
-    updateParent(variable) {
+    updateParent(variable, variable2) {
       this.exemplairesMultiplesParent = variable;
+      this.codePebParent = variable2;
     },
   },
 };
