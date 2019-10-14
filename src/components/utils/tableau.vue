@@ -400,7 +400,11 @@ export default {
             this.listTypeExemp.push({ libelle: 'Non défini' });
           },
           (error) => {
-            this.alertMessage = constants.erreurListeTraitements;
+            if (addr === `${process.env.VUE_APP_ROOT_API}typeExempA`) {
+              this.alertMessage = constants.erreurTypeExemp;
+            } else if (addr === `${process.env.VUE_APP_ROOT_API}traitements`) {
+              this.alertMessage = constants.erreurListeTraitements;
+            }
             this.alert = true;
             this.alertType = 'error';
             if (error.response.status === 401) {
