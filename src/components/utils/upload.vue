@@ -16,10 +16,10 @@
       </v-card-text>
       <!--Zone de Choix d'exemplarisation multiple ne s'affiche pas si modif = true (en modification)-->
       <div v-if="!this.modif" class="item-flexbox-for-checkbox">
-        <div class="item-margin-right-app-bar">
+        <div class="item-margin-right-app-bar" style="margin-left:auto; margin-right:0">
               <v-checkbox value="exempMulti" id="exempMulti" @click.native="getExemplairesMultiples()" label="Je souhaite créer des exemplaires supplémentaires"></v-checkbox>
         </div>
-        <div class="item-margin-right-app-bar" style="margin-bottom: 0.5em">
+        <div class="item-margin-right-app-bar" style="margin-bottom: 0.5em; padding-left: 5px">
               <v-dialog v-model="dialog" persistent max-width="400">
                 <template v-slot:activator="{ on }">
                   <v-btn text small icon v-on="on">
@@ -39,7 +39,7 @@
       </div>
       <!-- liste de sélection du code PEB ne s'affiche pas si modif = true -->
       <div v-if="!this.modif" class="item-flexbox-for-checkbox">
-        <div class="item-margin-left-app-bar" style="margin-bottom: 0.5em">
+        <div class="item-margin-left-app-bar" style="margin-bottom: 0.5em; margin-left:auto; margin-right:1.2em">
           <v-select label="Code peb selectionné" id="codesPebList" :items="codesPeb" v-model="defaultCodePebChild" @change="getCodePebSelected()"></v-select>
         </div>
       </div>
