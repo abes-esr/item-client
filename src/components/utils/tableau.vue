@@ -6,27 +6,59 @@
           <span v-html="alertMessage"></span>
         </v-alert>
         <v-card :loading="tableLoading">
-          <v-card-title class="title" v-if="archive && modif" >Mes demandes de modification archivées</v-card-title>
-          <v-card-title class="title" v-if="!archive && modif">Gérer mes demandes de modification</v-card-title>
-          <v-card-title class="title" v-if="archive && !modif">Mes demandes d'exemplarisation archivées</v-card-title>
-          <v-card-title class="title" v-if="!archive && !modif">Gérer mes demandes d'exemplarisation</v-card-title>
-          <!--Ligne d'entête du tableau-->
-          <v-data-table :headers="headers" :items="computedItems('guess')" :items-per-page="8" class="elevation-1" item-key="num" loading-text="chargement.." multi-sort no-data-text="Aucune demande trouvée" no-results-text="Aucun resultat trouvé" headers-length="3" :sort-desc="[false, true]" :footer-props="{showFirstLastPage: true,firstIcon: 'mdi-arrow-collapse-left',lastIcon: 'mdi-arrow-collapse-right',prevIcon: 'mdi-minus',nextIcon: 'mdi-plus'}">
+          <v-container>
+            <v-row no-gutters>
+              <v-col cols="12" sm="12" md="4">
+                <v-card-title class="title" v-if="archive && modif" >Mes demandes de modification archivées</v-card-title>
+                <v-card-title class="title" v-if="!archive && modif">Gérer mes demandes de modification</v-card-title>
+                <v-card-title class="title" v-if="archive && !modif">Mes demandes d'exemplarisation archivées</v-card-title>
+                <v-card-title class="title" v-if="!archive && !modif">Gérer mes demandes d'exemplarisation</v-card-title>
+              </v-col>
+              <!--Zone de case à cocher pour affichage restrictif si administrateur-->
+              <v-col cols="12" sm="12" md="8">
+                <div v-if="user.role === 'ADMIN'" class="item-flexbox-for-checkbox">
+                  <div class="item-margin-right-app-bar">
+                    <v-checkbox value="restrictDisplay" id="restrictDisplay" @click.native="switchRestrictionAffichage()" label="Afficher uniquement les demandes terminées / erreur pour les autres utilisateurs"></v-checkbox>
+                  </div>
+                  <div class="item-margin-right-app-bar" style="margin-bottom: 0.5em">
+                    <v-dialog v-model="dialog" persistent max-width="600">
+                      <template v-slot:activator="{ on }">
+                        <v-btn text small icon v-on="on">
+                          <v-icon>info</v-icon>
+                        </v-btn>
+                      </template>
+                      <v-card>
+                        <v-card-title class="headline">Affichage restrictif</v-card-title>
+                        <v-card-text>Permet en tant qu'administrateur de ne voir que les demandes en cours de saisie et en erreur des autres utilisateurs rattachés à son ILN.</v-card-text>
+                        <v-card-actions>
+                          <div class="flex-grow-1"></div>
+                          <v-btn text @click="dialog = false">Compris</v-btn>
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
+                  </div>
+                </div>
+              </v-col>
+            </v-row>
+          </v-container>
+          <!--Ligne d'entête du tableau d'EXEMPLARISATION-->
+          <v-data-table v-if="!modif" :headers="headers" :items="computedItems('guess')" :items-per-page="10" class="elevation-1" item-key="num" loading-text="chargement.." multi-sort no-data-text="Aucune demande trouvée" no-results-text="Aucun resultat trouvé" :headers-length="3" :sort-desc="[false, true]" :footer-props="{showFirstLastPage: true, itemsPerPageOptions:[10,15,20,-1], itemsPerPageAllText:'Toutes', itemsPerPageText:'Lignes par page'}">
             <!--
             Tableau d'exemplarisation
             -->
-            <template v-slot:body="{ items }" v-if="!modif">
+            <template v-slot:body="{ items }">
               <!--Ligne avec les champs de recherche : EXEMPLARISATION-->
               <thead>
               <tr>
                 <!--COM--><th></th>
                 <!--DEM--><th><v-text-field append-icon="search" aria-label="Recherche par numéro" clear-icon='clear' clearable hide-details single-line v-model="searchNum" v-on:keyup="computedItems('num')"></v-text-field></th>
-                <!--MAJ--><th class="smallTD"><v-menu :close-on-content-click="true" ref="menu" v-model="menu"><template v-slot:activator="{ on }"><v-text-field class="item-calendar-searchfield-item" label="recherche par date" persistent-hint v-model="searchDateModification" v-on="on"></v-text-field></template><v-date-picker @change="computedItems('dateModification')" first-day-of-week="1" locale="fr-fr" no-title v-model="searchDateModification"></v-date-picker></v-menu></th>
-                <!--ILN--><th class="smallTD" v-if="user.role === 'ADMIN'"><v-text-field append-icon="search" aria-label="Recherche par ILN" clear-icon='clear' clearable hide-details single-line v-model="searchILN" v-on:keyup="computedItems('iln')"></v-text-field></th>
+                <!--CRE--><th><v-menu :close-on-content-click="true" ref="menuCreation" v-model="menuCreation"><template v-slot:activator="{ on }"><v-text-field clearable class="item-calendar-searchfield-item" append-icon="search" persistent-hint v-model="searchDateCreation" v-on="on"></v-text-field></template><v-date-picker @change="computedItems('dateCreation')" first-day-of-week="1" locale="fr-fr" no-title v-model="searchDateCreation"></v-date-picker></v-menu></th>
+                <!--MAJ--><th><v-menu :close-on-content-click="true" ref="menuModification" v-model="menuModification"><template v-slot:activator="{ on }"><v-text-field clearable class="item-calendar-searchfield-item" append-icon="search" persistent-hint v-model="searchDateModification" v-on="on"></v-text-field></template><v-date-picker @change="computedItems('dateModification')" first-day-of-week="1" locale="fr-fr" no-title v-model="searchDateModification"></v-date-picker></v-menu></th>
+                <!--ILN--><th v-if="user.role === 'ADMIN'"><v-text-field append-icon="search" aria-label="Recherche par ILN" clear-icon='clear' clearable hide-details single-line v-model="searchILN" v-on:keyup="computedItems('iln')"></v-text-field></th>
                 <!--RCR--><th><v-text-field append-icon="search" aria-label="Recherche par RCR"  clear-icon='clear' clearable hide-details single-line v-model="searchRCR" v-on:keyup="computedItems('rcr')"></v-text-field></th>
-                <!--IND--><th><v-text-field append-icon="search" aria-label="Recherche par Index"  clear-icon='clear' clearable hide-details single-line v-model="searchIndexRecherche" v-on:keyup="computedItems('indexRecherche')"></v-text-field></th>
                 <!--TYP--><th><v-select :items="listTypeExemp" @change="computedItems('typeExemp')" aria-label="Recherche par type d'exemplarisation" clear-icon='clear' clearable item-text="libelle" item-value="libelle" no-data-text="Aucun type trouvé." v-model="searchTypeExemp"></v-select></th>
-                <!--STA--><th class="smallTD" v-if="!archive"><v-select :items="listStatut" @change="computedItems('statut')" aria-label="Recherche par statut" clear-icon='clear' clearable no-data-text="Aucun statut trouvé." v-model="searchStatut"></v-select></th>
+                <!--IND--><th><v-text-field append-icon="search" aria-label="Recherche par Index"  clear-icon='clear' clearable hide-details single-line v-model="searchIndexRecherche" v-on:keyup="computedItems('indexRecherche')"></v-text-field></th>
+                <!--STA--><th v-if="!archive"><v-select :items="listStatut" @change="computedItems('statut')" aria-label="Recherche par statut" clear-icon='clear' clearable no-data-text="Aucun statut trouvé." v-model="searchStatut"></v-select></th>
                 <!--TL1--><th></th>
                 <!--AR2--><th v-if="!archive"></th>
               </tr>
@@ -36,25 +68,26 @@
               <tr :key="item.name" v-for="item in items">
                 <!--COM--><td></td>
                 <!--DEM--><td @click="clickRow(item.num, item.codeStatut)">{{ item.num }}</td>
+                <!--CRE--><td @click="clickRow(item.num, item.dateCreation)">{{ item.dateCreation | formatDate }}</td>
                 <!--MAJ--><td @click="clickRow(item.num, item.codeStatut)">{{ item.dateModification | formatDate }}</td>
                 <!--ILN--><td @click="clickRow(item.num, item.codeStatut)">{{ item.iln }}</td>
                 <!--RCR--><td @click="clickRow(item.num, item.codeStatut)">{{ item.rcr }}</td>
-                <!--IND--><td @click="clickRow(item.num, item.codeStatut)">{{ item.indexRecherche }}</td>
                 <!--TYP--><td @click="clickRow(item.num, item.codeStatut)">{{ item.typeExemp }}</td>
+                <!--IND--><td @click="clickRow(item.num, item.codeStatut)">{{ item.indexRecherche }}</td>
                 <!--STA--><td @click="clickRow(item.num, item.codeStatut)">{{ item.statut }}</td>
                 <!--TL1--><td>
                 <v-menu bottom left v-if="item.codeStatut >= 2"><template v-slot:activator="{ on }"><v-btn aria-label="Télécharger les fichiers" class="cloudButton" color="info" small v-on="on"><v-icon>cloud_download</v-icon></v-btn></template>
                   <!-- FICHIERS MODIF -->
                   <v-list v-if="item.codeStatut >= 3 && modif">
-                    <v-list-item-content @click="downloadFile(item.num, 'ppn')"><v-list-item-title>Télécharger le fichier initial des PPN</v-list-item-title></v-list-item-content>
-                    <v-list-item-content @click="downloadFile(item.num, 'epn')"><v-list-item-title>Télécharger le fichier de correspondance PPN/EPN</v-list-item-title></v-list-item-content>
-                    <v-list-item-content @click="downloadFile(item.num, 'enrichi')" v-if="item.codeStatut >= 4"><v-list-item-title>Télécharger le fichier enrichi</v-list-item-title></v-list-item-content>
-                    <v-list-item-content @click="downloadFile(item.num, 'resultat')" v-if="item.codeStatut >= 7"><v-list-item-title>Télécharger le fichier résultat</v-list-item-title></v-list-item-content>
+                    <v-list-item @click="downloadFile(item.num, 'ppn')"><v-list-item-title>Télécharger le fichier initial des PPN</v-list-item-title></v-list-item>
+                    <v-list-item @click="downloadFile(item.num, 'epn')"><v-list-item-title>Télécharger le fichier de correspondance PPN/EPN</v-list-item-title></v-list-item>
+                    <v-list-item @click="downloadFile(item.num, 'enrichi')" v-if="item.codeStatut >= 4"><v-list-item-title>Télécharger le fichier enrichi</v-list-item-title></v-list-item>
+                    <v-list-item @click="downloadFile(item.num, 'resultat')" v-if="item.codeStatut >= 7"><v-list-item-title>Télécharger le fichier résultat</v-list-item-title></v-list-item>
                   </v-list>
                   <!-- FICHIERS EXEMPLARISATION -->
                   <v-list v-if="item.codeStatut >= 3 && !modif">
-                    <v-list-item-content @click="downloadFile(item.num, 'initEx')"><v-list-item-title>Télécharger le fichier déposé</v-list-item-title></v-list-item-content>
-                    <v-list-item-content @click="downloadFile(item.num, 'resultatEx')" v-if="item.codeStatut >= 7"><v-list-item-title>Télécharger le fichier résultat</v-list-item-title></v-list-item-content>
+                    <v-list-item @click="downloadFile(item.num, 'initEx')"><v-list-item-title>Télécharger le fichier déposé</v-list-item-title></v-list-item>
+                    <v-list-item @click="downloadFile(item.num, 'resultatEx')" v-if="item.codeStatut >= 7"><v-list-item-title>Télécharger le fichier résultat</v-list-item-title></v-list-item>
                   </v-list>
                 </v-menu>
                 <span v-if="item.codeStatut === 1">
@@ -72,27 +105,30 @@
               </tr>
               </tbody>
             </template>
+          </v-data-table>
+          <!--Ligne d'entête du tableau de MODIFICATION-->
+          <v-data-table v-if="modif" :headers="headers" :items="computedItems('guess')" :items-per-page="10" class="elevation-1" item-key="num" loading-text="chargement.." multi-sort no-data-text="Aucune demande trouvée" no-results-text="Aucun resultat trouvé" :headers-length="3" :sort-desc="[false, true]" :footer-props="{showFirstLastPage: true, itemsPerPageOptions:[10,15,20,-1], itemsPerPageAllText:'Toutes', itemsPerPageText:'Lignes par page'}">
             <!--
             Tableau de modification
             -->
-            <template v-if="modif">
+            <template v-slot:body="{ items }">
               <!--Ligne avec les champs de recherche : MODIFICATION-->
-              <thead v-if="modif">
+              <thead>
               <tr>
                 <!--COM--><th></th>
                 <!--DEM--><th><v-text-field append-icon="search" aria-label="Recherche par numéro" clear-icon='clear' clearable hide-details single-line v-model="searchNum" v-on:keyup="computedItems('num')"></v-text-field></th>
-                <!--MAJ--><th class="smallTD"><v-menu :close-on-content-click="true" ref="menu" v-model="menu"><template v-slot:activator="{ on }"><v-text-field class="item-calendar-searchfield-item" label="recherche par date" persistent-hint v-model="searchDateModification" v-on="on"></v-text-field></template><v-date-picker @change="computedItems('dateModification')" first-day-of-week="1" locale="fr-fr" no-title v-model="searchDateModification"></v-date-picker></v-menu></th>
-                <!--ILN--><th class="smallTD" v-if="user.role === 'ADMIN'"><v-text-field append-icon="search" aria-label="Recherche par ILN" clear-icon='clear' clearable hide-details single-line v-model="searchILN" v-on:keyup="computedItems('iln')"></v-text-field></th>
+                <!--MAJ--><th><v-menu :close-on-content-click="true" ref="menuModification" v-model="menuModification"><template v-slot:activator="{ on }"><v-text-field class="item-calendar-searchfield-item" label="recherche par date" persistent-hint v-model="searchDateModification" v-on="on"></v-text-field></template><v-date-picker @change="computedItems('dateModification')" first-day-of-week="1" locale="fr-fr" no-title v-model="searchDateModification"></v-date-picker></v-menu></th>
+                <!--ILN--><th v-if="user.role === 'ADMIN'"><v-text-field append-icon="search" aria-label="Recherche par ILN" clear-icon='clear' clearable hide-details single-line v-model="searchILN" v-on:keyup="computedItems('iln')"></v-text-field></th>
                 <!--RCR--><th><v-text-field append-icon="search" aria-label="Recherche par RCR"  clear-icon='clear' clearable hide-details single-line v-model="searchRCR" v-on:keyup="computedItems('rcr')"></v-text-field></th>
                 <!--ZON--><th><v-text-field append-icon="search" aria-label="Recherche par zone et sous-zone" clear-icon='clear' clearable hide-details single-line v-model="searchZoneSousZone" v-on:keyup="computedItems('zoneSousZone')"></v-text-field></th>
-                <!--TRT--><th><v-select :items="listTraitements" @change="computedItems('traitement')" aria-label="Recherche par type de traitement" clear-icon='clear' clearable item-text="libelle" item-value="libelle" no-data-text="Aucun type trouvé." v-model="searchTraitement"></v-select></th>
-                <!--STA--><th class="smallTD" v-if="!archive"><v-select :items="listStatut" @change="computedItems('statut')" aria-label="Recherche par statut" clear-icon='clear' clearable no-data-text="Aucun statut trouvé." v-model="searchStatut"></v-select></th>
+                <!--TRT--><th><v-select :items="listTraitements" @change="computedItems('traitement')" aria-label="Recherche par type de traitement" clear-icon='clear' clearable item-text="libelle" item-value="libelle" no-data-text="Aucun type trouvé." v-model="searchTypeExemp"></v-select></th>
+                <!--STA--><th v-if="!archive"><v-select :items="listStatut" @change="computedItems('statut')" aria-label="Recherche par statut" clear-icon='clear' clearable no-data-text="Aucun statut trouvé." v-model="searchStatut"></v-select></th>
                 <!--TL1--><th></th>
                 <!--AR2--><th v-if="!archive"></th>
               </tr>
               </thead>
               <!--Lignes de données : MODIFICATION-->
-              <tbody v-if="modif">
+              <tbody>
               <tr :key="item.name" v-for="item in items">
                 <!--COM--><td></td>
                 <!--DEM--><td @click="clickRow(item.num, item.codeStatut)">{{ item.num }}</td>
@@ -100,21 +136,21 @@
                 <!--ILN--><td @click="clickRow(item.num, item.codeStatut)">{{ item.iln }}</td>
                 <!--RCR--><td @click="clickRow(item.num, item.codeStatut)">{{ item.rcr }}</td>
                 <!--ZON--><td @click="clickRow(item.num, item.codeStatut)">{{ item.zoneSousZone }}</td>
-                <!--TRT--><td @click="clickRow(item.num, item.codeStatut)">{{ item.traitement }}</td>
+                <!--TRT--><td @click="clickRow(item.num, item.codeStatut)">{{ item.typeExemp }}</td>
                 <!--STA--><td @click="clickRow(item.num, item.codeStatut)">{{ item.statut }}</td>
                 <!--TL1--><td>
                 <v-menu bottom left v-if="item.codeStatut >= 2"><template v-slot:activator="{ on }"><v-btn aria-label="Télécharger les fichiers" class="cloudButton" color="info" small v-on="on"><v-icon>cloud_download</v-icon></v-btn></template>
                   <!-- FICHIERS MODIF -->
                   <v-list v-if="item.codeStatut >= 3 && modif">
-                    <v-list-item-content @click="downloadFile(item.num, 'ppn')"><v-list-item-title>Télécharger le fichier initial des PPN</v-list-item-title></v-list-item-content>
-                    <v-list-item-content @click="downloadFile(item.num, 'epn')"><v-list-item-title>Télécharger le fichier de correspondance PPN/EPN</v-list-item-title></v-list-item-content>
-                    <v-list-item-content @click="downloadFile(item.num, 'enrichi')" v-if="item.codeStatut >= 4"><v-list-item-title>Télécharger le fichier enrichi</v-list-item-title></v-list-item-content>
-                    <v-list-item-content @click="downloadFile(item.num, 'resultat')" v-if="item.codeStatut >= 7"><v-list-item-title>Télécharger le fichier résultat</v-list-item-title></v-list-item-content>
+                    <v-list-item @click="downloadFile(item.num, 'ppn')"><v-list-item-title>Télécharger le fichier initial des PPN</v-list-item-title></v-list-item>
+                    <v-list-item @click="downloadFile(item.num, 'epn')"><v-list-item-title>Télécharger le fichier de correspondance PPN/EPN</v-list-item-title></v-list-item>
+                    <v-list-item @click="downloadFile(item.num, 'enrichi')" v-if="item.codeStatut >= 4"><v-list-item-title>Télécharger le fichier enrichi</v-list-item-title></v-list-item>
+                    <v-list-item @click="downloadFile(item.num, 'resultat')" v-if="item.codeStatut >= 7"><v-list-item-title>Télécharger le fichier résultat</v-list-item-title></v-list-item>
                   </v-list>
                   <!-- FICHIERS EXEMPLARISATION -->
                   <v-list v-if="item.codeStatut >= 3 && !modif">
-                    <v-list-item-content @click="downloadFile(item.num, 'initEx')"><v-list-item-title>Télécharger le fichier déposé</v-list-item-title></v-list-item-content>
-                    <v-list-item-content @click="downloadFile(item.num, 'resultatEx')" v-if="item.codeStatut >= 7"><v-list-item-title>Télécharger le fichier résultat</v-list-item-title></v-list-item-content>
+                    <v-list-item @click="downloadFile(item.num, 'initEx')"><v-list-item-title>Télécharger le fichier déposé</v-list-item-title></v-list-item>
+                    <v-list-item @click="downloadFile(item.num, 'resultatEx')" v-if="item.codeStatut >= 7"><v-list-item-title>Télécharger le fichier résultat</v-list-item-title></v-list-item>
                   </v-list>
                 </v-menu>
                 <span v-if="item.codeStatut == 1">
@@ -199,6 +235,7 @@ export default {
       },
       search: '',
       selectedColumns: [],
+      searchDateCreation: '',
       searchDateModification: '',
       searchILN: '',
       searchRCR: '',
@@ -210,6 +247,7 @@ export default {
       searchZoneSousZone: '',
       listCodeStatut: ['1', '2'],
       typeSearch: 'search',
+      searchTraitement: '',
       searchCombo: [],
       headers: [],
       items: [],
@@ -222,7 +260,8 @@ export default {
       blobName: 'demande.csv',
       dialog: false,
       fileReady: false,
-      menu: false,
+      menuCreation: false,
+      menuModification: false,
       calendar2: false,
       listTypeExemp: [],
       listStatut: [],
@@ -236,7 +275,8 @@ export default {
       commentButton: false,
       tableExpanded: false,
       expanded: [],
-      listTraitements: ['pomme', 'raisin'],
+      listTraitements: [],
+      affichageRestrictifAdmin: false,
     };
   },
   props: {
@@ -268,8 +308,6 @@ export default {
     clearInterval(this.polling);
   },
   mounted() {
-    console.log(this.modif);
-
     this.user = JSON.parse(sessionStorage.getItem('user'));
 
     this.initHeader();
@@ -344,7 +382,12 @@ export default {
       return '';
     },
     getListTypeExemp() {
-      const addr = `${process.env.VUE_APP_ROOT_API}typeExemp`;
+      let addr;
+      if (this.modif) {
+        addr = `${process.env.VUE_APP_ROOT_API}traitements`;
+      } else {
+        addr = `${process.env.VUE_APP_ROOT_API}typeExemp`;
+      }
       if (this.user !== null && this.user.jwt !== null) {
         axios({
           headers: { Authorization: this.user.jwt },
@@ -357,7 +400,11 @@ export default {
             this.listTypeExemp.push({ libelle: 'Non défini' });
           },
           (error) => {
-            this.alertMessage = constants.erreurListeTraitements;
+            if (addr === `${process.env.VUE_APP_ROOT_API}typeExempA`) {
+              this.alertMessage = constants.erreurTypeExemp;
+            } else if (addr === `${process.env.VUE_APP_ROOT_API}traitements`) {
+              this.alertMessage = constants.erreurListeTraitements;
+            }
             this.alert = true;
             this.alertType = 'error';
             if (error.response.status === 401) {
@@ -417,13 +464,12 @@ export default {
         } else if (this.user.role === 'ADMIN') {
           url = `${process.env.VUE_APP_ROOT_API}demandes?userNum=${
             this.user.userNum
-          }&modif=${this.modif}`;
+          }&modif=${this.modif}&restriction=${this.affichageRestrictifAdmin}`;
         } else {
           url = `${process.env.VUE_APP_ROOT_API}chercherDemandes?userNum=${
             this.user.userNum
           }&modif=${this.modif}`;
         }
-
 
         axios({
           headers: { Authorization: this.user.jwt },
@@ -480,9 +526,12 @@ export default {
                 } else {
                   tempTypeExemp = result.data[key].typeExemp.libelle;
                 }
+              } else if (result.data[key].traitement === null) {
+                tempTypeExemp = 'Non défini';
+              } else {
+                tempTypeExemp = result.data[key].traitement.libelle;
               }
 
-              // pour éviter les erreurs si null
               this.items.push({
                 dateCreation: result.data[key].dateCreation,
                 dateModification: result.data[key].dateModification,
@@ -524,10 +573,10 @@ export default {
       if (this.typeSearch !== 'search') {
         this.search = '';
         /* fonction callback qui permet selon le choix dans la liste déroulante de ne récupérer que certaines demandes
-                         @param currentValue: objet représentant une ligne de demande de le tableau, acceder à son statut via
-                         la variable d'instance .statut
-                         @param searchStatut: le statut correspondant au choix dans la liste déroulante
-                       */
+                                     @param currentValue: objet représentant une ligne de demande de le tableau, acceder à son statut via
+                                     la variable d'instance .statut
+                                     @param searchStatut: le statut correspondant au choix dans la liste déroulante
+                                   */
         return this.items.filter((currentValue) => {
           let statut = '';
           if (currentValue.statut === 'A compléter'
@@ -544,50 +593,16 @@ export default {
             statut = 'En erreur';
           }
           if (
-            (currentValue.dateCreation
-              .toString()
-              .toLowerCase()
-              .indexOf(this.searchDateCreation) > -1
-                                || this.searchDateCreation == null)
-                            && (currentValue.dateModification
-                              .toString()
-                              .toLowerCase()
-                              .indexOf(this.searchDateModification) > -1
-                            || this.searchDateModification == null)
-                            && (currentValue.iln
-                              .toString()
-                              .toLowerCase()
-                              .indexOf(this.searchILN) > -1
-                            || this.searchRCR == null)
-                            && (this.searchRCR == null || currentValue.rcr
-                              .toString()
-                              .toLowerCase()
-                              .indexOf(this.searchRCR.toLowerCase()) > -1)
-                            && (this.searchZoneSousZone == null || currentValue.zoneSousZone
-                              .toString()
-                              .toLowerCase()
-                              .indexOf(this.searchZoneSousZone.toLowerCase()) > -1)
-                            && (this.searchIndexRecherche == null || currentValue.indexRecherche
-                              .toString()
-                              .toLowerCase()
-                              .indexOf(this.searchIndexRecherche.toLowerCase()) > -1)
-                            && (currentValue.num
-                              .toString()
-                              .toLowerCase()
-                              .indexOf(this.searchNum) > -1
-                            || this.searchNum == null)
-                            && (this.searchTypeExemp == null
-                            || currentValue.typeExemp
-                              .toString()
-                              .toLowerCase()
-                              .indexOf(this.searchTypeExemp.toLowerCase()) > -1)
-                            && (this.searchStatut == null || statut
-                              .toString()
-                              .toLowerCase()
-                              .indexOf(this.searchStatut.toLowerCase()) > -1)
-                            && (this.searchCodeStatut.toString().indexOf(currentValue.codeStatut)
-                            > -1
-                            || this.searchCodeStatut.toString() === '')
+            (currentValue.dateCreation.toString().toLowerCase().indexOf(this.searchDateCreation) > -1 || this.searchDateCreation == null)
+            && (currentValue.dateModification.toString().toLowerCase().indexOf(this.searchDateModification) > -1 || this.searchDateModification == null)
+            && (currentValue.iln.toString().toLowerCase().indexOf(this.searchILN) > -1 || this.searchILN == null)
+            && (currentValue.rcr.toString().toLowerCase().indexOf(this.searchRCR.toLowerCase()) > -1 || this.searchRCR == null)
+            && (currentValue.zoneSousZone.toString().toLowerCase().indexOf(this.searchZoneSousZone.toLowerCase()) > -1 || this.searchZoneSousZone == null)
+            && (currentValue.indexRecherche.toString().toLowerCase().indexOf(this.searchIndexRecherche.toLowerCase()) > -1 || this.searchIndexRecherche == null)
+            && (currentValue.num.toString().toLowerCase().indexOf(this.searchNum) > -1 || this.searchNum == null)
+            && (currentValue.typeExemp.toString().toLowerCase().indexOf(this.searchTypeExemp.toLowerCase()) > -1 || this.searchTypeExemp == null)
+            && (statut.toString().toLowerCase().indexOf(this.searchStatut.toLowerCase()) > -1 || this.searchStatut == null)
+            && (this.searchCodeStatut.toString().indexOf(currentValue.codeStatut) > -1 || this.searchCodeStatut.toString() === '')
           ) {
             return true;
           }
@@ -727,7 +742,7 @@ export default {
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
-        url: `${process.env.VUE_APP_ROOT_API}archiverDemande?numDemande=${this.current}?modif=false`,
+        url: `${process.env.VUE_APP_ROOT_API}archiverDemande?numDemande=${this.current}&modif=${this.modif}`,
       }).then(
         () => {
           this.alertMessage = 'Demande archivée.';
@@ -753,6 +768,11 @@ export default {
       if (statut === 'En saisie') return 'green';
       return 'orange';
     },
+    switchRestrictionAffichage() {
+      const elt = document.getElementById('restrictDisplay');
+      this.affichageRestrictifAdmin = elt.checked;
+      this.fetchData();
+    },
   },
 };
 </script>
@@ -763,9 +783,6 @@ export default {
   }
   table.v-table thead th {
     font-size: 14px;
-  }
-  .smallTD {
-    width: 10%
   }
   /* Ne me demandez pas pourquoi, mais ça marche pour aligner les barres de recherche... */
   .v-select {
@@ -798,5 +815,12 @@ export default {
   .colored{
     background-color: #326BB1;
     border-radius: 50%;
+  }
+  .item-flexbox-for-checkbox{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-right: 1em;
+    align-items: center
   }
 </style>

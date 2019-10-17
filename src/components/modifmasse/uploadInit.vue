@@ -96,8 +96,7 @@ export default {
         method: 'GET',
         url: `${process.env.VUE_APP_ROOT_API}demandes/${this.numDem}?modif=false`,
       }).then(
-        (result) => { // L'objet result contient le numero de RCR, qui n'est pas accessible via sessionStorage
-          console.log(result.data);
+        () => { // L'objet result contient le numero de RCR, qui n'est pas accessible via sessionStorage
           this.exauto = true;
         },
       );

@@ -134,7 +134,7 @@
                     <div class="notice">
                       <pre style="text-align: left; padding-top: 1em">
                         <span class="inner-pre">
-                          {{ noticeAvant }}
+{{ noticeAvant }}
                         </span>
                       </pre>
                     </div>
@@ -197,7 +197,7 @@
                   <div class="notice">
                     <br>
                     <pre style="text-align: left; padding-top: 1em">
-                      {{ noticeApres }}
+{{ noticeApres }}
                     </pre>
                   </div>
                 </v-card>
@@ -229,9 +229,9 @@
 <script>
 import loading from 'vue-full-loading';
 import axios from 'axios';
+import moment from 'moment';
 import stepper from '@/components/utils/stepperModif.vue';
 import supprMixin from '@/mixins/delete';
-import moment from 'moment';
 import constants from '@/components/utils/const';
 
 export default {
