@@ -129,7 +129,7 @@ export default {
       codePebSelected: '',
       fichierCharge: [],
       rules: [
-        value => ((value.type === 'text/csv') || (value.type === 'application/vnd.ms-excel') || (value.type === 'text/plain')) || 'Le fichier chargé n\'est pas dans un format autorisé (.txt ou .csv)',
+        value => !value || ((value.type === 'text/csv') || (value.type === 'application/vnd.ms-excel') || (value.type === 'text/plain')) || 'Le fichier chargé n\'est pas dans un format autorisé (.txt ou .csv)',
       ],
       typeFile: [
         value => value.type,
@@ -145,8 +145,8 @@ export default {
   methods: {
     // changement statut bouton envoyer
     autorisationEnvoi() {
-      if ((this.fichierCharge.type === 'text/csv') || (this.fichierCharge.type === 'application/vnd.ms-excel') || (this.fichierCharge.type === 'text/plain')) {
-        this.fichierPresent = true;
+      if (this.fichierCharge !== null) {
+        this.fichierPresent = (this.fichierCharge.type === 'text/csv') || (this.fichierCharge.type === 'application/vnd.ms-excel') || (this.fichierCharge.type === 'text/plain');
       } else {
         this.fichierPresent = false;
       }
