@@ -12,7 +12,7 @@
       </v-app-bar>
       <!--Nouveau composant d'upload vuetify 2-->
       <v-card-text style="margin-bottom: -2.8em">
-        <v-file-input :rules="rules" for="files" show-size outlined prepend-icon="attachment" type="file" aria-label="Dépôt du fichier" v-model="fichierCharge" @change="autorisationEnvoi" ref="fileInput" :label="text"></v-file-input>
+        <v-file-input accept=".csv,.txt" :rules="rules" for="files" show-size outlined prepend-icon="attachment" type="file" aria-label="Dépôt du fichier" v-model="fichierCharge" @change="autorisationEnvoi" ref="fileInput" :label="text"></v-file-input>
       </v-card-text>
       <!--Zone de Choix d'exemplarisation multiple ne s'affiche pas si modif = true (en modification)-->
       <div v-if="!this.modif" class="item-flexbox-for-checkbox">
