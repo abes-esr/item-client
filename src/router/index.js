@@ -9,7 +9,8 @@ const RcrComponent = () => import('@/components/rcr.vue');
 const uploadComponent = () => import('@/components/modifmasse/uploadInit.vue');
 const traitementComponent = () => import('@/components/modifmasse/selectTraitement.vue');
 const ArchiveModifComponent = () => import('@/components/modifmasse/archiveModif.vue');
-const GererTableauComponent = () => import('@/components/utils/gererTableau.vue');
+const GererTableauModifComponent = () => import('@/components/utils/gererTableauModif.vue');
+const GererTableauExempComponent = () => import('@/components/utils/gererTableauExemp.vue');
 const ArchiveExComponent = () => import('@/components/exemplarisation/archiveEx.vue');
 const ProfilComponent = () => import('@/components/profil.vue');
 const CGUComponent = () => import('@/components/footer/cgu.vue');
@@ -127,7 +128,7 @@ const router = new Router({
     {
       path: '/tableauExemplarisation',
       name: 'tabExemp',
-      component: GererTableauComponent,
+      component: GererTableauExempComponent,
       props: { modif: false },
       meta: {
         requiresAuth: true,
@@ -136,7 +137,7 @@ const router = new Router({
     {
       path: '/tableauModification',
       name: 'tabModif',
-      component: GererTableauComponent,
+      component: GererTableauModifComponent,
       props: { modif: true },
       meta: {
         requiresAuth: true,

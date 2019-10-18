@@ -304,9 +304,6 @@ export default {
       return value;
     },
   },
-  beforeDestroy() {
-    clearInterval(this.polling);
-  },
   mounted() {
     this.user = JSON.parse(sessionStorage.getItem('user'));
 
@@ -515,18 +512,19 @@ export default {
 
               // Si l'on est en exemplarisation
               if (!this.modif) {
-                if (result.data[key].indexRecherche === null) {
+                if ((result.data[key].indexRecherche === null) || (result.data[key].indexRecherche === undefined)) {
                   tempIndexRecherche = '';
                 } else {
                   tempIndexRecherche = result.data[key].indexRecherche.libelle;
                 }
 
-                if (result.data[key].typeExemp === null) {
+                if ((result.data[key].typeExemp === null) || (result.data[key].typeExemp === undefined)) {
                   tempTypeExemp = 'Non défini';
                 } else {
                   tempTypeExemp = result.data[key].typeExemp.libelle;
                 }
-              } else if (result.data[key].traitement === null) {
+                // Si l'on est en modification
+              } else if ((result.data[key].traitement === null) || (result.data[key].traitement === undefined)) {
                 tempTypeExemp = 'Non défini';
               } else {
                 tempTypeExemp = result.data[key].traitement.libelle;

@@ -6,7 +6,7 @@
 import tableau from '@/components/utils/tableau.vue';
 
 export default {
-  name: 'gerer',
+  name: 'gererTableauModif',
   props: {
     darkMode: {
       default: false,
