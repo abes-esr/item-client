@@ -591,21 +591,27 @@ export default {
             statut = 'En erreur';
           }
 
-          if (
-            (currentValue.dateCreation.toString().toLowerCase().indexOf(this.searchDateCreation) > -1 || this.searchDateCreation == null)
-            && (currentValue.dateModification.toString().toLowerCase().indexOf(this.searchDateModification) > -1 || this.searchDateModification == null)
-            && (currentValue.iln.toString().toLowerCase().indexOf(this.searchILN) > -1 || this.searchILN == null)
-            && (currentValue.rcr.toString().toLowerCase().indexOf(this.searchRCR) > -1 || this.searchRCR == null)
-            && (currentValue.zoneSousZone.toString().toLowerCase().indexOf(this.searchZoneSousZone) > -1 || this.searchZoneSousZone == null)
-            && (currentValue.indexRecherche.toString().toLowerCase().indexOf(this.searchIndexRecherche) > -1 || this.searchIndexRecherche == null)
-            && (currentValue.num.toString().toLowerCase().indexOf(this.searchNum) > -1 || this.searchNum == null)
-            && (currentValue.typeExemp.toString().toLowerCase().indexOf(this.searchTypeExemp) > -1 || this.searchTypeExemp == null)
-            && (statut.toString().toLowerCase().indexOf(this.searchStatut) > -1 || this.searchStatut == null)
-            && (this.searchCodeStatut.toString().indexOf(currentValue.codeStatut) > -1 || this.searchCodeStatut.toString() === '')
-          ) {
-            return true;
-          }
-          return false;
+          if (this.searchDateCreation === undefined || this.searchDateCreation === null) { this.searchDateCreation = ''; }
+          if (this.searchDateModification === undefined || this.searchDateModification === null) { this.searchDateCreation = ''; }
+          if (this.searchILN === undefined || this.searchILN === null) { this.searchILN = ''; }
+          if (this.searchRCR === undefined || this.searchRCR === null) { this.searchRCR = ''; }
+          if (this.searchZoneSousZone === undefined || this.searchZoneSousZone === null) { this.searchZoneSousZone = ''; }
+          if (this.searchIndexRecherche === undefined || this.searchIndexRecherche === null) { this.searchIndexRecherche = ''; }
+          if (this.searchNum === undefined || this.searchNum === null) { this.searchNum = ''; }
+          if (this.searchTypeExemp === undefined || this.searchTypeExemp === null) { this.searchTypeExemp = ''; }
+          if (this.searchStatut === undefined || this.searchStatut === null) { this.searchStatut = ''; }
+          if (this.searchCodeStatut === undefined || this.searchCodeStatut === null) { this.searchCodeStatut = ''; }
+
+          return (currentValue.dateCreation.toString().toLowerCase().indexOf(this.searchDateCreation.toLowerCase()) > -1)
+              && (currentValue.dateModification.toString().toLowerCase().indexOf(this.searchDateModification.toLowerCase()) > -1)
+              && (currentValue.iln.toString().toLowerCase().indexOf(this.searchILN.toLowerCase()) > -1)
+              && (currentValue.rcr.toString().toLowerCase().indexOf(this.searchRCR.toLowerCase()) > -1)
+              && (currentValue.zoneSousZone.toString().toLowerCase().indexOf(this.searchZoneSousZone.toLowerCase()) > -1)
+              && (currentValue.indexRecherche.toString().toLowerCase().indexOf(this.searchIndexRecherche.toLowerCase()) > -1)
+              && (currentValue.num.toString().toLowerCase().indexOf(this.searchNum.toLowerCase()) > -1)
+              && (currentValue.typeExemp.toString().toLowerCase().indexOf(this.searchTypeExemp.toLowerCase()) > -1)
+              && (statut.toString().toLowerCase().indexOf(this.searchStatut.toLowerCase()) > -1)
+              && (this.searchCodeStatut.toString().indexOf(currentValue.codeStatut) > -1 || this.searchCodeStatut.toString() === '');
         });
       }
 
