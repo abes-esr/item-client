@@ -61,9 +61,19 @@ const router = new Router({
       },
     },
     {
-      path: '/fichier',
-      name: 'upload',
+      path: '/fichierModif',
+      name: 'uploadModif',
       component: uploadComponent,
+      props: { modif: true },
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/fichierExemp',
+      name: 'uploadExemp',
+      component: uploadComponent,
+      props: { modif: false },
       meta: {
         requiresAuth: true,
       },

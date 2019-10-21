@@ -82,6 +82,12 @@ export default {
       exauto: false,
     };
   },
+  props: {
+    // Modif de masse ou exemplarisation
+    modif: {
+      default: true,
+    },
+  },
   // Récupération des infos utilisateur et du numéro de demande en session
   created() {
     this.user = JSON.parse(sessionStorage.getItem('user'));
@@ -94,7 +100,7 @@ export default {
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
-        url: `${process.env.VUE_APP_ROOT_API}demandes/${this.numDem}?modif=false`,
+        url: `${process.env.VUE_APP_ROOT_API}demandes/${this.numDem}?modif=${this.modif}`,
       }).then(
         () => { // L'objet result contient le numero de RCR, qui n'est pas accessible via sessionStorage
           this.exauto = true;

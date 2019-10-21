@@ -132,10 +132,9 @@ export default {
             sessionStorage.setItem('dem', result.data.numDemande);
             // Passage à l'étape suivante
             if (this.modif) {
-              this.$router.replace({ name: 'upload' });
+              this.$router.replace({ name: 'uploadModif' });
             } else {
-              // TODO : REMPLACER PAR LA BONNE ROUTE
-              this.$router.replace({ name: 'type' });
+              this.$router.replace({ name: 'uploadExemp' });
             }
           },
           (error) => {
