@@ -49,7 +49,9 @@
           </v-card>
         </v-dialog>
         <!-- FIL D'ARIANE -->
-        <stepper id="stepper" current="5"></stepper><!--TODO un autre component stepper avec v-if pour exauto, une fois que l'on connaitra le fil d'ariane-->
+        <stepperModif v-if=this.exauto id="stepper" current="5"></stepperModif>
+        <stepperExemp v-if=!this.exauto id="stepper" current="4"></stepperExemp>
+        <br>
         <!-- INFOS GENERALES DE LA DEMANDE -->
         <v-card id="demInfos" class="item-global-margin-bottom">
           <h3 style="padding-top: 15px; padding-left: 15px;" class="headline"><span
@@ -230,14 +232,16 @@
 import loading from 'vue-full-loading';
 import axios from 'axios';
 import moment from 'moment';
-import stepper from '@/components/utils/stepperModif.vue';
+import stepperModif from '@/components/utils/stepperModif.vue';
+import stepperExemp from '@/components/utils/stepperExemp.vue';
 import supprMixin from '@/mixins/delete';
 import constants from '@/components/utils/const';
 
 export default {
   components: {
     loading,
-    stepper,
+    stepperModif,
+    stepperExemp,
   },
   // Voilà le mixin en question
   mixins: [supprMixin],
