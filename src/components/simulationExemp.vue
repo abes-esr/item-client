@@ -123,14 +123,14 @@
             <v-row>
               <v-col :key="1" cols="12" sm="12" md="5"> <!--Exemplaires existants-->
                 <!--Carte grisée si absence d'exemplaires pour cette notice-->
-                <v-card dark class="pa-1" outlined tile v-if="exemplairesPresentsSurNoticeEnCours">
+                <v-card dark class="pa-1" outlined tile v-if="!exemplairesPresentsSurNoticeEnCours">
                   <span class="headline --text">Exemplaires existants</span>
                   <div class="notice">
                     <pre>Pas d'exemplaires pour cette notice avec ce RCR</pre>
                   </div>
                 </v-card>
                 <!--Carte activée si présence exemplaires pour cette notice-->
-                <v-card class="pa-1" outlined tile v-if="!exemplairesPresentsSurNoticeEnCours">
+                <v-card class="pa-1" outlined tile v-if="exemplairesPresentsSurNoticeEnCours">
                   <span class="headline --text">Exemplaires existants</span>
                   <v-container id="scroll-target" style="max-height: 400px" class="overflow-y-auto">
                     <div class="notice">
@@ -348,7 +348,8 @@ export default {
             this.noticeApres = result.data[1]; // Exemplaires à créer
           }
 
-          if (result.data[0] === null) {
+          // TODO corriger en back pour avoir un retour vide ou nul
+          if (result.data[0] !== '\r\n') {
             this.exemplairesPresentsSurNoticeEnCours = true;
           }
           this.loading = false;
