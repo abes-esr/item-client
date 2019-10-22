@@ -132,9 +132,11 @@ export default {
             sessionStorage.setItem('dem', result.data.numDemande);
             // Passage à l'étape suivante
             if (this.modif) {
+            // Passage etape 2 : upload du fichier de ppn en modification
               this.$router.replace({ name: 'uploadModif' });
             } else {
-              this.$router.replace({ name: 'uploadExemp' });
+            // Passage etape 2 : choix du type d'exemplarisation
+              this.$router.replace({ name: 'type' });
             }
           },
           (error) => {

@@ -70,18 +70,18 @@ const router = new Router({
       },
     },
     {
-      path: '/fichierExemp',
-      name: 'uploadExemp',
-      component: uploadComponent,
-      props: { modif: false },
+      path: '/fichierEnrichi',
+      name: 'uploadFinal',
+      component: uploadFinalComponent,
       meta: {
         requiresAuth: true,
       },
     },
     {
-      path: '/fichierEnrichi',
-      name: 'uploadFinal',
-      component: uploadFinalComponent,
+      path: '/fichierExemp',
+      name: 'uploadExemp',
+      component: uploadComponent,
+      props: { modif: false },
       meta: {
         requiresAuth: true,
       },
@@ -104,7 +104,7 @@ const router = new Router({
       },
     },
     {
-      path: '/type',
+      path: '/typeExemplarisation',
       name: 'type',
       component: typeComponent,
       meta: {
