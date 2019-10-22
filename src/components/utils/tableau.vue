@@ -66,7 +66,32 @@
               <!--Lignes de données : EXEMPLARISATION-->
               <tbody>
               <tr :key="item.name" v-for="item in items">
-                <!--COM--><td></td>
+                <!--COM--><td>
+                <v-btn v-if="item.commentaire" icon color="primary" @click.stop="$set(dialogNote, item.num, true)">
+                  <v-icon medium>mdi-comment-text-outline</v-icon>
+                </v-btn>
+                <v-btn v-if="!item.commentaire" icon color="grey" @click.stop="$set(dialogNote, item.num, true)">
+                  <v-icon medium>mdi-comment-text-outline</v-icon>
+                </v-btn>
+                <v-dialog v-model="dialogNote[item.num]" scrollable max-width="500" :key="item.num">
+                  <v-card>
+                    <v-card-title>
+                      <span>Note de la demande {{ item.num }}</span>
+                    </v-card-title>
+                    <v-card-text style="padding-top: 10px; margin-bottom: -25px;">
+                      <v-textarea
+                        outlined
+                        label="Commentaire"
+                        :value="item.commentaire"
+                      ></v-textarea>
+                    </v-card-text>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn color="primary" @click.stop="$set(dialogNote, item.num, false); this.saveComment(item.num, )">Enregistrer</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              </td>
                 <!--DEM--><td @click="clickRow(item.num, item.codeStatut)">{{ item.num }}</td>
                 <!--CRE--><td @click="clickRow(item.num, item.dateCreation)">{{ item.dateCreation | formatDate }}</td>
                 <!--MAJ--><td @click="clickRow(item.num, item.codeStatut)">{{ item.dateModification | formatDate }}</td>
@@ -102,6 +127,7 @@
                   <v-btn @click="current = item.num; popupArchive = true;" aria-label="Archiver" icon><v-icon>archive</v-icon></v-btn>
                 </span>
               </td>
+                <!--Zone de commentaire associée à un item-->
               </tr>
               </tbody>
             </template>
@@ -278,6 +304,7 @@ export default {
       expanded: [],
       listTraitements: [],
       affichageRestrictifAdmin: false,
+      dialogNote: {},
     };
   },
   props: {
