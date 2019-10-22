@@ -20,7 +20,7 @@
               <v-checkbox value="exempMulti" id="exempMulti" @click.native="getExemplairesMultiples()" label="Je souhaite créer des exemplaires supplémentaires"></v-checkbox>
         </div>
         <div class="item-margin-right-app-bar" style="margin-bottom: 0.5em; padding-left: 5px">
-              <v-dialog v-model="dialog" persistent max-width="400">
+              <v-dialog v-model="popupMultiplesCopies" persistent max-width="400">
                 <template v-slot:activator="{ on }">
                   <v-btn text small icon v-on="on">
                     <v-icon>info</v-icon>
@@ -31,7 +31,7 @@
                   <v-card-text>Si des exemplaires sont déjà présents sur les notices et que vous souhaitez en créer de nouveaux, cochez la case.</v-card-text>
                   <v-card-actions>
                     <div class="flex-grow-1"></div>
-                    <v-btn text @click="dialog = false">Compris</v-btn>
+                    <v-btn text @click="popupMultiplesCopies = false">Compris</v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
@@ -119,7 +119,7 @@ export default {
       alertMessage: 'Erreur.',
       alertType: 'error',
       popupDelete: false,
-      dialog: false,
+      popupMultiplesCopies: false,
       user: {},
       exemplairesMultiplesChild: false,
       codesPeb: [

@@ -21,7 +21,7 @@
                     <v-checkbox value="restrictDisplay" id="restrictDisplay" @click.native="switchRestrictionAffichage()" label="Afficher uniquement les demandes terminées / erreur pour les autres utilisateurs"></v-checkbox>
                   </div>
                   <div class="item-margin-right-app-bar" style="margin-bottom: 0.5em">
-                    <v-dialog v-model="dialog" persistent max-width="600">
+                    <v-dialog v-model="popupAffichageRestrictif" persistent max-width="600">
                       <template v-slot:activator="{ on }">
                         <v-btn text small icon v-on="on">
                           <v-icon>info</v-icon>
@@ -32,7 +32,7 @@
                         <v-card-text>Permet en tant qu'administrateur de ne voir que les demandes en cours de saisie et en erreur des autres utilisateurs rattachés à son ILN.</v-card-text>
                         <v-card-actions>
                           <div class="flex-grow-1"></div>
-                          <v-btn text @click="dialog = false">Compris</v-btn>
+                          <v-btn text @click="popupAffichageRestrictif = false">Compris</v-btn>
                         </v-card-actions>
                       </v-card>
                     </v-dialog>
@@ -171,7 +171,7 @@
           </v-data-table>
         </v-card>
       </v-col>
-      <v-dialog v-model="dialog" width="500">
+      <v-dialog v-model="popupDownloadFile" width="500">
         <v-card>
           <v-card-title class="headline" primary-title>Téléchargement du fichier</v-card-title>
           <v-card-text>
@@ -185,7 +185,7 @@
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn @click="dialog = false" aria-label="Fermer" text>Fermer</v-btn>
+            <v-btn @click="popupDownloadFile = false" aria-label="Fermer" text>Fermer</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -258,7 +258,8 @@ export default {
       user: {},
       fileLink: '',
       blobName: 'demande.csv',
-      dialog: false,
+      popupDownloadFile: false,
+      popupAffichageRestrictif: false,
       fileReady: false,
       menuCreation: false,
       menuModification: false,
@@ -323,7 +324,7 @@ export default {
   methods: {
     downloadFile(numDem, type) {
       this.fileReady = false;
-      this.dialog = true;
+      this.popupDownloadFile = true;
       let filename = '';
       switch (type) {
         case 'initEx':
@@ -366,7 +367,7 @@ export default {
           },
           (error) => {
             this.fileReady = false;
-            this.dialog = false;
+            this.popupDownloadFile = false;
             this.alertMessage = constants.erreurDownload;
             this.alert = true;
             this.alertType = 'error';
