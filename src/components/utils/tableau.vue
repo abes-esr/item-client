@@ -80,6 +80,7 @@
                     </v-card-title>
                     <v-card-text style="padding-top: 10px; margin-bottom: -25px;">
                       <v-textarea
+                        :v-model="commentaireMaj"
                         outlined
                         label="Commentaire"
                         :value="item.commentaire"
@@ -87,7 +88,7 @@
                     </v-card-text>
                     <v-card-actions>
                       <v-spacer></v-spacer>
-                      <v-btn color="primary" @click.stop="$set(dialogNote, item.num, false); this.saveComment(item.num, )">Enregistrer</v-btn>
+                      <v-btn color="primary" @click.stop="$set(dialogNote, item.num, false); saveComment(item.num, commentaireMaj)">Enregistrer</v-btn>
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
@@ -305,6 +306,7 @@ export default {
       listTraitements: [],
       affichageRestrictifAdmin: false,
       dialogNote: {},
+      commentaireMaj: '',
     };
   },
   props: {
@@ -720,6 +722,9 @@ export default {
       );
     },
     saveComment(numDem, comment) {
+      console.log(numDem);
+      console.log(comment);
+      console.log('passe dedans');
       this.commentButton = true;
       const demande = this.itemsUnaltered.find(element => element.numDemande === numDem);
       demande.commentaire = comment;
