@@ -2,9 +2,9 @@
   <v-container class="fill-height" fluid >
     <v-row align="center" justify="center">
       <v-col md="7">
-        <steppermodif class="item-stepper-bottom-margin" current="3" v-if="modif === 'MODIF'"></steppermodif>
-        <stepperexemp class="item-stepper-bottom-margin" current="3" v-if="modif === 'EXEMP'"></stepperexemp>
-        <stepperrecouv class="item-stepper-bottom-margin" current="2" v-if="modif === 'RECOUV'"></stepperrecouv>
+        <steppermodif class="item-stepper-bottom-margin" current="4" v-if="modif === 'MODIF'" :numDemande="this.numDem"></steppermodif>
+        <stepperexemp class="item-stepper-bottom-margin" current="3" v-if="modif === 'EXEMP'" :numDemande="this.numDem"></stepperexemp>
+        <stepperrecouv class="item-stepper-bottom-margin" current="2" v-if="modif === 'RECOUV'" :numDemande="this.numDem"></stepperrecouv>
         <upload :modif="modif" :loading="loading" :format=format :precedent="true" :title=titleUpload :text=textUpload v-on:upload="uploadFile" @precedent="precedentDemande(numDem, modif)" @supprimer="supprimerDemande(numDem, modif)" @eventName="updateParent"></upload>
           <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span></v-alert>
       </v-col>
@@ -58,7 +58,7 @@ export default {
   },
   // On récupère le numéro de demande enregistré en session
   created() {
-    this.numDem = sessionStorage.getItem('dem');
+    this.numDem = sessionStorage.getItem('dem');console.log(this.numDem);
   },
   methods: {
     // Upload du fichier enrichi

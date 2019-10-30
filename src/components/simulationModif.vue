@@ -49,7 +49,7 @@
           </v-card>
         </v-dialog>
         <!-- FIL D'ARIANE -->
-        <stepper class="stepper" current="5"></stepper>
+        <stepper class="stepper" current="5" :numDemande="this.numDem"></stepper>
         <!-- INFOS GENERALES DE LA DEMANDE -->
         <v-card id="demInfos" class="item-global-margin-bottom">
           <h3 style="padding-top: 15px; padding-left: 15px;" class="headline"><span

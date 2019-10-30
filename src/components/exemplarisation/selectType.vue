@@ -3,7 +3,7 @@
     <v-row   justify="center">
       <loading :show="loading" label="Chargement en cours..."></loading>
       <v-col md="7">
-        <stepper class="item-stepper-bottom-margin" current="2" stepperExemp=false></stepper>
+        <stepperexemp class="item-stepper-bottom-margin" current="2" stepperExemp=false :numDemande="this.numDem"></stepperexemp>
         <v-card>
           <v-app-bar dark color="primary">
             <v-toolbar-title>Choix du type d'exemplarisation</v-toolbar-title>
@@ -61,7 +61,7 @@
 <script>
 import axios from 'axios';
 import loading from 'vue-full-loading';
-import stepper from '@/components/utils/stepperExemp.vue';
+import stepperexemp from '@/components/utils/stepperExemp.vue';
 import supprMixin from '@/mixins/delete';
 import constants from '@/components/utils/const';
 import TYPEDEMANDE from '../../enums/typeDemande';
@@ -71,7 +71,7 @@ export default {
   mixins: [supprMixin],
   components: {
     loading,
-    stepper,
+    stepperexemp,
   },
   data() {
     return {

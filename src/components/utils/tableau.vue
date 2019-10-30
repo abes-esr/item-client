@@ -180,13 +180,20 @@
               <tbody>
               <tr :key="item.name" v-for="item in items">
                 <!--COM--><td><v-btn v-if="item.commentaire" icon color="primary" @click.stop="$set(dialogNote, item.num, true), fetchComment(item.commentaire)"><v-icon medium>mdi-comment-text-outline</v-icon></v-btn><v-btn v-if="!item.commentaire" icon color="grey" @click.stop="$set(dialogNote, item.num, true), fetchComment(item.commentaire)"><v-icon medium>mdi-comment-text-outline</v-icon></v-btn><v-dialog v-model="dialogNote[item.num]" scrollable max-width="500" :key="item.num"><v-card><v-card-title><span>Note de la demande {{ item.num }}</span></v-card-title><v-card-text style="padding-top: 10px; margin-bottom: -25px;"><v-textarea v-model="commentaireMaj" outlined label="Commentaire"></v-textarea></v-card-text><v-card-actions><v-spacer></v-spacer><v-btn color="primary" @click.stop="$set(dialogNote, item.num, false); saveComment(item.num, commentaireMaj)">Enregistrer</v-btn></v-card-actions></v-card></v-dialog></td>
-                <!--DEM--><td @click="clickRow(item.num, item.codeStatut)">{{ item.num }}</td>
-                <!--CRE--><td @click="clickRow(item.num, item.dateCreation)">{{ item.dateCreation | formatDate }}</td>
-                <!--MAJ--><td @click="clickRow(item.num, item.codeStatut)">{{ item.dateModification | formatDate }}</td>
-                <!--ILN--><td @click="clickRow(item.num, item.codeStatut)">{{ item.iln }}</td>
-                <!--RCR--><td @click="clickRow(item.num, item.codeStatut)">{{ item.rcr }}</td>
-                <!--IND--><td @click="clickRow(item.num, item.codeStatut)">{{ item.indexRecherche }}</td>
-                <!--STA--><td @click="clickRow(item.num, item.codeStatut)">{{ item.statut }}</td>
+                <!--DEM--><td v-if="item.codeStatut !== 5" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.num }}</td>
+                          <td v-if="item.codeStatut === 5">{{ item.num }}</td>
+                <!--CRE--><td v-if="item.codeStatut !== 5" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.dateCreation | formatDate }}</td>
+                          <td v-if="item.codeStatut === 5">{{ item.dateCreation | formatDate }}</td>
+                <!--MAJ--><td v-if="item.codeStatut !== 5" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.dateModification | formatDate }}</td>
+                          <td v-if="item.codeStatut === 5">{{ item.dateModification | formatDate }}</td>
+                <!--ILN--><td v-if="item.codeStatut !== 5" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.iln }}</td>
+                          <td v-if="item.codeStatut === 5">{{ item.iln }}</td>
+                <!--RCR--><td v-if="item.codeStatut !== 5" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.rcr }}</td>
+                          <td v-if="item.codeStatut === 5">{{ item.rcr }}</td>
+                <!--IND--><td v-if="item.codeStatut !== 5" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.indexRecherche }}</td>
+                          <td v-if="item.codeStatut === 5">{{ item.indexRecherche }}</td>
+                <!--STA--><td v-if="item.codeStatut !== 5" @click="clickRow(item.num, item.codeStatut)" class="clickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip></td>
+                          <td v-if="item.codeStatut === 5"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip></td>
                 <!--TL1--><td>
                 <v-menu bottom left v-if="item.codeStatut >= 2"><template v-slot:activator="{ on }"><v-btn aria-label="Télécharger les fichiers" class="cloudButton" color="info" small v-on="on"><v-icon>cloud_download</v-icon></v-btn></template>
                   <!-- FICHIERS RECOUV -->
@@ -212,16 +219,6 @@
               </tbody>
             </template>
           </v-data-table>
-            <!--COM-->
-            <!--DEM-->
-            <!--CRE-->
-            <!--MAJ-->
-            <!--ILN-->
-            <!--RCR-->
-            <!--IND-->
-            <!--STA-->
-            <!--TL1-->
-            <!--AR2-->
         </v-card>
       </v-col>
 
@@ -364,7 +361,6 @@ export default {
     },
   },
   mounted() {
-    console.log(this.modif);
     // Chargement initial des données du tableau
     this.user = JSON.parse(sessionStorage.getItem('user'));
     this.initHeader();
@@ -445,6 +441,8 @@ export default {
         addr = `${process.env.VUE_APP_ROOT_API}traitements`;
       } else if (this.modif === 'EXEMP') {
         addr = `${process.env.VUE_APP_ROOT_API}typeExemp`;
+      } else if (this.modif === 'RECOUV') {
+        addr = `${process.env.VUE_APP_ROOT_API}typeExemp`;
       }
       if (this.user !== null && this.user.jwt !== null) {
         axios({
@@ -473,7 +471,24 @@ export default {
       }
     },
     clickRow(numDem, codeStatut) {
+      console.log(codeStatut);
       sessionStorage.setItem('dem', numDem);
+      switch (this.modif) {
+        case 'EXEMP':
+          this.redirectionExemp(codeStatut);
+          break;
+        case 'MODIF':
+          this.redirectionModif(codeStatut);
+          break;
+        case 'RECOUV':
+          this.redirectionRecouv(codeStatut);
+          break;
+        default:
+          this.$router.push('home');
+          break;
+      }
+    },
+    redirectionExemp(codeStatut) {
       switch (codeStatut) {
         case 1:
           this.$router.push('type');
@@ -483,6 +498,31 @@ export default {
           break;
         case 4:
           this.$router.push('simulationTest');
+          break;
+        default:
+          break;
+      }
+    },
+    redirectionModif(codeStatut) {
+      switch (codeStatut) {
+        case 1:
+          this.$router.push('type');
+          break;
+        case 3:
+          this.$router.push('fichierExemplarisation');
+          break;
+        case 4:
+          this.$router.push('simulationTest');
+          break;
+        default:
+          break;
+      }
+    },
+    redirectionRecouv(codeStatut) {
+      console.log(codeStatut);
+      switch (codeStatut) {
+        case 1:
+          this.$router.push('fichierRecouv');
           break;
         default:
           break;
@@ -612,7 +652,6 @@ export default {
                 // index: result.data[key].indexRecherche.libelle,
                 typeExemp: tempTypeExemp,
                 statut: tempStatus,
-                color: this.getColor(result.data[key].etatDemande.libelle),
                 codeStatut: result.data[key].etatDemande.numEtat,
                 commentaire: result.data[key].commentaire,
               });
@@ -852,8 +891,12 @@ export default {
       );
     },
     getColor(statut) {
-      if (statut === 'En saisie') return 'green';
-      return 'orange';
+      switch (statut) {
+        case 'En erreur': return 'red';
+        case 'En attente': return 'orange';
+        case 'Terminée': return 'green';
+        default: return 'none';
+      }
     },
     switchRestrictionAffichage() {
       const elt = document.getElementById('restrictDisplay');
@@ -868,7 +911,7 @@ export default {
 </script>
 
 <style scoped>
-  td {
+  .clickable{
     cursor: pointer;
   }
   table.v-table thead th {

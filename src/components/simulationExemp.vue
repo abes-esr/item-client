@@ -49,8 +49,8 @@
           </v-card>
         </v-dialog>
         <!-- FIL D'ARIANE -->
-        <stepperModif v-if=this.exauto id="stepperModif" current="5"></stepperModif>
-        <stepperExemp v-if=!this.exauto id="stepperExemp" current="4"></stepperExemp>
+        <stepperModif v-if=this.exauto id="stepperModif" current="5" :numDemande="this.numDem"></stepperModif>
+        <stepperExemp v-if=!this.exauto id="stepperExemp" current="4" :numDemande="this.numDem"></stepperExemp>
         <br>
         <!-- INFOS GENERALES DE LA DEMANDE -->
         <v-card id="demInfos" class="item-global-margin-bottom">

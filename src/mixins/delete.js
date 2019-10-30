@@ -13,7 +13,7 @@ export default {
       axios({
         headers: { Authorization: user.jwt },
         method: 'DELETE',
-        url: `${process.env.VUE_APP_ROOT_API}demandes/${numDemande}?modif=${modif}`,
+        url: `${process.env.VUE_APP_ROOT_API}demandes/${numDemande}?type=${modif}`,
       }).then(
         () => {
           this.loading = false;
@@ -35,7 +35,7 @@ export default {
       axios({
         headers: { Authorization: user.jwt },
         method: 'GET',
-        url: `${process.env.VUE_APP_ROOT_API}etapePrecedente/${numDemande}?modif=${modif}`,
+        url: `${process.env.VUE_APP_ROOT_API}etapePrecedente/${numDemande}?type=${modif}`,
       }).then(
         () => {
           this.loading = false;

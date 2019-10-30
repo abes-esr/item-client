@@ -3,7 +3,7 @@
     <v-row   justify="center">
       <loading :show="loading" label="Chargement en cours..."></loading>
       <v-col cols="8">
-        <stepper id="stepper" current="3"></stepper>
+        <steppermodif id="stepper" current="3" :numDemande="this.numDem"></steppermodif>
       </v-col>
       <v-col md="5" id="flexBox">
         <v-card class="elevation-12">
@@ -70,7 +70,7 @@
 import axios from 'axios';
 import loading from 'vue-full-loading';
 import { showAt } from 'vue-breakpoints';
-import stepper from '@/components/utils/stepperModif.vue';
+import steppermodif from '@/components/utils/stepperModif.vue';
 import supprMixin from '@/mixins/delete';
 import constants from '@/components/utils/const';
 
@@ -79,7 +79,7 @@ export default {
   mixins: [supprMixin],
   components: {
     loading,
-    stepper,
+    steppermodif,
     showAt,
   },
   data() {

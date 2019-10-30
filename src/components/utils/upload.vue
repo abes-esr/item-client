@@ -47,7 +47,8 @@
         <v-spacer></v-spacer>
         <v-btn color="info" v-if="precedent" @click="$emit('precedent')" aria-label="Annuler">Précédent</v-btn>
         <!-- Lors du clic sur "Envoyer", on emet un évenement "upload" avec le contenu du fichier en paramètre, afin que le composant père puisse récupérer le fichier-->
-        <v-btn color="info" :disabled="!fichierPresent" @click="displayDialog()" aria-label="Envoyer">Envoyer</v-btn>
+        <v-btn v-if="this.uploadInit === false" color="info" :disabled="!fichierPresent" @click="displayDialog()" aria-label="Envoyer">Lancer le traitement en simulation</v-btn>
+        <v-btn v-if="this.uploadInit === true" color="info" :disabled="!fichierPresent" @click="displayDialog()" aria-label="Envoyer">Envoyer</v-btn>
       </v-card-actions>
     </v-card>
     <!--Message d'alerte quand l'utilisateur clique sur supprimer demande-->
@@ -128,6 +129,9 @@ export default {
     // Modif de masse ou exemplarisation
     modif: {
       default: TYPEDEMANDE.DEMANDE_MODIFICATION,
+    },
+    uploadInit: {
+      default: false,
     },
   },
   data() {
