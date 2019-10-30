@@ -3,16 +3,17 @@
 </template>
 
 <script>
+import TYPEDEMANDE from '../../enums/typeDemande';
 import tableau from '@/components/utils/tableau.vue';
 
 export default {
-  name: 'gererTableauModif',
+  name: 'gererTableauExemp',
   props: {
     darkMode: {
       default: false,
     },
     modif: {
-      default: false,
+      default: TYPEDEMANDE.DEMANDE_EXEMPLARISATION,
     },
   },
   components: {

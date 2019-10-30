@@ -64,6 +64,7 @@ import loading from 'vue-full-loading';
 import stepper from '@/components/utils/stepperExemp.vue';
 import supprMixin from '@/mixins/delete';
 import constants from '@/components/utils/const';
+import TYPEDEMANDE from '../../enums/typeDemande';
 
 export default {
   // Import du mixin contenant les méthodes suppression et de précédent
@@ -90,7 +91,7 @@ export default {
   props: {
     // Modif de masse ou exemplarisation
     modif: {
-      default: false,
+      default: TYPEDEMANDE.DEMANDE_EXEMPLARISATION,
     },
   },
   mounted() {
@@ -137,7 +138,7 @@ export default {
           headers: { Authorization: this.user.jwt },
           method: 'GET',
           url:
-              `${process.env.VUE_APP_ROOT_API}demandes/${sessionStorage.getItem('dem')}?modif=false`,
+              `${process.env.VUE_APP_ROOT_API}demandes/${sessionStorage.getItem('dem')}?type=${this.modif}`,
         }).then(
           (result) => {
             demande = result.data;

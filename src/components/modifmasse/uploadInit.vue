@@ -3,7 +3,7 @@
     <loading :show="loading" label="Envoi en cours. Ce traitement peut prendre plusieurs minutes."></loading>
     <v-row align="center" justify="center">
       <v-col md="7">
-        <stepper id="stepper" current="2"></stepper>
+        <steppermodif class="item-stepper-bottom-margin" current="2" v-if="modif === 'MODIF'"></steppermodif>
         <upload v-if="showForm" :loading="loading" :format=format :title=titleUpload :precedent="false" :text=textUpload v-on:upload="uploadFile" @precedent="precedentDemande(numDem)" @supprimer="supprimerDemande(numDem, true)"></upload>
         <v-card v-if="!showForm" class="elevation-12">
           <v-app-bar dark color="primary">
@@ -49,16 +49,17 @@
 import axios from 'axios';
 import loading from 'vue-full-loading';
 import upload from '@/components/utils/upload.vue';
-import stepper from '@/components/utils/stepperModif.vue';
+import stepperModif from '@/components/utils/stepperModif.vue';
 import supprMixin from '@/mixins/delete';
 import constants from '@/components/utils/const';
+import TYPEDEMANDE from '../../enums/typeDemande';
 
 export default {
   name: 'uploadComponent',
   mixins: [supprMixin],
   components: {
     upload,
-    stepper,
+    steppermodif: stepperModif,
     loading,
   },
   data() {
@@ -85,7 +86,7 @@ export default {
   props: {
     // Modif de masse ou exemplarisation
     modif: {
-      default: true,
+      default: TYPEDEMANDE.DEMANDE_MODIFICATION,
     },
   },
   // Récupération des infos utilisateur et du numéro de demande en session
@@ -100,7 +101,7 @@ export default {
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
-        url: `${process.env.VUE_APP_ROOT_API}demandes/${this.numDem}?modif=${this.modif}`,
+        url: `${process.env.VUE_APP_ROOT_API}demandes/${this.numDem}?type=${this.modif}`,
       }).then(
         () => { // L'objet result contient le numero de RCR, qui n'est pas accessible via sessionStorage
           this.exauto = true;

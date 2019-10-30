@@ -70,12 +70,28 @@
             Recouvrement
           </v-list-item-title>
         </v-list-item>
-        <v-list-item v-on:click="$router.push({ name: 'tab' })">
+        <v-list-item v-on:click="$router.push({ name: 'rcrRecouv' })">
           <v-list-item-action>
             <v-icon>pie_chart</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>Calculer mon taux <br>de recouvrement</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item v-on:click="$router.push({ name: 'tabRecouv' })">
+          <v-list-item-action>
+            <v-icon>list</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Gérer mes demandes<br> de taux de recouvrement</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item v-on:click="$router.push({ name: 'archiveRecouv' })">
+          <v-list-item-action>
+            <v-icon>archive</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Mes demandes de taux<br> de recouvrement archivées</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>

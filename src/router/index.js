@@ -2,15 +2,17 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import axios from 'axios';
+import TYPEDEMANDE from '../enums/typeDemande';
 
 // import comme une fonction afin de permettre le lazy loading
 const LoginComponent = () => import('@/components/login.vue');
 const RcrComponent = () => import('@/components/rcr.vue');
-const uploadComponent = () => import('@/components/modifmasse/uploadInit.vue');
+const uploadInitComponent = () => import('@/components/modifmasse/uploadInit.vue');
 const traitementComponent = () => import('@/components/modifmasse/selectTraitement.vue');
 const ArchiveModifComponent = () => import('@/components/modifmasse/archiveModif.vue');
 const GererTableauModifComponent = () => import('@/components/utils/gererTableauModif.vue');
 const GererTableauExempComponent = () => import('@/components/utils/gererTableauExemp.vue');
+const GererTableauRecouvComponent = () => import('@/components/utils/gererTableauRecouv.vue');
 const ArchiveExComponent = () => import('@/components/exemplarisation/archiveEx.vue');
 const ProfilComponent = () => import('@/components/profil.vue');
 const CGUComponent = () => import('@/components/footer/cgu.vue');
@@ -47,6 +49,7 @@ const router = new Router({
       path: '/rcr',
       name: 'rcr',
       component: RcrComponent,
+      props: { modif: TYPEDEMANDE.DEMANDE_MODIFICATION },
       meta: {
         requiresAuth: true,
       },
@@ -55,7 +58,16 @@ const router = new Router({
       path: '/rcrEx',
       name: 'rcrEx',
       component: RcrComponent,
-      props: { modif: false },
+      props: { modif: TYPEDEMANDE.DEMANDE_EXEMPLARISATION },
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/rcrRecouv',
+      name: 'rcrRecouv',
+      component: RcrComponent,
+      props: { modif: TYPEDEMANDE.DEMANDE_RECOUVREMENT },
       meta: {
         requiresAuth: true,
       },
@@ -63,8 +75,8 @@ const router = new Router({
     {
       path: '/fichierModif',
       name: 'uploadModif',
-      component: uploadComponent,
-      props: { modif: true },
+      component: uploadInitComponent,
+      props: { modif: TYPEDEMANDE.DEMANDE_MODIFICATION }, // Chargement fichier initial en modification
       meta: {
         requiresAuth: true,
       },
@@ -73,6 +85,7 @@ const router = new Router({
       path: '/fichierEnrichi',
       name: 'uploadFinal',
       component: uploadFinalComponent,
+      props: { modif: TYPEDEMANDE.DEMANDE_MODIFICATION }, // Chargement fichier enrichi en modification
       meta: {
         requiresAuth: true,
       },
@@ -80,8 +93,17 @@ const router = new Router({
     {
       path: '/fichierExemp',
       name: 'uploadExemp',
-      component: uploadComponent,
-      props: { modif: false },
+      component: uploadFinalComponent,
+      props: { modif: TYPEDEMANDE.DEMANDE_EXEMPLARISATION },
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/fichierRecouv',
+      name: 'uploadRecouv',
+      component: uploadFinalComponent,
+      props: { modif: TYPEDEMANDE.DEMANDE_RECOUVREMENT },
       meta: {
         requiresAuth: true,
       },
@@ -90,7 +112,7 @@ const router = new Router({
       path: '/fichierExemplarisation',
       name: 'fichierExemp',
       component: uploadFinalComponent,
-      props: { modif: false },
+      props: { modif: TYPEDEMANDE.DEMANDE_EXEMPLARISATION },
       meta: {
         requiresAuth: true,
       },
@@ -139,7 +161,7 @@ const router = new Router({
       path: '/tableauExemplarisation',
       name: 'tabExemp',
       component: GererTableauExempComponent,
-      props: { modif: false },
+      props: { modif: TYPEDEMANDE.DEMANDE_EXEMPLARISATION },
       meta: {
         requiresAuth: true,
       },
@@ -148,7 +170,16 @@ const router = new Router({
       path: '/tableauModification',
       name: 'tabModif',
       component: GererTableauModifComponent,
-      props: { modif: true },
+      props: { modif: TYPEDEMANDE.DEMANDE_MODIFICATION },
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/tableauRecouvrement',
+      name: 'tabRecouv',
+      component: GererTableauRecouvComponent,
+      props: { modif: TYPEDEMANDE.DEMANDE_RECOUVREMENT },
       meta: {
         requiresAuth: true,
       },

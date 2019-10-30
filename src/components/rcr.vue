@@ -4,8 +4,9 @@
     <v-row justify="center" align="center">
       <loading :show="show" :label="label"></loading>
       <v-col md="7">
-        <stepper class="item-stepper-bottom-margin" current="1" v-if="modif"></stepper>
-        <stepperexemp class="item-stepper-bottom-margin" current="1" v-if="!modif"></stepperexemp>
+        <steppermodif class="item-stepper-bottom-margin" current="1" v-if="modif === 'MODIF'"></steppermodif>
+        <stepperexemp class="item-stepper-bottom-margin" current="1" v-if="modif === 'EXEMP'"></stepperexemp>
+        <stepperrecouv class="item-stepper-bottom-margin" current="1" v-if="modif === 'RECOUV'"></stepperrecouv>
         <v-card class="elevation-12">
           <v-app-bar dark color="primary">
             <v-toolbar-title>Sélection du RCR</v-toolbar-title>
@@ -43,15 +44,18 @@
 import axios from 'axios';
 import loading from 'vue-full-loading';
 import constants from '@/components/utils/const';
-import stepper from '@/components/utils/stepperModif.vue';
+import steppermodif from '@/components/utils/stepperModif.vue';
 import stepperexemp from '@/components/utils/stepperExemp.vue';
+import stepperrecouv from '@/components/utils/stepperRecouv.vue';
+import TYPEDEMANDE from '../enums/typeDemande';
 
 export default {
   name: 'Rcr',
   components: {
     loading,
-    stepper,
+    steppermodif,
     stepperexemp,
+    stepperrecouv,
   },
   data() {
     return {
@@ -71,7 +75,7 @@ export default {
   props: {
     // Modif de masse ou exemplarisation
     modif: {
-      default: true,
+      default: TYPEDEMANDE.DEMANDE_MODIFICATION,
     },
   },
   mounted() {
@@ -125,18 +129,26 @@ export default {
                 this.selected
               }&userNum=${
                 this.user.userNum}
-                &modif=${this.modif}`,
+                &type=${this.modif}`,
         }).then(
           (result) => {
             // On stocke le numéro de la demande en session, utilisé par d'autres composants
             sessionStorage.setItem('dem', result.data.numDemande);
             // Passage à l'étape suivante
-            if (this.modif) {
-            // Passage etape 2 : upload du fichier de ppn en modification
-              this.$router.replace({ name: 'uploadModif' });
-            } else {
-            // Passage etape 2 : choix du type d'exemplarisation
-              this.$router.replace({ name: 'type' });
+            switch (this.modif) {
+              case TYPEDEMANDE.DEMANDE_MODIFICATION:
+                // Passage etape 2 : upload du fichier de ppn en modification
+                this.$router.replace({ name: 'uploadModif' });
+                break;
+              case TYPEDEMANDE.DEMANDE_EXEMPLARISATION:
+                // Passage etape 2 : choix du type d'exemplarisation
+                this.$router.replace({ name: 'type' });
+                break;
+              case TYPEDEMANDE.DEMANDE_RECOUVREMENT:
+                this.$router.replace({ name: 'uploadRecouv' });
+                break;
+              default:
+                this.$router.replace({ name: 'home' });
             }
           },
           (error) => {

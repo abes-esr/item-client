@@ -7,13 +7,13 @@ import tableau from '@/components/utils/tableau.vue';
 import TYPEDEMANDE from '../../enums/typeDemande';
 
 export default {
-  name: 'gererTableauModif',
+  name: 'gererTableauRecouv',
   props: {
     darkMode: {
       default: false,
     },
     modif: {
-      default: TYPEDEMANDE.MODIFICATION,
+      default: TYPEDEMANDE.DEMANDE_RECOUVREMENT,
     },
   },
   components: {

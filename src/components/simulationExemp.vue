@@ -236,6 +236,7 @@ import stepperModif from '@/components/utils/stepperModif.vue';
 import stepperExemp from '@/components/utils/stepperExemp.vue';
 import supprMixin from '@/mixins/delete';
 import constants from '@/components/utils/const';
+import TYPEDEMANDE from '../enums/typeDemande';
 
 export default {
   components: {
@@ -275,7 +276,7 @@ export default {
   props: {
     // Modif de masse ou exemplarisation
     modif: {
-      default: false,
+      default: TYPEDEMANDE.DEMANDE_EXEMPLARISATION,
     },
   },
   mounted() {
@@ -299,13 +300,16 @@ export default {
   methods: {
     // Récupération des infos de la demande
     getInfosDemande() {
+        console.log(this.numDem);
+        console.log(`${process.env.VUE_APP_ROOT_API}demandes/${this.numDem}?type=${this.modif}`);
       this.loading = true;
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
-        url: `${process.env.VUE_APP_ROOT_API}demandes/${this.numDem}?modif=${this.modif}`,
+        url: `${process.env.VUE_APP_ROOT_API}demandes/${this.numDem}?type=${this.modif}`,
       }).then(
         (result) => {
+          console.log(result.data); //VIDE
           this.demande = result.data;
           this.autorisationExemplairesMultiples = this.demande.exemplairesMultiplesAutorise;
           this.getSimulation();
@@ -329,7 +333,7 @@ export default {
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
-        url: `${process.env.VUE_APP_ROOT_API}simulerLigne?modif=${this.modif}&numDemande=${
+        url: `${process.env.VUE_APP_ROOT_API}simulerLigne?type=${this.modif}&numDemande=${
           this.demande.numDemande
         }&numLigne=${this.noticeEnCours}`,
       }).then(
@@ -406,7 +410,7 @@ export default {
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
-        url: `${process.env.VUE_APP_ROOT_API}getNbLigneFichier/${this.numDem}?modif=${this.modif}`,
+        url: `${process.env.VUE_APP_ROOT_API}getNbLigneFichier/${this.numDem}?type=${this.modif}`,
       }).then(
         (result) => {
           this.numberLines = result.data;
@@ -431,7 +435,7 @@ export default {
         method: 'GET',
         url: `${process.env.VUE_APP_ROOT_API}passerEnAttente?numDemande=${
           this.demande.numDemande
-        }&modif=false`,
+        }&type=false`,
       }).then(
         () => {
           this.loading = false;

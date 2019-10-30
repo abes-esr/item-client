@@ -15,7 +15,7 @@
         <v-file-input accept=".csv,.txt" :rules="rules" for="files" show-size outlined prepend-icon="attachment" type="file" aria-label="Dépôt du fichier" v-model="fichierCharge" @change="autorisationEnvoi" ref="fileInput" :label="text"></v-file-input>
       </v-card-text>
       <!--Zone de Choix d'exemplarisation multiple ne s'affiche pas si modif = true (en modification)-->
-      <div v-if="!this.modif" class="item-flexbox-for-checkbox">
+      <div v-if="this.modif === 'EXEMP'" class="item-flexbox-for-checkbox">
         <div class="item-margin-right-app-bar" style="margin-left:auto; margin-right:0">
               <v-checkbox value="exempMulti" id="exempMulti" @click.native="getExemplairesMultiples()" label="Je souhaite créer des exemplaires supplémentaires"></v-checkbox>
         </div>
@@ -38,7 +38,7 @@
         </div>
       </div>
       <!-- liste de sélection du code PEB ne s'affiche pas si modif = true -->
-      <div v-if="!this.modif" class="item-flexbox-for-checkbox">
+      <div v-if="this.modif === 'EXEMP'" class="item-flexbox-for-checkbox">
         <div class="item-margin-left-app-bar" style="margin-bottom: 0.5em; margin-left:auto; margin-right:1.2em">
           <v-select label="Code peb selectionné" id="codesPebList" :items="codesPeb" v-model="defaultCodePebChild" @change="getCodePebSelected()"></v-select>
         </div>
@@ -47,7 +47,7 @@
         <v-spacer></v-spacer>
         <v-btn color="info" v-if="precedent" @click="$emit('precedent')" aria-label="Annuler">Précédent</v-btn>
         <!-- Lors du clic sur "Envoyer", on emet un évenement "upload" avec le contenu du fichier en paramètre, afin que le composant père puisse récupérer le fichier-->
-        <v-btn color="info" :disabled="!fichierPresent" @click="$emit('upload', fichierCharge)" aria-label="Envoyer">Envoyer</v-btn>
+        <v-btn color="info" :disabled="!fichierPresent" @click="displayDialog()" aria-label="Envoyer">Envoyer</v-btn>
       </v-card-actions>
     </v-card>
     <!--Message d'alerte quand l'utilisateur clique sur supprimer demande-->
@@ -68,6 +68,22 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <!-- POPUP DE CONFIRMATION QUE LE TRAITEMENT EST LANCE -->
+    <v-dialog v-model="dialogFinished" width="500">
+      <v-card>
+        <v-card-title class="headline" primary-title>Traitement validé</v-card-title>
+        <v-card-text>Votre demande est en cours de traitement, elle sera traitée dès que
+          possible.<br/>Un mail vous sera envoyé une fois le traitement terminé.
+          <br>Vous pouvez retrouver l'ensemble de vos demandes depuis la page "Gérer mes
+          demandes".
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" text @click="dialog = false, $emit('upload', fichierCharge), $router.push({ name: 'home' })" aria-label="OK">OK</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -75,6 +91,8 @@
 import loading from 'vue-full-loading';
 import { showAt } from 'vue-breakpoints';
 import axios from 'axios';
+import TYPEDEMANDE from '../../enums/typeDemande';
+
 
 export default {
   name: 'upload',
@@ -109,7 +127,7 @@ export default {
     },
     // Modif de masse ou exemplarisation
     modif: {
-      default: true,
+      default: TYPEDEMANDE.DEMANDE_MODIFICATION,
     },
   },
   data() {
@@ -127,6 +145,8 @@ export default {
       defaultCodePebChild: {},
       codesPebChild: '',
       codePebSelected: '',
+      dialogFinished: false,
+      dialog: false,
       fichierCharge: [],
       rules: [
         value => !value || ((value.type === 'text/csv') || (value.type === 'application/vnd.ms-excel') || (value.type === 'text/plain')) || 'Le fichier chargé n\'est pas dans un format autorisé (.txt ou .csv)',
@@ -193,6 +213,13 @@ export default {
           this.alertMessage = `impossible de charger la liste des codes PEB ${error.response.data.message} <br /> Veuillez réessayer ultérieurement. Si le problème persiste merci de contacter l'assistance.`;
         },
       );
+    },
+    displayDialog() {
+      if (this.modif === 'RECOUV') {
+        this.dialogFinished = true;
+      } else {
+        this.$emit('upload', this.fichierCharge);
+      }
     },
   },
 };

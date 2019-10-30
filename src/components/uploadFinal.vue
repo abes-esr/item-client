@@ -2,12 +2,11 @@
   <v-container class="fill-height" fluid >
     <v-row align="center" justify="center">
       <v-col md="7">
-        <stepper class="item-stepper-bottom-margin" current="3" v-if="modif"></stepper>
-        <stepperexemp class="item-stepper-bottom-margin" current="3" v-if="!modif"></stepperexemp>
-        <!--modif : true, exemp :false-->
+        <steppermodif class="item-stepper-bottom-margin" current="3" v-if="modif === 'MODIF'"></steppermodif>
+        <stepperexemp class="item-stepper-bottom-margin" current="3" v-if="modif === 'EXEMP'"></stepperexemp>
+        <stepperrecouv class="item-stepper-bottom-margin" current="2" v-if="modif === 'RECOUV'"></stepperrecouv>
         <upload :modif="modif" :loading="loading" :format=format :precedent="true" :title=titleUpload :text=textUpload v-on:upload="uploadFile" @precedent="precedentDemande(numDem, modif)" @supprimer="supprimerDemande(numDem, modif)" @eventName="updateParent"></upload>
-          <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span>
-        </v-alert>
+          <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span></v-alert>
       </v-col>
     </v-row>
   </v-container>
@@ -16,10 +15,12 @@
 <script>
 import axios from 'axios';
 import upload from '@/components/utils/upload.vue';
-import stepper from '@/components/utils/stepperModif.vue';
+import steppermodif from '@/components/utils/stepperModif.vue';
 import stepperexemp from '@/components/utils/stepperExemp.vue';
+import stepperrecouv from '@/components/utils/stepperRecouv.vue';
 import supprMixin from '@/mixins/delete';
 import constants from '@/components/utils/const';
+import TYPEDEMANDE from '../enums/typeDemande';
 
 export default {
   name: 'uploadComponent',
@@ -27,8 +28,9 @@ export default {
   mixins: [supprMixin],
   components: {
     upload,
-    stepper,
+    steppermodif,
     stepperexemp,
+    stepperrecouv,
   },
   data() {
     return {
@@ -44,12 +46,14 @@ export default {
       textUpload: 'Cliquez pour charger votre fichier complété (format .txt ou .csv obligatoire)',
       exemplairesMultiplesParent: false,
       codePebParent: '',
+      dialog: false,
+      dialogFinished: false,
     };
   },
   props: {
     // Modif de masse ou exemplarisation
     modif: {
-      default: true,
+      default: TYPEDEMANDE.DEMANDE_MODIFICATION,
     },
   },
   // On récupère le numéro de demande enregistré en session
@@ -67,7 +71,7 @@ export default {
       this.user = JSON.parse(sessionStorage.getItem('user'));
       if (this.user !== null && this.user.jwt !== null) {
         axios
-          .post(`${process.env.VUE_APP_ROOT_API}uploadDemande?modif=${this.modif}&exempMulti=${this.exemplairesMultiplesParent}&codePeb=${this.codePebParent}`, formData, {
+          .post(`${process.env.VUE_APP_ROOT_API}uploadDemande?type=${this.modif}&exempMulti=${this.exemplairesMultiplesParent}&codePeb=${this.codePebParent}`, formData, {
             headers: {
               Authorization: this.user.jwt,
               'Content-Type': 'multipart/form-data',
@@ -79,10 +83,11 @@ export default {
               this.alertType = 'success';
               this.alert = true;
               this.loading = false;
-              if (this.modif) {
-                this.$router.replace({ name: 'simulation' });
-              } else {
-                this.$router.replace({ name: 'simulationTest' });
+              switch (this.modif) {
+                case 'MODIF': this.$router.replace({ name: 'simulation' }); break;
+                case 'EXEMP': this.$router.replace({ name: 'simulationTest' }); break;
+                case 'RECOUV': this.$router.replace({ name: 'home' }); break;
+                default: this.$router.replace({ name: 'home' });
               }
             },
             (error) => {
