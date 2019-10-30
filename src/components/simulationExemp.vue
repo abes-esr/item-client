@@ -300,8 +300,6 @@ export default {
   methods: {
     // Récupération des infos de la demande
     getInfosDemande() {
-        console.log(this.numDem);
-        console.log(`${process.env.VUE_APP_ROOT_API}demandes/${this.numDem}?type=${this.modif}`);
       this.loading = true;
       axios({
         headers: { Authorization: this.user.jwt },
@@ -309,7 +307,6 @@ export default {
         url: `${process.env.VUE_APP_ROOT_API}demandes/${this.numDem}?type=${this.modif}`,
       }).then(
         (result) => {
-          console.log(result.data); //VIDE
           this.demande = result.data;
           this.autorisationExemplairesMultiples = this.demande.exemplairesMultiplesAutorise;
           this.getSimulation();
@@ -435,7 +432,7 @@ export default {
         method: 'GET',
         url: `${process.env.VUE_APP_ROOT_API}passerEnAttente?numDemande=${
           this.demande.numDemande
-        }&type=false`,
+        }&type=${this.modif}`,
       }).then(
         () => {
           this.loading = false;
