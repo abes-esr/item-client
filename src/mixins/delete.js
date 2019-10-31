@@ -41,8 +41,6 @@ export default {
         () => {
           this.loading = false;
           if (modif === TYPEDEMANDE.DEMANDE_MODIFICATION) {
-            console.log(modif);
-            console.log(this.$router.currentRoute.path);
             switch (this.$router.currentRoute.path) {
               case '/fichierModif':
                 this.$router.replace('/rcr'); break;
@@ -54,20 +52,20 @@ export default {
                 this.$router.replace('home'); break;
             }
           } else if (modif === TYPEDEMANDE.DEMANDE_EXEMPLARISATION) {
-            switch (this.$router.currentRoute.name) {
-              case 'uploadFinal':
-                this.$router.replace('/traitement'); break;
-              case 'type':
-                this.$router.replace('rcr'); break;
+            switch (this.$router.currentRoute.path) {
+              case '/typeExemplarisation':
+                this.$router.replace('/rcr'); break;
+              case '/fichierExemplarisation':
+                this.$router.replace('/typeExemplarisation'); break;
+              case '/simulationTest':
+                this.$router.replace('/fichierExemplarisation'); break;
               default:
                 this.$router.replace('home'); break;
             }
           } else if (modif === TYPEDEMANDE.DEMANDE_RECOUVREMENT) {
-            switch (this.$router.currentRoute.name) {
-              case 'uploadFpinal':
-                this.$router.replace('/traitement'); break;
-              case 'uploadFpinagsl':
-                this.$router.replace('/traitement'); break;
+            switch (this.$router.currentRoute.path) {
+              case '/fichierRecouv':
+                this.$router.replace('/rcr'); break;
               default:
                 this.$router.replace('home'); break;
             }

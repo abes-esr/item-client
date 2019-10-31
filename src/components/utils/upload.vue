@@ -45,7 +45,7 @@
       </div>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="info" v-if="precedent" @click="$emit('precedent')" aria-label="Annuler">Précédent</v-btn>
+        <div v-if="displayPreviousButton" style="margin-right: 0.5em"><v-btn color="info" v-if="precedent" @click="$emit('precedent')" aria-label="Annuler">Précédent</v-btn></div>
         <!-- Lors du clic sur "Envoyer", on emet un évenement "upload" avec le contenu du fichier en paramètre, afin que le composant père puisse récupérer le fichier-->
         <v-btn v-if="this.uploadInit === false" color="info" :disabled="!fichierPresent" @click="displayDialog()" aria-label="Envoyer">Lancer le traitement en simulation</v-btn>
         <v-btn v-if="this.uploadInit === true" color="info" :disabled="!fichierPresent" @click="displayDialog()" aria-label="Envoyer">Envoyer</v-btn>
@@ -158,6 +158,7 @@ export default {
       typeFile: [
         value => value.type,
       ],
+      displayPreviousButton: true,
     };
   },
   mounted() {
@@ -165,6 +166,9 @@ export default {
     this.user = JSON.parse(sessionStorage.getItem('user'));
     // on récupère la liste des codes PEB
     this.getCodesPeb();
+    if (this.modif === TYPEDEMANDE.DEMANDE_RECOUVREMENT) {
+      this.displayPreviousButton = false;
+    }
   },
   methods: {
     // changement statut bouton envoyer

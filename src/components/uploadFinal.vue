@@ -73,7 +73,6 @@ export default {
         url: `${process.env.VUE_APP_ROOT_API}getTypeExemplarisationDemande/${numDemande}`,
       }).then(
         (result) => {
-          console.log(result.data);
           this.typeDemandeChoisi = result.data;
         },
         (error) => {
