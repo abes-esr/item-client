@@ -1,5 +1,6 @@
 import axios from 'axios';
 import constants from '@/components/utils/const';
+import TYPEDEMANDE from '../enums/typeDemande';
 
 // MIXIN : permet d'importer ces deux fonctions dans n'importe quel composant
 export default {
@@ -39,17 +40,37 @@ export default {
       }).then(
         () => {
           this.loading = false;
-          if (modif === true) {
-            // Redirection après précédent
-            if (this.$router.currentRoute.name === 'uploadFinal') {
-              this.$router.replace('/traitement');
-            } else {
-              this.$router.replace('/fichier');
+          if (modif === TYPEDEMANDE.DEMANDE_MODIFICATION) {
+            console.log(modif);
+            console.log(this.$router.currentRoute.path);
+            switch (this.$router.currentRoute.path) {
+              case '/fichierModif':
+                this.$router.replace('/rcr'); break;
+              case '/traitement':
+                this.$router.replace('/fichierModif'); break;
+              case '/fichierEnrichi':
+                this.$router.replace('/traitement'); break;
+              default:
+                this.$router.replace('home'); break;
             }
-          } else if (this.$router.currentRoute.name === 'type') {
-            this.$router.replace('rcr');
-          } else {
-            this.$router.replace('type');
+          } else if (modif === TYPEDEMANDE.DEMANDE_EXEMPLARISATION) {
+            switch (this.$router.currentRoute.name) {
+              case 'uploadFinal':
+                this.$router.replace('/traitement'); break;
+              case 'type':
+                this.$router.replace('rcr'); break;
+              default:
+                this.$router.replace('home'); break;
+            }
+          } else if (modif === TYPEDEMANDE.DEMANDE_RECOUVREMENT) {
+            switch (this.$router.currentRoute.name) {
+              case 'uploadFpinal':
+                this.$router.replace('/traitement'); break;
+              case 'uploadFpinagsl':
+                this.$router.replace('/traitement'); break;
+              default:
+                this.$router.replace('home'); break;
+            }
           }
         },
         () => {

@@ -3,7 +3,7 @@
     <v-row   justify="center">
       <loading :show="loading" label="Chargement en cours..."></loading>
       <v-col md="7">
-        <stepperexemp class="item-stepper-bottom-margin" current="2" stepperExemp=false :numDemande="this.numDem"></stepperexemp>
+        <stepperexemp class="item-stepper-bottom-margin" current="2" stepperExemp=false :numDemande="this.numDem.toString()"></stepperexemp>
         <v-card>
           <v-app-bar dark color="primary">
             <v-toolbar-title>Choix du type d'exemplarisation</v-toolbar-title>

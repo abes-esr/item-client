@@ -2,9 +2,9 @@
   <v-container class="fill-height" fluid >
     <v-row align="center" justify="center">
       <v-col md="7">
-        <steppermodif class="item-stepper-bottom-margin" current="4" v-if="modif === 'MODIF'" :numDemande="this.numDem"></steppermodif>
-        <stepperexemp class="item-stepper-bottom-margin" current="3" v-if="modif === 'EXEMP'" :numDemande="this.numDem"></stepperexemp>
-        <stepperrecouv class="item-stepper-bottom-margin" current="2" v-if="modif === 'RECOUV'" :numDemande="this.numDem"></stepperrecouv>
+        <steppermodif class="item-stepper-bottom-margin" current="4" v-if="modif === 'MODIF'" :numDemande="this.numDem.toString()"></steppermodif>
+        <stepperexemp class="item-stepper-bottom-margin" current="3" v-if="modif === 'EXEMP'" :numDemande="this.numDem.toString()" :typeExemplarisation="typeDemandeChoisi"></stepperexemp>
+        <stepperrecouv class="item-stepper-bottom-margin" current="2" v-if="modif === 'RECOUV'" :numDemande="this.numDem.toString()"></stepperrecouv>
         <upload :modif="modif" :loading="loading" :format=format :precedent="true" :title=titleUpload :text=textUpload v-on:upload="uploadFile" @precedent="precedentDemande(numDem, modif)" @supprimer="supprimerDemande(numDem, modif)" @eventName="updateParent"></upload>
           <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span></v-alert>
       </v-col>
@@ -48,6 +48,7 @@ export default {
       codePebParent: '',
       dialog: false,
       dialogFinished: false,
+      typeDemandeChoisi: '',
     };
   },
   props: {
@@ -57,10 +58,35 @@ export default {
     },
   },
   // On récupère le numéro de demande enregistré en session
-  created() {
-    this.numDem = sessionStorage.getItem('dem');console.log(this.numDem);
+  mounted() {
+    // On récupère les infos utilisateur en session car on a besoin du jwt afin d'appeler les WS REST
+    this.user = JSON.parse(sessionStorage.getItem('user'));
+    this.numDem = sessionStorage.getItem('dem');
+    this.getTypeExemplarisation(this.numDem);
   },
   methods: {
+    // recuperation du type d'exemplarisation prealablement choisi
+    getTypeExemplarisation(numDemande) {
+      axios({
+        headers: { Authorization: this.user.jwt },
+        method: 'GET',
+        url: `${process.env.VUE_APP_ROOT_API}getTypeExemplarisationDemande/${numDemande}`,
+      }).then(
+        (result) => {
+          console.log(result.data);
+          this.typeDemandeChoisi = result.data;
+        },
+        (error) => {
+          this.loading = false;
+          this.alert = true;
+          this.alertType = 'error';
+          this.alertMessage = `Impossible de récupérer le type d'exemplarisation pour la demande : ${error.response.data.message}.  <br /> Veuillez réessayer ultérieurement. Si le problème persiste merci de contacter l'assistance.`;
+          if (error.response.status === 401) {
+            this.$emit('logout');
+          }
+        },
+      );
+    },
     // Upload du fichier enrichi
     uploadFile(file) {
       this.loading = true;

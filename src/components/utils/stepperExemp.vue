@@ -2,10 +2,10 @@
   <!-- FIL D'ARIANE DES DEMANDES D'EXEMPLARISATION-->
   <v-stepper :value="current" :alt-labels=true>
     <v-stepper-header>
-      <v-stepper-step v-if="this.numDemande === 0" step="1" :complete="current > 1">Sélection RCR<small>Demande</small></v-stepper-step>
-      <v-stepper-step v-if="this.numDemande !== 0" step="1" :complete="current > 1">Sélection RCR<small>Demande n°{{this.numDemande}}</small></v-stepper-step>
+      <v-stepper-step v-if="this.numDemande === undefined" step="1" :complete="current > 1">Sélection RCR<small>Demande</small></v-stepper-step>
+      <v-stepper-step v-if="this.numDemande !== undefined" step="1" :complete="current > 1">Sélection RCR<small>Demande n°{{this.numDemande}}</small></v-stepper-step>
       <v-divider></v-divider>
-      <v-stepper-step step="2" :complete="current > 2">Choix du type<small>d'exemplarisation</small></v-stepper-step>
+      <v-stepper-step step="2" :complete="current > 2">Choix du type<small>{{this.typeExemplarisation}}</small></v-stepper-step>
       <v-divider></v-divider>
       <v-stepper-step step="3" :complete="current > 3">Téléchargement <small>du fichier</small></v-stepper-step>
       <v-divider></v-divider>
@@ -20,7 +20,8 @@ export default {
   props: {
     /** Numéro de l'étape courante */
     current: { type: String, default: '5' },
-    numDemande: { type: Int8Array, default: '0' },
+    numDemande: { type: String },
+    typeExemplarisation: { type: String },
   },
 };
 </script>

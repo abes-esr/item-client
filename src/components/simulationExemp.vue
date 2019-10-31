@@ -49,8 +49,8 @@
           </v-card>
         </v-dialog>
         <!-- FIL D'ARIANE -->
-        <stepperModif v-if=this.exauto id="stepperModif" current="5" :numDemande="this.numDem"></stepperModif>
-        <stepperExemp v-if=!this.exauto id="stepperExemp" current="4" :numDemande="this.numDem"></stepperExemp>
+        <stepperModif v-if=this.exauto id="stepperModif" current="5" :numDemande="this.numDem.toString()"></stepperModif>
+        <stepperExemp v-if=!this.exauto id="stepperExemp" current="4" :numDemande="this.numDem.toString()" :typeExemplarisation="typeExemplarisation"></stepperExemp>
         <br>
         <!-- INFOS GENERALES DE LA DEMANDE -->
         <v-card id="demInfos" class="item-global-margin-bottom">
@@ -271,6 +271,7 @@ export default {
       popupDelete: false,
       exemplairesPresentsSurNoticeEnCours: false,
       autorisationExemplairesMultiples: false,
+      typeExemplarisation: '',
     };
   },
   props: {
@@ -288,6 +289,8 @@ export default {
     this.getInfosDemande();
     // On compte le nombre de lignes totale sur le fichier
     this.getNumberLines();
+    // On récupère le type d'exemplarisation
+    this.getTypeExemplarisation(this.numDem);
   },
   filters: {
     formatDate(value) {
@@ -298,6 +301,27 @@ export default {
     },
   },
   methods: {
+    // recuperation du type d'exemplarisation prealablement choisi
+    getTypeExemplarisation(numDemande) {
+      axios({
+        headers: { Authorization: this.user.jwt },
+        method: 'GET',
+        url: `${process.env.VUE_APP_ROOT_API}getTypeExemplarisationDemande/${numDemande}`,
+      }).then(
+        (result) => {
+          this.typeExemplarisation = result.data;
+        },
+        (error) => {
+          this.loading = false;
+          this.alert = true;
+          this.alertType = 'error';
+          this.alertMessage = `Impossible de récupérer le type d'exemplarisation pour la demande : ${error.response.data.message}.  <br /> Veuillez réessayer ultérieurement. Si le problème persiste merci de contacter l'assistance.`;
+          if (error.response.status === 401) {
+            this.$emit('logout');
+          }
+        },
+      );
+    },
     // Récupération des infos de la demande
     getInfosDemande() {
       this.loading = true;
