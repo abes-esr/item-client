@@ -10,6 +10,7 @@ const RcrComponent = () => import('@/components/rcr.vue');
 const uploadInitComponent = () => import('@/components/modifmasse/uploadInit.vue');
 const traitementComponent = () => import('@/components/modifmasse/selectTraitement.vue');
 const ArchiveModifComponent = () => import('@/components/modifmasse/archiveModif.vue');
+const ArchiveRecouvComponent = () => import('@/components/recouvrement/archiveRecouv.vue');
 const GererTableauModifComponent = () => import('@/components/utils/gererTableauModif.vue');
 const GererTableauExempComponent = () => import('@/components/utils/gererTableauExemp.vue');
 const GererTableauRecouvComponent = () => import('@/components/utils/gererTableauRecouv.vue');
@@ -153,6 +154,7 @@ const router = new Router({
       path: '/archive',
       name: 'archive',
       component: ArchiveModifComponent,
+      props: { modif: TYPEDEMANDE.DEMANDE_MODIFICATION },
       meta: {
         requiresAuth: true,
       },
@@ -185,9 +187,19 @@ const router = new Router({
       },
     },
     {
+      path: '/archiveRecouv',
+      name: 'archiveRecouv',
+      component: ArchiveRecouvComponent,
+      props: { modif: TYPEDEMANDE.DEMANDE_RECOUVREMENT },
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
       path: '/archiveEx',
       name: 'archiveEx',
       component: ArchiveExComponent,
+      props: { modif: TYPEDEMANDE.DEMANDE_EXEMPLARISATION },
       meta: {
         requiresAuth: true,
       },

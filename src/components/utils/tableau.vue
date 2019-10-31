@@ -68,14 +68,22 @@
               <tbody>
               <tr :key="item.name" v-for="item in items">
                 <!--COM--><td><v-btn v-if="item.commentaire" icon color="primary" @click.stop="$set(dialogNote, item.num, true), fetchComment(item.commentaire)"><v-icon medium>mdi-comment-text-outline</v-icon></v-btn><v-btn v-if="!item.commentaire" icon color="grey" @click.stop="$set(dialogNote, item.num, true), fetchComment(item.commentaire)"><v-icon medium>mdi-comment-text-outline</v-icon></v-btn><v-dialog v-model="dialogNote[item.num]" scrollable max-width="500" :key="item.num"><v-card><v-card-title><span>Note de la demande {{ item.num }}</span></v-card-title><v-card-text style="padding-top: 10px; margin-bottom: -25px;"><v-textarea v-model="commentaireMaj" outlined label="Commentaire"></v-textarea></v-card-text><v-card-actions><v-spacer></v-spacer><v-btn color="primary" @click.stop="$set(dialogNote, item.num, false); saveComment(item.num, commentaireMaj)">Enregistrer</v-btn></v-card-actions></v-card></v-dialog></td>
-                <!--DEM--><td @click="clickRow(item.num, item.codeStatut)">{{ item.num }}</td>
-                <!--CRE--><td @click="clickRow(item.num, item.dateCreation)">{{ item.dateCreation | formatDate }}</td>
-                <!--MAJ--><td @click="clickRow(item.num, item.codeStatut)">{{ item.dateModification | formatDate }}</td>
-                <!--ILN--><td @click="clickRow(item.num, item.codeStatut)">{{ item.iln }}</td>
-                <!--RCR--><td @click="clickRow(item.num, item.codeStatut)">{{ item.rcr }}</td>
-                <!--TYP--><td @click="clickRow(item.num, item.codeStatut)">{{ item.typeExemp }}</td>
-                <!--IND--><td @click="clickRow(item.num, item.codeStatut)">{{ item.indexRecherche }}</td>
-                <!--STA--><td @click="clickRow(item.num, item.codeStatut)">{{ item.statut }}</td>
+                <!--DEM--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.num }}</td>
+                          <td v-if="!item.isClickable">{{ item.num }}</td>
+                <!--CRE--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.dateCreation | formatDate }}</td>
+                          <td v-if="!item.isClickable">{{ item.dateCreation | formatDate}}</td>
+                <!--MAJ--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.dateModification | formatDate }}</td>
+                          <td v-if="!item.isClickable">{{ item.dateModification | formatDate}}</td>
+                <!--ILN--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.iln }}</td>
+                          <td v-if="!item.isClickable">{{ item.iln }}</td>
+                <!--RCR--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.rcr }}</td>
+                          <td v-if="!item.isClickable">{{ item.rcr }}</td>
+                <!--TYP--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.typeExemp }}</td>
+                          <td v-if="!item.isClickable">{{ item.typeExemp }}</td>
+                <!--IND--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.indexRecherche }}</td>
+                          <td v-if="!item.isClickable">{{ item.indexRecherche }}</td>
+                <!--STA--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip></td>
+                          <td v-if="!item.isClickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip></td>
                 <!--TL1--><td>
                 <v-menu bottom left v-if="item.codeStatut >= 2"><template v-slot:activator="{ on }"><v-btn aria-label="Télécharger les fichiers" class="cloudButton" color="info" small v-on="on"><v-icon>cloud_download</v-icon></v-btn></template>
                   <!-- FICHIERS EXEMPLARISATION -->
@@ -124,13 +132,20 @@
               <tbody>
               <tr :key="item.name" v-for="item in items">
                 <!--COM--><td><v-btn v-if="item.commentaire" icon color="primary" @click.stop="$set(dialogNote, item.num, true), fetchComment(item.commentaire)"><v-icon medium>mdi-comment-text-outline</v-icon></v-btn><v-btn v-if="!item.commentaire" icon color="grey" @click.stop="$set(dialogNote, item.num, true), fetchComment(item.commentaire)"><v-icon medium>mdi-comment-text-outline</v-icon></v-btn><v-dialog v-model="dialogNote[item.num]" scrollable max-width="500" :key="item.num"><v-card><v-card-title><span>Note de la demande {{ item.num }}</span></v-card-title><v-card-text style="padding-top: 10px; margin-bottom: -25px;"><v-textarea v-model="commentaireMaj" outlined label="Commentaire"></v-textarea></v-card-text><v-card-actions><v-spacer></v-spacer><v-btn color="primary" @click.stop="$set(dialogNote, item.num, false); saveComment(item.num, commentaireMaj)">Enregistrer</v-btn></v-card-actions></v-card></v-dialog></td>
-                <!--DEM--><td @click="clickRow(item.num, item.codeStatut)">{{ item.num }}</td>
-                <!--MAJ--><td @click="clickRow(item.num, item.codeStatut)">{{ item.dateModification | formatDate }}</td>
-                <!--ILN--><td @click="clickRow(item.num, item.codeStatut)">{{ item.iln }}</td>
-                <!--RCR--><td @click="clickRow(item.num, item.codeStatut)">{{ item.rcr }}</td>
-                <!--ZON--><td @click="clickRow(item.num, item.codeStatut)">{{ item.zoneSousZone }}</td>
-                <!--TRT--><td @click="clickRow(item.num, item.codeStatut)">{{ item.typeExemp }}</td>
-                <!--STA--><td @click="clickRow(item.num, item.codeStatut)">{{ item.statut }}</td>
+                <!--DEM--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.num }}</td>
+                          <td v-if="!item.isClickable">{{ item.num }}</td>
+                <!--MAJ--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.dateModification | formatDate }}</td>
+                          <td v-if="!item.isClickable">{{ item.dateModification | formatDate }}</td>
+                <!--ILN--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.iln }}</td>
+                          <td v-if="!item.isClickable">{{ item.iln }}</td>
+                <!--RCR--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.rcr }}</td>
+                          <td v-if="!item.isClickable">{{ item.rcr }}</td>
+                <!--ZON--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.zoneSousZone }}</td>
+                          <td v-if="!item.isClickable">{{ item.zoneSousZone }}</td>
+                <!--TRT--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.typeExemp }}</td>
+                          <td v-if="!item.isClickable">{{ item.typeExemp }}</td>
+                <!--STA--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip></td>
+                          <td v-if="!item.isClickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip></td>
                 <!--TL1--><td>
                 <v-menu bottom left v-if="item.codeStatut >= 2"><template v-slot:activator="{ on }"><v-btn aria-label="Télécharger les fichiers" class="cloudButton" color="info" small v-on="on"><v-icon>cloud_download</v-icon></v-btn></template>
                   <!-- FICHIERS MODIF -->
@@ -180,20 +195,20 @@
               <tbody>
               <tr :key="item.name" v-for="item in items">
                 <!--COM--><td><v-btn v-if="item.commentaire" icon color="primary" @click.stop="$set(dialogNote, item.num, true), fetchComment(item.commentaire)"><v-icon medium>mdi-comment-text-outline</v-icon></v-btn><v-btn v-if="!item.commentaire" icon color="grey" @click.stop="$set(dialogNote, item.num, true), fetchComment(item.commentaire)"><v-icon medium>mdi-comment-text-outline</v-icon></v-btn><v-dialog v-model="dialogNote[item.num]" scrollable max-width="500" :key="item.num"><v-card><v-card-title><span>Note de la demande {{ item.num }}</span></v-card-title><v-card-text style="padding-top: 10px; margin-bottom: -25px;"><v-textarea v-model="commentaireMaj" outlined label="Commentaire"></v-textarea></v-card-text><v-card-actions><v-spacer></v-spacer><v-btn color="primary" @click.stop="$set(dialogNote, item.num, false); saveComment(item.num, commentaireMaj)">Enregistrer</v-btn></v-card-actions></v-card></v-dialog></td>
-                <!--DEM--><td v-if="item.codeStatut !== 5" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.num }}</td>
-                          <td v-if="item.codeStatut === 5">{{ item.num }}</td>
-                <!--CRE--><td v-if="item.codeStatut !== 5" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.dateCreation | formatDate }}</td>
-                          <td v-if="item.codeStatut === 5">{{ item.dateCreation | formatDate }}</td>
-                <!--MAJ--><td v-if="item.codeStatut !== 5" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.dateModification | formatDate }}</td>
-                          <td v-if="item.codeStatut === 5">{{ item.dateModification | formatDate }}</td>
-                <!--ILN--><td v-if="item.codeStatut !== 5" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.iln }}</td>
-                          <td v-if="item.codeStatut === 5">{{ item.iln }}</td>
-                <!--RCR--><td v-if="item.codeStatut !== 5" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.rcr }}</td>
-                          <td v-if="item.codeStatut === 5">{{ item.rcr }}</td>
-                <!--IND--><td v-if="item.codeStatut !== 5" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.indexRecherche }}</td>
-                          <td v-if="item.codeStatut === 5">{{ item.indexRecherche }}</td>
-                <!--STA--><td v-if="item.codeStatut !== 5" @click="clickRow(item.num, item.codeStatut)" class="clickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip></td>
-                          <td v-if="item.codeStatut === 5"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip></td>
+                <!--DEM--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.num }}</td>
+                          <td v-if="!item.isClickable">{{ item.num }}</td>
+                <!--CRE--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.dateCreation | formatDate }}</td>
+                          <td v-if="!item.isClickable">{{ item.dateCreation | formatDate }}</td>
+                <!--MAJ--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.dateModification | formatDate }}</td>
+                          <td v-if="!item.isClickable">{{ item.dateModification | formatDate }}</td>
+                <!--ILN--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.iln }}</td>
+                          <td v-if="!item.isClickable">{{ item.iln }}</td>
+                <!--RCR--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.rcr }}</td>
+                          <td v-if="!item.isClickable">{{ item.rcr }}</td>
+                <!--IND--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.indexRecherche }}</td>
+                          <td v-if="!item.isClickable">{{ item.indexRecherche }}</td>
+                <!--STA--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip></td>
+                          <td v-if="!item.isClickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip></td>
                 <!--TL1--><td>
                 <v-menu bottom left v-if="item.codeStatut >= 2"><template v-slot:activator="{ on }"><v-btn aria-label="Télécharger les fichiers" class="cloudButton" color="info" small v-on="on"><v-icon>cloud_download</v-icon></v-btn></template>
                   <!-- FICHIERS RECOUV -->
@@ -471,7 +486,6 @@ export default {
       }
     },
     clickRow(numDem, codeStatut) {
-      console.log(codeStatut);
       sessionStorage.setItem('dem', numDem);
       switch (this.modif) {
         case 'EXEMP':
@@ -519,7 +533,6 @@ export default {
       }
     },
     redirectionRecouv(codeStatut) {
-      console.log(codeStatut);
       switch (codeStatut) {
         case 1:
           this.$router.push('fichierRecouv');
@@ -584,6 +597,9 @@ export default {
               let tempTypeExemp = '';
               let tempStatus = '';
 
+              // Pour savoir si l'item correspondant dans le tableau (la ligne) sera cliquable
+              let isLocalClickable = true;
+
               // En cas de modification
               let tempZone = '';
               let tempSousZone = '';
@@ -633,13 +649,28 @@ export default {
                   tempTypeExemp = result.data[key].traitement.libelle;
                 }
               }
-              // TODO si l'on est recouvrement
               if (this.modif === 'RECOUV') {
                 if (result.data[key].indexRecherche === null) {
                   tempIndexRecherche = '';
                 } else {
                   tempIndexRecherche = result.data[key].indexRecherche.libelle;
                 }
+              }
+
+              switch (result.data[key].etatDemande.numEtat) {
+                case 1: // En saisie
+                case 2: // Préparée
+                case 3: // A compléter
+                case 4: // En simulation
+                  isLocalClickable = true; break;
+                case 5: // En attente
+                case 6: // En cours de traitement
+                case 7: // Terminée
+                case 8: // En erreur
+                case 9: // Archivée
+                  isLocalClickable = false; break;
+                default:
+                  isLocalClickable = false; break;
               }
               this.items.push({
                 dateCreation: result.data[key].dateCreation,
@@ -653,6 +684,7 @@ export default {
                 typeExemp: tempTypeExemp,
                 statut: tempStatus,
                 codeStatut: result.data[key].etatDemande.numEtat,
+                isClickable: isLocalClickable,
                 commentaire: result.data[key].commentaire,
               });
             }
@@ -895,6 +927,7 @@ export default {
         case 'En erreur': return 'red';
         case 'En attente': return 'orange';
         case 'Terminée': return 'green';
+        case 'Archivée': return 'brown';
         default: return 'none';
       }
     },
