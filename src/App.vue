@@ -28,7 +28,7 @@
       <div class="item-margin-right-app-bar"></div> <!--Marge à droite des icones de la barre de navigation-->
     </v-app-bar>
     <!--BARRE LATERALE DE MENU-->
-    <v-navigation-drawer app v-if="authenticated" v-model="drawer" temporary>
+    <v-navigation-drawer width="18em" app v-if="authenticated" v-model="drawer" temporary>
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="title">

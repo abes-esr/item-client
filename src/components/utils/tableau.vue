@@ -423,6 +423,7 @@ export default {
           this.blobName = `fichier_prepare_${numDem}.csv`;
           break;
       }
+      console.log(filename);
       if (this.user !== null && this.user.jwt !== null) {
         return axios({
           headers: { Authorization: this.user.jwt },
