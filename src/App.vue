@@ -1,5 +1,5 @@
 <template>
-  <v-app :dark="isDark" id="inspire">
+  <v-app id="inspire">
     <!--BARRE DU HAUT DE L'APP-->
     <v-app-bar color="primary" max-height="4.2em" dark>
       <div class="item-margin-left-app-bar"></div> <!--Marge à gauche des icones de la barre de navigation-->
@@ -58,6 +58,14 @@
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>Modifier mon adresse mail</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item v-on:click="setTheme()">
+          <v-list-item-action>
+            <v-icon>invert_colors</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Changer de thème</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -265,6 +273,13 @@ export default {
             this.isAdmin = true;
           }
         }
+      }
+    },
+    setTheme() {
+      if (this.$vuetify.theme.dark === false) {
+        this.$vuetify.theme.dark = true;
+      } else if (this.$vuetify.theme.dark === true) {
+        this.$vuetify.theme.dark = false;
       }
     },
   },
