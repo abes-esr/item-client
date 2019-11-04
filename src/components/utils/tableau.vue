@@ -583,7 +583,6 @@ export default {
             this.user.userNum
           }&type=${this.modif}`;
         }
-
         axios({
           headers: { Authorization: this.user.jwt },
           method: 'GET',
