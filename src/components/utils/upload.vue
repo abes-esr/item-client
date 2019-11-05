@@ -69,22 +69,6 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <!-- POPUP DE CONFIRMATION QUE LE TRAITEMENT EST LANCE -->
-    <v-dialog v-model="dialogFinished" width="500">
-      <v-card>
-        <v-card-title class="headline" primary-title>Traitement validé</v-card-title>
-        <v-card-text>Votre demande est en cours de traitement, elle sera traitée dès que
-          possible.<br/>Un mail vous sera envoyé une fois le traitement terminé.
-          <br>Vous pouvez retrouver l'ensemble de vos demandes depuis la page "Gérer mes
-          demandes".
-        </v-card-text>
-        <v-divider></v-divider>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="dialog = false, $emit('upload', fichierCharge), $router.push({ name: 'home' })" aria-label="OK">OK</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </v-container>
 </template>
 
@@ -223,11 +207,7 @@ export default {
       );
     },
     displayDialog() {
-      if (this.modif === 'RECOUV') {
-        this.dialogFinished = true;
-      } else {
-        this.$emit('upload', this.fichierCharge);
-      }
+      this.$emit('upload', this.fichierCharge);
     },
   },
 };

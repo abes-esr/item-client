@@ -5,10 +5,26 @@
         <steppermodif class="item-stepper-bottom-margin" current="4" v-if="modif === 'MODIF'" :numDemande="this.numDem.toString()"></steppermodif>
         <stepperexemp class="item-stepper-bottom-margin" current="3" v-if="modif === 'EXEMP'" :numDemande="this.numDem.toString()" :typeExemplarisation="typeDemandeChoisi"></stepperexemp>
         <stepperrecouv class="item-stepper-bottom-margin" current="2" v-if="modif === 'RECOUV'" :numDemande="this.numDem.toString()"></stepperrecouv>
-        <upload :modif="modif" :loading="loading" :format=format :precedent="true" :title=titleUpload :text=textUpload v-on:upload="uploadFile" @precedent="precedentDemande(numDem, modif)" @supprimer="supprimerDemande(numDem, modif)" @eventName="updateParent"></upload>
+        <upload :modif="modif" :loading="loading" :format=format :precedent="true" :title=titleUpload :text=textUpload @upload="uploadFile" @precedent="precedentDemande(numDem, modif)" @supprimer="supprimerDemande(numDem, modif)" @eventName="updateParent"></upload>
           <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span></v-alert>
       </v-col>
     </v-row>
+    <!-- POPUP DE CONFIRMATION QUE LE TRAITEMENT EST LANCE -->
+    <v-dialog v-model="dialogFinished" width="500">
+      <v-card>
+        <v-card-title class="headline" primary-title>Traitement validé</v-card-title>
+        <v-card-text>Votre demande est en cours de traitement, elle sera traitée dès que
+          possible.<br/>Un mail vous sera envoyé une fois le traitement terminé.
+          <br>Vous pouvez retrouver l'ensemble de vos demandes depuis la page "Gérer mes
+          demandes".
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" text @click="turnOffPopup()" aria-label="OK">OK</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -110,8 +126,8 @@ export default {
               this.loading = false;
               switch (this.modif) {
                 case 'MODIF': this.$router.replace({ name: 'simulation' }); break;
-                case 'EXEMP': this.$router.replace({ name: 'simulationTest' }); break;
-                case 'RECOUV': this.$router.replace({ name: 'home' }); break;
+                case 'RECOUV': this.dialogFinished = true; break;
+                case 'EXEMP': this.$router.replace({ name: 'home' }); break;
                 default: this.$router.replace({ name: 'home' });
               }
             },
@@ -136,6 +152,10 @@ export default {
         this.alert = true;
         this.loading = false;
       }
+    },
+    turnOffPopup() {
+      this.dialogFinished = false;
+      this.$router.replace({ name: 'home' });
     },
     updateParent(variable, variable2) {
       this.exemplairesMultiplesParent = variable;

@@ -10,10 +10,10 @@
             <v-row no-gutters>
               <!--Zone du titre du tableau-->
               <v-col cols="12" sm="12" md="4">
-                <v-card-title class="title" v-if="archive && modif === 'MODIF'">Mes demandes de modification archivées</v-card-title>
-                <v-card-title class="title" v-if="!archive && modif === 'MODIF'">Gérer mes demandes de modification</v-card-title>
-                <v-card-title class="title" v-if="archive && modif === 'EXEMP'">Mes demandes d'exemplarisation archivées</v-card-title>
-                <v-card-title class="title" v-if="!archive && modif === 'EXEMP'">Gérer mes demandes d'exemplarisation</v-card-title>
+                <v-card-title class="title" v-if="archive && modif === 'MODIF'">Mes modifications archivées</v-card-title>
+                <v-card-title class="title" v-if="!archive && modif === 'MODIF'">Gérer mes modifications</v-card-title>
+                <v-card-title class="title" v-if="archive && modif === 'EXEMP'">Mes créations archivées</v-card-title>
+                <v-card-title class="title" v-if="!archive && modif === 'EXEMP'">Gérer mes créations</v-card-title>
                 <v-card-title class="title" v-if="archive && modif === 'RECOUV'">Mes demandes de recouvrement archivées</v-card-title>
                 <v-card-title class="title" v-if="!archive && modif === 'RECOUV'">Gérer mes demandes de recouvrement</v-card-title>
               </v-col>
