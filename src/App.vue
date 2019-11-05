@@ -91,7 +91,7 @@
             <v-icon>list</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Gérer mes demandes<br> de taux de recouvrement</v-list-item-title>
+            <v-list-item-title>Gérer mes demandes de taux<br>de recouvrement</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
         <v-list-item v-on:click="$router.push({ name: 'archiveRecouv' })">
@@ -99,7 +99,7 @@
             <v-icon>archive</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Mes demandes de taux<br> de recouvrement archivées</v-list-item-title>
+            <v-list-item-title>Gérer mes demandes de taux<br>de recouvrement archivées</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -133,7 +133,7 @@
             <v-icon>archive</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Mes demandes <br>d'exemplarisation archivées</v-list-item-title>
+            <v-list-item-title>Gérer mes créations<br>archivées</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -167,7 +167,7 @@
             <v-icon>archive</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Mes demandes <br>de modification archivées</v-list-item-title>
+            <v-list-item-title>Gérer mes modifications<br>archivées</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
