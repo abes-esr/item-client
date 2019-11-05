@@ -125,7 +125,7 @@
             <v-icon>list</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Gérer mes demandes<br> d'exemplarisation</v-list-item-title>
+            <v-list-item-title>Gérer mes créations</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
         <v-list-item v-on:click="$router.push({ name: 'archiveEx' })">
@@ -159,7 +159,7 @@
             <v-icon>list</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Gérer mes demandes<br> de modification</v-list-item-title>
+            <v-list-item-title>Gérer mes modifications</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
         <v-list-item v-on:click="$router.push({ name: 'archive' })">

@@ -124,14 +124,14 @@
               <v-col :key="1" cols="12" sm="12" md="5"> <!--Exemplaires existants-->
                 <!--Carte grisée si absence d'exemplaires pour cette notice-->
                 <v-card dark class="pa-1" outlined tile v-if="!exemplairesPresentsSurNoticeEnCours">
-                  <span class="headline --text">Exemplaires existants</span>
+                  <span class="headline --text">Exemplaire(s) existant(s)</span>
                   <div class="notice">
                     <pre>Pas d'exemplaires pour cette notice avec ce RCR</pre>
                   </div>
                 </v-card>
                 <!--Carte activée si présence exemplaires pour cette notice-->
                 <v-card class="pa-1" outlined tile v-if="exemplairesPresentsSurNoticeEnCours">
-                  <span class="headline --text">Exemplaires existants</span>
+                  <span class="headline --text">Exemplaire(s) existant(s)</span>
                   <v-container id="scroll-target" style="max-height: 400px" class="overflow-y-auto">
                     <div class="notice">
                       <pre style="text-align: left; padding-top: 1em">
