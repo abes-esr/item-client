@@ -15,7 +15,7 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="primary" text @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
-            <v-btn color="primary" text @click="supprimerDemande(numDem, !exauto)" aria-label="Confirmer">Confirmer</v-btn>
+            <v-btn color="primary" text @click="supprimerDemande(numDem, modification)" aria-label="Confirmer">Confirmer</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -196,6 +196,7 @@ import moment from 'moment';
 import stepper from '@/components/utils/stepperModif.vue';
 import supprMixin from '@/mixins/delete';
 import constants from '@/components/utils/const';
+import TYPEDEMANDE from '../enums/typeDemande';
 
 export default {
   components: {
@@ -220,8 +221,7 @@ export default {
       user: {},
       noticeAvant: 'Notice en cours de popupEndProcessingchargement...',
       noticeApres: 'Notice en cours de chargement...',
-      exauto: false,
-      /* exauto a false pour modif de masse, true pour exauto */
+      modification: TYPEDEMANDE.DEMANDE_MODIFICATION,
       popupStartProcessing: false,
       popupEndProcessing: false,
       derniereNotice: false,

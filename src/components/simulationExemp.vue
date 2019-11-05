@@ -256,7 +256,7 @@ export default {
           libelle: '',
         },
       },
-      exauto: false,
+      exauto: TYPEDEMANDE.DEMANDE_EXEMPLARISATION,
       /* exauto a true pour modif de masse, false pour exauto */
       alertMessage: 'Erreur.',
       alertType: 'error',
