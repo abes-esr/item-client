@@ -342,7 +342,6 @@ export default {
       current: '',
       polling: null,
       commentButton: false,
-      tableExpanded: false,
       expanded: [],
       listTraitements: [],
       affichageRestrictifAdmin: false,
@@ -381,7 +380,7 @@ export default {
     this.initHeader();
     this.fetchData();
     // Rafraichissement des données toutes les 10 sec
-    this.polling = setInterval(() => { this.conditionalFetch(); }, 10000);
+    this.polling = setInterval(() => { this.fetchData(); }, 10000);
     this.getListTypeExemp();
     if (!this.archive) {
       this.getListStatus();
@@ -390,6 +389,9 @@ export default {
     // Tri par défaut sur les numéros demandes
     this.changeSort('num');
     this.pagination.descending = true;
+  },
+  beforeDestroy() {
+    clearInterval(this.polling);
   },
   methods: {
     downloadFile(numDem, type) {
@@ -557,12 +559,6 @@ export default {
       this.searchCombo.splice(this.searchCombo.length - 1, 1);
       for (let i = 0; i < this.searchCombo.length; i += 1) {
         this.selectedColumns[i] = this.searchCombo[i].value;
-      }
-    },
-    // On met à jours les données toutes les 10sec uniquement si aucune demande n'est en cours d'édition (pour ne pas écraser les modifs en cours)
-    conditionalFetch() {
-      if (!this.tableExpanded) {
-        this.fetchData();
       }
     },
     // Alimentation des données du tableau
