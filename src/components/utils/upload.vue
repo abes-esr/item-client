@@ -12,15 +12,15 @@
       </v-app-bar>
       <!--Nouveau composant d'upload vuetify 2-->
       <v-card-text style="margin-bottom: -2.8em">
-        <v-file-input :rules="rules" for="files" show-size outlined prepend-icon="attachment" type="file" aria-label="Dépôt du fichier" v-model="fichierCharge" @change="autorisationEnvoi" ref="fileInput" :label="text"></v-file-input>
+        <v-file-input accept=".csv,.txt" :rules="rules" for="files" show-size outlined prepend-icon="attachment" type="file" aria-label="Dépôt du fichier" v-model="fichierCharge" @change="autorisationEnvoi" ref="fileInput" :label="text"></v-file-input>
       </v-card-text>
       <!--Zone de Choix d'exemplarisation multiple ne s'affiche pas si modif = true (en modification)-->
-      <div v-if="!this.modif" class="item-flexbox-for-checkbox">
+      <div v-if="this.modif === 'EXEMP'" class="item-flexbox-for-checkbox">
         <div class="item-margin-right-app-bar" style="margin-left:auto; margin-right:0">
               <v-checkbox value="exempMulti" id="exempMulti" @click.native="getExemplairesMultiples()" label="Je souhaite créer des exemplaires supplémentaires"></v-checkbox>
         </div>
         <div class="item-margin-right-app-bar" style="margin-bottom: 0.5em; padding-left: 5px">
-              <v-dialog v-model="dialog" persistent max-width="400">
+              <v-dialog v-model="popupMultiplesCopies" persistent max-width="400">
                 <template v-slot:activator="{ on }">
                   <v-btn text small icon v-on="on">
                     <v-icon>info</v-icon>
@@ -31,23 +31,24 @@
                   <v-card-text>Si des exemplaires sont déjà présents sur les notices et que vous souhaitez en créer de nouveaux, cochez la case.</v-card-text>
                   <v-card-actions>
                     <div class="flex-grow-1"></div>
-                    <v-btn text @click="dialog = false">Compris</v-btn>
+                    <v-btn text @click="popupMultiplesCopies = false">Compris</v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
         </div>
       </div>
       <!-- liste de sélection du code PEB ne s'affiche pas si modif = true -->
-      <div v-if="!this.modif" class="item-flexbox-for-checkbox">
+      <div v-if="this.modif === 'EXEMP'" class="item-flexbox-for-checkbox">
         <div class="item-margin-left-app-bar" style="margin-bottom: 0.5em; margin-left:auto; margin-right:1.2em">
           <v-select label="Code peb selectionné" id="codesPebList" :items="codesPeb" v-model="defaultCodePebChild" @change="getCodePebSelected()"></v-select>
         </div>
       </div>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="info" v-if="precedent" @click="$emit('precedent')" aria-label="Annuler">Précédent</v-btn>
+        <div v-if="displayPreviousButton" style="margin-right: 0.5em"><v-btn color="info" v-if="precedent" @click="$emit('precedent')" aria-label="Annuler">Précédent</v-btn></div>
         <!-- Lors du clic sur "Envoyer", on emet un évenement "upload" avec le contenu du fichier en paramètre, afin que le composant père puisse récupérer le fichier-->
-        <v-btn color="info" :disabled="!fichierPresent" @click="$emit('upload', fichierCharge)" aria-label="Envoyer">Envoyer</v-btn>
+        <v-btn v-if="this.uploadInit === false" color="info" :disabled="!fichierPresent" @click="displayDialog()" aria-label="Envoyer">Lancer le traitement en simulation</v-btn>
+        <v-btn v-if="this.uploadInit === true" color="info" :disabled="!fichierPresent" @click="displayDialog()" aria-label="Envoyer">Envoyer</v-btn>
       </v-card-actions>
     </v-card>
     <!--Message d'alerte quand l'utilisateur clique sur supprimer demande-->
@@ -75,6 +76,8 @@
 import loading from 'vue-full-loading';
 import { showAt } from 'vue-breakpoints';
 import axios from 'axios';
+import TYPEDEMANDE from '../../enums/typeDemande';
+
 
 export default {
   name: 'upload',
@@ -109,7 +112,10 @@ export default {
     },
     // Modif de masse ou exemplarisation
     modif: {
-      default: true,
+      default: TYPEDEMANDE.DEMANDE_MODIFICATION,
+    },
+    uploadInit: {
+      default: false,
     },
   },
   data() {
@@ -119,7 +125,7 @@ export default {
       alertMessage: 'Erreur.',
       alertType: 'error',
       popupDelete: false,
-      dialog: false,
+      popupMultiplesCopies: false,
       user: {},
       exemplairesMultiplesChild: false,
       codesPeb: [
@@ -127,13 +133,16 @@ export default {
       defaultCodePebChild: {},
       codesPebChild: '',
       codePebSelected: '',
+      dialogFinished: false,
+      dialog: false,
       fichierCharge: [],
       rules: [
-        value => ((value.type === 'text/csv') || (value.type === 'application/vnd.ms-excel') || (value.type === 'text/plain')) || 'Le fichier chargé n\'est pas dans un format autorisé (.txt ou .csv)',
+        value => !value || ((value.type === 'text/csv') || (value.type === 'application/vnd.ms-excel') || (value.type === 'text/plain')) || 'Le fichier chargé n\'est pas dans un format autorisé (.txt ou .csv)',
       ],
       typeFile: [
         value => value.type,
       ],
+      displayPreviousButton: true,
     };
   },
   mounted() {
@@ -141,12 +150,15 @@ export default {
     this.user = JSON.parse(sessionStorage.getItem('user'));
     // on récupère la liste des codes PEB
     this.getCodesPeb();
+    if (this.modif === TYPEDEMANDE.DEMANDE_RECOUVREMENT) {
+      this.displayPreviousButton = false;
+    }
   },
   methods: {
     // changement statut bouton envoyer
     autorisationEnvoi() {
-      if ((this.fichierCharge.type === 'text/csv') || (this.fichierCharge.type === 'application/vnd.ms-excel') || (this.fichierCharge.type === 'text/plain')) {
-        this.fichierPresent = true;
+      if (this.fichierCharge !== null) {
+        this.fichierPresent = (this.fichierCharge.type === 'text/csv') || (this.fichierCharge.type === 'application/vnd.ms-excel') || (this.fichierCharge.type === 'text/plain');
       } else {
         this.fichierPresent = false;
       }
@@ -193,6 +205,9 @@ export default {
           this.alertMessage = `impossible de charger la liste des codes PEB ${error.response.data.message} <br /> Veuillez réessayer ultérieurement. Si le problème persiste merci de contacter l'assistance.`;
         },
       );
+    },
+    displayDialog() {
+      this.$emit('upload', this.fichierCharge);
     },
   },
 };

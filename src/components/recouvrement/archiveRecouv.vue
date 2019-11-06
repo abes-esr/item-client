@@ -1,5 +1,5 @@
 <template>
-    <tableau :archive=true :modif=this.modif></tableau>
+  <tableau :archive=true :modif=this.modif></tableau>
 </template>
 
 <script>
@@ -7,7 +7,7 @@ import tableau from '@/components/utils/tableau.vue';
 import TYPEDEMANDE from '../../enums/typeDemande';
 
 export default {
-  name: 'archive',
+  name: 'archiveRecouv',
   components: {
     tableau,
   },
@@ -18,3 +18,7 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+
+</style>

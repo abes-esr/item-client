@@ -3,8 +3,8 @@
     <loading :show="loading" label="Envoi en cours. Ce traitement peut prendre plusieurs minutes."></loading>
     <v-row align="center" justify="center">
       <v-col md="7">
-        <stepper id="stepper" current="2"></stepper>
-        <upload v-if="showForm" :loading="loading" :format=format :title=titleUpload :precedent="false" :text=textUpload v-on:upload="uploadFile" @precedent="precedentDemande(numDem)" @supprimer="supprimerDemande(numDem, true)"></upload>
+        <steppermodif class="item-stepper-bottom-margin" current="2" v-if="modif === 'MODIF'" :numDemande="this.numDem.toString()"></steppermodif>
+        <upload v-if="showForm" :loading="loading" :format=format :title=titleUpload :precedent="false" :text=textUpload v-on:upload="uploadFile" @precedent="precedentDemande(numDem)" @supprimer="supprimerDemande(numDem, true)" :uploadInit="true"></upload>
         <v-card v-if="!showForm" class="elevation-12">
           <v-app-bar dark color="primary">
             <v-toolbar-title>Récupération du fichier de correspondances PPN / EPN</v-toolbar-title>
@@ -19,7 +19,7 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="info" v-on:click="precedentDemande(numDem, true); showForm = true;" aria-label="Annuler">Précédent</v-btn>
+            <v-btn color="info" v-on:click="precedentDemande(numDem, modif); showForm = true;" aria-label="Annuler">Précédent</v-btn>
             <v-btn color="info" :disabled="disabledButton" v-on:click="$router.replace({ name: 'traitement' })" aria-label="Suivant">Suivant</v-btn>
           </v-card-actions>
         </v-card>
@@ -37,7 +37,7 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="primary" text @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
-            <v-btn color="primary" text @click="supprimerDemande(numDem, true)" aria-label="Confirmer">Confirmer</v-btn>
+            <v-btn color="primary" text @click="supprimerDemande(numDem, this.modif)" aria-label="Confirmer">Confirmer</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -49,16 +49,17 @@
 import axios from 'axios';
 import loading from 'vue-full-loading';
 import upload from '@/components/utils/upload.vue';
-import stepper from '@/components/utils/stepperModif.vue';
+import stepperModif from '@/components/utils/stepperModif.vue';
 import supprMixin from '@/mixins/delete';
 import constants from '@/components/utils/const';
+import TYPEDEMANDE from '../../enums/typeDemande';
 
 export default {
   name: 'uploadComponent',
   mixins: [supprMixin],
   components: {
     upload,
-    stepper,
+    steppermodif: stepperModif,
     loading,
   },
   data() {
@@ -82,6 +83,12 @@ export default {
       exauto: false,
     };
   },
+  props: {
+    // Modif de masse ou exemplarisation
+    modif: {
+      default: TYPEDEMANDE.DEMANDE_MODIFICATION,
+    },
+  },
   // Récupération des infos utilisateur et du numéro de demande en session
   created() {
     this.user = JSON.parse(sessionStorage.getItem('user'));
@@ -94,7 +101,7 @@ export default {
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
-        url: `${process.env.VUE_APP_ROOT_API}demandes/${this.numDem}?modif=false`,
+        url: `${process.env.VUE_APP_ROOT_API}demandes/${this.numDem}?type=${this.modif}`,
       }).then(
         () => { // L'objet result contient le numero de RCR, qui n'est pas accessible via sessionStorage
           this.exauto = true;

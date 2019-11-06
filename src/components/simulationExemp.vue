@@ -44,12 +44,14 @@
             <v-divider></v-divider>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="primary" text @click="dialog = false, $router.push({ name: 'tabEx' })" aria-label="OK">OK</v-btn>
+              <v-btn color="primary" text @click="dialog = false, $router.push({ name: 'home' })" aria-label="OK">OK</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
         <!-- FIL D'ARIANE -->
-        <stepper id="stepper" current="5"></stepper><!--TODO un autre component stepper avec v-if pour exauto, une fois que l'on connaitra le fil d'ariane-->
+        <stepperModif v-if=this.exauto id="stepperModif" current="5" :numDemande="this.numDem.toString()"></stepperModif>
+        <stepperExemp v-if=!this.exauto id="stepperExemp" current="4" :numDemande="this.numDem.toString()" :typeExemplarisation="typeExemplarisation"></stepperExemp>
+        <br>
         <!-- INFOS GENERALES DE LA DEMANDE -->
         <v-card id="demInfos" class="item-global-margin-bottom">
           <h3 style="padding-top: 15px; padding-left: 15px;" class="headline"><span
@@ -121,15 +123,15 @@
             <v-row>
               <v-col :key="1" cols="12" sm="12" md="5"> <!--Exemplaires existants-->
                 <!--Carte grisée si absence d'exemplaires pour cette notice-->
-                <v-card dark class="pa-1" outlined tile v-if="exemplairesPresentsSurNoticeEnCours">
-                  <span class="headline --text">Exemplaires existants</span>
+                <v-card dark class="pa-1" outlined tile v-if="!exemplairesPresentsSurNoticeEnCours">
+                  <span class="headline --text">Exemplaire(s) existant(s)</span>
                   <div class="notice">
                     <pre>Pas d'exemplaires pour cette notice avec ce RCR</pre>
                   </div>
                 </v-card>
                 <!--Carte activée si présence exemplaires pour cette notice-->
-                <v-card class="pa-1" outlined tile v-if="!exemplairesPresentsSurNoticeEnCours">
-                  <span class="headline --text">Exemplaires existants</span>
+                <v-card class="pa-1" outlined tile v-if="exemplairesPresentsSurNoticeEnCours">
+                  <span class="headline --text">Exemplaire(s) existant(s)</span>
                   <v-container id="scroll-target" style="max-height: 400px" class="overflow-y-auto">
                     <div class="notice">
                       <pre style="text-align: left; padding-top: 1em">
@@ -230,14 +232,17 @@
 import loading from 'vue-full-loading';
 import axios from 'axios';
 import moment from 'moment';
-import stepper from '@/components/utils/stepperModif.vue';
+import stepperModif from '@/components/utils/stepperModif.vue';
+import stepperExemp from '@/components/utils/stepperExemp.vue';
 import supprMixin from '@/mixins/delete';
 import constants from '@/components/utils/const';
+import TYPEDEMANDE from '../enums/typeDemande';
 
 export default {
   components: {
     loading,
-    stepper,
+    stepperModif,
+    stepperExemp,
   },
   // Voilà le mixin en question
   mixins: [supprMixin],
@@ -251,7 +256,7 @@ export default {
           libelle: '',
         },
       },
-      exauto: false,
+      exauto: TYPEDEMANDE.DEMANDE_EXEMPLARISATION,
       /* exauto a true pour modif de masse, false pour exauto */
       alertMessage: 'Erreur.',
       alertType: 'error',
@@ -266,12 +271,13 @@ export default {
       popupDelete: false,
       exemplairesPresentsSurNoticeEnCours: false,
       autorisationExemplairesMultiples: false,
+      typeExemplarisation: '',
     };
   },
   props: {
     // Modif de masse ou exemplarisation
     modif: {
-      default: false,
+      default: TYPEDEMANDE.DEMANDE_EXEMPLARISATION,
     },
   },
   mounted() {
@@ -283,6 +289,8 @@ export default {
     this.getInfosDemande();
     // On compte le nombre de lignes totale sur le fichier
     this.getNumberLines();
+    // On récupère le type d'exemplarisation
+    this.getTypeExemplarisation(this.numDem);
   },
   filters: {
     formatDate(value) {
@@ -293,13 +301,34 @@ export default {
     },
   },
   methods: {
+    // recuperation du type d'exemplarisation prealablement choisi
+    getTypeExemplarisation(numDemande) {
+      axios({
+        headers: { Authorization: this.user.jwt },
+        method: 'GET',
+        url: `${process.env.VUE_APP_ROOT_API}getTypeExemplarisationDemande/${numDemande}`,
+      }).then(
+        (result) => {
+          this.typeExemplarisation = result.data;
+        },
+        (error) => {
+          this.loading = false;
+          this.alert = true;
+          this.alertType = 'error';
+          this.alertMessage = `Impossible de récupérer le type d'exemplarisation pour la demande : ${error.response.data.message}.  <br /> Veuillez réessayer ultérieurement. Si le problème persiste merci de contacter l'assistance.`;
+          if (error.response.status === 401) {
+            this.$emit('logout');
+          }
+        },
+      );
+    },
     // Récupération des infos de la demande
     getInfosDemande() {
       this.loading = true;
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
-        url: `${process.env.VUE_APP_ROOT_API}demandes/${this.numDem}?modif=${this.modif}`,
+        url: `${process.env.VUE_APP_ROOT_API}demandes/${this.numDem}?type=${this.modif}`,
       }).then(
         (result) => {
           this.demande = result.data;
@@ -325,7 +354,7 @@ export default {
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
-        url: `${process.env.VUE_APP_ROOT_API}simulerLigne?modif=${this.modif}&numDemande=${
+        url: `${process.env.VUE_APP_ROOT_API}simulerLigne?type=${this.modif}&numDemande=${
           this.demande.numDemande
         }&numLigne=${this.noticeEnCours}`,
       }).then(
@@ -344,7 +373,8 @@ export default {
             this.noticeApres = result.data[1]; // Exemplaires à créer
           }
 
-          if (result.data[0] === null) {
+          // TODO corriger en back pour avoir un retour vide ou nul
+          if (result.data[0] !== '\r\n') {
             this.exemplairesPresentsSurNoticeEnCours = true;
           }
           this.loading = false;
@@ -401,7 +431,7 @@ export default {
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
-        url: `${process.env.VUE_APP_ROOT_API}getNbLigneFichier/${this.numDem}?modif=${this.modif}`,
+        url: `${process.env.VUE_APP_ROOT_API}getNbLigneFichier/${this.numDem}?type=${this.modif}`,
       }).then(
         (result) => {
           this.numberLines = result.data;
@@ -426,7 +456,7 @@ export default {
         method: 'GET',
         url: `${process.env.VUE_APP_ROOT_API}passerEnAttente?numDemande=${
           this.demande.numDemande
-        }&modif=false`,
+        }&type=${this.modif}`,
       }).then(
         () => {
           this.loading = false;

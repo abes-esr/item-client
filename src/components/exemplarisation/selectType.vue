@@ -3,7 +3,7 @@
     <v-row   justify="center">
       <loading :show="loading" label="Chargement en cours..."></loading>
       <v-col md="7">
-        <stepper class="item-stepper-bottom-margin" current="2" stepperExemp=false></stepper>
+        <stepperexemp class="item-stepper-bottom-margin" current="2" stepperExemp=false :numDemande="this.numDem.toString()"></stepperexemp>
         <v-card>
           <v-app-bar dark color="primary">
             <v-toolbar-title>Choix du type d'exemplarisation</v-toolbar-title>
@@ -50,7 +50,7 @@
             <v-spacer></v-spacer>
             <v-btn color="primary" text @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
             <!-- supprimerDemande(numDem) est contenue dans le mixin delete.js importé plus bas -->
-            <v-btn color="primary" text @click="supprimerDemande(numDem, false)" aria-label="Confirmer">Confirmer</v-btn>
+            <v-btn color="primary" text @click="supprimerDemande(numDem, this.modif)" aria-label="Confirmer">Confirmer</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -61,16 +61,17 @@
 <script>
 import axios from 'axios';
 import loading from 'vue-full-loading';
-import stepper from '@/components/utils/stepperExemp.vue';
+import stepperexemp from '@/components/utils/stepperExemp.vue';
 import supprMixin from '@/mixins/delete';
 import constants from '@/components/utils/const';
+import TYPEDEMANDE from '../../enums/typeDemande';
 
 export default {
   // Import du mixin contenant les méthodes suppression et de précédent
   mixins: [supprMixin],
   components: {
     loading,
-    stepper,
+    stepperexemp,
   },
   data() {
     return {
@@ -90,7 +91,7 @@ export default {
   props: {
     // Modif de masse ou exemplarisation
     modif: {
-      default: false,
+      default: TYPEDEMANDE.DEMANDE_EXEMPLARISATION,
     },
   },
   mounted() {
@@ -137,7 +138,7 @@ export default {
           headers: { Authorization: this.user.jwt },
           method: 'GET',
           url:
-              `${process.env.VUE_APP_ROOT_API}demandes/${sessionStorage.getItem('dem')}?modif=false`,
+              `${process.env.VUE_APP_ROOT_API}demandes/${sessionStorage.getItem('dem')}?type=${this.modif}`,
         }).then(
           (result) => {
             demande = result.data;

@@ -2,24 +2,41 @@
   <v-container class="fill-height" fluid >
     <v-row align="center" justify="center">
       <v-col md="7">
-        <stepper class="item-stepper-bottom-margin" current="3" v-if="modif"></stepper>
-        <stepperexemp class="item-stepper-bottom-margin" current="3" v-if="!modif"></stepperexemp>
-        <!--modif : true, exemp :false-->
-        <upload :modif="modif" :loading="loading" :format=format :precedent="true" :title=titleUpload :text=textUpload v-on:upload="uploadFile" @precedent="precedentDemande(numDem, modif)" @supprimer="supprimerDemande(numDem, modif)" @eventName="updateParent"></upload>
-          <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span>
-        </v-alert>
+        <steppermodif class="item-stepper-bottom-margin" current="4" v-if="modif === 'MODIF'" :numDemande="this.numDem.toString()"></steppermodif>
+        <stepperexemp class="item-stepper-bottom-margin" current="3" v-if="modif === 'EXEMP'" :numDemande="this.numDem.toString()" :typeExemplarisation="typeDemandeChoisi"></stepperexemp>
+        <stepperrecouv class="item-stepper-bottom-margin" current="2" v-if="modif === 'RECOUV'" :numDemande="this.numDem.toString()"></stepperrecouv>
+        <upload :modif="modif" :loading="loading" :format=format :precedent="true" :title=titleUpload :text=textUpload @upload="uploadFile" @precedent="precedentDemande(numDem, modif)" @supprimer="supprimerDemande(numDem, modif)" @eventName="updateParent"></upload>
+          <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span></v-alert>
       </v-col>
     </v-row>
+    <!-- POPUP DE CONFIRMATION QUE LE TRAITEMENT EST LANCE -->
+    <v-dialog v-model="dialogFinished" width="500">
+      <v-card>
+        <v-card-title class="headline" primary-title>Traitement validé</v-card-title>
+        <v-card-text>Votre demande est en cours de traitement, elle sera traitée dès que
+          possible.<br/>Un mail vous sera envoyé une fois le traitement terminé.
+          <br>Vous pouvez retrouver l'ensemble de vos demandes depuis la page "Gérer mes
+          demandes".
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" text @click="turnOffPopup()" aria-label="OK">OK</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
 <script>
 import axios from 'axios';
 import upload from '@/components/utils/upload.vue';
-import stepper from '@/components/utils/stepperModif.vue';
+import steppermodif from '@/components/utils/stepperModif.vue';
 import stepperexemp from '@/components/utils/stepperExemp.vue';
+import stepperrecouv from '@/components/utils/stepperRecouv.vue';
 import supprMixin from '@/mixins/delete';
 import constants from '@/components/utils/const';
+import TYPEDEMANDE from '../enums/typeDemande';
 
 export default {
   name: 'uploadComponent',
@@ -27,8 +44,9 @@ export default {
   mixins: [supprMixin],
   components: {
     upload,
-    stepper,
+    steppermodif,
     stepperexemp,
+    stepperrecouv,
   },
   data() {
     return {
@@ -44,19 +62,46 @@ export default {
       textUpload: 'Cliquez pour charger votre fichier complété (format .txt ou .csv obligatoire)',
       exemplairesMultiplesParent: false,
       codePebParent: '',
+      dialog: false,
+      dialogFinished: false,
+      typeDemandeChoisi: '',
     };
   },
   props: {
     // Modif de masse ou exemplarisation
     modif: {
-      default: true,
+      default: TYPEDEMANDE.DEMANDE_MODIFICATION,
     },
   },
   // On récupère le numéro de demande enregistré en session
-  created() {
+  mounted() {
+    // On récupère les infos utilisateur en session car on a besoin du jwt afin d'appeler les WS REST
+    this.user = JSON.parse(sessionStorage.getItem('user'));
     this.numDem = sessionStorage.getItem('dem');
+    this.getTypeExemplarisation(this.numDem);
   },
   methods: {
+    // recuperation du type d'exemplarisation prealablement choisi
+    getTypeExemplarisation(numDemande) {
+      axios({
+        headers: { Authorization: this.user.jwt },
+        method: 'GET',
+        url: `${process.env.VUE_APP_ROOT_API}getTypeExemplarisationDemande/${numDemande}`,
+      }).then(
+        (result) => {
+          this.typeDemandeChoisi = result.data;
+        },
+        (error) => {
+          this.loading = false;
+          this.alert = true;
+          this.alertType = 'error';
+          this.alertMessage = `Impossible de récupérer le type d'exemplarisation pour la demande : ${error.response.data.message}.  <br /> Veuillez réessayer ultérieurement. Si le problème persiste merci de contacter l'assistance.`;
+          if (error.response.status === 401) {
+            this.$emit('logout');
+          }
+        },
+      );
+    },
     // Upload du fichier enrichi
     uploadFile(file) {
       this.loading = true;
@@ -67,7 +112,7 @@ export default {
       this.user = JSON.parse(sessionStorage.getItem('user'));
       if (this.user !== null && this.user.jwt !== null) {
         axios
-          .post(`${process.env.VUE_APP_ROOT_API}uploadDemande?modif=${this.modif}&exempMulti=${this.exemplairesMultiplesParent}&codePeb=${this.codePebParent}`, formData, {
+          .post(`${process.env.VUE_APP_ROOT_API}uploadDemande?type=${this.modif}&exempMulti=${this.exemplairesMultiplesParent}&codePeb=${this.codePebParent}`, formData, {
             headers: {
               Authorization: this.user.jwt,
               'Content-Type': 'multipart/form-data',
@@ -79,10 +124,11 @@ export default {
               this.alertType = 'success';
               this.alert = true;
               this.loading = false;
-              if (this.modif) {
-                this.$router.replace({ name: 'simulation' });
-              } else {
-                this.$router.replace({ name: 'simulationTest' });
+              switch (this.modif) {
+                case 'MODIF': this.$router.replace({ name: 'simulation' }); break;
+                case 'RECOUV': this.dialogFinished = true; break;
+                case 'EXEMP': this.$router.replace({ name: 'home' }); break;
+                default: this.$router.replace({ name: 'home' });
               }
             },
             (error) => {
@@ -106,6 +152,10 @@ export default {
         this.alert = true;
         this.loading = false;
       }
+    },
+    turnOffPopup() {
+      this.dialogFinished = false;
+      this.$router.replace({ name: 'home' });
     },
     updateParent(variable, variable2) {
       this.exemplairesMultiplesParent = variable;

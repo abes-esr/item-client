@@ -1,5 +1,5 @@
 <template>
-  <v-app :dark="isDark" id="inspire">
+  <v-app id="inspire">
     <!--BARRE DU HAUT DE L'APP-->
     <v-app-bar color="primary" max-height="4.2em" dark>
       <div class="item-margin-left-app-bar"></div> <!--Marge à gauche des icones de la barre de navigation-->
@@ -28,7 +28,7 @@
       <div class="item-margin-right-app-bar"></div> <!--Marge à droite des icones de la barre de navigation-->
     </v-app-bar>
     <!--BARRE LATERALE DE MENU-->
-    <v-navigation-drawer app v-if="authenticated" v-model="drawer" temporary>
+    <v-navigation-drawer width="18em" app v-if="authenticated" v-model="drawer" temporary>
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="title">
@@ -60,6 +60,14 @@
             <v-list-item-title>Modifier mon adresse mail</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+        <v-list-item v-on:click="setTheme()">
+          <v-list-item-action>
+            <v-icon>invert_colors</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Changer de thème</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
 
       <v-divider></v-divider>
@@ -70,12 +78,28 @@
             Recouvrement
           </v-list-item-title>
         </v-list-item>
-        <v-list-item v-on:click="$router.push({ name: 'tab' })">
+        <v-list-item v-on:click="$router.push({ name: 'rcrRecouv' })">
           <v-list-item-action>
             <v-icon>pie_chart</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>Calculer mon taux <br>de recouvrement</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item v-on:click="$router.push({ name: 'tabRecouv' })">
+          <v-list-item-action>
+            <v-icon>list</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Gérer mes demandes de taux<br>de recouvrement</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item v-on:click="$router.push({ name: 'archiveRecouv' })">
+          <v-list-item-action>
+            <v-icon>archive</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Gérer mes demandes de taux<br>de recouvrement archivées</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -101,7 +125,7 @@
             <v-icon>list</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Gérer mes demandes<br> d'exemplarisation</v-list-item-title>
+            <v-list-item-title>Gérer mes créations</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
         <v-list-item v-on:click="$router.push({ name: 'archiveEx' })">
@@ -109,7 +133,7 @@
             <v-icon>archive</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Mes demandes <br>d'exemplarisation archivées</v-list-item-title>
+            <v-list-item-title>Gérer mes créations<br>archivées</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -135,7 +159,7 @@
             <v-icon>list</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Gérer mes demandes<br> de modification</v-list-item-title>
+            <v-list-item-title>Gérer mes modifications</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
         <v-list-item v-on:click="$router.push({ name: 'archive' })">
@@ -143,7 +167,7 @@
             <v-icon>archive</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Mes demandes <br>de modification archivées</v-list-item-title>
+            <v-list-item-title>Gérer mes modifications<br>archivées</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -249,6 +273,13 @@ export default {
             this.isAdmin = true;
           }
         }
+      }
+    },
+    setTheme() {
+      if (this.$vuetify.theme.dark === false) {
+        this.$vuetify.theme.dark = true;
+      } else if (this.$vuetify.theme.dark === true) {
+        this.$vuetify.theme.dark = false;
       }
     },
   },

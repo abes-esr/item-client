@@ -3,7 +3,7 @@
     <v-row   justify="center">
       <loading :show="loading" label="Chargement en cours..."></loading>
       <v-col cols="8">
-        <stepper id="stepper" current="3"></stepper>
+        <steppermodif id="stepper" current="3" :numDemande="this.numDem.toString()"></steppermodif>
       </v-col>
       <v-col md="5" id="flexBox">
         <v-card class="elevation-12">
@@ -40,7 +40,7 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <!-- precedentDemande(numDem) est contenue dans le mixin delete.js importé plus bas -->
-            <v-btn color="info" v-on:click="precedentDemande(numDem, true)">Précédent</v-btn>
+            <v-btn color="info" v-on:click="precedentDemande(numDem, modifData)">Précédent</v-btn>
           </v-card-actions>
         </v-card>
         <br />
@@ -58,7 +58,7 @@
             <v-spacer></v-spacer>
             <v-btn color="primary" text @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
             <!-- supprimerDemande(numDem) est contenue dans le mixin delete.js importé plus bas -->
-            <v-btn color="primary" text @click="supprimerDemande(numDem, true)" aria-label="Confirmer">Confirmer</v-btn>
+            <v-btn color="primary" text @click="supprimerDemande(numDem, this.modif)" aria-label="Confirmer">Confirmer</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -70,16 +70,17 @@
 import axios from 'axios';
 import loading from 'vue-full-loading';
 import { showAt } from 'vue-breakpoints';
-import stepper from '@/components/utils/stepperModif.vue';
+import steppermodif from '@/components/utils/stepperModif.vue';
 import supprMixin from '@/mixins/delete';
 import constants from '@/components/utils/const';
+import TYPEDEMANDE from '../../enums/typeDemande';
 
 export default {
   // Import du mixin contenant les méthodes suppression et de précédent
   mixins: [supprMixin],
   components: {
     loading,
-    stepper,
+    steppermodif,
     showAt,
   },
   data() {
@@ -95,6 +96,7 @@ export default {
       loading: false,
       numDem: 0,
       popupDelete: false,
+      modifData: TYPEDEMANDE.DEMANDE_MODIFICATION,
     };
   },
   mounted() {
@@ -102,6 +104,7 @@ export default {
     // Récupération du numéro de demande courant depuis sessionStorage
     // Il est enregistré par rcr.vue lors de la création, ou depuis le tableau lorsque l'on clique sur une demande
     this.numDem = sessionStorage.getItem('dem');
+    this.modif = TYPEDEMANDE.DEMANDE_MODIFICATION;
   },
   methods: {
     // Récupère la liste des traitements afin de les afficher
