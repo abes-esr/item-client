@@ -6,8 +6,8 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" aria-label="menu latéral" v-if="authenticated">
         <v-icon large>menu</v-icon>
       </v-app-bar-nav-icon>
-      <img alt="icone assistance" height="41px" href="https://stp.abes.fr/node/3?origine=sudocpro" src="@/assets/item_logo.svg" target="_blank" width="41px" style="margin-left: 1em">
-      <v-toolbar-title class="item-margin-left-icon">Item</v-toolbar-title>
+      <img alt="icone assistance" height="41px" v-on:click="$router.push({ path: '/' })" src="@/assets/item_logo.svg" target="_blank" width="41px" style="margin-left: 1em">
+      <v-toolbar-title class="item-margin-left-icon" v-on:click="$router.push({ path: '/' })">Item</v-toolbar-title>
 
       <!--Icones de la barre de menu à droite-->
       <div class="flex-grow-1"></div>

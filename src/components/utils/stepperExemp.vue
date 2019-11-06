@@ -7,7 +7,7 @@
       <v-divider></v-divider>
       <v-stepper-step step="2" :complete="current > 2">Choix du type<small>{{this.typeExemplarisation}}</small></v-stepper-step>
       <v-divider></v-divider>
-      <v-stepper-step step="3" :complete="current > 3">Téléchargement <small>du fichier</small></v-stepper-step>
+      <v-stepper-step step="3" :complete="current > 3">Envoi<small>du fichier</small></v-stepper-step>
       <v-divider></v-divider>
       <v-stepper-step step="4" :complete="current > 4">Simulation<small>avant envoi</small></v-stepper-step>
     </v-stepper-header>
