@@ -650,7 +650,7 @@ export default {
                 }
               }
               if (this.modif === 'RECOUV') {
-                if (result.data[key].indexRecherche === null) {
+                if ((result.data[key].indexRecherche === null) || (result.data[key].indexRecherche === undefined)) {
                   tempIndexRecherche = '';
                 } else {
                   tempIndexRecherche = result.data[key].indexRecherche.libelle;
