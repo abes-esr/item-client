@@ -6,23 +6,24 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" aria-label="menu latéral" v-if="authenticated">
         <v-icon large>menu</v-icon>
       </v-app-bar-nav-icon>
+      <img alt="icone assistance" height="41px" href="https://stp.abes.fr/node/3?origine=sudocpro" src="@/assets/item_logo.svg" target="_blank" width="41px" style="margin-left: 1em">
       <v-toolbar-title class="item-margin-left-icon">Item</v-toolbar-title>
 
       <!--Icones de la barre de menu à droite-->
       <div class="flex-grow-1"></div>
       <div class="item-margin-around-single-icon">
         <v-btn class="mx-2 item-margin-around-single-icon" fab dark small color="primary">
-            <span><a href="https://stp.abes.fr/node/3?origine=sudocpro" title="Assistance" rel="noopener" target="_blank"><img alt="icone assistance" height="41px" href="https://stp.abes.fr/node/3?origine=sudocpro" src="@/assets/assistance.png" target="_blank" width="41px"></a></span>
+            <span><a href="https://stp.abes.fr/node/3?origine=sudocpro" title="Assistance" rel="noopener" target="_blank"><img alt="icone assistance" height="41px" href="https://stp.abes.fr/node/3?origine=sudocpro" src="@/assets/item_assistance.svg" target="_blank" width="41px"></a></span>
         </v-btn>
       </div>
       <div class="item-margin-around-single-icon">
         <v-btn class="mx-2 item-margin-around-single-icon" fab dark small color="primary">
-            <span><a href="http://documentation.abes.fr/aideitem/index.html" title="Documentation" rel="noopener" target="_blank"><img alt="icone documentation" height="41px" href="http://documentation.abes.fr/aideitem/index.html" src="@/assets/documentation.png" target="_blank" width="41px"></a></span>
+            <span><a href="http://documentation.abes.fr/aideitem/index.html" title="Documentation" rel="noopener" target="_blank"><img alt="icone documentation" height="41px" href="http://documentation.abes.fr/aideitem/index.html" src="@/assets/item_documentation.svg" target="_blank" width="41px"></a></span>
         </v-btn>
       </div>
       <div class="item-margin-around-single-icon">
       <v-btn class="mx-2 item-margin-around-single-icon" fab dark small color="primary" v-if="authenticated">
-          <span @click="logout()" title="Déconnexion"><a><img alt="icone déconnexion" height="41px" src="@/assets/deconnexion.png" width="41px"></a></span>
+          <span @click="logout()" title="Déconnexion"><a><img alt="icone déconnexion" height="41px" src="@/assets/item_deconnexion.svg" width="41px"></a></span>
       </v-btn>
       </div>
       <div class="item-margin-right-app-bar"></div> <!--Marge à droite des icones de la barre de navigation-->
