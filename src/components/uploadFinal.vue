@@ -127,7 +127,7 @@ export default {
               switch (this.modif) {
                 case 'MODIF': this.$router.replace({ name: 'simulation' }); break;
                 case 'RECOUV': this.dialogFinished = true; break;
-                case 'EXEMP': this.$router.replace({ name: 'home' }); break;
+                case 'EXEMP': this.$router.replace({ name: 'simulationTest' }); break;
                 default: this.$router.replace({ name: 'home' });
               }
             },
