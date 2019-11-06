@@ -58,7 +58,7 @@ export default {
       user: {},
       format: ['csv', 'txt'],
       numDem: 0,
-      titleUpload: 'Envoyer le fichier complété de la zone d\'exemplaire à traiter',
+      titleUpload: 'Télécharger le fichier complété des données d\'exemplaires',
       textUpload: 'Cliquez pour charger votre fichier complété (format .txt ou .csv obligatoire)',
       exemplairesMultiplesParent: false,
       codePebParent: '',

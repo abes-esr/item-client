@@ -27,11 +27,11 @@
                   </v-btn>
                 </template>
                 <v-card>
-                  <v-card-title class="headline">Exemplaires multiples sur notice</v-card-title>
-                  <v-card-text>Si des exemplaires sont déjà présents sur les notices et que vous souhaitez en créer de nouveaux, cochez la case.</v-card-text>
+                  <v-card-title class="headline">Précisions</v-card-title>
+                  <v-card-text>Si des exemplaires sont déjà présents sur les notices et que vous souhaitez en créer de nouveaux, cochez cette case.</v-card-text>
                   <v-card-actions>
                     <div class="flex-grow-1"></div>
-                    <v-btn text @click="popupMultiplesCopies = false">Compris</v-btn>
+                    <v-btn text @click="popupMultiplesCopies = false">Ok</v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
