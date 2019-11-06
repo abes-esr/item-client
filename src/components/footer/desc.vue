@@ -6,9 +6,9 @@
             <v-row>
                 <v-col cols="12" sm="12" md="6" lg="6">
                     <v-card-text class="white--text pt-0 text-left">
-                        Cette application est à destination des coordinateurs du réseau Sudoc.
-                        Elle permet la modification en masse des données d'exemplaire d'un RCR pour un ILN donné.
-                        Ces traitements sont automatiquement répercutés dans les fichiers de transfert régulier.
+                      Cette application est à destination des coordinateurs du réseau Sudoc.
+                      Elle permet la création et la modification en masse des données d'exemplaires d'un RCR.
+                      Ces traitements sont automatiquement répercutés dans les fichiers de transferts réguliers.
                     </v-card-text>
                 </v-col>
               <hide-at :breakpoints="{small: 620, medium: 1500, large: 1600}" breakpoint="mediumAndBelow">
