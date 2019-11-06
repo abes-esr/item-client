@@ -94,14 +94,29 @@ export default {
         (result) => {
           this.json = result.data.sudoc.query.result;
           let item;
-          for (const key in this.json) {
+          if (Array.isArray(this.json)) {
+            for (const key in this.json) {
+              item = {
+                rcr: this.json[key].library.rcr,
+                name:
+                    `${this.json[key].library.rcr
+                    } - ${
+                      this.json[key].library.shortname}`,
+                shortname: this.json[key].library.shortname,
+              };
+              this.listRcr.push(item);
+            }
+          } else {
+            // Cette partie du code permet de contourner un bug du WS iln2rcr
+            // S'il n'y a qu'un seul résultat il ne revoi pas un tableau d'une seule cas, mais le résultat brut
+            // Lorsque ce sera ocrrigé, il suffira de supprimer ce if/else
             item = {
-              rcr: this.json[key].library.rcr,
+              rcr: this.json.library.rcr,
               name:
-                  `${this.json[key].library.rcr
-                  } - ${
-                    this.json[key].library.shortname}`,
-              shortname: this.json[key].library.shortname,
+                    `${this.json.library.rcr
+                    } - ${
+                      this.json.library.shortname}`,
+              shortname: this.json.library.shortname,
             };
             this.listRcr.push(item);
           }

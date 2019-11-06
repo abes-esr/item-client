@@ -9,9 +9,9 @@ module.exports = {
   },
   productionSourceMap: false,
   // eslint-disable-next-line no-nested-ternary
-  outputDir: process.env.NODE_ENV === 'production'
+  outputDir: process.env.VUE_OUTPUT === 'production'
     ? './dist-prod/'
-    : process.env.NODE_ENV === 'test'
+    : process.env.VUE_OUTPUT === 'test'
       ? './dist-test/'
       : './dist-dev/',
 };
