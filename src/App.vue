@@ -61,13 +61,9 @@
             <v-list-item-title>Modifier mon adresse mail</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item v-on:click="setTheme()">
-          <v-list-item-action>
-            <v-icon>invert_colors</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>Changer de thème</v-list-item-title>
-          </v-list-item-content>
+        <v-list-item>
+          <v-switch v-model="darkTheme" style="margin-top: 8px" inset v-on:click="setTheme()"></v-switch>
+          <v-list-item-title style="padding-bottom: 1.2em">Changer de thème</v-list-item-title>
         </v-list-item>
       </v-list>
 
@@ -188,6 +184,7 @@
 </template>
 
 <script>
+import Cookies from 'js-cookie';
 import footerAbes from '@/components/footer/footer.vue';
 import footerDesc from '@/components/footer/desc.vue';
 import logout from '@/components/utils/logoutPopup.vue';
@@ -201,6 +198,7 @@ export default {
   },
   data() {
     return {
+      darkTheme: false,
       authenticated: false,
       drawer: false,
       user: {},
@@ -223,6 +221,8 @@ export default {
     },
   },
   mounted() {
+    // Récuperation du bon theme à partir du cookie placé en mémoire
+    this.getThemeFromCookies();
     this.getUserData();
 
     // Bannière pour prévenir de l'utilisation de cookies
@@ -279,8 +279,19 @@ export default {
     setTheme() {
       if (this.$vuetify.theme.dark === false) {
         this.$vuetify.theme.dark = true;
+        Cookies.set('theme', 'dark');
       } else if (this.$vuetify.theme.dark === true) {
         this.$vuetify.theme.dark = false;
+        Cookies.set('theme', 'light');
+      }
+    },
+    getThemeFromCookies() {
+      if (Cookies.get('theme') === 'dark') {
+        this.$vuetify.theme.dark = true;
+        this.darkTheme = true;
+      } else if (Cookies.get('theme') === 'light') {
+        this.$vuetify.theme.dark = false;
+        this.darkTheme = false;
       }
     },
   },
