@@ -61,12 +61,9 @@
             <v-list-item-title>Modifier mon adresse mail</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item v-on:click="setTheme()">
-          <v-list-item-action>
-            <v-icon>invert_colors</v-icon>
-          </v-list-item-action>
+        <v-list-item @click="saveTheme();">
           <v-list-item-content>
-            <v-list-item-title>Changer de thème</v-list-item-title>
+            <v-switch v-model="$vuetify.theme.dark" primary label="Thème sombre" />
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -176,7 +173,7 @@
     <!--COMPOSANTS IMBRIQUES CREES-->
     <v-content>
       <transition name="fade">
-        <router-view @authenticated="setAuthenticated" @logout="logoutExpired" :darkMode="isDark"/>
+        <router-view @authenticated="setAuthenticated" @logout="logoutExpired"/>
       </transition>
     </v-content>
     <!-- FOOTER -->
@@ -204,25 +201,18 @@ export default {
       authenticated: false,
       drawer: false,
       user: {},
-      isDark: false,
       isAdmin: false,
       dialog: false,
       wrapped: '',
     };
   },
-  computed: {
-    styling() {
-      if (this.isDark) {
-        return {
-          color: 'white',
-        };
-      }
-      return {
-        color: 'black',
-      };
-    },
-  },
   mounted() {
+    // Récupération du thème sombre/clair en localStorage
+    // le 'true' est une String car le localStorage gère mal les booléens
+    if (localStorage.dark === 'true') {
+      this.$vuetify.theme.dark = true;
+    }
+
     this.getUserData();
 
     // Bannière pour prévenir de l'utilisation de cookies
@@ -276,12 +266,8 @@ export default {
         }
       }
     },
-    setTheme() {
-      if (this.$vuetify.theme.dark === false) {
-        this.$vuetify.theme.dark = true;
-      } else if (this.$vuetify.theme.dark === true) {
-        this.$vuetify.theme.dark = false;
-      }
+    saveTheme() {
+      localStorage.dark = this.$vuetify.theme.dark;
     },
   },
 };
