@@ -6,8 +6,8 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" aria-label="menu latéral" v-if="authenticated">
         <v-icon large>menu</v-icon>
       </v-app-bar-nav-icon>
-      <img alt="icone assistance" height="41px" href="https://stp.abes.fr/node/3?origine=sudocpro" src="@/assets/item_logo.svg" target="_blank" width="41px" style="margin-left: 1em">
-      <v-toolbar-title class="item-margin-left-icon">Item</v-toolbar-title>
+      <img alt="icone assistance" height="41px" v-on:click="$router.push({ path: '/' })" src="@/assets/item_logo.svg" target="_blank" width="41px" style="margin-left: 1em">
+      <v-toolbar-title class="item-margin-left-icon" v-on:click="$router.push({ path: '/' })">Item</v-toolbar-title>
 
       <!--Icones de la barre de menu à droite-->
       <div class="flex-grow-1"></div>
@@ -61,10 +61,9 @@
             <v-list-item-title>Modifier mon adresse mail</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item @click="saveTheme();">
-          <v-list-item-content>
-            <v-switch v-model="$vuetify.theme.dark" primary label="Thème sombre" />
-          </v-list-item-content>
+        <v-list-item v-on:click="saveTheme()">
+          <v-switch v-model="$vuetify.theme.dark" style="margin-top: 8px" inset ></v-switch>
+          <v-list-item-title style="padding-bottom: 1.2em">Changer de thème</v-list-item-title>
         </v-list-item>
       </v-list>
 

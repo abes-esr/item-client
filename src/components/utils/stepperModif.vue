@@ -9,7 +9,7 @@
       <v-divider></v-divider>
       <v-stepper-step step="3" :complete="current > 3">Choix traitement<small>à effectuer</small></v-stepper-step>
       <v-divider></v-divider>
-      <v-stepper-step step="4" :complete="current > 4">Envoi du fichier <small>complété</small></v-stepper-step>
+      <v-stepper-step step="4" :complete="current > 4">Envoi<small>du fichier</small></v-stepper-step>
       <v-divider></v-divider>
       <v-stepper-step step="5" :complete="current > 5">Simulation<small>avant envoi</small></v-stepper-step>
     </v-stepper-header>
