@@ -45,7 +45,7 @@
             </v-row>
           </v-container>
           <!--Ligne d'entête du tableau d'EXEMPLARISATION-->
-          <v-data-table v-if="modif === 'EXEMP'" :headers="headers" :items="computedItems('guess')" :items-per-page="10" class="elevation-1" item-key="num" loading-text="chargement.." no-data-text="Aucune demande trouvée" no-results-text="Aucun resultat trouvé" :headers-length="3" :footer-props="{showFirstLastPage: true, itemsPerPageOptions:[10,15,20,-1], itemsPerPageAllText:'Toutes', itemsPerPageText:'Lignes par page'}">
+          <v-data-table :sort-by.sync="sortBy" :sort-desc.sync="descending" v-if="modif === 'EXEMP'" :headers="headers" :items="computedItems('guess')" :items-per-page="10" class="elevation-1" item-key="num" loading-text="chargement.." no-data-text="Aucune demande trouvée" no-results-text="Aucun resultat trouvé" :headers-length="3" :footer-props="{showFirstLastPage: true, itemsPerPageOptions:[10,15,20,-1], itemsPerPageAllText:'Toutes', itemsPerPageText:'Lignes par page'}">
             <!--Tableau d'exemplarisation-->
             <template v-slot:body="{ items }">
               <!--Ligne avec les champs de recherche : EXEMPLARISATION-->
@@ -110,7 +110,7 @@
             </template>
           </v-data-table>
           <!--Ligne d'entête du tableau de MODIFICATION-->
-          <v-data-table v-if="modif === 'MODIF'" :headers="headers" :items="computedItems('guess')" :items-per-page="10" class="elevation-1" item-key="num" loading-text="chargement.." no-data-text="Aucune demande trouvée" no-results-text="Aucun resultat trouvé" :headers-length="3" :footer-props="{showFirstLastPage: true, itemsPerPageOptions:[10,15,20,-1], itemsPerPageAllText:'Toutes', itemsPerPageText:'Lignes par page'}">
+          <v-data-table :sort-by.sync="sortBy" :sort-desc.sync="descending" v-if="modif === 'MODIF'" :headers="headers" :items="computedItems('guess')" :items-per-page="10" class="elevation-1" item-key="num" loading-text="chargement.." no-data-text="Aucune demande trouvée" no-results-text="Aucun resultat trouvé" :headers-length="3" :footer-props="{showFirstLastPage: true, itemsPerPageOptions:[10,15,20,-1], itemsPerPageAllText:'Toutes', itemsPerPageText:'Lignes par page'}">
             <!--Tableau de modification-->
             <template v-slot:body="{ items }">
               <!--Ligne avec les champs de recherche : MODIFICATION-->
@@ -173,7 +173,7 @@
             </template>
           </v-data-table>
           <!--Ligne d'entête du tableau de RECOUVREMENT-->
-          <v-data-table v-if="modif === 'RECOUV'" :headers="headers" :items="computedItems('guess')" :items-per-page="10" class="elevation-1" item-key="num" loading-text="chargement.." no-data-text="Aucune demande trouvée" no-results-text="Aucun resultat trouvé" :headers-length="3" :footer-props="{showFirstLastPage: true, itemsPerPageOptions:[10,15,20,-1], itemsPerPageAllText:'Toutes', itemsPerPageText:'Lignes par page'}">
+          <v-data-table :sort-by.sync="sortBy" :sort-desc.sync="descending" v-if="modif === 'RECOUV'" :headers="headers" :items="computedItems('guess')" :items-per-page="10" class="elevation-1" item-key="num" loading-text="chargement.." no-data-text="Aucune demande trouvée" no-results-text="Aucun resultat trouvé" :headers-length="3" :footer-props="{showFirstLastPage: true, itemsPerPageOptions:[10,15,20,-1], itemsPerPageAllText:'Toutes', itemsPerPageText:'Lignes par page'}">
           <!--Tableau de RECOUVREMENT-->
             <template v-slot:body="{ items }">
             <!--Ligne avec les champs de recherche : RECOUVREMENT-->
@@ -299,6 +299,8 @@ export default {
   name: 'tableauComponent',
   data() {
     return {
+      sortBy: 'dateModification',
+      descending: true,
       pagination: {
         sortBy: 'name',
       },
