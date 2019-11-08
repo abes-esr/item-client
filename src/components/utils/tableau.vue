@@ -352,7 +352,6 @@ export default {
     };
   },
   props: {
-    darkMode: Boolean,
     /** Tableau d'archive ou non ?
              * Si oui, on affiche uniquement les demandes archivées et désactive certaines fonctions
              * Si non, on affiche le tableau de gestion classique

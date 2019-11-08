@@ -1,5 +1,5 @@
 <template>
-  <tableau :archive=false :darkMode="darkMode" :modif=this.modif></tableau>
+  <tableau :archive=false :modif=this.modif></tableau>
 </template>
 
 <script>
@@ -9,9 +9,6 @@ import tableau from '@/components/utils/tableau.vue';
 export default {
   name: 'gererTableauExemp',
   props: {
-    darkMode: {
-      default: false,
-    },
     modif: {
       default: TYPEDEMANDE.DEMANDE_EXEMPLARISATION,
     },
