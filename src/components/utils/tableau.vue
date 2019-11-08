@@ -289,7 +289,6 @@
 </template>
 
 <script>
-import Cookies from 'js-cookie';
 import axios from 'axios';
 import moment from 'moment';
 import constants from '@/components/utils/const';
@@ -942,9 +941,9 @@ export default {
       this.commentaireMaj = comment;
     },
     getCommentColor() {
-      if (Cookies.get('theme') === 'dark') {
+      if (this.$vuetify.theme.dark === true) {
         this.commentColor = 'yellow';
-      } else if (Cookies.get('theme') === 'light') {
+      } else {
         this.commentColor = 'secondary';
       }
     },
