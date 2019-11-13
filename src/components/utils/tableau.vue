@@ -19,7 +19,7 @@
               </v-col>
               <!--Zone de case à cocher pour affichage restrictif si administrateur uniquement en modif et admin-->
               <v-col cols="12" sm="12" md="8">
-                <div v-if="user.role === 'ADMIN'" class="item-flexbox-for-checkbox">
+                <div v-if="user.role === 'ADMIN' && !archive" class="item-flexbox-for-checkbox">
                   <div class="item-margin-right-app-bar">
                     <v-checkbox value="restrictDisplay" id="restrictDisplay" @click.native="switchRestrictionAffichage()" label="Afficher uniquement les demandes terminées / erreur pour les autres utilisateurs"></v-checkbox>
                   </div>

@@ -149,8 +149,9 @@ export default {
     // On récupère les infos utilisateur en session car on a besoin du jwt afin d'appeler les WS REST
     this.user = JSON.parse(sessionStorage.getItem('user'));
     // on récupère la liste des codes PEB
-    this.getCodesPeb();
-    if (this.modif === TYPEDEMANDE.DEMANDE_RECOUVREMENT) {
+    if (this.modif === TYPEDEMANDE.DEMANDE_EXEMPLARISATION) {
+      this.getCodesPeb();
+    } else if (this.modif === TYPEDEMANDE.DEMANDE_RECOUVREMENT) {
       this.displayPreviousButton = false;
     }
   },
