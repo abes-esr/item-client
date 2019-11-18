@@ -119,6 +119,11 @@
                   <span class="headline mb-0" id="numLigne">Ligne de votre fichier : {{ noticeEnCours + 1 }} sur {{ numberLines }}</span>
                 </v-card>
               </v-col>
+              <v-col :key="2" cols="12" sm="5"> <!--Ligne du fichier-->
+                <v-card class="pa-1" elevation="0">
+                  <span class="headline mb-0">Exemplaire(s) existant(s) sous PPN n° {{ this.numeroPPNNotice }}</span>
+                </v-card>
+              </v-col>
             </v-row>
             <v-row>
               <v-col :key="1" cols="12" sm="12" md="5"> <!--Exemplaires existants-->
@@ -248,6 +253,7 @@ export default {
   mixins: [supprMixin],
   data() {
     return {
+      numeroPPNNotice: 0,
       noticeEnCours: 0,
       numberLines: 0,
       loading: false,
@@ -359,22 +365,24 @@ export default {
         }&numLigne=${this.noticeEnCours}`,
       }).then(
         (result) => {
-          if (result.data[0] === '') {
+          this.numeroPPNNotice = result.data[0];
+          console.log(result.data[0]);
+          if (result.data[1] === '') {
             this.noticeAvant = 'Il n\'y a pas d\'exemplaires '
                 + 'déjà existants pour cette notice sur ce RCR.';
           } else {
-            this.noticeAvant = result.data[0]; // Exemplaires existants
+            this.noticeAvant = result.data[1]; // Exemplaires existants
           }
-          if (result.data[1] === '') {
+          if (result.data[2] === '') {
             this.noticeApres = 'Vous n\'avez pas autorisé la création d\'exemplaires en cas '
                 + 'd\'exemplaires déja présents sur cette notice pour ce RCR, '
                 + 'lors de l\'Etape précédente de cette Demande.';
           } else {
-            this.noticeApres = result.data[1]; // Exemplaires à créer
+            this.noticeApres = result.data[2]; // Exemplaires à créer
           }
 
           // TODO corriger en back pour avoir un retour vide ou nul
-          if (result.data[0] !== '\r\n') {
+          if (result.data[1] !== '\r\n') {
             this.exemplairesPresentsSurNoticeEnCours = true;
           }
           this.loading = false;
