@@ -211,7 +211,7 @@
               </v-col>
               <v-col v-else :key="3" cols="12" sm="12" md="5"> <!--Exemplaire à créer impossibles si exemplaires deja présents sur notice pour 1 rcr donné-->
                 <v-card class="pa-1" outlined tile>
-                  <span class="headline --text">Exemplaires à créer</span>
+                  <span class="headline --text">Exemplaire à créer</span>
                   <div class="notice">
                     <br>
                     <p>Vous n'avez pas autorisé la création d'exemplaires multiples en
