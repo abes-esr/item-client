@@ -197,7 +197,7 @@
                   <div>Dernière <br>notice</div>
                 </v-card>
               </v-col>
-              <v-col v-if="autorisationExemplairesMultiples" :key="3" cols="12" sm="12" md="5"> <!--Exemplaire à créer-->
+              <v-col :key="3" cols="12" sm="12" md="5"> <!--Exemplaire à créer-->
                 <v-card class="pa-1" outlined tile>
                   <span class="headline --text">Exemplaire à créer</span>
                   <div class="notice">
@@ -205,16 +205,6 @@
                     <pre style="text-align: left; padding-top: 1em">
 {{ noticeApres }}
                     </pre>
-                  </div>
-                </v-card>
-              </v-col>
-              <v-col v-else :key="3" cols="12" sm="12" md="5"> <!--Exemplaire à créer impossibles si exemplaires deja présents sur notice pour 1 rcr donné-->
-                <v-card class="pa-1" outlined tile>
-                  <span class="headline --text">Exemplaire à créer</span>
-                  <div class="notice">
-                    <br>
-                    <p>Vous n'avez pas autorisé la création d'exemplaires multiples en
-                      cas d'exemplaires déjà présents sur des notices pour ce rcr, à l'écran précédent.</p>
                   </div>
                 </v-card>
               </v-col>
@@ -353,7 +343,6 @@ export default {
     getSimulation() {
       this.alert = false;
       this.loading = true;
-
       axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
@@ -375,6 +364,7 @@ export default {
                 + 'lors de l\'Etape précédente de cette Demande.';
           } else {
             this.noticeApres = result.data[2]; // Exemplaires à créer
+            console.log(this.noticeApres);
           }
 
           // TODO corriger en back pour avoir un retour vide ou nul
