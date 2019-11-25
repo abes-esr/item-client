@@ -29,6 +29,7 @@
                 placeholder="Mot de passe"
                 :rules="[rules.required]"
                 v-on:keyup.enter="login"
+                autocomplete="on"
               />
             </v-form>
           </v-card-text>

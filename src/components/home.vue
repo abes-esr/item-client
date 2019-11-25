@@ -9,7 +9,7 @@
 
     </v-col>
     <v-col cols="12" sm="12" md="12" lg="6">
-      <menu-cards :cardHeight=9 iconType="sort" routerLink="tabRecouv" titleName='Gérer mes demandes de <span style="white-space: nowrap;"> taux de recouvrement</span>' class="item-horizontal-align"></menu-cards>
+      <menu-cards :cardHeight=9 iconType="sort" routerLink="tabRecouv" titleName='Gérer mes <span style="white-space: nowrap;"> taux de recouvrement</span>' class="item-horizontal-align"></menu-cards>
       <menu-cards :cardHeight=9 iconType="sort" routerLink="tabExemp" titleName='Gérer mes <span style="white-space: nowrap;">créations</span>' class="item-horizontal-align"></menu-cards>
       <menu-cards :cardHeight=9 iconType="sort" routerLink="tabModif" titleName='Gérer mes <span style="white-space: nowrap;">modifications</span>' class="item-horizontal-align"></menu-cards>
     </v-col>

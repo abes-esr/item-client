@@ -118,23 +118,16 @@
                   <span class="headline mb-0" id="numLigne">Ligne de votre fichier : {{ noticeEnCours + 1 }} sur {{ numberLines }}</span>
                 </v-card>
               </v-col>
-              <v-col :key="3" cols="12" sm="5"> <!--Ligne du fichier-->
+              <v-col :key="3" cols="12" sm="12"> <!--Ligne du fichier-->
                 <v-card class="pa-1" elevation="0">
-                  <span class="headline mb-0">Exemplaire(s) existant(s) sous PPN n° {{ this.numeroPPNNotice }}</span>
+                  <span class="headline mb-0">PPN n° {{ this.numeroPPNNotice }}</span>
                 </v-card>
               </v-col>
             </v-row>
             <v-row>
               <v-col :key="1" cols="12" sm="12" md="5"> <!--Exemplaires existants-->
-                <!--Carte grisée si absence d'exemplaires pour cette notice-->
-                <v-card dark class="pa-1" outlined tile v-if="!exemplairesPresentsSurNoticeEnCours">
-                  <span class="headline --text">Exemplaire(s) existant(s)</span>
-                  <div class="notice">
-                    <pre>Pas d'exemplaires pour cette notice avec ce RCR</pre>
-                  </div>
-                </v-card>
                 <!--Carte activée si présence exemplaires pour cette notice-->
-                <v-card class="pa-1" outlined tile v-if="exemplairesPresentsSurNoticeEnCours">
+                <v-card class="pa-1" outlined tile>
                   <span class="headline --text">Exemplaire(s) existant(s)</span>
                   <v-container id="scroll-target" style="max-height: 400px" class="overflow-y-auto">
                     <div class="notice">
@@ -352,19 +345,18 @@ export default {
       }).then(
         (result) => {
           this.numeroPPNNotice = result.data[0];
-          if (result.data[1] === '') {
-            this.noticeAvant = 'Il n\'y a pas d\'exemplaires '
-                + 'déjà existants pour cette notice sur ce RCR.';
+          if (result.data[1] === '' || result.data[1] === '\r\n') {
+            this.noticeAvant = 'Il n\'y a pas d\'exemplaires\n'
+                + 'déjà existants pour cette\nnotice sur ce RCR.';
           } else {
             this.noticeAvant = result.data[1]; // Exemplaires existants
           }
           if (result.data[2] === '') {
-            this.noticeApres = 'Vous n\'avez pas autorisé la création d\'exemplaires en cas '
-                + 'd\'exemplaires déja présents sur cette notice pour ce RCR, '
-                + 'lors de l\'Etape précédente de cette Demande.';
+            this.noticeApres = 'Vous n\'avez pas autorisé la création d\'exemplaires\nen cas '
+                + 'd\'exemplaires déja présents sur cette notice\npour ce RCR, '
+                + 'lors de l\'Etape précédente\nde cette Demande.';
           } else {
             this.noticeApres = result.data[2]; // Exemplaires à créer
-            console.log(this.noticeApres);
           }
 
           // TODO corriger en back pour avoir un retour vide ou nul

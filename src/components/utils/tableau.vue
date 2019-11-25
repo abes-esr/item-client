@@ -67,7 +67,7 @@
               <!--Lignes de données : EXEMPLARISATION-->
               <tbody>
               <tr :key="item.name" v-for="item in items">
-                <!--COM--><td><v-btn v-if="item.commentaire" icon color="primary" @click.stop="$set(dialogNote, item.num, true), fetchComment(item.commentaire)"><v-icon :color="this.commentColor" medium>mdi-comment-text-outline</v-icon></v-btn><v-btn v-if="!item.commentaire" icon color="grey" @click.stop="$set(dialogNote, item.num, true), fetchComment(item.commentaire)"><v-icon medium>mdi-comment-text-outline</v-icon></v-btn><v-dialog v-model="dialogNote[item.num]" scrollable max-width="500" :key="item.num"><v-card><v-card-title><span>Note de la demande {{ item.num }}</span></v-card-title><v-card-text style="padding-top: 10px; margin-bottom: -25px;"><v-textarea v-model="commentaireMaj" outlined label="Commentaire"></v-textarea></v-card-text><v-card-actions><v-spacer></v-spacer><v-btn color="primary" @click.stop="$set(dialogNote, item.num, false); saveComment(item.num, commentaireMaj)">Enregistrer</v-btn></v-card-actions></v-card></v-dialog></td>
+                <!--COM--><td><v-btn v-if="item.commentaire" icon color="primary" @click.stop="$set(dialogNote, item.num, true), fetchComment(item.commentaire)"><v-icon medium color="red">mdi-comment-text-outline</v-icon></v-btn><v-btn v-if="!item.commentaire" icon color="grey" @click.stop="$set(dialogNote, item.num, true), fetchComment(item.commentaire)"><v-icon medium>mdi-comment-text-outline</v-icon></v-btn><v-dialog v-model="dialogNote[item.num]" scrollable max-width="500" :key="item.num"><v-card><v-card-title><span>Note de la demande {{ item.num }}</span></v-card-title><v-card-text style="padding-top: 10px; margin-bottom: -25px;"><v-textarea v-model="commentaireMaj" outlined label="Commentaire"></v-textarea></v-card-text><v-card-actions><v-spacer></v-spacer><v-btn color="primary" @click.stop="$set(dialogNote, item.num, false); saveComment(item.num, commentaireMaj)">Enregistrer</v-btn></v-card-actions></v-card></v-dialog></td>
                 <!--DEM--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.num }}</td>
                           <td v-if="!item.isClickable">{{ item.num }}</td>
                 <!--CRE--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.dateCreation | formatDate }}</td>
@@ -131,7 +131,7 @@
               <!--Lignes de données : MODIFICATION-->
               <tbody>
               <tr :key="item.name" v-for="item in items">
-                <!--COM--><td><v-btn v-if="item.commentaire" icon color="primary" @click.stop="$set(dialogNote, item.num, true), fetchComment(item.commentaire)"><v-icon medium>mdi-comment-text-outline</v-icon></v-btn><v-btn v-if="!item.commentaire" icon color="grey" @click.stop="$set(dialogNote, item.num, true), fetchComment(item.commentaire)"><v-icon medium>mdi-comment-text-outline</v-icon></v-btn><v-dialog v-model="dialogNote[item.num]" scrollable max-width="500" :key="item.num"><v-card><v-card-title><span>Note de la demande {{ item.num }}</span></v-card-title><v-card-text style="padding-top: 10px; margin-bottom: -25px;"><v-textarea v-model="commentaireMaj" outlined label="Commentaire"></v-textarea></v-card-text><v-card-actions><v-spacer></v-spacer><v-btn color="primary" @click.stop="$set(dialogNote, item.num, false); saveComment(item.num, commentaireMaj)">Enregistrer</v-btn></v-card-actions></v-card></v-dialog></td>
+                <!--COM--><td><v-btn v-if="item.commentaire" icon color="primary" @click.stop="$set(dialogNote, item.num, true), fetchComment(item.commentaire)"><v-icon medium color="red">mdi-comment-text-outline</v-icon></v-btn><v-btn v-if="!item.commentaire" icon color="grey" @click.stop="$set(dialogNote, item.num, true), fetchComment(item.commentaire)"><v-icon medium>mdi-comment-text-outline</v-icon></v-btn><v-dialog v-model="dialogNote[item.num]" scrollable max-width="500" :key="item.num"><v-card><v-card-title><span>Note de la demande {{ item.num }}</span></v-card-title><v-card-text style="padding-top: 10px; margin-bottom: -25px;"><v-textarea v-model="commentaireMaj" outlined label="Commentaire"></v-textarea></v-card-text><v-card-actions><v-spacer></v-spacer><v-btn color="primary" @click.stop="$set(dialogNote, item.num, false); saveComment(item.num, commentaireMaj)">Enregistrer</v-btn></v-card-actions></v-card></v-dialog></td>
                 <!--DEM--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.num }}</td>
                           <td v-if="!item.isClickable">{{ item.num }}</td>
                 <!--MAJ--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.dateModification | formatDate }}</td>
@@ -194,7 +194,7 @@
           <!--Lignes de données : RECOUVREMENT-->
               <tbody>
               <tr :key="item.name" v-for="item in items">
-                <!--COM--><td><v-btn v-if="item.commentaire" icon color="primary" @click.stop="$set(dialogNote, item.num, true), fetchComment(item.commentaire)"><v-icon medium>mdi-comment-text-outline</v-icon></v-btn><v-btn v-if="!item.commentaire" icon color="grey" @click.stop="$set(dialogNote, item.num, true), fetchComment(item.commentaire)"><v-icon medium>mdi-comment-text-outline</v-icon></v-btn><v-dialog v-model="dialogNote[item.num]" scrollable max-width="500" :key="item.num"><v-card><v-card-title><span>Note de la demande {{ item.num }}</span></v-card-title><v-card-text style="padding-top: 10px; margin-bottom: -25px;"><v-textarea v-model="commentaireMaj" outlined label="Commentaire"></v-textarea></v-card-text><v-card-actions><v-spacer></v-spacer><v-btn color="primary" @click.stop="$set(dialogNote, item.num, false); saveComment(item.num, commentaireMaj)">Enregistrer</v-btn></v-card-actions></v-card></v-dialog></td>
+                <!--COM--><td><v-btn v-if="item.commentaire" icon color="primary" @click.stop="$set(dialogNote, item.num, true), fetchComment(item.commentaire)"><v-icon medium color="red">mdi-comment-text-outline</v-icon></v-btn><v-btn v-if="!item.commentaire" icon color="grey" @click.stop="$set(dialogNote, item.num, true), fetchComment(item.commentaire)"><v-icon medium>mdi-comment-text-outline</v-icon></v-btn><v-dialog v-model="dialogNote[item.num]" scrollable max-width="500" :key="item.num"><v-card><v-card-title><span>Note de la demande {{ item.num }}</span></v-card-title><v-card-text style="padding-top: 10px; margin-bottom: -25px;"><v-textarea v-model="commentaireMaj" outlined label="Commentaire"></v-textarea></v-card-text><v-card-actions><v-spacer></v-spacer><v-btn color="primary" @click.stop="$set(dialogNote, item.num, false); saveComment(item.num, commentaireMaj)">Enregistrer</v-btn></v-card-actions></v-card></v-dialog></td>
                 <!--DEM--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.num }}</td>
                           <td v-if="!item.isClickable">{{ item.num }}</td>
                 <!--CRE--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.dateCreation | formatDate }}</td>
@@ -349,7 +349,6 @@ export default {
       affichageRestrictifAdmin: false,
       dialogNote: {},
       commentaireMaj: '',
-      commentColor: 'secondary',
     };
   },
   props: {
@@ -430,7 +429,6 @@ export default {
           this.blobName = `fichier_prepare_${numDem}.csv`;
           break;
       }
-      console.log(filename);
       if (this.user !== null && this.user.jwt !== null) {
         return axios({
           headers: { Authorization: this.user.jwt },
