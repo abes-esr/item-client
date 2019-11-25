@@ -79,5 +79,42 @@ export default {
         },
       );
     },
+    // Retour sur une étape déterminée d'une demande
+    etapeDemande(numDemande, modif, etapeChoisie) {
+      // Nécessite d'avoir le composant vue-full-loading dans le composant appelant
+      this.loading = true;
+      const user = JSON.parse(sessionStorage.getItem('user'));
+      axios({
+        headers: { Authorization: user.jwt },
+        method: 'GET',
+        url: `${process.env.VUE_APP_ROOT_API}etapeChoisie/${numDemande}?type=${modif}&etape=${etapeChoisie}`,
+      }).then(
+        () => {
+          this.loading = false;
+          if (modif === TYPEDEMANDE.DEMANDE_MODIFICATION) {
+            // TODO construire le switch case pour la modification
+          } else if (modif === TYPEDEMANDE.DEMANDE_EXEMPLARISATION) {
+            switch (etapeChoisie) {
+              case 1:
+                this.$router.replace('/rcr'); break;
+              case 2:
+                this.$router.replace('/typeExemplarisation'); break;
+              case 3:
+                this.$router.replace('/fichierExemplarisation'); break;
+              default:
+                this.$router.replace('home'); break;
+            }
+          } else if (modif === TYPEDEMANDE.DEMANDE_RECOUVREMENT) {
+            // TODO constuire le switch case pour le recouvrement
+          }
+        },
+        () => {
+          this.alert = true;
+          this.alertType = 'error';
+          this.alertMessage = constants.erreur500;
+          this.loading = false;
+        },
+      );
+    },
   },
 };

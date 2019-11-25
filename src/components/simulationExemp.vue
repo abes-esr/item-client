@@ -49,8 +49,7 @@
           </v-card>
         </v-dialog>
         <!-- FIL D'ARIANE -->
-        <stepperModif v-if=this.exauto id="stepperModif" current="5" :numDemande="this.numDem.toString()"></stepperModif>
-        <stepperExemp v-if=!this.exauto id="stepperExemp" current="4" :numDemande="this.numDem.toString()" :typeExemplarisation="typeExemplarisation"></stepperExemp>
+        <stepperExemp id="stepperExemp" current="4" :numDemande="this.numDem.toString()" :typeExemplarisation="typeExemplarisation" :modif="this.modif"></stepperExemp>
         <br>
         <!-- INFOS GENERALES DE LA DEMANDE -->
         <v-card id="demInfos" class="item-global-margin-bottom">
@@ -119,7 +118,7 @@
                   <span class="headline mb-0" id="numLigne">Ligne de votre fichier : {{ noticeEnCours + 1 }} sur {{ numberLines }}</span>
                 </v-card>
               </v-col>
-              <v-col :key="2" cols="12" sm="5"> <!--Ligne du fichier-->
+              <v-col :key="3" cols="12" sm="5"> <!--Ligne du fichier-->
                 <v-card class="pa-1" elevation="0">
                   <span class="headline mb-0">Exemplaire(s) existant(s) sous PPN n° {{ this.numeroPPNNotice }}</span>
                 </v-card>
@@ -237,7 +236,6 @@
 import loading from 'vue-full-loading';
 import axios from 'axios';
 import moment from 'moment';
-import stepperModif from '@/components/utils/stepperModif.vue';
 import stepperExemp from '@/components/utils/stepperExemp.vue';
 import supprMixin from '@/mixins/delete';
 import constants from '@/components/utils/const';
@@ -246,7 +244,6 @@ import TYPEDEMANDE from '../enums/typeDemande';
 export default {
   components: {
     loading,
-    stepperModif,
     stepperExemp,
   },
   // Voilà le mixin en question
@@ -366,7 +363,6 @@ export default {
       }).then(
         (result) => {
           this.numeroPPNNotice = result.data[0];
-          console.log(result.data[0]);
           if (result.data[1] === '') {
             this.noticeAvant = 'Il n\'y a pas d\'exemplaires '
                 + 'déjà existants pour cette notice sur ce RCR.';

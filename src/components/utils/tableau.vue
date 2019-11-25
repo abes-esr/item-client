@@ -513,7 +513,7 @@ export default {
     redirectionExemp(codeStatut) {
       switch (codeStatut) {
         case 1:
-          this.$router.push('type');
+          this.$router.push('typeExemplarisation');
           break;
         case 3:
           this.$router.push('fichierExemplarisation');
@@ -531,7 +531,7 @@ export default {
           this.$router.push('type');
           break;
         case 3:
-          this.$router.push('fichierExemplarisation');
+          this.$router.push('fichierModification'); // TODO controler les routes
           break;
         case 4:
           this.$router.push('simulationTest');

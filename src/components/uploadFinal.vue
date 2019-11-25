@@ -3,7 +3,7 @@
     <v-row align="center" justify="center">
       <v-col md="7">
         <steppermodif class="item-stepper-bottom-margin" current="4" v-if="modif === 'MODIF'" :numDemande="this.numDem.toString()"></steppermodif>
-        <stepperexemp class="item-stepper-bottom-margin" current="3" v-if="modif === 'EXEMP'" :numDemande="this.numDem.toString()" :typeExemplarisation="typeDemandeChoisi"></stepperexemp>
+        <stepperexemp class="item-stepper-bottom-margin" current="3" v-if="modif === 'EXEMP'" :numDemande="this.numDem.toString()" :typeExemplarisation="typeDemandeChoisi" :modif="this.modif"></stepperexemp>
         <stepperrecouv class="item-stepper-bottom-margin" current="2" v-if="modif === 'RECOUV'" :numDemande="this.numDem.toString()"></stepperrecouv>
         <upload :modif="modif" :loading="loading" :format=format :precedent="true" :title=titleUpload :text=textUpload @upload="uploadFile" @precedent="precedentDemande(numDem, modif)" @supprimer="supprimerDemande(numDem, modif)" @eventName="updateParent"></upload>
           <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span></v-alert>
