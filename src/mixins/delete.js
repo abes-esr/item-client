@@ -82,6 +82,7 @@ export default {
     // Retour sur une étape déterminée d'une demande
     etapeDemande(numDemande, modif, etapeChoisie) {
       // Nécessite d'avoir le composant vue-full-loading dans le composant appelant
+      console.log(numDemande + modif + etapeChoisie);
       this.loading = true;
       const user = JSON.parse(sessionStorage.getItem('user'));
       axios({
@@ -92,11 +93,22 @@ export default {
         () => {
           this.loading = false;
           if (modif === TYPEDEMANDE.DEMANDE_MODIFICATION) {
-            // TODO construire le switch case pour la modification
-          } else if (modif === TYPEDEMANDE.DEMANDE_EXEMPLARISATION) {
             switch (etapeChoisie) {
               case 1:
                 this.$router.replace('/rcr'); break;
+              case 2:
+                this.$router.replace('/fichierModif'); break;
+              case 3:
+                this.$router.replace('/traitement'); break;
+              case 4:
+                this.$router.replace('/fichierEnrichi'); break;
+              default:
+                this.$router.replace('home'); break;
+            }
+          } else if (modif === TYPEDEMANDE.DEMANDE_EXEMPLARISATION) {
+            switch (etapeChoisie) {
+              case 1:
+                this.$router.replace('/rcrEx'); break;
               case 2:
                 this.$router.replace('/typeExemplarisation'); break;
               case 3:
@@ -104,8 +116,6 @@ export default {
               default:
                 this.$router.replace('home'); break;
             }
-          } else if (modif === TYPEDEMANDE.DEMANDE_RECOUVREMENT) {
-            // TODO constuire le switch case pour le recouvrement
           }
         },
         () => {

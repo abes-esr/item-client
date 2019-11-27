@@ -3,7 +3,7 @@
     <loading :show="loading" label="Envoi en cours. Ce traitement peut prendre plusieurs minutes."></loading>
     <v-row align="center" justify="center">
       <v-col md="7">
-        <steppermodif class="item-stepper-bottom-margin" current="2" v-if="modif === 'MODIF'" :numDemande="this.numDem.toString()"></steppermodif>
+        <steppermodif class="item-stepper-bottom-margin" current="2" v-if="modif === 'MODIF'" :numDemande="this.numDem.toString()" :modif="this.modif"></steppermodif>
         <upload v-if="showForm" :loading="loading" :format=format :title=titleUpload :precedent="false" :text=textUpload v-on:upload="uploadFile" @precedent="precedentDemande(numDem)" @supprimer="supprimerDemande(numDem, true)" :uploadInit="true"></upload>
         <v-card v-if="!showForm" class="elevation-12">
           <v-app-bar dark color="primary">

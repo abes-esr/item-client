@@ -49,7 +49,7 @@
           </v-card>
         </v-dialog>
         <!-- FIL D'ARIANE -->
-        <stepper class="stepper" current="5" :numDemande="this.numDem.toString()"></stepper>
+        <stepper class="stepper" current="5" :numDemande="this.numDem.toString()" :modif="this.modif"></stepper>
         <!-- INFOS GENERALES DE LA DEMANDE -->
         <v-card id="demInfos" class="item-global-margin-bottom">
           <h3 style="padding-top: 15px; padding-left: 15px;" class="headline"><span
@@ -232,7 +232,7 @@ export default {
   props: {
     // Modif de masse ou exemplarisation
     modif: {
-      default: true,
+      default: TYPEDEMANDE.DEMANDE_MODIFICATION,
     },
   },
   mounted() {

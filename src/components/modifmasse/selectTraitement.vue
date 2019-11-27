@@ -3,7 +3,7 @@
     <v-row   justify="center">
       <loading :show="loading" label="Chargement en cours..."></loading>
       <v-col cols="8">
-        <steppermodif id="stepper" current="3" :numDemande="this.numDem.toString()"></steppermodif>
+        <steppermodif id="stepper" current="3" :numDemande="this.numDem.toString()" :modif="this.modif"></steppermodif>
       </v-col>
       <v-col md="5" id="flexBox">
         <v-card class="elevation-12">
