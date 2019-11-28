@@ -2,7 +2,7 @@
   <v-container class="fill-height" fluid >
     <v-row align="center" justify="center">
       <v-col md="7">
-        <steppermodif class="item-stepper-bottom-margin" current="4" v-if="modif === 'MODIF'" :numDemande="this.numDem.toString()" :modif="this.modif"></steppermodif>
+        <steppermodif class="item-stepper-bottom-margin" current="4" v-if="modif === 'MODIF'" :numDemande="this.numDem.toString()" :modif="this.modif" :choixTraitement="this.typeTraitementChoisi"></steppermodif>
         <stepperexemp class="item-stepper-bottom-margin" current="3" v-if="modif === 'EXEMP'" :numDemande="this.numDem.toString()" :typeExemplarisation="typeDemandeChoisi" :modif="this.modif"></stepperexemp>
         <stepperrecouv class="item-stepper-bottom-margin" current="2" v-if="modif === 'RECOUV'" :numDemande="this.numDem.toString()" :modif="this.modif"></stepperrecouv>
         <upload :modif="modif" :loading="loading" :format=format :precedent="true" :title=titleUpload :text=textUpload @upload="uploadFile" @precedent="precedentDemande(numDem, modif)" @supprimer="supprimerDemande(numDem, modif)" @eventName="updateParent"></upload>
@@ -65,6 +65,7 @@ export default {
       dialog: false,
       dialogFinished: false,
       typeDemandeChoisi: '',
+      typeTraitementChoisi: '',
     };
   },
   props: {
@@ -82,6 +83,7 @@ export default {
     this.user = JSON.parse(sessionStorage.getItem('user'));
     this.numDem = sessionStorage.getItem('dem');
     this.getTypeExemplarisation(this.numDem);
+    this.getTypeTraitementChoisi(this.numDem);
   },
   methods: {
     // recuperation du type d'exemplarisation prealablement choisi
@@ -93,6 +95,34 @@ export default {
       }).then(
         (result) => {
           this.typeDemandeChoisi = result.data;
+        },
+        (error) => {
+          this.loading = false;
+          this.alert = true;
+          this.alertType = 'error';
+          this.alertMessage = `Impossible de récupérer le type d'exemplarisation pour la demande : ${error.response.data.message}.  <br /> Veuillez réessayer ultérieurement. Si le problème persiste merci de contacter l'assistance.`;
+          if (error.response.status === 401) {
+            this.$emit('logout');
+          }
+        },
+      );
+    },
+    // recuperation du type de choix de traiement choisi pour une demande de modification
+    getTypeTraitementChoisi(numDemande) {
+      axios({
+        headers: { Authorization: this.user.jwt },
+        method: 'GET',
+        url: `${process.env.VUE_APP_ROOT_API}traitementFromDemande/${numDemande}`,
+      }).then(
+        (result) => {
+          switch (result.data) {
+            case 1: this.typeTraitementChoisi = 'Création nouvelle zone'; break;
+            case 2: this.typeTraitementChoisi = 'Création sous-zone'; break;
+            case 3: this.typeTraitementChoisi = 'Remplacer sous-zone'; break;
+            case 4: this.typeTraitementChoisi = 'Supprimer sous-zone'; break;
+            case 5: this.typeTraitementChoisi = 'Supprimer zone'; break;
+            default: this.typeTraitementChoisi = 'inconnu'; break;
+          }
         },
         (error) => {
           this.loading = false;
