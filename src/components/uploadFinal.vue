@@ -72,6 +72,9 @@ export default {
     modif: {
       default: TYPEDEMANDE.DEMANDE_MODIFICATION,
     },
+    choixTraitement: {
+      default: 'à effectuer',
+    },
   },
   // On récupère le numéro de demande enregistré en session
   mounted() {

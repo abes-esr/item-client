@@ -7,7 +7,7 @@
       <v-divider></v-divider>
       <v-stepper-step :editable="current > 2" step="2" :complete="current > 2" @click="etapeDemande(numDemande, modif, 2)">PPN/RCR/EPN<small>fichier à récupérer</small></v-stepper-step>
       <v-divider></v-divider>
-      <v-stepper-step :editable="current > 3" step="3" :complete="current > 3" @click="etapeDemande(numDemande, modif, 3)">Choix traitement<small>à effectuer</small></v-stepper-step>
+      <v-stepper-step :editable="current > 3" step="3" :complete="current > 3" @click="etapeDemande(numDemande, modif, 3)">Choix traitement<small>{{this.choixTraitement}}</small></v-stepper-step>
       <v-divider></v-divider>
       <v-stepper-step :editable="current > 4" step="4" :complete="current > 4" @click="etapeDemande(numDemande, modif, 4)">Envoi<small>du fichier</small></v-stepper-step>
       <v-divider></v-divider>
@@ -29,6 +29,7 @@ export default {
     current: { type: String, default: '5' },
     numDemande: { type: String },
     modif: { type: String },
+    choixTraitement: { type: String },
   },
   methods: {
     // suppression d'une demande depuis le stepper avec redirection sur l'étape 1 et non l'accueil

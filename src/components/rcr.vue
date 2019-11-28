@@ -4,7 +4,7 @@
     <v-row justify="center" align="center">
       <loading :show="show" :label="label"></loading>
       <v-col md="7">
-        <steppermodif class="item-stepper-bottom-margin" current="1" v-if="modif === 'MODIF'"></steppermodif>
+        <steppermodif class="item-stepper-bottom-margin" current="1" v-if="modif === 'MODIF'" :choixTraitement="this.choixTraitement"></steppermodif>
         <stepperexemp class="item-stepper-bottom-margin" current="1" v-if="modif === 'EXEMP'"></stepperexemp>
         <stepperrecouv class="item-stepper-bottom-margin" current="1" v-if="modif === 'RECOUV'"></stepperrecouv>
         <v-card class="elevation-12">
@@ -76,6 +76,9 @@ export default {
     // Modif de masse ou exemplarisation
     modif: {
       default: TYPEDEMANDE.DEMANDE_MODIFICATION,
+    },
+    choixTraitement: {
+      default: 'à effectuer',
     },
   },
   mounted() {
