@@ -82,7 +82,6 @@ export default {
     // Retour sur une étape déterminée d'une demande
     etapeDemande(numDemande, modif, etapeChoisie) {
       // Nécessite d'avoir le composant vue-full-loading dans le composant appelant
-      console.log(numDemande + modif + etapeChoisie);
       this.loading = true;
       const user = JSON.parse(sessionStorage.getItem('user'));
       axios({
