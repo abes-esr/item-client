@@ -37,12 +37,6 @@
               </v-dialog>
         </div>
       </div>
-      <!-- liste de sélection du code PEB ne s'affiche pas si modif = true -->
-      <div v-if="this.modif === 'EXEMP'" class="item-flexbox-for-checkbox">
-        <div class="item-margin-left-app-bar" style="margin-bottom: 0.5em; margin-left:auto; margin-right:1.2em">
-          <v-select label="Code peb selectionné" id="codesPebList" :items="codesPeb" v-model="defaultCodePebChild" @change="getCodePebSelected()"></v-select>
-        </div>
-      </div>
       <v-card-actions>
         <v-spacer></v-spacer>
         <div v-if="displayPreviousButton" style="margin-right: 0.5em"><v-btn color="info" v-if="precedent" @click="$emit('precedent')" aria-label="Annuler">Précédent</v-btn></div>
@@ -128,11 +122,6 @@ export default {
       popupMultiplesCopies: false,
       user: {},
       exemplairesMultiplesChild: false,
-      codesPeb: [
-      ],
-      defaultCodePebChild: {},
-      codesPebChild: '',
-      codePebSelected: '',
       dialogFinished: false,
       dialog: false,
       fichierCharge: [],
@@ -148,10 +137,7 @@ export default {
   mounted() {
     // On récupère les infos utilisateur en session car on a besoin du jwt afin d'appeler les WS REST
     this.user = JSON.parse(sessionStorage.getItem('user'));
-    // on récupère la liste des codes PEB
-    if (this.modif === TYPEDEMANDE.DEMANDE_EXEMPLARISATION) {
-      this.getCodesPeb();
-    } else if (this.modif === TYPEDEMANDE.DEMANDE_RECOUVREMENT) {
+    if (this.modif === TYPEDEMANDE.DEMANDE_RECOUVREMENT) {
       this.displayPreviousButton = false;
     }
   },
@@ -185,27 +171,7 @@ export default {
     getExemplairesMultiples() {
       const elt = document.getElementById('exempMulti');
       this.exemplairesMultiplesChild = elt.checked;
-      this.$emit('eventName', this.exemplairesMultiplesChild, this.defaultCodePebChild);
-    },
-    getCodePebSelected() {
-      this.$emit('eventName', this.exemplairesMultiplesChild, this.defaultCodePebChild);
-    },
-    getCodesPeb() {
-      axios({
-        headers: { Authorization: this.user.jwt },
-        method: 'GET',
-        url: `${process.env.VUE_APP_ROOT_API}codesPeb`,
-      }).then(
-        (result) => {
-          this.codesPeb = result.data;
-          this.defaultCodePebChild = result.data[0];
-        },
-        (error) => {
-          this.alert = true;
-          this.alertType = 'error';
-          this.alertMessage = `impossible de charger la liste des codes PEB ${error.response.data.message} <br /> Veuillez réessayer ultérieurement. Si le problème persiste merci de contacter l'assistance.`;
-        },
-      );
+      this.$emit('eventName', this.exemplairesMultiplesChild);
     },
     displayDialog() {
       this.$emit('upload', this.fichierCharge);

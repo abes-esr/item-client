@@ -61,7 +61,6 @@ export default {
       titleUpload: 'Charger le fichier des exemplaires à traiter',
       textUpload: 'Cliquez pour charger votre fichier complété (format .txt ou .csv obligatoire)',
       exemplairesMultiplesParent: false,
-      codePebParent: '',
       dialog: false,
       dialogFinished: false,
       typeDemandeChoisi: '',
@@ -145,7 +144,7 @@ export default {
       this.user = JSON.parse(sessionStorage.getItem('user'));
       if (this.user !== null && this.user.jwt !== null) {
         axios
-          .post(`${process.env.VUE_APP_ROOT_API}uploadDemande?type=${this.modif}&exempMulti=${this.exemplairesMultiplesParent}&codePeb=${this.codePebParent}`, formData, {
+          .post(`${process.env.VUE_APP_ROOT_API}uploadDemande?type=${this.modif}&exempMulti=${this.exemplairesMultiplesParent}`, formData, {
             headers: {
               Authorization: this.user.jwt,
               'Content-Type': 'multipart/form-data',
@@ -192,7 +191,6 @@ export default {
     },
     updateParent(variable, variable2) {
       this.exemplairesMultiplesParent = variable;
-      this.codePebParent = variable2;
     },
   },
 };
