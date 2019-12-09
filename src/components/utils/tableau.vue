@@ -444,7 +444,7 @@ export default {
           (error) => {
             this.fileReady = false;
             this.popupDownloadFile = false;
-            this.alertMessage = constants.erreurDownload;
+            this.alertMessage = constants.erreur500;
             this.alert = true;
             this.alertType = 'error';
             if (error.response.status === 401) {
@@ -478,9 +478,9 @@ export default {
           },
           (error) => {
             if (addr === `${process.env.VUE_APP_ROOT_API}typeExempA`) {
-              this.alertMessage = constants.erreurTypeExemp;
+              this.alertMessage = constants.erreur500;
             } else if (addr === `${process.env.VUE_APP_ROOT_API}traitements`) {
-              this.alertMessage = constants.erreurListeTraitements;
+              this.alertMessage = constants.erreur500;
             }
             this.alert = true;
             this.alertType = 'error';

@@ -137,7 +137,7 @@ export default {
               this.getFileResult();
             },
             (error) => {
-              this.alertMessage = constants.erreurUpload;
+              this.alertMessage = constants.erreur500;
               this.alertType = 'error';
               this.alert = true;
               this.loading = false;
@@ -185,7 +185,7 @@ export default {
             // this.$refs.fileLinkBtn.$el.click();
           },
           (error) => {
-            this.alertMessage = constants.erreurDownload;
+            this.alertMessage = constants.erreur500;
             this.alertType = 'error';
             this.alert = true;
             this.loading = false;

@@ -126,7 +126,7 @@ export default {
             this.listTraitements = result.data;
           },
           (error) => {
-            this.alertMessage = constants.erreurListeTraitements;
+            this.alertMessage = constants.erreur500;
             this.alert = true;
             this.alertType = 'error';
             if (error.response.status === 401) {
@@ -186,7 +186,7 @@ export default {
           this.loading = false;
         },
         (error) => {
-          this.alertMessage = constants.erreurDemande;
+          this.alertMessage = constants.erreur500;
           this.alert = true;
           this.alertType = 'error';
           if (error.response.status === 401) {

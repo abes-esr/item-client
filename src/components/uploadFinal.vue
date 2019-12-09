@@ -164,7 +164,7 @@ export default {
               }
             },
             (error) => {
-              this.alertMessage = constants.erreurUpload;
+              this.alertMessage = constants.erreur500;
               this.alertType = 'error';
               this.alert = true;
               this.loading = false;
