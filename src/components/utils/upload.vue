@@ -144,6 +144,7 @@ export default {
   methods: {
     // changement statut bouton envoyer
     autorisationEnvoi() {
+      this.$emit('reseterror');
       if (this.fichierCharge !== null) {
         this.fichierPresent = (this.fichierCharge.type === 'text/csv') || (this.fichierCharge.type === 'application/vnd.ms-excel') || (this.fichierCharge.type === 'text/plain');
       } else {
