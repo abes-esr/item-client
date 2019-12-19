@@ -54,7 +54,7 @@
                 <!--COM--><th></th>
                 <!--DEM--><th><v-text-field append-icon="search" aria-label="Recherche par numéro" clear-icon='clear' clearable hide-details single-line v-model="searchNum" v-on:keyup="computedItems('num')"></v-text-field></th>
                 <!--CRE--><th><v-text-field append-icon="search" aria-label="Recherche par date de création" clearable class="item-calendar-searchfield-item" hide-details single-line persistent-hint v-model="searchDateCreation" v-on:keyup="computedItems('dateCreation')"></v-text-field></th>
-                <!--MAJ--><th><v-menu :close-on-content-click="true" ref="menuModification" v-model="menuModification"><template v-slot:activator="{ on }"><v-text-field clearable class="item-calendar-searchfield-item" append-icon="search" persistent-hint v-model="searchDateModification" v-on="on"></v-text-field></template><v-date-picker @change="computedItems('dateModification')" first-day-of-week="1" locale="fr-fr" no-title v-model="searchDateModification"></v-date-picker></v-menu></th>
+                <!--MAJ--><th><v-text-field append-icon="search" aria-label="Recherche par date de modification" clearable class="item-calendar-searchfield-item" hide-details single-line persistent-hint v-model="searchDateModification" v-on:keyup="computedItems('dateModification')"></v-text-field></th>
                 <!--ILN--><th v-if="user.role === 'ADMIN'"><v-text-field append-icon="search" aria-label="Recherche par ILN" clear-icon='clear' clearable hide-details single-line v-model="searchILN" v-on:keyup="computedItems('iln')"></v-text-field></th>
                 <!--RCR--><th><v-text-field append-icon="search" aria-label="Recherche par RCR"  clear-icon='clear' clearable hide-details single-line v-model="searchRCR" v-on:keyup="computedItems('rcr')"></v-text-field></th>
                 <!--TYP--><th><v-select :items="listTypeExemp" @change="computedItems('typeExemp')" aria-label="Recherche par type d'exemplarisation" clear-icon='clear' clearable item-text="libelle" item-value="libelle" no-data-text="Aucun type trouvé." v-model="searchTypeExemp"></v-select></th>
@@ -72,8 +72,8 @@
                           <td v-if="!item.isClickable">{{ item.num }}</td>
                 <!--CRE--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.dateCreation }}</td>
                           <td v-if="!item.isClickable">{{ item.dateCreation }}</td>
-                <!--MAJ--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.dateModification | formatDate }}</td>
-                          <td v-if="!item.isClickable">{{ item.dateModification | formatDate}}</td>
+                <!--MAJ--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.dateModification }}</td>
+                          <td v-if="!item.isClickable">{{ item.dateModification }}</td>
                 <!--ILN--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.iln }}</td>
                           <td v-if="!item.isClickable">{{ item.iln }}</td>
                 <!--RCR--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.rcr }}</td>
@@ -118,7 +118,7 @@
               <tr>
                 <!--COM--><th></th>
                 <!--DEM--><th><v-text-field append-icon="search" aria-label="Recherche par numéro" clear-icon='clear' clearable hide-details single-line v-model="searchNum" v-on:keyup="computedItems('num')"></v-text-field></th>
-                <!--MAJ--><th><v-menu :close-on-content-click="true" ref="menuModification" v-model="menuModification"><template v-slot:activator="{ on }"><v-text-field class="item-calendar-searchfield-item" label="recherche par date" persistent-hint v-model="searchDateModification" v-on="on"></v-text-field></template><v-date-picker @change="computedItems('dateModification')" first-day-of-week="1" locale="fr-fr" no-title v-model="searchDateModification"></v-date-picker></v-menu></th>
+                <!--MAJ--><th><v-text-field append-icon="search" aria-label="Recherche par date de modification" class="item-calendar-searchfield-item" clearable hide-details single-line v-model="searchDateModification" v-on:keyup="computedItems('dateModification')"></v-text-field></th>
                 <!--ILN--><th v-if="user.role === 'ADMIN'"><v-text-field append-icon="search" aria-label="Recherche par ILN" clear-icon='clear' clearable hide-details single-line v-model="searchILN" v-on:keyup="computedItems('iln')"></v-text-field></th>
                 <!--RCR--><th><v-text-field append-icon="search" aria-label="Recherche par RCR"  clear-icon='clear' clearable hide-details single-line v-model="searchRCR" v-on:keyup="computedItems('rcr')"></v-text-field></th>
                 <!--ZON--><th><v-text-field append-icon="search" aria-label="Recherche par zone et sous-zone" clear-icon='clear' clearable hide-details single-line v-model="searchZoneSousZone" v-on:keyup="computedItems('zoneSousZone')"></v-text-field></th>
@@ -134,8 +134,8 @@
                 <!--COM--><td><v-btn v-if="item.commentaire" icon color="primary" @click.stop="$set(dialogNote, item.num, true), fetchComment(item.commentaire)"><v-icon medium color="red">mdi-comment-text-outline</v-icon></v-btn><v-btn v-if="!item.commentaire" icon color="grey" @click.stop="$set(dialogNote, item.num, true), fetchComment(item.commentaire)"><v-icon medium>mdi-comment-text-outline</v-icon></v-btn><v-dialog v-model="dialogNote[item.num]" scrollable max-width="500" :key="item.num"><v-card><v-card-title><span>Note de la demande {{ item.num }}</span></v-card-title><v-card-text style="padding-top: 10px; margin-bottom: -25px;"><v-textarea v-model="commentaireMaj" outlined label="Commentaire"></v-textarea></v-card-text><v-card-actions><v-spacer></v-spacer><v-btn color="primary" @click.stop="$set(dialogNote, item.num, false); saveComment(item.num, commentaireMaj)">Enregistrer</v-btn></v-card-actions></v-card></v-dialog></td>
                 <!--DEM--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.num }}</td>
                           <td v-if="!item.isClickable">{{ item.num }}</td>
-                <!--MAJ--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.dateModification | formatDate }}</td>
-                          <td v-if="!item.isClickable">{{ item.dateModification | formatDate }}</td>
+                <!--MAJ--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.dateModification }}</td>
+                          <td v-if="!item.isClickable">{{ item.dateModification }}</td>
                 <!--ILN--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.iln }}</td>
                           <td v-if="!item.isClickable">{{ item.iln }}</td>
                 <!--RCR--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.rcr }}</td>
@@ -181,8 +181,8 @@
               <tr>
                 <!--COM--><th></th>
                 <!--DEM--><th><v-text-field append-icon="search" aria-label="Recherche par numéro" clear-icon='clear' clearable hide-details single-line v-model="searchNum" v-on:keyup="computedItems('num')"></v-text-field></th>
-                <!--CRE--><th><v-menu :close-on-content-click="true" ref="menuCreation" v-model="menuCreation"><template v-slot:activator="{ on }"><v-text-field clearable class="item-calendar-searchfield-item" append-icon="search" persistent-hint v-model="searchDateCreation" v-on="on"></v-text-field></template><v-date-picker @change="computedItems('dateCreation')" first-day-of-week="1" locale="fr-fr" no-title v-model="searchDateCreation"></v-date-picker></v-menu></th>
-                <!--MAJ--><th><v-menu :close-on-content-click="true" ref="menuModification" v-model="menuModification"><template v-slot:activator="{ on }"><v-text-field clearable class="item-calendar-searchfield-item" append-icon="search" persistent-hint v-model="searchDateModification" v-on="on"></v-text-field></template><v-date-picker @change="computedItems('dateModification')" first-day-of-week="1" locale="fr-fr" no-title v-model="searchDateModification"></v-date-picker></v-menu></th>
+                <!--CRE--><th><v-text-field clearable class="item-calendar-searchfield-item" append-icon="search" persistent-hint v-model="searchDateCreation" v-on:keyup="computedItems('dateCreation')"></v-text-field></th>
+                <!--MAJ--><th><v-text-field clearable class="item-calendar-searchfield-item" append-icon="search" persistent-hint v-model="searchDateModification" v-on:keyup="computedItems('dateModification')"></v-text-field></th>
                 <!--ILN--><th v-if="user.role === 'ADMIN'"><v-text-field append-icon="search" aria-label="Recherche par ILN" clear-icon='clear' clearable hide-details single-line v-model="searchILN" v-on:keyup="computedItems('iln')"></v-text-field></th>
                 <!--RCR--><th><v-text-field append-icon="search" aria-label="Recherche par RCR"  clear-icon='clear' clearable hide-details single-line v-model="searchRCR" v-on:keyup="computedItems('rcr')"></v-text-field></th>
                 <!--IND--><th><v-text-field append-icon="search" aria-label="Recherche par Index"  clear-icon='clear' clearable hide-details single-line v-model="searchIndexRecherche" v-on:keyup="computedItems('indexRecherche')"></v-text-field></th>
@@ -197,10 +197,10 @@
                 <!--COM--><td><v-btn v-if="item.commentaire" icon color="primary" @click.stop="$set(dialogNote, item.num, true), fetchComment(item.commentaire)"><v-icon medium color="red">mdi-comment-text-outline</v-icon></v-btn><v-btn v-if="!item.commentaire" icon color="grey" @click.stop="$set(dialogNote, item.num, true), fetchComment(item.commentaire)"><v-icon medium>mdi-comment-text-outline</v-icon></v-btn><v-dialog v-model="dialogNote[item.num]" scrollable max-width="500" :key="item.num"><v-card><v-card-title><span>Note de la demande {{ item.num }}</span></v-card-title><v-card-text style="padding-top: 10px; margin-bottom: -25px;"><v-textarea v-model="commentaireMaj" outlined label="Commentaire"></v-textarea></v-card-text><v-card-actions><v-spacer></v-spacer><v-btn color="primary" @click.stop="$set(dialogNote, item.num, false); saveComment(item.num, commentaireMaj)">Enregistrer</v-btn></v-card-actions></v-card></v-dialog></td>
                 <!--DEM--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.num }}</td>
                           <td v-if="!item.isClickable">{{ item.num }}</td>
-                <!--CRE--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.dateCreation | formatDate }}</td>
-                          <td v-if="!item.isClickable">{{ item.dateCreation | formatDate }}</td>
-                <!--MAJ--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.dateModification | formatDate }}</td>
-                          <td v-if="!item.isClickable">{{ item.dateModification | formatDate }}</td>
+                <!--CRE--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.dateCreation }}</td>
+                          <td v-if="!item.isClickable">{{ item.dateCreation }}</td>
+                <!--MAJ--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.dateModification }}</td>
+                          <td v-if="!item.isClickable">{{ item.dateModification }}</td>
                 <!--ILN--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.iln }}</td>
                           <td v-if="!item.isClickable">{{ item.iln }}</td>
                 <!--RCR--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.rcr }}</td>
@@ -674,7 +674,7 @@ export default {
 
               this.items.push({
                 dateCreation: moment(String(result.data[key].dateCreation)).format('DD/MM/YYYY HH:mm'),
-                dateModification: result.data[key].dateModification,
+                dateModification: moment(String(result.data[key].dateModification)).format('DD/MM/YYYY HH:mm'),
                 rcr: `${result.data[key].rcr}`,
                 iln: result.data[key].iln,
                 num: result.data[key].numDemande,
