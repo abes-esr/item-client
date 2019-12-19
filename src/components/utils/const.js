@@ -87,6 +87,7 @@ export default {
     { text: 'Type', value: 'typeExemp', width: '15%' },
     { text: 'Index', value: 'indexRecherche', width: '10%' },
     { text: 'Téléchargement', value: 'codeStatut', width: '10%' },
+    { text: '', value: 'delete', width: '10%' },
   ],
   headerExempArchive: [
     { text: '', value: 'expand', width: '5%' },
