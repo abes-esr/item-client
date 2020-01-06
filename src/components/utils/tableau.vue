@@ -298,7 +298,7 @@ export default {
   name: 'tableauComponent',
   data() {
     return {
-      sortBy: 'dateModification',
+      sortBy: 'dateModificationBrute',
       descending: true,
       pagination: {
         sortBy: 'name',
@@ -369,10 +369,7 @@ export default {
   },
   filters: {
     formatDate(value) {
-      if (value) {
-        return moment(String(value)).format('DD/MM/YYYY HH:mm');
-      }
-      return value;
+      return moment(String(value)).format('DD/MM/YYYY HH:mm');
     },
   },
   mounted() {
@@ -675,6 +672,7 @@ export default {
               this.items.push({
                 dateCreation: moment(String(result.data[key].dateCreation)).format('DD/MM/YYYY HH:mm'),
                 dateModification: moment(String(result.data[key].dateModification)).format('DD/MM/YYYY HH:mm'),
+                dateModificationBrute: result.data[key].dateModification,
                 rcr: `${result.data[key].rcr}`,
                 iln: result.data[key].iln,
                 num: result.data[key].numDemande,
