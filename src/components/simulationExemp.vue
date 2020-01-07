@@ -132,7 +132,7 @@
                   <v-container id="scroll-target" style="max-height: 400px" class="overflow-y-auto">
                     <div class="notice">
                       <pre style="text-align: left; padding-top: 1em">
-                        <span class="inner-pre">
+                        <span class="inner-pre" style="text-align: left; padding-top: 1em; overflow-x:scroll;">
 {{ noticeAvant }}
                         </span>
                       </pre>
@@ -195,7 +195,7 @@
                   <span class="headline --text">Exemplaire à créer</span>
                   <div class="notice">
                     <br>
-                    <pre style="text-align: left; padding-top: 1em">
+                    <pre style="text-align: left; padding-top: 1em; overflow-x:scroll;">
 {{ noticeApres }}
                     </pre>
                   </div>

@@ -3,10 +3,9 @@
   <v-row class="container">
   <v-row>
     <v-col cols="12" sm="12" md="12" lg="6">
-      <menu-cards :cardHeight=9 iconType="pie_chart" routerLink="rcrRecouv" titleName='Calculer mon taux de <span style="white-space: nowrap;">recouvrement</span>' class="item-horizontal-align"></menu-cards>
+      <menu-cards :cardHeight=9 iconType="mdi-percent" routerLink="rcrRecouv" titleName='Calculer mon taux de <span style="white-space: nowrap;">recouvrement</span>' class="item-horizontal-align"></menu-cards>
       <menu-cards :cardHeight=9 iconType="add_circle_outline" routerLink="rcrEx" titleName='Créer des exemplaires' class="item-horizontal-align"></menu-cards>
       <menu-cards :cardHeight=9 iconType="edit" routerLink="rcr" titleName='Modifier des <span style="white-space: nowrap;">exemplaires</span>' class="item-horizontal-align"></menu-cards>
-
     </v-col>
     <v-col cols="12" sm="12" md="12" lg="6">
       <menu-cards :cardHeight=9 iconType="sort" routerLink="tabRecouv" titleName='Gérer mes <span style="white-space: nowrap;"> taux de recouvrement</span>' class="item-horizontal-align"></menu-cards>

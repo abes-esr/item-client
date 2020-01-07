@@ -125,7 +125,7 @@ export default {
           }
         },
         () => {
-          this.alertMessage = constants.erreurRCR;
+          this.alertMessage = constants.erreur500;
           this.alert = true;
           this.alertType = 'error';
         },
