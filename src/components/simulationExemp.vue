@@ -371,7 +371,7 @@ export default {
           this.loading = false;
           this.alert = true;
           this.alertType = 'error';
-          this.alertMessage = `Impossible de récupérer la notice pour la simulation : ${error.response.data.message}.  <br /> Veuillez réessayer ultérieurement. Si le problème persiste merci de contacter l'assistance.`;
+          this.alertMessage = `Simulation impossible : ${error.response.data.message}.  <br /> Veuillez réessayer ultérieurement. Si le problème persiste merci de contacter l'assistance.`;
           if (error.response.status === 401) {
             this.$emit('logout');
           } else if (error.response.status === 400 && error.response.data.message.includes('Numéro de notice erroné')
