@@ -205,13 +205,15 @@
           </v-container>
         </v-card>
         <v-row justify="end" id="layoutButtonOk" style="margin : 1em 0 0 0">
-          <v-btn large color="info" @click="dialog = true"
+          <v-btn v-if="!alert" large color="info" @click="dialog = true"
                  aria-label="Lancer le traitement en production">Lancer le traitement en production
+          </v-btn>
+          <v-btn v-if="alert" large color="info"
+                 aria-label="Lancer le traitement en production" disabled>Lancer le traitement en production
           </v-btn>
         </v-row>
       </v-col>
     </v-row>
-
   </v-container>
 </template>
 
