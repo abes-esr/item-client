@@ -205,6 +205,9 @@
           </v-container>
         </v-card>
         <v-row justify="end" id="layoutButtonOk" style="margin : 1em 0 0 0">
+          <v-btn large color="info" @click="etapeDemande(numDem, modif, 3)" aria-label="Annuler" style="margin-right: 1em">
+            Précédent
+          </v-btn>
           <v-btn v-if="!alert" large color="info" @click="dialog = true"
                  aria-label="Lancer le traitement en production">Lancer le traitement en production
           </v-btn>
