@@ -10,137 +10,335 @@ export default {
 
   headersArchiveAdminModif: [
     { text: '', value: 'expand', width: '5%' },
-    { text: 'Demande', value: 'num', width: '11%' },
-    { text: 'Modification', value: 'dateModification', width: '15%' },
-    { text: 'ILN', value: 'iln', width: '10%' },
-    { text: 'RCR', value: 'rcr', width: '10%' },
-    { text: 'Zones et sous-zones', value: 'zoneSousZone', width: '10%' },
-    { text: 'Traitement', value: 'traitement', width: '20%' },
-    { text: 'Statut', value: 'codeStatut', width: '7%' },
-    { text: 'Téléchargement', value: '', width: '12%' },
+    {
+      text: 'Demande', align: 'center', value: 'num', width: '11%',
+    },
+    {
+      text: 'Mise à jour', align: 'center', value: 'dateModification', width: '15%',
+    },
+    {
+      text: 'ILN', align: 'center', value: 'iln', width: '10%',
+    },
+    {
+      text: 'RCR', align: 'center', value: 'rcr', width: '10%',
+    },
+    {
+      text: 'Zones et sous-zones', align: 'center', value: 'zoneSousZone', width: '10%',
+    },
+    {
+      text: 'Traitement', align: 'center', value: 'traitement', width: '20%',
+    },
+    {
+      text: 'Statut', align: 'center', value: 'codeStatut', width: '7%',
+    },
+    {
+      text: 'Téléchargement', align: 'center', value: '', width: '12%',
+    },
   ],
   headersArchiveModif: [
     { text: '', value: 'expand', width: '5%' },
-    { text: 'Demande', value: 'num', width: '15%' },
-    { text: 'Modification', value: 'dateModification', width: '15%' },
-    { text: 'RCR', value: 'rcr', width: '15%' },
-    { text: 'Zones et sous-zones', value: 'zoneSousZone', width: '11%' },
-    { text: 'Traitement', value: 'traitement', width: '20%' },
-    { text: 'Statut', value: 'codeStatut', width: '7%' },
-    { text: 'Téléchargement', value: '', width: '12%' },
+    {
+      text: 'Demande', align: 'center', value: 'num', width: '15%',
+    },
+    {
+      text: 'Mise à jour', align: 'center', value: 'dateModification', width: '15%',
+    },
+    {
+      text: 'RCR', align: 'center', value: 'rcr', width: '15%',
+    },
+    {
+      text: 'Zones et sous-zones', align: 'center', value: 'zoneSousZone', width: '11%',
+    },
+    {
+      text: 'Traitement', align: 'center', value: 'traitement', width: '20%',
+    },
+    {
+      text: 'Statut', align: 'center', value: 'codeStatut', width: '7%',
+    },
+    {
+      text: 'Téléchargement', align: 'center', value: '', width: '12%',
+    },
   ],
   headerModifAdmin: [
     { text: '', value: 'expand', width: '5%' },
-    { text: 'Demande', value: 'num', width: '10%' },
-    { text: 'Modification', value: 'dateModification', width: '15%' },
-    { text: 'ILN', value: 'iln', width: '10%' },
-    { text: 'RCR', value: 'rcr', width: '10%' },
-    { text: 'Zones et sous-zones', value: 'zoneSousZone', width: '15%' },
-    { text: 'Traitement', value: 'traitement', width: '15%' },
-    { text: 'Statut', value: 'statut', width: '10%' },
-    { text: 'Téléchargement', value: 'codeStatut', width: '8%' },
-    { text: '', value: 'delete', width: '3%' },
+    {
+      text: 'Demande', align: 'center', value: 'num', width: '7%',
+    },
+    {
+      text: 'Mise à jour', align: 'center', value: 'dateModification', width: '15%',
+    },
+    {
+      text: 'ILN', align: 'center', value: 'iln', width: '10%',
+    },
+    {
+      text: 'RCR', align: 'center', value: 'rcr', width: '10%',
+    },
+    {
+      text: 'Zones et sous-zones', align: 'center', value: 'zoneSousZone', width: '15%',
+    },
+    {
+      text: 'Traitement', align: 'center', value: 'traitement', width: '15%',
+    },
+    {
+      text: 'Statut', align: 'center', value: 'statut', width: '10%',
+    },
+    {
+      text: 'Téléchargement', align: 'center', value: 'codeStatut', width: '8%',
+    },
+    {
+      text: 'Action', align: 'center', value: 'delete', width: '6%',
+    },
   ],
   headerModif: [
     { text: '', value: 'expand', width: '5%' },
-    { text: 'Demande', value: 'num', width: '10%' },
-    { text: 'Modification', value: 'dateModification', width: '15%' },
-    { text: 'RCR', value: 'rcr', width: '5%' },
-    { text: 'Zones et sous-zones', value: 'zoneSousZone', width: '15%' },
-    { text: 'Traitement', value: 'traitement', width: '25%' },
-    { text: 'Statut', value: 'statut', width: '10%' },
-    { text: 'Téléchargement', value: 'codeStatut', width: '10%' },
-    { text: '', value: 'delete', width: '3%' },
+    {
+      text: 'Demande', align: 'center', value: 'num', width: '7%',
+    },
+    {
+      text: 'Mise à jour', align: 'center', value: 'dateModification', width: '15%',
+    },
+    {
+      text: 'RCR', align: 'center', value: 'rcr', width: '5%',
+    },
+    {
+      text: 'Zones et sous-zones', align: 'center', value: 'zoneSousZone', width: '15%',
+    },
+    {
+      text: 'Traitement', align: 'center', value: 'traitement', width: '25%',
+    },
+    {
+      text: 'Statut', align: 'center', value: 'statut', width: '10%',
+    },
+    {
+      text: 'Téléchargement', align: 'center', value: 'codeStatut', width: '10%',
+    },
+    {
+      text: 'Action', align: 'center', value: 'delete', width: '6%',
+    },
   ],
   headerExempAdmin: [
     { text: '', value: 'expand', width: '5%' },
-    { text: 'Demande', value: 'num', width: '10%' },
-    { text: 'Création', value: 'dateCreation', width: '10%' },
-    { text: 'Modification', value: 'dateModification', width: '10%' },
-    { text: 'ILN', value: 'iln', width: '7%' },
-    { text: 'RCR', value: 'rcr', width: '8%' },
-    { text: 'Type', value: 'typeExemp', width: '17%' },
-    { text: 'Index', value: 'indexRecherche', width: '8%' },
-    { text: 'Statut', value: 'statut', width: '14%' },
-    { text: 'Téléchargement', value: 'codeStatut', width: '8%' },
-    { text: '', value: 'delete', width: '3%' },
+    {
+      text: 'Demande', align: 'center', value: 'num', width: '8%',
+    },
+    {
+      text: 'Création', align: 'center', value: 'dateCreation', width: '10%',
+    },
+    {
+      text: 'Mise à jour', align: 'center', value: 'dateModification', width: '10%',
+    },
+    {
+      text: 'ILN', align: 'center', value: 'iln', width: '7%',
+    },
+    {
+      text: 'RCR', align: 'center', value: 'rcr', width: '8%',
+    },
+    {
+      text: 'Type', align: 'center', value: 'typeExemp', width: '15%',
+    },
+    {
+      text: 'Index', align: 'center', value: 'indexRecherche', width: '7%',
+    },
+    {
+      text: 'Statut', align: 'center', value: 'statut', width: '14%',
+    },
+    {
+      text: 'Téléchargement', align: 'center', value: 'codeStatut', width: '10%',
+    },
+    {
+      text: 'Action', align: 'center', value: 'delete', width: '6%',
+    },
   ],
   headerExemp: [
     { text: '', value: 'expand', width: '5%' },
-    { text: 'Demande', value: 'num', width: '10%' },
-    { text: 'Création', value: 'dateCreation', width: '10%' },
-    { text: 'Modification', value: 'dateModification', width: '10%' },
-    { text: 'RCR', value: 'rcr', width: '10%' },
-    { text: 'Type', value: 'typeExemp', width: '15%' },
-    { text: 'Index', value: 'indexRecherche', width: '10%' },
-    { text: 'Statut', value: 'statut', width: '10%' },
-    { text: 'Téléchargement', value: 'codeStatut', width: '8%' },
-    { text: '', value: 'delete', width: '3%' },
+    {
+      text: 'Demande', align: 'center', value: 'num', width: '6%',
+    },
+    {
+      text: 'Création', align: 'center', value: 'dateCreation', width: '10%',
+    },
+    {
+      text: 'Mise à jour', align: 'center', value: 'dateModification', width: '10%',
+    },
+    {
+      text: 'RCR', align: 'center', value: 'rcr', width: '10%',
+    },
+    {
+      text: 'Type', align: 'center', value: 'typeExemp', width: '15%',
+    },
+    {
+      text: 'Index', align: 'center', value: 'indexRecherche', width: '10%',
+    },
+    {
+      text: 'Statut', align: 'center', value: 'statut', width: '10%',
+    },
+    {
+      text: 'Téléchargement', align: 'center', value: 'codeStatut', width: '10%',
+    },
+    {
+      text: 'Action', align: 'center', value: 'delete', width: '5%',
+    },
   ],
   headerExempArchiveAdmin: [
     { text: '', value: 'expand', width: '5%' },
-    { text: 'Demande', value: 'num', width: '10%' },
-    { text: 'Création', value: 'dateCreation', width: '15%' },
-    { text: 'Modification', value: 'dateModification', width: '15%' },
-    { text: 'ILN', value: 'iln', width: '10%' },
-    { text: 'RCR', value: 'rcr', width: '10%' },
-    { text: 'Type', value: 'typeExemp', width: '15%' },
-    { text: 'Index', value: 'indexRecherche', width: '10%' },
-    { text: 'Téléchargement', value: 'codeStatut', width: '10%' },
-    { text: '', value: 'delete', width: '10%' },
+    {
+      text: 'Demande', align: 'center', value: 'num', width: '10%',
+    },
+    {
+      text: 'Création', align: 'center', value: 'dateCreation', width: '12%',
+    },
+    {
+      text: 'Mise à jour', align: 'center', value: 'dateModification', width: '12%',
+    },
+    {
+      text: 'ILN', align: 'center', value: 'iln', width: '8%',
+    },
+    {
+      text: 'RCR', align: 'center', value: 'rcr', width: '10%',
+    },
+    {
+      text: 'Type', align: 'center', value: 'typeExemp', width: '15%',
+    },
+    {
+      text: 'Index', align: 'center', value: 'indexRecherche', width: '10%',
+    },
+    {
+      text: 'Téléchargement', align: 'center', value: 'codeStatut', width: '10%',
+    },
+    {
+      text: 'Action', align: 'center', value: 'delete', width: '18%',
+    },
   ],
   headerExempArchive: [
     { text: '', value: 'expand', width: '5%' },
-    { text: 'Demande', value: 'num', width: '15%' },
-    { text: 'Création', value: 'dateCreation', width: '15%' },
-    { text: 'Modification', value: 'dateModification', width: '15%' },
-    { text: 'RCR', value: 'rcr', width: '10%' },
-    { text: 'Type', value: 'typeExemp', width: '15%' },
-    { text: 'Index', value: 'indexRecherche', width: '15%' },
-    { text: 'Téléchargement', value: 'codeStatut', width: '10%' },
+    {
+      text: 'Demande', align: 'center', value: 'num', width: '15%',
+    },
+    {
+      text: 'Création', align: 'center', value: 'dateCreation', width: '15%',
+    },
+    {
+      text: 'Mise à jour', align: 'center', value: 'dateModification', width: '15%',
+    },
+    {
+      text: 'RCR', align: 'center', value: 'rcr', width: '10%',
+    },
+    {
+      text: 'Type', align: 'center', value: 'typeExemp', width: '15%',
+    },
+    {
+      text: 'Index', align: 'center', value: 'indexRecherche', width: '15%',
+    },
+    {
+      text: 'Téléchargement', align: 'center', value: 'codeStatut', width: '10%',
+    },
   ],
   headerRecouvAdmin: [
     { text: '', value: 'expand', width: '5%' },
-    { text: 'Demande', value: 'num', width: '10%' },
-    { text: 'Création', value: 'dateCreation', width: '10%' },
-    { text: 'Modification', value: 'dateModification', width: '10%' },
-    { text: 'ILN', value: 'iln', width: '7%' },
-    { text: 'RCR', value: 'rcr', width: '8%' },
-    { text: 'Index', value: 'indexRecherche', width: '10%' },
-    { text: 'Statut', value: 'statut', width: '15%' },
-    { text: 'Téléchargement', value: 'codeStatut', width: '5%' },
-    { text: '', value: 'delete', width: '10%' },
+    {
+      text: 'Demande', align: 'center', value: 'num', width: '10%',
+    },
+    {
+      text: 'Création', align: 'center', value: 'dateCreation', width: '10%',
+    },
+    {
+      text: 'Mise à jour', align: 'center', value: 'dateModification', width: '10%',
+    },
+    {
+      text: 'ILN', align: 'center', value: 'iln', width: '7%',
+    },
+    {
+      text: 'RCR', align: 'center', value: 'rcr', width: '8%',
+    },
+    {
+      text: 'Index', align: 'center', value: 'indexRecherche', width: '10%',
+    },
+    {
+      text: 'Statut', align: 'center', value: 'statut', width: '15%',
+    },
+    {
+      text: 'Téléchargement', align: 'center', value: 'codeStatut', width: '8%',
+    },
+    {
+      text: 'Action', align: 'center', value: 'delete', width: '7%',
+    },
   ],
   headerRecouv: [
     { text: '', value: 'expand', width: '5%' },
-    { text: 'Demande', value: 'num', width: '10%' },
-    { text: 'Création', value: 'dateCreation', width: '10%' },
-    { text: 'Modification', value: 'dateModification', width: '10%' },
-    { text: 'RCR', value: 'rcr', width: '10%' },
-    { text: 'Index', value: 'indexRecherche', width: '10%' },
-    { text: 'Statut', value: 'statut', width: '15%' },
-    { text: 'Téléchargement', value: 'codeStatut', width: '5%' },
-    { text: '', value: 'delete', width: '10%' },
+    {
+      text: 'Demande', align: 'center', value: 'num', width: '10%',
+    },
+    {
+      text: 'Création', align: 'center', value: 'dateCreation', width: '10%',
+    },
+    {
+      text: 'Mise à jour', align: 'center', value: 'dateModification', width: '10%',
+    },
+    {
+      text: 'RCR', align: 'center', value: 'rcr', width: '10%',
+    },
+    {
+      text: 'Index', align: 'center', value: 'indexRecherche', width: '10%',
+    },
+    {
+      text: 'Statut', align: 'center', value: 'statut', width: '15%',
+    },
+    {
+      text: 'Téléchargement', align: 'center', value: 'codeStatut', width: '8%',
+    },
+    {
+      text: 'Action', align: 'center', value: 'delete', width: '7%',
+    },
   ],
   headerRecouvArchiveAdmin: [
     { text: '', value: 'expand', width: '5%' },
-    { text: 'Demande', value: 'num', width: '10%' },
-    { text: 'Création', value: 'dateCreation', width: '15%' },
-    { text: 'Modification', value: 'dateModification', width: '15%' },
-    { text: 'ILN', value: 'iln', width: '10%' },
-    { text: 'RCR', value: 'rcr', width: '10%' },
-    { text: 'Index', value: 'indexRecherche', width: '10%' },
-    { text: 'Statut', value: 'codeStatut', width: '10%' },
-    { text: 'Téléchargement', value: 'codeStatut', width: '10%' },
+    {
+      text: 'Demande', align: 'center', value: 'num', width: '10%',
+    },
+    {
+      text: 'Création', align: 'center', value: 'dateCreation', width: '15%',
+    },
+    {
+      text: 'Mise à jour', align: 'center', value: 'dateModification', width: '15%',
+    },
+    {
+      text: 'ILN', align: 'center', value: 'iln', width: '10%',
+    },
+    {
+      text: 'RCR', align: 'center', value: 'rcr', width: '10%',
+    },
+    {
+      text: 'Index', align: 'center', value: 'indexRecherche', width: '10%',
+    },
+    {
+      text: 'Statut', align: 'center', value: 'codeStatut', width: '10%',
+    },
+    {
+      text: 'Téléchargement', align: 'center', value: 'codeStatut', width: '10%',
+    },
   ],
   headerRecouvArchive: [
     { text: '', value: 'expand', width: '5%' },
-    { text: 'Demande', value: 'num', width: '15%' },
-    { text: 'Création', value: 'dateCreation', width: '15%' },
-    { text: 'Modification', value: 'dateModification', width: '15%' },
-    { text: 'RCR', value: 'rcr', width: '10%' },
-    { text: 'Index', value: 'indexRecherche', width: '15%' },
-    { text: 'Statut', value: 'codeStatut', width: '10%' },
-    { text: 'Téléchargement', value: 'codeStatut', width: '10%' },
+    {
+      text: 'Demande', align: 'center', value: 'num', width: '15%',
+    },
+    {
+      text: 'Création', align: 'center', value: 'dateCreation', width: '15%',
+    },
+    {
+      text: 'Mise à jour', align: 'center', value: 'dateModification', width: '15%',
+    },
+    {
+      text: 'RCR', align: 'center', value: 'rcr', width: '10%',
+    },
+    {
+      text: 'Index', align: 'center', value: 'indexRecherche', width: '15%',
+    },
+    {
+      text: 'Statut', align: 'center', value: 'codeStatut', width: '10%',
+    },
+    {
+      text: 'Téléchargement', align: 'center', value: 'codeStatut', width: '10%',
+    },
   ],
 };
