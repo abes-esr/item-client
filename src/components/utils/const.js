@@ -65,7 +65,7 @@ export default {
       text: 'Demande', align: 'center', value: 'num', width: '7%',
     },
     {
-      text: 'Mise à jour', align: 'center', value: 'dateModification', width: '15%',
+      text: 'Mise à jour', align: 'center', value: 'dateModification', width: '10%',
     },
     {
       text: 'ILN', align: 'center', value: 'iln', width: '10%',
@@ -83,10 +83,10 @@ export default {
       text: 'Statut', align: 'center', value: 'statut', width: '10%',
     },
     {
-      text: 'Téléchargement', align: 'center', value: 'codeStatut', width: '8%',
+      text: 'Téléchargement', align: 'center', value: 'codeStatut', width: '10%',
     },
     {
-      text: 'Action', align: 'center', value: 'delete', width: '6%',
+      text: 'Action', align: 'center', value: 'delete', width: '9%',
     },
   ],
   headerModif: [
