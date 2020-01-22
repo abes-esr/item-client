@@ -96,7 +96,7 @@
             <v-icon>archive</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Gérer mes taux<br>de recouvrement archivées</v-list-item-title>
+            <v-list-item-title>Gérer mes taux<br>de recouvrement archivés</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
