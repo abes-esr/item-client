@@ -11,14 +11,16 @@
                       Ces traitements sont automatiquement répercutés dans les fichiers de transferts réguliers.
                     </v-card-text>
                 </v-col>
-              <hide-at :breakpoints="{small: 620, medium: 1500, large: 1600}" breakpoint="mediumAndBelow">
+                <hide-at :breakpoints="{small: 620, medium: 1500, large: 1600}" breakpoint="mediumAndBelow">
                 <v-col cols="12" sm="12" md="3" lg="3">
                     <v-card-text class="white--text item-text-center">
-                        <p><span class="title">Assistance</span></p>
-                        <p><a class="white--text" href="https://stp.abes.fr/node/3?origine=sudocpro" target="_blank" rel="noopener">Guichet ABESstp</a></p>
+                      <v-list-item-content>
+                        <v-list-item-title class="headline mb-1">Assistance</v-list-item-title>
+                        <v-list-item-subtitle><a class="white--text" href="https://stp.abes.fr/node/3?origine=sudocpro" target="_blank" rel="noopener" style="margin-left: -0em;">Guichet ABESstp</a></v-list-item-subtitle>
+                      </v-list-item-content>
                     </v-card-text>
                 </v-col>
-              </hide-at>
+                </hide-at>
                 <hide-at :breakpoints="{small: 620, medium: 1500, large: 1600}" breakpoint="mediumAndBelow">
                 <v-col cols="12" sm="12" md="1" lg="1">
                   <v-card-text class="justify-center">
