@@ -70,9 +70,7 @@
 <script>
 import loading from 'vue-full-loading';
 import { showAt } from 'vue-breakpoints';
-import axios from 'axios';
 import TYPEDEMANDE from '../../enums/typeDemande';
-
 
 export default {
   name: 'upload',
