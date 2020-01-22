@@ -189,7 +189,7 @@ export default {
       this.dialogFinished = false;
       this.$router.replace({ name: 'home' });
     },
-    updateParent(variable, variable2) {
+    updateParent(variable) {
       this.exemplairesMultiplesParent = variable;
     },
     resetError() {
