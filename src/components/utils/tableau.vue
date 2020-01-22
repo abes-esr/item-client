@@ -14,8 +14,8 @@
                 <v-card-title class="title" v-if="!archive && modif === 'MODIF'">Gérer mes modifications</v-card-title>
                 <v-card-title class="title" v-if="archive && modif === 'EXEMP'">Mes créations archivées</v-card-title>
                 <v-card-title class="title" v-if="!archive && modif === 'EXEMP'">Gérer mes créations</v-card-title>
-                <v-card-title class="title" v-if="archive && modif === 'RECOUV'">Mes demandes de recouvrement archivées</v-card-title>
-                <v-card-title class="title" v-if="!archive && modif === 'RECOUV'">Gérer mes demandes de recouvrement</v-card-title>
+                <v-card-title class="title" v-if="archive && modif === 'RECOUV'">Mes taux de recouvrement archivées</v-card-title>
+                <v-card-title class="title" v-if="!archive && modif === 'RECOUV'">Gérer mes taux de recouvrement</v-card-title>
               </v-col>
               <!--Zone de case à cocher pour affichage restrictif si administrateur uniquement en modif et admin-->
               <v-col cols="12" sm="12" md="8">
