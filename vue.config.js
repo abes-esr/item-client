@@ -1,17 +1,6 @@
-const fs = require('fs');
-const packageJson = fs.readFileSync('./package.json');
-const version = JSON.parse(packageJson).version || 0;
-
 module.exports = {
   lintOnSave: true,
   configureWebpack: {
-    plugins: [
-      new webpack.DefinePlugin({
-        'process.env': {
-          PACKAGE_VERSION: '"' + version + '"'
-        }
-      })
-    ],
     optimization: {
       splitChunks: {
         chunks: 'all',
