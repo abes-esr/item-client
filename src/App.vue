@@ -177,13 +177,14 @@
     </v-content>
     <!-- FOOTER -->
     <footerDesc v-if="!authenticated"></footerDesc>
-    <footerAbes></footerAbes>
+    <footerAbes :applicationVersion="this.applicationVersion"></footerAbes>
     <!-- POPUP EN CAS DE DECONNEXION AUTOMATIQUE -->
     <logout :dialog=dialog @closePopup="dialog = false;"></logout>
   </v-app>
 </template>
 
 <script>
+import axios from 'axios';
 import footerAbes from '@/components/footer/footer.vue';
 import footerDesc from '@/components/footer/desc.vue';
 import logout from '@/components/utils/logoutPopup.vue';
@@ -203,6 +204,7 @@ export default {
       isAdmin: false,
       dialog: false,
       wrapped: '',
+      applicationVersion: '',
     };
   },
   mounted() {
@@ -238,6 +240,20 @@ export default {
     setAuthenticated(status) {
       this.authenticated = status;
       this.getUserData();
+      this.getApplicationVersion();
+    },
+    // récupère le numero de version de l'application
+    getApplicationVersion() {
+      return axios({
+        headers: { Authorization: this.user.jwt },
+        method: 'GET',
+        url: `${process.env.VUE_APP_ROOT_API}applicationVersion`,
+      }).then(
+        (result) => {
+          console.log(result);
+          this.applicationVersion = result.data;
+        },
+      );
     },
     // Vide la session en cas de déconnexion, puis renvoie vers la page de logn
     logout() {
