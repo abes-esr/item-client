@@ -129,7 +129,7 @@
                   <span class="headline mb-0" id="numLigne">Ligne de votre fichier : {{ noticeEnCours + 1 }} sur {{ numberLines }}</span>
                 </v-card>
               </v-col>
-              <v-col :key="3" cols="12" sm="12"> <!--Ligne du fichier-->
+              <v-col :key="3" cols="12" sm="12"> <!--PPN de la notice en cours-->
                 <v-card class="pa-1" elevation="0">
                   <span class="headline mb-0">PPN n° {{ this.numeroPPNNotice }}</span>
                 </v-card>

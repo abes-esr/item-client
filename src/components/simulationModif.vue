@@ -110,6 +110,11 @@
                   <span class="headline mb-0" id="numLigne">Ligne de votre fichier : {{ noticeEnCours + 1 }} sur {{ numberLines }}</span>
                 </v-card>
               </v-col>
+              <v-col :key="3" cols="12" sm="12"> <!--PPN de la notice en cours-->
+                <v-card class="pa-1" elevation="0">
+                  <span class="headline mb-0">PPN n° {{ this.numeroPPNNotice }}</span>
+                </v-card>
+              </v-col>
             </v-row>
             <v-row>
               <v-col :key="1" cols="12" sm="12" md="5"> <!--Exemplaires avant traitement-->
@@ -207,6 +212,7 @@ export default {
   mixins: [supprMixin],
   data() {
     return {
+      numeroPPNNotice: 0,
       noticeEnCours: 0,
       numberLines: 0,
       loading: false,
@@ -290,8 +296,9 @@ export default {
         }&numLigne=${this.noticeEnCours}`,
       }).then(
         (result) => {
-          this.noticeAvant = result.data[0];
-          this.noticeApres = result.data[1];
+          this.numeroPPNNotice = result.data[0];
+          this.noticeAvant = result.data[1];
+          this.noticeApres = result.data[2];
           this.loading = false;
         },
         (error) => {
