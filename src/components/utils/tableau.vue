@@ -19,9 +19,10 @@
               </v-col>
               <!--Zone de case à cocher pour affichage restrictif si administrateur uniquement en modif et admin-->
               <v-col cols="12" sm="12" md="8">
+                <!--Zone de case à cocher pour affichage restrictif - tableaux classiques-->
                 <div v-if="user.role === 'ADMIN' && !archive" class="item-flexbox-for-checkbox">
                   <div class="item-margin-right-app-bar">
-                    <v-checkbox value="restrictDisplay" id="restrictDisplay" @click.native="switchRestrictionAffichage()" label="Afficher uniquement les demandes terminées / erreur pour les autres utilisateurs"></v-checkbox>
+                    <v-checkbox value="restrictDisplay" id="restrictDisplay" @click.native="switchRestrictionAffichage()" label="Affichage restrictif des demandes des autres utilisateurs"></v-checkbox>
                   </div>
                   <div class="item-margin-right-app-bar" style="margin-bottom: 0.5em">
                     <v-dialog v-model="popupAffichageRestrictif" persistent max-width="600">
@@ -32,15 +33,39 @@
                       </template>
                       <v-card>
                         <v-card-title class="headline">Affichage restrictif</v-card-title>
-                        <v-card-text>Permet en tant qu'administrateur de ne voir que les demandes en cours de saisie et en erreur des autres utilisateurs rattachés à son ILN.</v-card-text>
+                        <v-card-text>Permet en tant qu'administrateur de ne voir que les demandes terminées et en erreur, des utilisateurs rattachés à son ILN.</v-card-text>
                         <v-card-actions>
                           <div class="flex-grow-1"></div>
-                          <v-btn text @click="popupAffichageRestrictif = false">Compris</v-btn>
+                          <v-btn text @click="popupAffichageRestrictif = false">Ok</v-btn>
                         </v-card-actions>
                       </v-card>
                     </v-dialog>
                   </div>
                 </div>
+                <!--Zone de case à cocher pour affichage restrictif - tableaux d'archive-->
+                <div v-if="user.role === 'ADMIN' && archive" class="item-flexbox-for-checkbox">
+                  <div class="item-margin-right-app-bar">
+                    <v-checkbox value="restrictDisplay" id="restrictDisplay" @click.native="switchRestrictionAffichage()" label="Affichage restrictif des demandes archivées"></v-checkbox>
+                  </div>
+                  <div class="item-margin-right-app-bar" style="margin-bottom: 0.5em">
+                    <v-dialog v-model="popupAffichageRestrictif" persistent max-width="600">
+                      <template v-slot:activator="{ on }">
+                        <v-btn text small icon v-on="on">
+                          <v-icon>info</v-icon>
+                        </v-btn>
+                      </template>
+                      <v-card>
+                        <v-card-title class="headline">Affichage restrictif</v-card-title>
+                        <v-card-text>Case cochée : voir en tant qu'administrateur les demandes archivées de son RCR uniquement.<br>Case non cochée : voir en tant qu'administrateur les demandes archivées de son ILN.</v-card-text>
+                        <v-card-actions>
+                          <div class="flex-grow-1"></div>
+                          <v-btn text @click="popupAffichageRestrictif = false">Ok</v-btn>
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
+                  </div>
+                </div>
+                <!--TODO mettre en place la restriction sur le tableau d'archive un deuxieme item-flexbox-for-checkbox-->
               </v-col>
             </v-row>
           </v-container>
@@ -569,7 +594,7 @@ export default {
         if (this.archive) {
           url = `${process.env.VUE_APP_ROOT_API}chercherArchives?userNum=${
             this.user.userNum
-          }&type=${this.modif}`;
+          }&type=${this.modif}&restriction=${this.affichageRestrictifAdmin}`;
         } else if (this.user.role === 'ADMIN') {
           url = `${process.env.VUE_APP_ROOT_API}demandes?userNum=${
             this.user.userNum
