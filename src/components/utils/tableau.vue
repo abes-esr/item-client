@@ -14,14 +14,15 @@
                 <v-card-title class="title" v-if="!archive && modif === 'MODIF'">Gérer mes modifications</v-card-title>
                 <v-card-title class="title" v-if="archive && modif === 'EXEMP'">Mes créations archivées</v-card-title>
                 <v-card-title class="title" v-if="!archive && modif === 'EXEMP'">Gérer mes créations</v-card-title>
-                <v-card-title class="title" v-if="archive && modif === 'RECOUV'">Mes demandes de recouvrement archivées</v-card-title>
-                <v-card-title class="title" v-if="!archive && modif === 'RECOUV'">Gérer mes demandes de recouvrement</v-card-title>
+                <v-card-title class="title" v-if="archive && modif === 'RECOUV'">Mes taux de recouvrement archivées</v-card-title>
+                <v-card-title class="title" v-if="!archive && modif === 'RECOUV'">Gérer mes taux de recouvrement</v-card-title>
               </v-col>
               <!--Zone de case à cocher pour affichage restrictif si administrateur uniquement en modif et admin-->
               <v-col cols="12" sm="12" md="8">
+                <!--Zone de case à cocher pour affichage restrictif - tableaux classiques-->
                 <div v-if="user.role === 'ADMIN' && !archive" class="item-flexbox-for-checkbox">
                   <div class="item-margin-right-app-bar">
-                    <v-checkbox value="restrictDisplay" id="restrictDisplay" @click.native="switchRestrictionAffichage()" label="Afficher uniquement les demandes terminées / erreur pour les autres utilisateurs"></v-checkbox>
+                    <v-checkbox value="restrictDisplay" id="restrictDisplay" @click.native="switchRestrictionAffichage()" label="Affichage restrictif des demandes des autres utilisateurs"></v-checkbox>
                   </div>
                   <div class="item-margin-right-app-bar" style="margin-bottom: 0.5em">
                     <v-dialog v-model="popupAffichageRestrictif" persistent max-width="600">
@@ -32,15 +33,39 @@
                       </template>
                       <v-card>
                         <v-card-title class="headline">Affichage restrictif</v-card-title>
-                        <v-card-text>Permet en tant qu'administrateur de ne voir que les demandes en cours de saisie et en erreur des autres utilisateurs rattachés à son ILN.</v-card-text>
+                        <v-card-text>Permet en tant qu'administrateur de ne voir que les demandes terminées et en erreur, des utilisateurs rattachés à son ILN.</v-card-text>
                         <v-card-actions>
                           <div class="flex-grow-1"></div>
-                          <v-btn text @click="popupAffichageRestrictif = false">Compris</v-btn>
+                          <v-btn text @click="popupAffichageRestrictif = false">Ok</v-btn>
                         </v-card-actions>
                       </v-card>
                     </v-dialog>
                   </div>
                 </div>
+                <!--Zone de case à cocher pour affichage restrictif - tableaux d'archive-->
+                <div v-if="user.role === 'ADMIN' && archive" class="item-flexbox-for-checkbox">
+                  <div class="item-margin-right-app-bar">
+                    <v-checkbox value="restrictDisplay" id="restrictDisplay" @click.native="switchRestrictionAffichage()" label="Affichage restrictif des demandes archivées"></v-checkbox>
+                  </div>
+                  <div class="item-margin-right-app-bar" style="margin-bottom: 0.5em">
+                    <v-dialog v-model="popupAffichageRestrictif" persistent max-width="600">
+                      <template v-slot:activator="{ on }">
+                        <v-btn text small icon v-on="on">
+                          <v-icon>info</v-icon>
+                        </v-btn>
+                      </template>
+                      <v-card>
+                        <v-card-title class="headline">Affichage restrictif</v-card-title>
+                        <v-card-text>Case cochée : voir en tant qu'administrateur les demandes archivées de son RCR uniquement.<br>Case non cochée : voir en tant qu'administrateur les demandes archivées de son ILN.</v-card-text>
+                        <v-card-actions>
+                          <div class="flex-grow-1"></div>
+                          <v-btn text @click="popupAffichageRestrictif = false">Ok</v-btn>
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
+                  </div>
+                </div>
+                <!--TODO mettre en place la restriction sur le tableau d'archive un deuxieme item-flexbox-for-checkbox-->
               </v-col>
             </v-row>
           </v-container>
@@ -57,7 +82,7 @@
                 <!--MAJ--><th><v-text-field append-icon="search" aria-label="Recherche par date de modification" clearable class="item-calendar-searchfield-item" hide-details single-line persistent-hint v-model="searchDateModification" v-on:keyup="computedItems('dateModification')"></v-text-field></th>
                 <!--ILN--><th v-if="user.role === 'ADMIN'"><v-text-field append-icon="search" aria-label="Recherche par ILN" clear-icon='clear' clearable hide-details single-line v-model="searchILN" v-on:keyup="computedItems('iln')"></v-text-field></th>
                 <!--RCR--><th><v-text-field append-icon="search" aria-label="Recherche par RCR"  clear-icon='clear' clearable hide-details single-line v-model="searchRCR" v-on:keyup="computedItems('rcr')"></v-text-field></th>
-                <!--TYP--><th><v-select :items="listTypeExemp" @change="computedItems('typeExemp')" aria-label="Recherche par type d'exemplarisation" clear-icon='clear' clearable item-text="libelle" item-value="libelle" no-data-text="Aucun type trouvé." v-model="searchTypeExemp"></v-select></th>
+                <!--TYP--><th><v-select :items="listTypeExemp" @change="computedItems('typeExemp')" aria-label="Recherche par type d'exemplarisation" clear-icon='clear' clearable item-text="libelle" item-value="libelle" no-data-text="Aucun type trouvé." v-model="searchTypeExemp" style="font-size:1.1em"></v-select></th>
                 <!--IND--><th><v-text-field append-icon="search" aria-label="Recherche par Index"  clear-icon='clear' clearable hide-details single-line v-model="searchIndexRecherche" v-on:keyup="computedItems('indexRecherche')"></v-text-field></th>
                 <!--STA--><th v-if="!archive"><v-select :items="listStatut" @change="computedItems('statut')" aria-label="Recherche par statut" clear-icon='clear' clearable no-data-text="Aucun statut trouvé." v-model="searchStatut"></v-select></th>
                 <!--TL1--><th></th>
@@ -569,7 +594,7 @@ export default {
         if (this.archive) {
           url = `${process.env.VUE_APP_ROOT_API}chercherArchives?userNum=${
             this.user.userNum
-          }&type=${this.modif}`;
+          }&type=${this.modif}&restriction=${this.affichageRestrictifAdmin}`;
         } else if (this.user.role === 'ADMIN') {
           url = `${process.env.VUE_APP_ROOT_API}demandes?userNum=${
             this.user.userNum

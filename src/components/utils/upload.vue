@@ -41,7 +41,8 @@
         <v-spacer></v-spacer>
         <div v-if="displayPreviousButton" style="margin-right: 0.5em"><v-btn color="info" v-if="precedent" @click="$emit('precedent')" aria-label="Annuler">Précédent</v-btn></div>
         <!-- Lors du clic sur "Envoyer", on emet un évenement "upload" avec le contenu du fichier en paramètre, afin que le composant père puisse récupérer le fichier-->
-        <v-btn v-if="this.uploadInit === false" color="info" :disabled="!fichierPresent" @click="displayDialog()" aria-label="Envoyer">Lancer le traitement en simulation</v-btn>
+        <v-btn v-if="this.uploadInit === false && this.modif === 'RECOUV'" color="info" :disabled="!fichierPresent" @click="displayDialog()" aria-label="Envoyer">Lancer le traitement</v-btn>
+        <v-btn v-if="this.uploadInit === false && (this.modif === 'MODIF' || this.modif === 'EXEMP')" color="info" :disabled="!fichierPresent" @click="displayDialog()" aria-label="Envoyer">Lancer le traitement en simulation</v-btn>
         <v-btn v-if="this.uploadInit === true" color="info" :disabled="!fichierPresent" @click="displayDialog()" aria-label="Envoyer">Envoyer</v-btn>
       </v-card-actions>
     </v-card>
@@ -69,9 +70,7 @@
 <script>
 import loading from 'vue-full-loading';
 import { showAt } from 'vue-breakpoints';
-import axios from 'axios';
 import TYPEDEMANDE from '../../enums/typeDemande';
-
 
 export default {
   name: 'upload',
@@ -158,7 +157,7 @@ export default {
     checkFormat() {
       this.alert = false;
       if (!(this.format.includes(this.$refs.fileInput.files[0].name.split('.')[1]))) {
-        this.alertMessage = `Le format du fichier est non conforme : seuls les fichiers txt ou csv sont autorisés. Merci de consulter la documentation utilisateur à cette adresse : `;
+        this.alertMessage = 'Le format du fichier est non conforme : seuls les fichiers txt ou csv sont autorisés. Merci de consulter la documentation utilisateur à cette adresse : ';
         this.alertType = 'error';
         this.alert = true;
         this.fichierPresent = false;

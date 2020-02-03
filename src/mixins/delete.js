@@ -63,11 +63,10 @@ export default {
                 this.$router.replace('home'); break;
             }
           } else if (modif === TYPEDEMANDE.DEMANDE_RECOUVREMENT) {
-            switch (this.$router.currentRoute.path) {
-              case '/fichierRecouv':
-                this.$router.replace('/rcr'); break;
-              default:
-                this.$router.replace('home'); break;
+            if (this.$router.currentRoute.path === '/fichierRecouv') {
+              this.$router.replace('/rcr');
+            } else {
+              this.$router.replace('home');
             }
           }
         },

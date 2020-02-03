@@ -34,12 +34,23 @@
         </v-dialog>
         <!-- POPUP DE CONFIRMATION QUE LE TRAITEMENT EST LANCE -->
         <v-dialog v-model="dialogFinished" width="500">
-          <v-card>
+          <v-card v-if="this.modif !== 'EXEMP'">
             <v-card-title class="headline" primary-title>Traitement validé</v-card-title>
             <v-card-text>Votre demande est en cours de traitement, elle sera traitée dès que
               possible.<br/>Un mail vous sera envoyé une fois le traitement terminé.
               <br>Vous pouvez retrouver l'ensemble de vos demandes depuis la page "Gérer mes
               demandes".
+            </v-card-text>
+            <v-divider></v-divider>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="primary" text @click="dialog = false, $router.push({ name: 'home' })" aria-label="OK">OK</v-btn>
+            </v-card-actions>
+          </v-card>
+          <v-card v-if="this.modif === 'EXEMP'">
+            <v-card-title class="headline" primary-title>Traitement validé</v-card-title>
+            <v-card-text>Votre demande est en cours de traitement.<br/>Un mail vous sera envoyé quand celle-ci sera terminée.
+              <br>Vous pouvez retrouver l'ensemble de vos demandes sur votre tableau de bord ITEM. Rubrique "Gérer mes créations".
             </v-card-text>
             <v-divider></v-divider>
             <v-card-actions>
@@ -118,7 +129,7 @@
                   <span class="headline mb-0" id="numLigne">Ligne de votre fichier : {{ noticeEnCours + 1 }} sur {{ numberLines }}</span>
                 </v-card>
               </v-col>
-              <v-col :key="3" cols="12" sm="12"> <!--Ligne du fichier-->
+              <v-col :key="3" cols="12" sm="12"> <!--PPN de la notice en cours-->
                 <v-card class="pa-1" elevation="0">
                   <span class="headline mb-0">PPN n° {{ this.numeroPPNNotice }}</span>
                 </v-card>
@@ -205,13 +216,18 @@
           </v-container>
         </v-card>
         <v-row justify="end" id="layoutButtonOk" style="margin : 1em 0 0 0">
-          <v-btn large color="info" @click="dialog = true"
+          <v-btn large color="info" @click="etapeDemande(numDem, modif, 3)" aria-label="Annuler" style="margin-right: 1em">
+            Précédent
+          </v-btn>
+          <v-btn v-if="!alert" large color="info" @click="dialog = true"
                  aria-label="Lancer le traitement en production">Lancer le traitement en production
+          </v-btn>
+          <v-btn v-if="alert" large color="info"
+                 aria-label="Lancer le traitement en production" disabled>Lancer le traitement en production
           </v-btn>
         </v-row>
       </v-col>
     </v-row>
-
   </v-container>
 </template>
 

@@ -3,6 +3,14 @@
       <v-row>
           <v-chip color="secondary" href="http://abes.fr/">&copy; 2019 — ABES</v-chip>
            <v-spacer></v-spacer>
+        <v-tooltip v-if="applicationVersion !== ''" top>
+          <template v-slot:activator="{ on }">
+            <v-chip color="secondary" v-on="on">
+            Version
+          </v-chip>
+          </template>
+          <span>{{ applicationVersion }}</span>
+        </v-tooltip>
           <v-chip color="secondary" @click="$router.push({ name: 'donnees' })">
             Données Personnelles
           </v-chip>
@@ -23,27 +31,17 @@ export default {
   data() {
     return {
       user: {},
-      /** applicationVersion: '',* */
     };
+  },
+  props: {
+    applicationVersion: {
+      type: String,
+      default: '',
+    },
   },
   created() {
     this.user = JSON.parse(sessionStorage.getItem('user'));
-    /** this.getApplicationVersion();* */
   },
-  /**
-  methods: {
-    getApplicationVersion() {
-      return axios({
-        method: 'GET',
-        url: `${process.env.VUE_APP_ROOT_API}versionApplication`,
-      }).then(
-        (result) => {
-          this.applicationVersion = result.data;
-        },
-      );
-    },
-  },
-  * */
 };
 </script>
 

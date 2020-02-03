@@ -45,7 +45,7 @@
       <v-divider></v-divider>
 
       <v-list dense nav>
-        <v-list-item v-on:click="$router.push({ name: 'home' })">
+        <v-list-item v-on:click="$router.push({ name: 'home' }).catch(err => {})">
           <v-list-item-action>
             <v-icon>home</v-icon>
           </v-list-item-action>
@@ -53,7 +53,7 @@
             <v-list-item-title>Accueil</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item v-on:click="$router.push({ name: 'profil' })">
+        <v-list-item v-on:click="$router.push({ name: 'profil' }).catch(err => {})">
           <v-list-item-action>
             <v-icon>mail_outline</v-icon>
           </v-list-item-action>
@@ -75,7 +75,7 @@
             Recouvrement
           </v-list-item-title>
         </v-list-item>
-        <v-list-item v-on:click="$router.push({ name: 'rcrRecouv' })">
+        <v-list-item v-on:click="$router.push({ name: 'rcrRecouv' }).catch(err => {})">
           <v-list-item-action>
             <v-icon>mdi-percent</v-icon>
           </v-list-item-action>
@@ -83,7 +83,7 @@
             <v-list-item-title>Calculer mon taux <br>de recouvrement</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item v-on:click="$router.push({ name: 'tabRecouv' })">
+        <v-list-item v-on:click="$router.push({ name: 'tabRecouv' }).catch(err => {})">
           <v-list-item-action>
             <v-icon>list</v-icon>
           </v-list-item-action>
@@ -91,12 +91,12 @@
             <v-list-item-title>Gérer mes taux<br>de recouvrement</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item v-on:click="$router.push({ name: 'archiveRecouv' })">
+        <v-list-item v-on:click="$router.push({ name: 'archiveRecouv' }).catch(err => {})">
           <v-list-item-action>
             <v-icon>archive</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Gérer mes taux<br>de recouvrement archivées</v-list-item-title>
+            <v-list-item-title>Gérer mes taux<br>de recouvrement archivés</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -109,7 +109,7 @@
             Creations
           </v-list-item-title>
         </v-list-item>
-        <v-list-item v-on:click="$router.push({ name: 'rcrEx' })">
+        <v-list-item v-on:click="$router.push({ name: 'rcrEx' }).catch(err => {})">
           <v-list-item-action>
             <v-icon>edit</v-icon>
           </v-list-item-action>
@@ -117,7 +117,7 @@
             <v-list-item-title>Créer des exemplaires</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item v-on:click="$router.push({ name: 'tabExemp' })">
+        <v-list-item v-on:click="$router.push({ name: 'tabExemp' }).catch(err => {})">
           <v-list-item-action>
             <v-icon>list</v-icon>
           </v-list-item-action>
@@ -125,7 +125,7 @@
             <v-list-item-title>Gérer mes créations</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item v-on:click="$router.push({ name: 'archiveEx' })">
+        <v-list-item v-on:click="$router.push({ name: 'archiveEx' }).catch(err => {})">
           <v-list-item-action>
             <v-icon>archive</v-icon>
           </v-list-item-action>
@@ -143,7 +143,7 @@
             Modifications
           </v-list-item-title>
         </v-list-item>
-        <v-list-item v-on:click="$router.push({ name: 'rcr' })">
+        <v-list-item v-on:click="$router.push({ name: 'rcr' }).catch(err => {})">
           <v-list-item-action>
             <v-icon>edit</v-icon>
           </v-list-item-action>
@@ -151,7 +151,7 @@
             <v-list-item-title>Modifier des exemplaires</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item v-on:click="$router.push({ name: 'tabModif' })">
+        <v-list-item v-on:click="$router.push({ name: 'tabModif' }).catch(err => {})">
           <v-list-item-action>
             <v-icon>list</v-icon>
           </v-list-item-action>
@@ -159,7 +159,7 @@
             <v-list-item-title>Gérer mes modifications</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item v-on:click="$router.push({ name: 'archive' })">
+        <v-list-item v-on:click="$router.push({ name: 'archive' }).catch(err => {})">
           <v-list-item-action>
             <v-icon>archive</v-icon>
           </v-list-item-action>
@@ -177,13 +177,14 @@
     </v-content>
     <!-- FOOTER -->
     <footerDesc v-if="!authenticated"></footerDesc>
-    <footerAbes></footerAbes>
+    <footerAbes :applicationVersion="this.applicationVersion"></footerAbes>
     <!-- POPUP EN CAS DE DECONNEXION AUTOMATIQUE -->
     <logout :dialog=dialog @closePopup="dialog = false;"></logout>
   </v-app>
 </template>
 
 <script>
+import axios from 'axios';
 import footerAbes from '@/components/footer/footer.vue';
 import footerDesc from '@/components/footer/desc.vue';
 import logout from '@/components/utils/logoutPopup.vue';
@@ -203,6 +204,7 @@ export default {
       isAdmin: false,
       dialog: false,
       wrapped: '',
+      applicationVersion: '',
     };
   },
   mounted() {
@@ -238,6 +240,20 @@ export default {
     setAuthenticated(status) {
       this.authenticated = status;
       this.getUserData();
+      this.getApplicationVersion();
+    },
+    // récupère le numero de version de l'application
+    getApplicationVersion() {
+      return axios({
+        headers: { Authorization: this.user.jwt },
+        method: 'GET',
+        url: `${process.env.VUE_APP_ROOT_API}applicationVersion`,
+      }).then(
+        (result) => {
+          console.log(result);
+          this.applicationVersion = result.data;
+        },
+      );
     },
     // Vide la session en cas de déconnexion, puis renvoie vers la page de logn
     logout() {
@@ -270,6 +286,7 @@ export default {
     },
   },
 };
+
 </script>
 
 <style>

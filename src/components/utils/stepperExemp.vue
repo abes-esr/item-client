@@ -5,11 +5,11 @@
       <v-stepper-step :editable="current > 1" v-if="this.numDemande === undefined" step="1" :complete="current > 1">Sélection RCR</v-stepper-step>
       <v-stepper-step :editable="current > 1" v-if="this.numDemande !== undefined" step="1" :complete="current > 1" @click="supprimerDemande(numDemande, modif)">Sélection RCR<small>Demande n°{{numDemande}}</small></v-stepper-step>
       <v-divider></v-divider>
-      <v-stepper-step :editable="current > 2" step="2" :complete="current > 2" @click="etapeDemande(numDemande, modif, 2)">Choix du type<small>{{typeExemplarisation}}</small></v-stepper-step>
+      <v-stepper-step :editable="current > 2" step="2" :complete="current > 2" @click="etapeDemande(numDemande, modif, 2)">Type document<small>{{typeExemplarisation}}</small></v-stepper-step>
       <v-divider></v-divider>
-      <v-stepper-step :editable="current > 3" step="3" :complete="current > 3" @click="etapeDemande(numDemande, modif, 3)">Envoi<small>du fichier</small></v-stepper-step>
+      <v-stepper-step :editable="current > 3" step="3" :complete="current > 3" @click="etapeDemande(numDemande, modif, 3)">Chargement<small>fichier</small></v-stepper-step>
       <v-divider></v-divider>
-      <v-stepper-step :editable="current > 4" step="4" :complete="current > 4">Simulation<small>avant envoi</small></v-stepper-step>
+      <v-stepper-step :editable="current > 4" step="4" :complete="current > 4">Simulation</v-stepper-step>
     </v-stepper-header>
   </v-stepper>
 </template>
