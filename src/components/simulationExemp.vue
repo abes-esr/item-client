@@ -55,7 +55,7 @@
             <v-divider></v-divider>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="primary" text @click="dialog = false, $router.push({ name: 'home' })" aria-label="OK">OK</v-btn>
+              <v-btn color="primary" text @click="dialog = false, $router.push({ name: 'tabExemp' })" aria-label="OK">OK</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
