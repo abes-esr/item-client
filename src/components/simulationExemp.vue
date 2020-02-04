@@ -2,7 +2,7 @@
   <!-- PAGE DE SIMULATION -->
   <v-container fluid>
     <loading :show="loading" label="Chargement en cours..."></loading>
-    <v-row justify="center" align="center">
+    <v-row justify="center" align="center" style="padding: 1em">
       <v-col class="text-center">
         <!-- POPUP DE SUPPRESSION DE LA DEMANDE -->
         <v-dialog v-model="popupDelete" width="500">
@@ -103,7 +103,7 @@
           <span v-html="alertMessage"></span>
         </v-alert>
         <!-- CONTENU SIMULATION -->
-        <v-card>
+        <v-card style="padding: 1em">
           <v-app-bar dark color="primary">
             <v-toolbar-title>Ecran de simulation</v-toolbar-title>
             <v-spacer></v-spacer>
@@ -113,7 +113,7 @@
           <!--TEMPLATE DE SIMULATION-->
           <v-container>
             <v-row no-gutters>
-              <v-col :key="1" cols="12" sm="12" style="margin: 1em 0 0 1em">
+              <v-col :key="1" cols="12" sm="12" style="margin-top: 1em">
                 <!--Message de visualisation de la simulation-->
                 <v-alert type="warning" dense prominent border="left">
                   Cet écran n'est qu'une <strong>visualisation</strong> du traitement.<br>

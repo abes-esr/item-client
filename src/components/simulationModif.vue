@@ -2,7 +2,7 @@
   <!-- PAGE DE SIMULATION -->
   <v-container fluid style="padding: 1em">
     <loading :show="loading" label="Chargement en cours..."></loading>
-    <v-row justify="center" align="center" style="padding: 1.5em">
+    <v-row justify="center" align="center" style="padding: 1em">
       <v-col class="text-center">
         <!-- POPUP DE SUPPRESSION DE LA DEMANDE -->
         <v-dialog v-model="popupDelete" width="500">
