@@ -2,7 +2,7 @@
   <!-- PAGE DE SIMULATION -->
   <v-container fluid>
     <loading :show="loading" label="Chargement en cours..."></loading>
-    <v-row justify="center" align="center">
+    <v-row justify="center" align="center" style="padding: 1em">
       <v-col class="text-center">
         <!-- POPUP DE SUPPRESSION DE LA DEMANDE -->
         <v-dialog v-model="popupDelete" width="500">
@@ -55,7 +55,7 @@
             <v-divider></v-divider>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="primary" text @click="dialog = false, $router.push({ name: 'home' })" aria-label="OK">OK</v-btn>
+              <v-btn color="primary" text @click="dialog = false, $router.push({ name: 'tabExemp' })" aria-label="OK">OK</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -103,7 +103,7 @@
           <span v-html="alertMessage"></span>
         </v-alert>
         <!-- CONTENU SIMULATION -->
-        <v-card>
+        <v-card style="padding: 1em">
           <v-app-bar dark color="primary">
             <v-toolbar-title>Ecran de simulation</v-toolbar-title>
             <v-spacer></v-spacer>
@@ -113,16 +113,14 @@
           <!--TEMPLATE DE SIMULATION-->
           <v-container>
             <v-row no-gutters>
-              <v-col :key="1" cols="12" sm="12">
+              <v-col :key="1" cols="12" sm="12" style="margin-top: 1em">
                 <!--Message de visualisation de la simulation-->
-                <v-card flat>
-                  <p>
-                    Cet écran n'est qu'une visualisation du traitement.<br>
-                    Les règles de validation ne sont pas prises en compte lors de cette simulation.<br>
-                    Il s'agit de la dernière étape avant de lancer le traitement en base de
-                    production.
-                  </p>
-                </v-card>
+                <v-alert type="warning" dense prominent border="left">
+                  Cet écran n'est qu'une <strong>visualisation</strong> du traitement.<br>
+                  Les <strong>règles de validation</strong> ne sont pas prises en compte lors de cette simulation.<br>
+                  Il s'agit de la <strong>dernière étape</strong> avant de lancer le traitement en <strong>base de
+                  production</strong>.
+                </v-alert>
               </v-col>
               <v-col :key="2" cols="12" sm="12"> <!--Ligne du fichier-->
                 <v-card class="pa-1" outlined tile>

@@ -187,7 +187,21 @@ export default {
     },
     turnOffPopup() {
       this.dialogFinished = false;
-      this.$router.replace({ name: 'home' });
+      console.log(this.modif);
+      switch (this.modif) {
+        case TYPEDEMANDE.DEMANDE_EXEMPLARISATION:
+          this.$router.replace({ name: 'tabExemp' });
+          break;
+        case TYPEDEMANDE.DEMANDE_MODIFICATION:
+          this.$router.replace({ name: 'tabModif' });
+          break;
+        case TYPEDEMANDE.DEMANDE_RECOUVREMENT:
+          this.$router.replace({ name: 'tabRecouv' });
+          break;
+        default:
+          this.$router.replace({ name: 'home' });
+          break;
+      }
     },
     updateParent(variable) {
       this.exemplairesMultiplesParent = variable;

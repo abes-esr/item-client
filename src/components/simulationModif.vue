@@ -1,9 +1,9 @@
 <template>
   <!-- PAGE DE SIMULATION -->
-  <v-container fluid>
+  <v-container fluid style="padding: 1em">
     <loading :show="loading" label="Chargement en cours..."></loading>
-    <v-row justify="center" align="center">
-      <v-col class="text-center" >
+    <v-row justify="center" align="center" style="padding: 1em">
+      <v-col class="text-center">
         <!-- POPUP DE SUPPRESSION DE LA DEMANDE -->
         <v-dialog v-model="popupDelete" width="500">
         <v-card>
@@ -44,18 +44,18 @@
             <v-divider></v-divider>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="primary" text @click="popupStartProcessing = false, $router.push({ name: 'home' })" aria-label="OK">OK</v-btn>
+              <v-btn color="primary" text @click="popupStartProcessing = false, $router.push({ name: 'tabModif' })" aria-label="OK">OK</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
         <!-- FIL D'ARIANE -->
-        <stepper class="stepper" current="5" :numDemande="this.numDem.toString()" :modif="this.modif"></stepper>
+        <stepper class="stepper" current="5" :numDemande="this.numDem.toString()" :modif="this.modif" :choixTraitement="this.typeTraitementChoisi"></stepper>
         <!-- INFOS GENERALES DE LA DEMANDE -->
-        <v-card id="demInfos" class="item-global-margin-bottom">
+        <v-card id="demInfos">
           <h3 style="padding-top: 15px; padding-left: 15px;" class="headline"><span
             class="item-break-words">Ma demande</span></h3>
           <v-container>
-            <v-row  >
+            <v-row>
               <v-col class="item-text-align-center item-break-words">
                 <div>
                   <span>Numéro de Demande</span>
@@ -84,7 +84,7 @@
           <span v-html="alertMessage"></span>
         </v-alert>
         <!-- CONTENU SIMULATION -->
-        <v-card>
+        <v-card style="padding: 1em">
           <v-app-bar dark color="primary">
             <v-toolbar-title>Ecran de simulation</v-toolbar-title>
             <v-spacer></v-spacer>
@@ -94,20 +94,18 @@
           <!--TEMPLATE DE SIMULATION-->
           <v-container>
             <v-row no-gutters>
-              <v-col :key="1" cols="12" sm="12">
+              <v-col :key="1" cols="12" sm="12" style="margin-top: 1em">
                 <!--Message de visualisation de la simulation-->
-                <v-card flat>
-                  <p>
-                    Cet écran n'est qu'une visualisation du traitement.<br>
-                    Les règles de validation ne sont pas prises en compte lors de cette simulation.<br>
-                    Il s'agit de la dernière étape avant de lancer le traitement en base de
-                    production.
-                  </p>
-                </v-card>
+                <v-alert type="warning" dense prominent border="left">
+                  Cet écran n'est qu'une <strong>visualisation</strong> du traitement.<br>
+                  Les <strong>règles de validation</strong> ne sont pas prises en compte lors de cette simulation.<br>
+                  Il s'agit de la <strong>dernière étape</strong> avant de lancer le traitement en <strong>base de
+                  production</strong>.
+                </v-alert>
               </v-col>
               <v-col :key="2" cols="12" sm="12"> <!--Ligne du fichier-->
                 <v-card class="pa-1" outlined tile>
-                  <span class="headline mb-0" id="numLigne">Ligne de votre fichier : {{ noticeEnCours + 1 }} sur {{ numberLines }}</span>
+                  <span class="headline mb-0">Ligne de votre fichier : {{ noticeEnCours + 1 }} sur {{ numberLines }}</span>
                 </v-card>
               </v-col>
               <v-col :key="3" cols="12" sm="12"> <!--PPN de la notice en cours-->
@@ -233,6 +231,7 @@ export default {
       derniereNotice: false,
       numDem: 0,
       popupDelete: false,
+      typeTraitementChoisi: '',
     };
   },
   props: {
@@ -250,6 +249,8 @@ export default {
     this.getInfosDemande();
     // On compte le nombre de lignes totale sur le fichier
     this.getNumberLines();
+    // On récupère le type de traitement choisi en etape 3 pour l'afficher dans le stepper
+    this.getTypeTraitementChoisi(this.numDem);
   },
   filters: {
     formatDate(value) {
@@ -260,6 +261,34 @@ export default {
     },
   },
   methods: {
+    // recuperation du type de choix de traiement choisi pour une demande de modification
+    getTypeTraitementChoisi(numDemande) {
+      axios({
+        headers: { Authorization: this.user.jwt },
+        method: 'GET',
+        url: `${process.env.VUE_APP_ROOT_API}traitementFromDemande/${numDemande}`,
+      }).then(
+        (result) => {
+          switch (result.data) {
+            case 1: this.typeTraitementChoisi = 'Création nouvelle zone'; break;
+            case 2: this.typeTraitementChoisi = 'Création sous-zone'; break;
+            case 3: this.typeTraitementChoisi = 'Remplacer sous-zone'; break;
+            case 4: this.typeTraitementChoisi = 'Supprimer sous-zone'; break;
+            case 5: this.typeTraitementChoisi = 'Supprimer zone'; break;
+            default: this.typeTraitementChoisi = 'inconnu'; break;
+          }
+        },
+        (error) => {
+          this.loading = false;
+          this.alert = true;
+          this.alertType = 'error';
+          this.alertMessage = `Impossible de récupérer le type d'exemplarisation pour la demande : ${error.response.data.message}.  <br /> Veuillez réessayer ultérieurement. Si le problème persiste merci de contacter l'assistance.`;
+          if (error.response.status === 401) {
+            this.$emit('logout');
+          }
+        },
+      );
+    },
     // Récupération des infos de la demande
     getInfosDemande() {
       this.loading = true;
