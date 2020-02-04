@@ -14,6 +14,8 @@
           </v-app-bar>
           <v-card-text>
             <v-autocomplete
+              color="info"
+              hide-selected
               :filter="searchRCR"
               v-model="selected"
               :items="listRcr"
