@@ -113,16 +113,14 @@
           <!--TEMPLATE DE SIMULATION-->
           <v-container>
             <v-row no-gutters>
-              <v-col :key="1" cols="12" sm="12">
+              <v-col :key="1" cols="12" sm="12" style="margin: 1em 0 0 1em">
                 <!--Message de visualisation de la simulation-->
-                <v-card flat>
-                  <p>
-                    Cet écran n'est qu'une visualisation du traitement.<br>
-                    Les règles de validation ne sont pas prises en compte lors de cette simulation.<br>
-                    Il s'agit de la dernière étape avant de lancer le traitement en base de
-                    production.
-                  </p>
-                </v-card>
+                <v-alert type="warning" dense prominent border="left">
+                  Cet écran n'est qu'une <strong>visualisation</strong> du traitement.<br>
+                  Les <strong>règles de validation</strong> ne sont pas prises en compte lors de cette simulation.<br>
+                  Il s'agit de la <strong>dernière étape</strong> avant de lancer le traitement en <strong>base de
+                  production</strong>.
+                </v-alert>
               </v-col>
               <v-col :key="2" cols="12" sm="12"> <!--Ligne du fichier-->
                 <v-card class="pa-1" outlined tile>
