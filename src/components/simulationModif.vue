@@ -49,7 +49,7 @@
           </v-card>
         </v-dialog>
         <!-- FIL D'ARIANE -->
-        <stepper class="stepper" current="5" :numDemande="this.numDem.toString()" :modif="this.modif"></stepper>
+        <stepper class="stepper" current="5" :numDemande="this.numDem.toString()" :modif="this.modif" :choixTraitement="this.typeTraitementChoisi"></stepper>
         <!-- INFOS GENERALES DE LA DEMANDE -->
         <v-card id="demInfos" class="item-global-margin-bottom">
           <h3 style="padding-top: 15px; padding-left: 15px;" class="headline"><span
@@ -233,6 +233,7 @@ export default {
       derniereNotice: false,
       numDem: 0,
       popupDelete: false,
+      typeTraitementChoisi: '',
     };
   },
   props: {
@@ -250,6 +251,8 @@ export default {
     this.getInfosDemande();
     // On compte le nombre de lignes totale sur le fichier
     this.getNumberLines();
+    // On récupère le type de traitement choisi en etape 3 pour l'afficher dans le stepper
+    this.getTypeTraitementChoisi(this.numDem);
   },
   filters: {
     formatDate(value) {
@@ -260,6 +263,34 @@ export default {
     },
   },
   methods: {
+    // recuperation du type de choix de traiement choisi pour une demande de modification
+    getTypeTraitementChoisi(numDemande) {
+      axios({
+        headers: { Authorization: this.user.jwt },
+        method: 'GET',
+        url: `${process.env.VUE_APP_ROOT_API}traitementFromDemande/${numDemande}`,
+      }).then(
+        (result) => {
+          switch (result.data) {
+            case 1: this.typeTraitementChoisi = 'Création nouvelle zone'; break;
+            case 2: this.typeTraitementChoisi = 'Création sous-zone'; break;
+            case 3: this.typeTraitementChoisi = 'Remplacer sous-zone'; break;
+            case 4: this.typeTraitementChoisi = 'Supprimer sous-zone'; break;
+            case 5: this.typeTraitementChoisi = 'Supprimer zone'; break;
+            default: this.typeTraitementChoisi = 'inconnu'; break;
+          }
+        },
+        (error) => {
+          this.loading = false;
+          this.alert = true;
+          this.alertType = 'error';
+          this.alertMessage = `Impossible de récupérer le type d'exemplarisation pour la demande : ${error.response.data.message}.  <br /> Veuillez réessayer ultérieurement. Si le problème persiste merci de contacter l'assistance.`;
+          if (error.response.status === 401) {
+            this.$emit('logout');
+          }
+        },
+      );
+    },
     // Récupération des infos de la demande
     getInfosDemande() {
       this.loading = true;
