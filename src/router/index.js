@@ -284,7 +284,7 @@ router.beforeResolve((to, from, next) => {
         headers: { Authorization: user.jwt },
         method: 'GET',
         url:
-            `${process.env.VUE_APP_ROOT_API}demandes/${numDem}`,
+          `${process.env.VUE_APP_ROOT_API}demandes/${numDem}`,
       }).then(
         (result) => {
           switch (result.data.etatDemande.numEtat) {
