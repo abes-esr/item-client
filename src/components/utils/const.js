@@ -1,12 +1,12 @@
 export default {
-  erreur500: "Le service est indisponible. Veuillez réessayer ultérieurement. Si le problème persiste, merci de contacter l'assistance.",
-  erreurUpload: "Une erreur est survenue lors de l'envoi du fichier. Veuillez réessayer ultérieurement. Si le problème persiste, merci de contacter l'assistance.",
-  erreurDownload: "Une erreur est survenue lors de la récupération du fichier. Veuillez réessayer ultérieurement. Si le problème persiste, merci de contacter l'assistance.",
-  erreurRCR: "Il est impossible d'afficher la liste des RCR. Veuillez réessayer ultérieurement. Si le problème persiste, merci de contacter l'assistance.",
-  erreurListeTraitements: "Impossible de récupérer la liste des traitements. Veuillez réessayer ultérieurement. Si le problème persiste, merci de contacter l'assistance.",
-  erreurTypeExemp: "Le tri par type d’exemplarisation est impossible. Veuillez réessayer ultérieurement. Si le problème persiste, merci de contacter l'assistance.",
-  erreurListeExemp: "Il est Impossible de récupérer la liste des exemplarisations. Veuillez réessayer ultérieurement. Si le problème persiste, merci de contacter l'assistance.",
-  erreurDemande: "Impossible mettre à jour la demande. Veuillez réessayer ultérieurement. Si le problème persiste, merci de contacter l'assistance.",
+  erreur500: 'Le service est indisponible. Veuillez réessayer ultérieurement. Si le problème persiste, merci de contacter l\'assistance.',
+  erreurUpload: 'Une erreur est survenue lors de l\'envoi du fichier.',
+  erreurDownload: 'Une erreur est survenue lors de la récupération du fichier.',
+  erreurRCR: 'Il est impossible d\'afficher la liste des RCR.',
+  erreurListeTraitements: 'Impossible de récupérer la liste des traitements.',
+  erreurTypeExemp: 'Le tri par type d’exemplarisation est impossible.',
+  erreurListeExemp: 'Il est Impossible de récupérer la liste des exemplarisations.',
+  erreurDemande: 'Impossible mettre à jour la demande.',
 
   headersArchiveAdminModif: [
     { text: '', value: 'expand', width: '5%' },

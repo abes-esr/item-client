@@ -315,7 +315,7 @@ export default {
           this.loading = false;
           this.alert = true;
           this.alertType = 'error';
-          this.alertMessage = `Impossible de récupérer le type d'exemplarisation pour la demande : ${error.response.data.message}.  <br /> Veuillez réessayer ultérieurement. Si le problème persiste merci de contacter l'assistance.`;
+          this.alertMessage = `Impossible de récupérer le type d'exemplarisation pour la demande : ${error.response.data.message}`;
           if (error.response.status === 401) {
             this.$emit('logout');
           }
@@ -385,7 +385,7 @@ export default {
           this.loading = false;
           this.alert = true;
           this.alertType = 'error';
-          this.alertMessage = `Impossible de récupérer la notice pour la simulation : ${error.response.data.message}.  <br /> Veuillez réessayer ultérieurement. Si le problème persiste merci de contacter l'assistance.`;
+          this.alertMessage = `Impossible de récupérer la notice pour la simulation : ${error.response.data.message}`;
           if (error.response.status === 401) {
             this.$emit('logout');
           } else if (error.response.status === 400 && error.response.data.message.includes('Numéro de notice erroné')
@@ -439,7 +439,7 @@ export default {
         (error) => {
           this.alert = true;
           this.alertType = 'error';
-          this.alertMessage = 'Impossible de récupérer le nombre de lignes du fichier. Veuillez réessayer ultérieurement.';
+          this.alertMessage = 'Impossible de récupérer le nombre de lignes du fichier.';
           if (error.response.status === 401) {
             this.$emit('logout');
           }
