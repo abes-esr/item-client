@@ -62,13 +62,13 @@ export default {
   headerModifAdmin: [
     { text: '', value: 'expand', width: '5%' },
     {
-      text: 'Demande', align: 'center', value: 'num', width: '7%',
+      text: 'Demande', align: 'center', value: 'num', width: '9%',
     },
     {
       text: 'Mise à jour', align: 'center', value: 'dateModification', width: '10%',
     },
     {
-      text: 'ILN', align: 'center', value: 'iln', width: '10%',
+      text: 'ILN', align: 'center', value: 'iln', width: '8%',
     },
     {
       text: 'RCR', align: 'center', value: 'rcr', width: '10%',
@@ -92,16 +92,16 @@ export default {
   headerModif: [
     { text: '', value: 'expand', width: '5%' },
     {
-      text: 'Demande', align: 'center', value: 'num', width: '7%',
+      text: 'Demande', align: 'center', value: 'num', width: '9%',
     },
     {
       text: 'Mise à jour', align: 'center', value: 'dateModification', width: '15%',
     },
     {
-      text: 'RCR', align: 'center', value: 'rcr', width: '5%',
+      text: 'RCR', align: 'center', value: 'rcr', width: '8%',
     },
     {
-      text: 'Zones et sous-zones', align: 'center', value: 'zoneSousZone', width: '15%',
+      text: 'Zones et sous-zones', align: 'center', value: 'zoneSousZone', width: '11%',
     },
     {
       text: 'Traitement', align: 'center', value: 'traitement', width: '25%',
