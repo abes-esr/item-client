@@ -77,13 +77,13 @@
               <thead>
               <tr>
                 <!--COM--><th></th>
-                <!--DEM--><th><v-text-field append-icon="search" aria-label="Recherche par numéro" clear-icon='clear' clearable hide-details single-line v-model="searchNum" v-on:keyup="computedItems('num')"></v-text-field></th>
-                <!--CRE--><th><v-text-field append-icon="search" aria-label="Recherche par date de création" clearable class="item-calendar-searchfield-item" hide-details single-line persistent-hint v-model="searchDateCreation" v-on:keyup="computedItems('dateCreation')"></v-text-field></th>
-                <!--MAJ--><th><v-text-field append-icon="search" aria-label="Recherche par date de modification" clearable class="item-calendar-searchfield-item" hide-details single-line persistent-hint v-model="searchDateModification" v-on:keyup="computedItems('dateModification')"></v-text-field></th>
-                <!--ILN--><th v-if="user.role === 'ADMIN'"><v-text-field append-icon="search" aria-label="Recherche par ILN" clear-icon='clear' clearable hide-details single-line v-model="searchILN" v-on:keyup="computedItems('iln')"></v-text-field></th>
-                <!--RCR--><th><v-text-field append-icon="search" aria-label="Recherche par RCR"  clear-icon='clear' clearable hide-details single-line v-model="searchRCR" v-on:keyup="computedItems('rcr')"></v-text-field></th>
+                <!--DEM--><th><v-text-field class="appropriateFontSize" append-icon="search" aria-label="Recherche par numéro" clear-icon='clear' clearable hide-details single-line v-model="searchNum" v-on:keyup="computedItems('num')"></v-text-field></th>
+                <!--CRE--><th><v-text-field append-icon="search" aria-label="Recherche par date de création" clearable class="appropriateFontSize" hide-details single-line persistent-hint v-model="searchDateCreation" v-on:keyup="computedItems('dateCreation')"></v-text-field></th>
+                <!--MAJ--><th><v-text-field append-icon="search" aria-label="Recherche par date de modification" clearable class="appropriateFontSize" hide-details single-line persistent-hint v-model="searchDateModification" v-on:keyup="computedItems('dateModification')"></v-text-field></th>
+                <!--ILN--><th v-if="user.role === 'ADMIN'"><v-text-field class="appropriateFontSize" append-icon="search" aria-label="Recherche par ILN" clear-icon='clear' clearable hide-details single-line v-model="searchILN" v-on:keyup="computedItems('iln')"></v-text-field></th>
+                <!--RCR--><th><v-text-field class="appropriateFontSize" append-icon="search" aria-label="Recherche par RCR" clear-icon='clear' clearable hide-details single-line v-model="searchRCR" v-on:keyup="computedItems('rcr')"></v-text-field></th>
                 <!--TYP--><th><v-select :items="listTypeExemp" @change="computedItems('typeExemp')" aria-label="Recherche par type d'exemplarisation" clear-icon='clear' clearable item-text="libelle" item-value="libelle" no-data-text="Aucun type trouvé." v-model="searchTypeExemp" style="font-size:1.1em"></v-select></th>
-                <!--IND--><th><v-text-field append-icon="search" aria-label="Recherche par Index"  clear-icon='clear' clearable hide-details single-line v-model="searchIndexRecherche" v-on:keyup="computedItems('indexRecherche')"></v-text-field></th>
+                <!--IND--><th><v-text-field class="appropriateFontSize" append-icon="search" aria-label="Recherche par Index"  clear-icon='clear' clearable hide-details single-line v-model="searchIndexRecherche" v-on:keyup="computedItems('indexRecherche')"></v-text-field></th>
                 <!--STA--><th v-if="!archive"><v-select :items="listStatut" @change="computedItems('statut')" aria-label="Recherche par statut" clear-icon='clear' clearable no-data-text="Aucun statut trouvé." v-model="searchStatut"></v-select></th>
                 <!--TL1--><th></th>
                 <!--AR2--><th></th>
@@ -143,9 +143,9 @@
               <tr>
                 <!--COM--><th></th>
                 <!--DEM--><th><v-text-field append-icon="search" aria-label="Recherche par numéro" clear-icon='clear' clearable hide-details single-line v-model="searchNum" v-on:keyup="computedItems('num')"></v-text-field></th>
-                <!--MAJ--><th><v-text-field append-icon="search" aria-label="Recherche par date de modification" class="item-calendar-searchfield-item" clearable hide-details single-line v-model="searchDateModification" v-on:keyup="computedItems('dateModification')"></v-text-field></th>
-                <!--ILN--><th v-if="user.role === 'ADMIN'"><v-text-field append-icon="search" aria-label="Recherche par ILN" clear-icon='clear' clearable hide-details single-line v-model="searchILN" v-on:keyup="computedItems('iln')"></v-text-field></th>
-                <!--RCR--><th><v-text-field append-icon="search" aria-label="Recherche par RCR"  clear-icon='clear' clearable hide-details single-line v-model="searchRCR" v-on:keyup="computedItems('rcr')"></v-text-field></th>
+                <!--MAJ--><th><v-text-field append-icon="search" aria-label="Recherche par date de modification" class="appropriateFontSize" clearable hide-details single-line v-model="searchDateModification" v-on:keyup="computedItems('dateModification')"></v-text-field></th>
+                <!--ILN--><th v-if="user.role === 'ADMIN'"><v-text-field class="appropriateFontSize" append-icon="search" aria-label="Recherche par ILN" clear-icon='clear' clearable hide-details single-line v-model="searchILN" v-on:keyup="computedItems('iln')"></v-text-field></th>
+                <!--RCR--><th><v-text-field class="appropriateFontSize" append-icon="search" aria-label="Recherche par RCR"  clear-icon='clear' clearable hide-details single-line v-model="searchRCR" v-on:keyup="computedItems('rcr')"></v-text-field></th>
                 <!--ZON--><th><v-text-field append-icon="search" aria-label="Recherche par zone et sous-zone" clear-icon='clear' clearable hide-details single-line v-model="searchZoneSousZone" v-on:keyup="computedItems('zoneSousZone')"></v-text-field></th>
                 <!--TRT--><th><v-select :items="listTraitements" @change="computedItems('traitement')" aria-label="Recherche par type de traitement" clear-icon='clear' clearable item-text="libelle" item-value="libelle" no-data-text="Aucun type trouvé." v-model="searchTypeExemp"></v-select></th>
                 <!--STA--><th v-if="!archive"><v-select :items="listStatut" @change="computedItems('statut')" aria-label="Recherche par statut" clear-icon='clear' clearable no-data-text="Aucun statut trouvé." v-model="searchStatut"></v-select></th>
@@ -208,9 +208,9 @@
                 <!--DEM--><th><v-text-field append-icon="search" aria-label="Recherche par numéro" clear-icon='clear' clearable hide-details single-line v-model="searchNum" v-on:keyup="computedItems('num')"></v-text-field></th>
                 <!--CRE--><th><v-text-field clearable class="item-calendar-searchfield-item" append-icon="search" persistent-hint v-model="searchDateCreation" v-on:keyup="computedItems('dateCreation')"></v-text-field></th>
                 <!--MAJ--><th><v-text-field clearable class="item-calendar-searchfield-item" append-icon="search" persistent-hint v-model="searchDateModification" v-on:keyup="computedItems('dateModification')"></v-text-field></th>
-                <!--ILN--><th v-if="user.role === 'ADMIN'"><v-text-field append-icon="search" aria-label="Recherche par ILN" clear-icon='clear' clearable hide-details single-line v-model="searchILN" v-on:keyup="computedItems('iln')"></v-text-field></th>
-                <!--RCR--><th><v-text-field append-icon="search" aria-label="Recherche par RCR"  clear-icon='clear' clearable hide-details single-line v-model="searchRCR" v-on:keyup="computedItems('rcr')"></v-text-field></th>
-                <!--IND--><th><v-text-field append-icon="search" aria-label="Recherche par Index"  clear-icon='clear' clearable hide-details single-line v-model="searchIndexRecherche" v-on:keyup="computedItems('indexRecherche')"></v-text-field></th>
+                <!--ILN--><th v-if="user.role === 'ADMIN'"><v-text-field class="appropriateFontSize" append-icon="search" aria-label="Recherche par ILN" clear-icon='clear' clearable hide-details single-line v-model="searchILN" v-on:keyup="computedItems('iln')"></v-text-field></th>
+                <!--RCR--><th><v-text-field class="appropriateFontSize" append-icon="search" aria-label="Recherche par RCR"  clear-icon='clear' clearable hide-details single-line v-model="searchRCR" v-on:keyup="computedItems('rcr')"></v-text-field></th>
+                <!--IND--><th><v-text-field class="appropriateFontSize" append-icon="search" aria-label="Recherche par Index"  clear-icon='clear' clearable hide-details single-line v-model="searchIndexRecherche" v-on:keyup="computedItems('indexRecherche')"></v-text-field></th>
                 <!--STA--><th v-if="!archive"><v-select :items="listStatut" @change="computedItems('statut')" aria-label="Recherche par statut" clear-icon='clear' clearable no-data-text="Aucun statut trouvé." v-model="searchStatut"></v-select></th>
                 <!--TL1--><th></th>
                 <!--AR2--><th></th>
@@ -1018,5 +1018,8 @@ export default {
     justify-content: flex-end;
     margin-right: 1em;
     align-items: center
+  }
+  .appropriateFontSize{
+    font-size: 11px;
   }
 </style>
