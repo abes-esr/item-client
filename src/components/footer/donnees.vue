@@ -52,6 +52,33 @@
               </tbody>
             </table>
             <br />
+            <h4 class="title">2) Cookies de mesure d’audience</h4>
+            <p>
+              En vue d’adapter le site aux demandes de ses visiteurs, nous mesurons le nombre de visites, le nombre de pages vues ainsi que l'activité des visiteurs sur le site et leur fréquence de retour.
+              PIWIK, l'outil de statistiques utilisé par l'ABES, génère les cookies suivants :
+            </p>
+            <table border="1">
+              <thead>
+                <tr>
+                  <th>Nom du cookie</th>
+                  <th>Finalité</th>
+                  <th>Durée de conservation</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>pk_session</td>
+                  <td>Statistiques piwik</td>
+                  <td>7 jours</td>
+                </tr>
+                <tr>
+                  <td>pk_id</td>
+                  <td>Statistiques piwik</td>
+                  <td>30 minutes</td>
+                </tr>
+              </tbody>
+            </table>
+            <br />
             <p>
               Nous collectons également votre adresse IP, anonymisée, afin de
               déterminer la ville depuis laquelle vous vous connectez. L'application

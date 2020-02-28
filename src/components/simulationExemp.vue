@@ -129,7 +129,7 @@
               </v-col>
               <v-col :key="3" cols="12" sm="12"> <!--PPN de la notice en cours-->
                 <v-card class="pa-1" elevation="0">
-                  <span class="headline mb-0">PPN n° {{ this.numeroPPNNotice }}</span>
+                  <span class="headline mb-0" v-if="this.numeroPPNNotice !== ''">PPN n° {{ this.numeroPPNNotice }}</span>
                 </v-card>
               </v-col>
             </v-row>
@@ -380,7 +380,9 @@ export default {
           this.loading = false;
         },
         (error) => {
-          this.noticeAvant = '';
+          this.numeroPPNNotice = '';
+          this.noticeAvant = 'Erreur (voir ci-dessus)';
+          this.noticeApres = 'Erreur (voir ci-dessus)';
           // this.noticeApres = '';
           this.loading = false;
           this.alert = true;
