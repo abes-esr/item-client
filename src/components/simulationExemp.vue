@@ -381,8 +381,8 @@ export default {
         },
         (error) => {
           this.numeroPPNNotice = '';
-          this.noticeAvant = 'Erreur (voir ci-dessus)';
-          this.noticeApres = 'Erreur (voir ci-dessus)';
+          this.noticeAvant = 'Simulation impossible. Voir message ci-dessus.';
+          this.noticeApres = 'Simulation impossible. Voir message ci-dessus.';
           // this.noticeApres = '';
           this.loading = false;
           this.alert = true;

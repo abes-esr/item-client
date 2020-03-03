@@ -81,10 +81,24 @@ export default {
     // On récupère les infos utilisateur en session car on a besoin du jwt afin d'appeler les WS REST
     this.user = JSON.parse(sessionStorage.getItem('user'));
     this.numDem = sessionStorage.getItem('dem');
+    this.getAdaptationOfTheTextInTheTitle();
     this.getTypeExemplarisation(this.numDem);
     this.getTypeTraitementChoisi(this.numDem);
   },
   methods: {
+    // Adaptation du texte de l'intitulé en fonction du type de demande
+    getAdaptationOfTheTextInTheTitle() {
+      switch (this.modif) {
+        case 'RECOUV':
+          this.titleUpload = 'Charger le fichier du taux de recouvrement'; break;
+        case 'EXEMP':
+          this.titleUpload = 'Charger le fichier des exemplaires à traiter'; break;
+        case 'MODIF':
+          this.titleUpload = 'Charger le fichier des exemplaires à modifier'; break;
+        default:
+          this.titleUpload = 'Charger le fichier'; break;
+      }
+    },
     // recuperation du type d'exemplarisation prealablement choisi
     getTypeExemplarisation(numDemande) {
       axios({
