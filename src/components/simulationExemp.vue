@@ -49,7 +49,7 @@
           </v-card>
           <v-card v-if="this.modif === 'EXEMP'">
             <v-card-title class="headline" primary-title>Traitement validé</v-card-title>
-            <v-card-text>Votre demande est en cours de traitement.<br/>Un mail vous sera envoyé quand celle-ci sera terminée.
+            <v-card-text>Votre demande est en cours de traitement.<br/>Un mail vous sera envoyé quand celui-ci sera terminé.
               <br>Vous pouvez retrouver l'ensemble de vos demandes sur votre tableau de bord ITEM. Rubrique "Gérer mes créations".
             </v-card-text>
             <v-divider></v-divider>
@@ -217,11 +217,8 @@
           <v-btn large color="info" @click="etapeDemande(numDem, modif, 3)" aria-label="Annuler" style="margin-right: 1em">
             Précédent
           </v-btn>
-          <v-btn v-if="!alert" large color="info" @click="dialog = true"
+          <v-btn large color="info" @click="dialog = true"
                  aria-label="Lancer le traitement en production">Lancer le traitement en production
-          </v-btn>
-          <v-btn v-if="alert" large color="info"
-                 aria-label="Lancer le traitement en production" disabled>Lancer le traitement en production
           </v-btn>
         </v-row>
       </v-col>

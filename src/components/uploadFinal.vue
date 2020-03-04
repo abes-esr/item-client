@@ -15,8 +15,8 @@
         <v-card-title class="headline" primary-title>Traitement validé</v-card-title>
         <v-card-text>Votre demande est en cours de traitement, elle sera traitée dès que
           possible.<br/>Un mail vous sera envoyé une fois le traitement terminé.
-          <br>Vous pouvez retrouver l'ensemble de vos demandes depuis la page "Gérer mes
-          demandes".
+          <br>Vous pouvez retrouver l'ensemble de vos demandes sur votre tableau de bord ITEM. Rubrique "Gérer mes
+          taux de recouvrement".
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>

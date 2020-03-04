@@ -7,7 +7,7 @@
       <v-divider></v-divider>
       <v-stepper-step :editable="current > 2" step="2" :complete="current > 2" @click="etapeDemande(numDemande, modif, 2)">Type document<small>{{typeExemplarisation}}</small></v-stepper-step>
       <v-divider></v-divider>
-      <v-stepper-step :editable="current > 3" step="3" :complete="current > 3" @click="etapeDemande(numDemande, modif, 3)">Chargement<small>fichier</small></v-stepper-step>
+      <v-stepper-step :editable="current > 3" step="3" :complete="current > 3" @click="etapeDemande(numDemande, modif, 3)">Chargement</v-stepper-step>
       <v-divider></v-divider>
       <v-stepper-step :editable="current > 4" step="4" :complete="current > 4">Simulation</v-stepper-step>
     </v-stepper-header>

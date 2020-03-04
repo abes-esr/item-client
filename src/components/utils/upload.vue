@@ -125,7 +125,7 @@ export default {
       dialog: false,
       fichierCharge: [],
       rules: [
-        value => !value || ((value.type === 'text/csv') || (value.type === 'application/vnd.ms-excel') || (value.type === 'text/plain')) || 'Le fichier chargé n\'est pas dans un format autorisé (.txt ou .csv)',
+        value => !value || ((value.type === undefined) || (value.type === 'text/csv') || (value.type === 'application/vnd.ms-excel') || (value.type === 'text/plain')) || 'Le fichier chargé n\'est pas dans un format autorisé (.txt ou .csv)',
       ],
       typeFile: [
         value => value.type,
