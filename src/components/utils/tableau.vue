@@ -22,7 +22,7 @@
                 <!--Zone de case à cocher pour affichage restrictif - tableaux classiques-->
                 <div v-if="user.role === 'ADMIN' && !archive" class="item-flexbox-for-checkbox">
                   <div class="item-margin-right-app-bar">
-                    <v-checkbox value="restrictDisplay" id="restrictDisplay" @click.native="switchRestrictionAffichage()" label="Affichage restrictif des demandes des autres utilisateurs"></v-checkbox>
+                    <v-checkbox value="restrictDisplay" id="restrictDisplay" @click.native="switchRestrictionAffichage()" label="Affichage étendu"></v-checkbox>
                   </div>
                   <div class="item-margin-right-app-bar" style="margin-bottom: 0.5em">
                     <v-dialog v-model="popupAffichageRestrictif" persistent max-width="600">
@@ -33,7 +33,7 @@
                       </template>
                       <v-card>
                         <v-card-title class="headline">Affichage restrictif</v-card-title>
-                        <v-card-text>Permet en tant qu'administrateur de ne voir que les demandes terminées et en erreur, des utilisateurs rattachés à son ILN.</v-card-text>
+                        <v-card-text>Permet en tant qu'administrateur de visualiser également les demandes terminées et en erreur des autres ILN</v-card-text>
                         <v-card-actions>
                           <div class="flex-grow-1"></div>
                           <v-btn text @click="popupAffichageRestrictif = false">Ok</v-btn>
@@ -42,30 +42,6 @@
                     </v-dialog>
                   </div>
                 </div>
-                <!--Zone de case à cocher pour affichage restrictif - tableaux d'archive-->
-                <div v-if="user.role === 'ADMIN' && archive" class="item-flexbox-for-checkbox">
-                  <div class="item-margin-right-app-bar">
-                    <v-checkbox value="restrictDisplay" id="restrictDisplay" @click.native="switchRestrictionAffichage()" label="Affichage restrictif des demandes archivées"></v-checkbox>
-                  </div>
-                  <div class="item-margin-right-app-bar" style="margin-bottom: 0.5em">
-                    <v-dialog v-model="popupAffichageRestrictif" persistent max-width="600">
-                      <template v-slot:activator="{ on }">
-                        <v-btn text small icon v-on="on">
-                          <v-icon>info</v-icon>
-                        </v-btn>
-                      </template>
-                      <v-card>
-                        <v-card-title class="headline">Affichage restrictif</v-card-title>
-                        <v-card-text>Case cochée : voir en tant qu'administrateur les demandes archivées de son RCR uniquement.<br>Case non cochée : voir en tant qu'administrateur les demandes archivées de son ILN.</v-card-text>
-                        <v-card-actions>
-                          <div class="flex-grow-1"></div>
-                          <v-btn text @click="popupAffichageRestrictif = false">Ok</v-btn>
-                        </v-card-actions>
-                      </v-card>
-                    </v-dialog>
-                  </div>
-                </div>
-                <!--TODO mettre en place la restriction sur le tableau d'archive un deuxieme item-flexbox-for-checkbox-->
               </v-col>
             </v-row>
           </v-container>
@@ -99,8 +75,8 @@
                           <td v-if="!item.isClickable">{{ item.dateCreation }}</td>
                 <!--MAJ--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.dateModification }}</td>
                           <td v-if="!item.isClickable">{{ item.dateModification }}</td>
-                <!--ILN--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.iln }}</td>
-                          <td v-if="!item.isClickable">{{ item.iln }}</td>
+                <!--ILN--><td v-if="item.isClickable && user.role === 'ADMIN'" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.iln }}</td>
+                          <td v-if="!item.isClickable && user.role === 'ADMIN'">{{ item.iln }}</td>
                 <!--RCR--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.rcr }}</td>
                           <td v-if="!item.isClickable">{{ item.rcr }}</td>
                 <!--TYP--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.typeExemp }}</td>
@@ -161,8 +137,8 @@
                           <td v-if="!item.isClickable">{{ item.num }}</td>
                 <!--MAJ--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.dateModification }}</td>
                           <td v-if="!item.isClickable">{{ item.dateModification }}</td>
-                <!--ILN--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.iln }}</td>
-                          <td v-if="!item.isClickable">{{ item.iln }}</td>
+                <!--ILN--><td v-if="item.isClickable && user.role === 'ADMIN'" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.iln }}</td>
+                          <td v-if="!item.isClickable && user.role === 'ADMIN'">{{ item.iln }}</td>
                 <!--RCR--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.rcr }}</td>
                           <td v-if="!item.isClickable">{{ item.rcr }}</td>
                 <!--ZON--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.zoneSousZone }}</td>
@@ -226,8 +202,8 @@
                           <td v-if="!item.isClickable">{{ item.dateCreation }}</td>
                 <!--MAJ--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.dateModification }}</td>
                           <td v-if="!item.isClickable">{{ item.dateModification }}</td>
-                <!--ILN--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.iln }}</td>
-                          <td v-if="!item.isClickable">{{ item.iln }}</td>
+                <!--ILN--><td v-if="item.isClickable && user.role === 'ADMIN'" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.iln }}</td>
+                          <td v-if="!item.isClickable && user.role === 'ADMIN'">{{ item.iln }}</td>
                 <!--RCR--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.rcr }}</td>
                           <td v-if="!item.isClickable">{{ item.rcr }}</td>
                 <!--IND--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.indexRecherche }}</td>
@@ -591,15 +567,15 @@ export default {
       this.alert = false;
       if (this.user !== null && this.user.jwt !== null) {
         let url = '';
-        if (this.archive) {
+        if (this.archive) { // retour des demandes archivées
           url = `${process.env.VUE_APP_ROOT_API}chercherArchives?userNum=${
             this.user.userNum
-          }&type=${this.modif}&restriction=${this.affichageRestrictifAdmin}`;
-        } else if (this.user.role === 'ADMIN') {
+          }&type=${this.modif}`;
+        } else if (this.user.role === 'ADMIN') { // retour de l'ensemble des demandes pour un administrateur
           url = `${process.env.VUE_APP_ROOT_API}demandes?userNum=${
             this.user.userNum
           }&type=${this.modif}&restriction=${this.affichageRestrictifAdmin}`;
-        } else {
+        } else { // retour de l'ensemble des demandes pour un utilisateur
           url = `${process.env.VUE_APP_ROOT_API}chercherDemandes?userNum=${
             this.user.userNum
           }&type=${this.modif}`;
