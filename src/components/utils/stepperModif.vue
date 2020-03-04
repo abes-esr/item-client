@@ -13,6 +13,7 @@
       <v-divider></v-divider>
       <v-stepper-step :editable="current > 5" step="5" :complete="current > 5">Simulation<small>avant envoi</small></v-stepper-step>
     </v-stepper-header>
+    <v-snackbar v-model="this.alert" :timeout="timeout" :color="alertType" top="true" style="margin-top: 5em">{{ this.alertMessage }}<v-btn text @click="alert = false">Fermer</v-btn></v-snackbar>
   </v-stepper>
 </template>
 
@@ -30,6 +31,14 @@ export default {
     numDemande: { type: String },
     modif: { type: String },
     choixTraitement: { type: String },
+  },
+  data() {
+    return {
+      timeout: 0,
+      alert: false,
+      alertMessage: 'Erreur.',
+      alertType: 'error',
+    };
   },
   methods: {
     // suppression d'une demande depuis le stepper avec redirection sur l'étape 1 et non l'accueil

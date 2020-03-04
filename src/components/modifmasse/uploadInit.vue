@@ -24,8 +24,6 @@
           </v-card-actions>
         </v-card>
         <br />
-        <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span>
-        </v-alert>
       </v-col>
       <v-dialog v-model="popupDelete" width="500">
         <v-card>
@@ -42,6 +40,8 @@
         </v-card>
       </v-dialog>
     </v-row>
+
+    <v-snackbar v-model="this.alert" :timeout="timeout" :color="alertType" top="true" style="margin-top: 5em">{{ this.alertMessage }}<v-btn text @click="alert = false">Fermer</v-btn></v-snackbar>
   </v-container>
 </template>
 
@@ -81,6 +81,7 @@ export default {
       disabledButton: true,
       popupDelete: false,
       exauto: false,
+      timeout: 0,
     };
   },
   props: {

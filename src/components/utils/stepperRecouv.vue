@@ -7,6 +7,7 @@
       <v-divider></v-divider>
       <v-stepper-step step="2" :complete="current > 2">Téléchargement <small>du fichier</small></v-stepper-step>
     </v-stepper-header>
+    <v-snackbar v-model="this.alert" :timeout="timeout" :color="alertType" top="true" style="margin-top: 5em">{{ this.alertMessage }}<v-btn text @click="alert = false">Fermer</v-btn></v-snackbar>
   </v-stepper>
 </template>
 
@@ -22,6 +23,14 @@ export default {
     /** Numéro de la demande */
     numDemande: { type: String },
     modif: { type: String },
+  },
+  data() {
+    return {
+      timeout: 0,
+      alert: false,
+      alertMessage: 'Erreur.',
+      alertType: 'error',
+    };
   },
   methods: {
     // suppresion d'une demande depuis le stepper avec redirection sur l'étape 1 de recouvrement

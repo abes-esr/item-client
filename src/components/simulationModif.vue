@@ -80,9 +80,6 @@
             </v-row>
           </v-container>
         </v-card>
-        <v-alert :value="alert" :type="alertType" transition="scale-transition" dismissible>
-          <span v-html="alertMessage"></span>
-        </v-alert>
         <!-- CONTENU SIMULATION -->
         <v-card style="padding: 1em">
           <v-app-bar dark color="primary">
@@ -190,6 +187,8 @@
         </v-row>
       </v-col>
     </v-row>
+
+    <v-snackbar v-model="this.alert" :timeout="timeout" :color="alertType" top="true" style="margin-top: 5em">{{ this.alertMessage }}<v-btn text @click="alert = false">Fermer</v-btn></v-snackbar>
   </v-container>
 </template>
 <script>
@@ -222,6 +221,7 @@ export default {
       alertMessage: 'Erreur.',
       alertType: 'error',
       alert: false,
+      timeout: 0,
       user: {},
       noticeAvant: 'Notice en cours de popupEndProcessingchargement...',
       noticeApres: 'Notice en cours de chargement...',
