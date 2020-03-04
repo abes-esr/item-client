@@ -25,7 +25,7 @@
       </v-card>
     </v-dialog>
 
-    <v-snackbar v-model="this.alert" :timeout="timeout" :color="alertType" top="true" style="margin-top: 5em">{{ this.alertMessage }}<v-btn text @click="alert = false">Fermer</v-btn></v-snackbar>
+    <v-snackbar v-model="this.alert" :timeout="timeout" :color="alertType" absolute="true">{{ this.alertMessage }}<v-btn text @click="alert = false">Fermer</v-btn></v-snackbar>
   </v-container>
 </template>
 
