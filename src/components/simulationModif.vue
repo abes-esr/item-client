@@ -36,10 +36,8 @@
         <v-dialog v-model="popupEndProcessing" width="500">
           <v-card>
             <v-card-title class="headline" primary-title>Traitement validé</v-card-title>
-            <v-card-text>Votre demande est en cours de traitement, elle sera traitée dès que
-              possible.<br />Un mail vous sera envoyé une fois le traitement terminé.
-              <br>Vous pouvez retrouver l'ensemble de vos demandes depuis la page "Gérer mes
-              demandes".
+            <v-card-text>Votre demande est en cours de traitement.<br />Un mail vous sera envoyé quand celui-ci sera terminé.
+              <br>Vous pouvez retrouver l'ensemble de vos demandes depuis la page "Gérer mes demandes".
             </v-card-text>
             <v-divider></v-divider>
             <v-card-actions>

@@ -49,7 +49,7 @@
           </v-card>
           <v-card v-if="this.modif === 'EXEMP'">
             <v-card-title class="headline" primary-title>Traitement validé</v-card-title>
-            <v-card-text>Votre demande est en cours de traitement.<br/>Un mail vous sera envoyé quand celle-ci sera terminée.
+            <v-card-text>Votre demande est en cours de traitement.<br/>Un mail vous sera envoyé quand celui-ci sera terminé.
               <br>Vous pouvez retrouver l'ensemble de vos demandes sur votre tableau de bord ITEM. Rubrique "Gérer mes créations".
             </v-card-text>
             <v-divider></v-divider>
