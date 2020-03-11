@@ -39,6 +39,8 @@
         </v-alert>
       </v-col>
     </v-row>
+
+    <v-snackbar v-model="this.alert" :timeout="timeout" :color="alertType" absolute="true">{{ this.alertMessage }}<v-btn text @click="alert = false">Fermer</v-btn></v-snackbar>
   </v-container>
 </template>
 
@@ -72,6 +74,7 @@ export default {
       user: {},
       label: 'Initialisation de la demande en cours...',
       isEditing: false,
+      timeout: 0,
     };
   },
   props: {

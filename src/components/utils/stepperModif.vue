@@ -15,7 +15,6 @@
     </v-stepper-header>
   </v-stepper>
 </template>
-
 <script>
 import axios from 'axios';
 import constants from '@/components/utils/const';

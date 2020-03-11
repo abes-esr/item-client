@@ -6,7 +6,6 @@
         <stepperexemp class="item-stepper-bottom-margin" current="3" v-if="modif === 'EXEMP'" :numDemande="this.numDem.toString()" :typeExemplarisation="typeDemandeChoisi" :modif="this.modif"></stepperexemp>
         <stepperrecouv class="item-stepper-bottom-margin" current="2" v-if="modif === 'RECOUV'" :numDemande="this.numDem.toString()" :modif="this.modif"></stepperrecouv>
         <upload :modif="modif" :loading="loading" :format=format :precedent="true" :title=titleUpload :text=textUpload @upload="uploadFile" @reseterror="resetError" @precedent="precedentDemande(numDem, modif)" @supprimer="supprimerDemande(numDem, modif)" @eventName="updateParent"></upload>
-          <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span></v-alert>
       </v-col>
     </v-row>
     <!-- POPUP DE CONFIRMATION QUE LE TRAITEMENT EST LANCE -->
@@ -25,6 +24,8 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-snackbar v-model="this.alert" :timeout="timeout" :color="alertType" absolute="true">{{ this.alertMessage }}<v-btn text @click="alert = false">Fermer</v-btn></v-snackbar>
   </v-container>
 </template>
 
@@ -54,6 +55,7 @@ export default {
       alert: false,
       alertMessage: 'Erreur.',
       alertType: 'error',
+      timeout: 0,
       loading: false,
       user: {},
       format: ['csv', 'txt'],
