@@ -2,9 +2,6 @@
   <v-container fluid>
     <v-row align="center" justify="center">
       <v-col class="text-center" >
-        <v-alert :type="alertType" :value="alert" dismissible transition="scale-transition">
-          <span v-html="alertMessage"></span>
-        </v-alert>
         <v-card :loading="tableLoading">
           <v-container>
             <v-row no-gutters>
@@ -286,6 +283,8 @@
         </v-card>
       </v-dialog>
     </v-row>
+
+    <v-snackbar v-model="this.alert" :timeout="timeout" :color="alertType" absolute="true">{{ this.alertMessage }}<v-btn text @click="alert = false">Fermer</v-btn></v-snackbar>
   </v-container>
 </template>
 
@@ -350,6 +349,7 @@ export default {
       affichageRestrictifAdmin: false,
       dialogNote: {},
       commentaireMaj: '',
+      timeout: 0,
     };
   },
   props: {
