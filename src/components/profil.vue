@@ -30,7 +30,6 @@
         </v-alert>
       </v-col>
     </v-row>
-    <v-snackbar v-model="this.alert" :timeout="timeout" :color="alertType" absolute="true">{{ this.alertMessage }}<v-btn text @click="alert = false">Fermer</v-btn></v-snackbar>
   </v-container>
 </template>
 
@@ -47,7 +46,6 @@ export default {
         email1: '',
       },
       alert: false,
-      alertMessage: 'Erreur',
       user: {},
       rules: {
         required: value => !!value || 'Champ obligatoire.',
