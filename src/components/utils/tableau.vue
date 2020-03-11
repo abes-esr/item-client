@@ -669,7 +669,6 @@ export default {
                 default:
                   isLocalClickable = false; break;
               }
-              console.log(result.data[key].numDemande + '//' + result.data[key].etatDemande.numEtat);
               this.items.push({
                 dateCreation: moment(String(result.data[key].dateCreation)).format('DD/MM/YYYY HH:mm'),
                 dateModification: moment(String(result.data[key].dateModification)).format('DD/MM/YYYY HH:mm'),
