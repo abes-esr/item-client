@@ -48,6 +48,8 @@
     </v-card>
     <!--Message d'alerte quand l'utilisateur clique sur supprimer demande-->
     <br />
+    <v-alert :value="alert" :type="alertType" transition="scale-transition"><span v-html="alertMessage"></span>
+    </v-alert>
     <v-dialog v-model="popupDelete" width="500">
       <v-card>
         <v-card-title class="headline" primary-title>Suppression</v-card-title>
@@ -115,7 +117,6 @@ export default {
       alert: false,
       alertMessage: 'Erreur.',
       alertType: 'error',
-      timeout: 0,
       popupDelete: false,
       popupMultiplesCopies: false,
       user: {},

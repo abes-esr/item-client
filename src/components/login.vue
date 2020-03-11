@@ -41,7 +41,6 @@
         <v-alert :value="alert" type="error" transition="scale-transition">{{ alertMessage }}</v-alert>
       </v-col>
     </v-row>
-    <v-snackbar v-model="this.alert" :timeout="timeout" :color="alertType" absolute="true">{{ this.alertMessage }}<v-btn text @click="alert = false">Fermer</v-btn></v-snackbar>
   </v-container>
 </template>
 
@@ -61,9 +60,7 @@ export default {
       authUser: {},
       user: {},
       alert: false,
-      alertMessage: 'Erreur.',
-      alertType: 'error',
-      timeout: 0,
+      alertMessage: "Nom d'utilisateur ou mot de passe incorrect",
       loading: false,
       rules: {
         required: value => !!value || 'Champ obligatoire.',
