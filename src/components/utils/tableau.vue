@@ -86,14 +86,14 @@
                 <!--STA--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip></td>
                           <td v-if="!item.isClickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip></td>
                 <!--TL1--><td>
-                <v-menu bottom left v-if="item.codeStatut >= 2"><template v-slot:activator="{ on }"><v-btn aria-label="Télécharger les fichiers" class="cloudButton" color="info" small v-on="on"><v-icon>cloud_download</v-icon></v-btn></template>
+                <v-menu bottom left v-if="item.codeStatut >= 4"><template v-slot:activator="{ on }"><v-btn aria-label="Télécharger les fichiers" class="cloudButton" color="info" small v-on="on"><v-icon>cloud_download</v-icon></v-btn></template>
                   <!-- FICHIERS EXEMPLARISATION -->
-                  <v-list v-if="item.codeStatut >= 3 && modif === 'EXEMP'">
+                  <v-list v-if="item.codeStatut >= 4 && modif === 'EXEMP'">
                     <v-list-item @click="downloadFile(item.num, 'initEx')"><v-list-item-title>Télécharger le fichier déposé</v-list-item-title></v-list-item>
                     <v-list-item @click="downloadFile(item.num, 'resultatEx')" v-if="item.codeStatut >= 7"><v-list-item-title>Télécharger le fichier résultat</v-list-item-title></v-list-item>
                   </v-list>
                 </v-menu>
-                <span v-if="item.codeStatut === 1">
+                <span v-if="item.codeStatut <= 3">
                   <v-btn aria-label="Téléchargement impossible" class="cloudButton" color="info" disabled small><v-icon>cloud_download</v-icon></v-btn>
                 </span>
               </td>
@@ -669,7 +669,7 @@ export default {
                 default:
                   isLocalClickable = false; break;
               }
-
+              console.log(result.data[key].numDemande + '//' + result.data[key].etatDemande.numEtat);
               this.items.push({
                 dateCreation: moment(String(result.data[key].dateCreation)).format('DD/MM/YYYY HH:mm'),
                 dateModification: moment(String(result.data[key].dateModification)).format('DD/MM/YYYY HH:mm'),
