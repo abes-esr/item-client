@@ -1,12 +1,12 @@
 export default {
   erreur500: 'Le service est indisponible. Veuillez réessayer ultérieurement. Si le problème persiste, merci de contacter l\'assistance.',
-  erreurUpload: 'Une erreur est survenue lors de l\'envoi du fichier.',
-  erreurDownload: 'Une erreur est survenue lors de la récupération du fichier.',
-  erreurRCR: 'Il est impossible d\'afficher la liste des RCR.',
-  erreurListeTraitements: 'Impossible de récupérer la liste des traitements.',
-  erreurTypeExemp: 'Le tri par type d’exemplarisation est impossible.',
-  erreurListeExemp: 'Il est Impossible de récupérer la liste des exemplarisations.',
-  erreurDemande: 'Impossible mettre à jour la demande.',
+  erreurUpload: 'Le service est indisponible. Veuillez réessayer ultérieurement. Si le problème persiste, merci de contacter l\'assistance.',
+  erreurDownload: 'Le service est indisponible. Veuillez réessayer ultérieurement. Si le problème persiste, merci de contacter l\'assistance.',
+  erreurRCR: 'Le service est indisponible. Veuillez réessayer ultérieurement. Si le problème persiste, merci de contacter l\'assistance.',
+  erreurListeTraitements: 'Le service est indisponible. Veuillez réessayer ultérieurement. Si le problème persiste, merci de contacter l\'assistance.',
+  erreurTypeExemp: 'Le service est indisponible. Veuillez réessayer ultérieurement. Si le problème persiste, merci de contacter l\'assistance.',
+  erreurListeExemp: 'Le service est indisponible. Veuillez réessayer ultérieurement. Si le problème persiste, merci de contacter l\'assistance.',
+  erreurDemande: 'Le service est indisponible. Veuillez réessayer ultérieurement. Si le problème persiste, merci de contacter l\'assistance.',
 
   headersArchiveAdminModif: [
     { text: '', value: 'expand', width: '5%' },

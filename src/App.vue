@@ -30,12 +30,12 @@
     </v-app-bar>
     <!--BARRE LATERALE DE MENU-->
     <v-navigation-drawer width="18em" app v-if="authenticated" v-model="drawer" temporary>
-      <v-list-item>
+      <v-list-item three-line>
         <v-list-item-content>
-          <v-list-item-title class="title">
+          <v-list-item-title class="title wrap-text">
             {{ user.username }}
           </v-list-item-title>
-          <v-list-item-subtitle>
+          <v-list-item-subtitle class="wrap-text">
             <span v-if="!isAdmin">Vous êtes habilité à intervenir<br> sur les exemplaires des RCR de<br> l'ILN {{ user.iln }}</span>
             <span v-else>Vous disposez des permissions <br>administrateur</span>
           </v-list-item-subtitle>
@@ -355,6 +355,10 @@ export default {
   }
   .item-calendar-searchfield-item{
     max-height: 2.8em
+  }
+  .wrap-text {
+    -webkit-line-clamp: unset !important;
+    white-space: normal;
   }
   @media all and (max-width: 10em){
     .item-break-words{
