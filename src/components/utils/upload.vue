@@ -157,7 +157,7 @@ export default {
     checkFormat() {
       this.alert = false;
       if (!(this.format.includes(this.$refs.fileInput.files[0].name.split('.')[1]))) {
-        this.alertMessage = 'Le format du fichier est non conforme : seuls les fichiers txt ou csv sont autorisés. Merci de consulter la documentation utilisateur à cette adresse : ';
+        this.alertMessage = 'Le format du fichier est non conforme : seuls les fichiers txt ou csv sont autorisés. Merci de consulter la documentation utilisateur à cette adresse : <a href="http://documentation.abes.fr/aideitem/index.html" target="_blank" style="color:white">documentation.abes.fr</a>';
         this.alertType = 'error';
         this.alert = true;
         this.fichierPresent = false;

@@ -116,10 +116,9 @@
               <v-col :key="1" cols="12" sm="12" style="margin-top: 1em">
                 <!--Message de visualisation de la simulation-->
                 <v-alert type="warning" dense prominent border="left">
-                  Cet écran n'est qu'une <strong>visualisation</strong> du traitement.<br>
-                  Les <strong>règles de validation</strong> ne sont pas prises en compte lors de cette simulation.<br>
-                  Il s'agit de la <strong>dernière étape</strong> avant de lancer le traitement en <strong>base de
-                  production</strong>.
+                  Cet écran est une <strong>simulation</strong> du traitement.<br>
+                  Il s'agit de la <strong>dernière étape</strong> avant de lancer le traitement en <strong>production</strong>.<br>
+                  Merci de <strong>vérifier vos données</strong> et le <strong>choix du nombre d'exemplaires</strong>.
                 </v-alert>
               </v-col>
               <v-col :key="2" cols="12" sm="12"> <!--Ligne du fichier-->

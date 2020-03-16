@@ -86,23 +86,23 @@
                 <!--STA--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip></td>
                           <td v-if="!item.isClickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip></td>
                 <!--TL1--><td>
-                <v-menu bottom left v-if="item.codeStatut >= 2"><template v-slot:activator="{ on }"><v-btn aria-label="Télécharger les fichiers" class="cloudButton" color="info" small v-on="on"><v-icon>cloud_download</v-icon></v-btn></template>
+                <v-menu bottom left v-if="item.codeStatut >= 4"><template v-slot:activator="{ on }"><v-btn aria-label="Télécharger les fichiers" class="cloudButton" color="info" small v-on="on" title="Télécharger"><v-icon>cloud_download</v-icon></v-btn></template>
                   <!-- FICHIERS EXEMPLARISATION -->
-                  <v-list v-if="item.codeStatut >= 3 && modif === 'EXEMP'">
+                  <v-list v-if="item.codeStatut >= 4 && modif === 'EXEMP'">
                     <v-list-item @click="downloadFile(item.num, 'initEx')"><v-list-item-title>Télécharger le fichier déposé</v-list-item-title></v-list-item>
                     <v-list-item @click="downloadFile(item.num, 'resultatEx')" v-if="item.codeStatut >= 7"><v-list-item-title>Télécharger le fichier résultat</v-list-item-title></v-list-item>
                   </v-list>
                 </v-menu>
-                <span v-if="item.codeStatut === 1">
+                <span v-if="item.codeStatut <= 3">
                   <v-btn aria-label="Téléchargement impossible" class="cloudButton" color="info" disabled small><v-icon>cloud_download</v-icon></v-btn>
                 </span>
               </td>
                 <!--AR2--><td class="text-center" v-if="!archive">
                 <span v-if="item.codeStatut < 5 && user.iln === item.iln">
-                  <v-btn @click="current = item.num; popupDelete = true;" aria-label="Supprimer" icon><v-icon>delete</v-icon></v-btn>
+                      <v-btn @click="current = item.num; popupDelete = true;" aria-label="Supprimer" icon title="Supprimer"><v-icon>delete</v-icon></v-btn>
                 </span>
                 <span v-else-if="item.codeStatut === 7 && user.iln === item.iln">
-                  <v-btn @click="current = item.num; popupArchive = true;" aria-label="Archiver" icon><v-icon>archive</v-icon></v-btn>
+                  <v-btn @click="current = item.num; popupArchive = true;" aria-label="Archiver" icon title="Archiver"><v-icon>archive</v-icon></v-btn>
                 </span>
               </td>
                 <!--Zone de commentaire associée à un item-->
@@ -662,14 +662,13 @@ export default {
                   isLocalClickable = true; break;
                 case 5: // En attente
                 case 6: // En cours de traitement
-                case 7: // Terminée
+                case 7: // Terminé
                 case 8: // En erreur
                 case 9: // Archivée
                   isLocalClickable = false; break;
                 default:
                   isLocalClickable = false; break;
               }
-
               this.items.push({
                 dateCreation: moment(String(result.data[key].dateCreation)).format('DD/MM/YYYY HH:mm'),
                 dateModification: moment(String(result.data[key].dateModification)).format('DD/MM/YYYY HH:mm'),
@@ -724,8 +723,8 @@ export default {
             statut = 'En saisie';
           } else if (currentValue.statut === 'En cours de traitement') {
             statut = 'En cours de traitement';
-          } else if (currentValue.statut === 'Terminée' || currentValue.statut === 'Archivée') {
-            statut = 'Terminée';
+          } else if (currentValue.statut === 'Terminé' || currentValue.statut === 'Archivée') {
+            statut = 'Terminé';
           } else if (currentValue.statut === 'En attente') {
             statut = 'En attente';
           } else if (currentValue.statut === 'En erreur') {
@@ -812,7 +811,7 @@ export default {
               this.listStatutSorted.set(2, 'En attente');
             } else if (result.data[i].libelle === 'En cours de traitement') {
               this.listStatutSorted.set(3, result.data[i].libelle);
-            } else if (result.data[i].libelle === 'Terminée') {
+            } else if (result.data[i].libelle === 'Terminé') {
               this.listStatutSorted.set(4, result.data[i].libelle);
             } else if (result.data[i].libelle === 'En erreur') {
               this.listStatutSorted.set(5, result.data[i].libelle);
@@ -925,7 +924,7 @@ export default {
       switch (statut) {
         case 'En erreur': return 'red';
         case 'En attente': return 'orange';
-        case 'Terminée': return 'green';
+        case 'Terminé': return 'green';
         case 'Archivée': return 'brown';
         default: return 'none';
       }
