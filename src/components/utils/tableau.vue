@@ -723,7 +723,7 @@ export default {
             statut = 'En saisie';
           } else if (currentValue.statut === 'En cours de traitement') {
             statut = 'En cours de traitement';
-          } else if (currentValue.statut === 'Terminé' || currentValue.statut === 'Archivée') {
+          } else if (currentValue.statut === 'Terminé' || currentValue.statut === 'Archivé') {
             statut = 'Terminé';
           } else if (currentValue.statut === 'En attente') {
             statut = 'En attente';
@@ -801,7 +801,7 @@ export default {
           for (let i = 0; i < result.data.length; i++) {
             if (
               result.data[i].libelle === 'Preparée'
-                                || result.data[i].libelle === 'Archivée'
+                                || result.data[i].libelle === 'Archivé'
                                 || result.data[i].libelle === 'A compléter'
                                 || result.data[i].libelle === 'En simulation'
                                 || result.data[i].libelle === 'En saisie'
@@ -925,7 +925,7 @@ export default {
         case 'En erreur': return 'red';
         case 'En attente': return 'orange';
         case 'Terminé': return 'green';
-        case 'Archivée': return 'brown';
+        case 'Archivé': return 'brown';
         default: return 'none';
       }
     },
