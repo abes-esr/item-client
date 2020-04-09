@@ -267,7 +267,7 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn @click="popupDelete = false" aria-label="Annuler" text>Annuler</v-btn>
-            <v-btn :disabled="deleteLoading" :loading="deleteLoading" @click="deleteDem"  aria-label="Confirmer" text>Confirmer</v-btn>
+            <v-btn :disabled="deleteLoading" :loading="deleteLoading" @click="deleteDemWithPreservation"  aria-label="Confirmer" text>Confirmer</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -872,6 +872,33 @@ export default {
         headers: { Authorization: this.user.jwt },
         method: 'DELETE',
         url: `${process.env.VUE_APP_ROOT_API}demandes/${this.current}?type=${this.modif}`,
+      }).then(
+        () => {
+          this.alertMessage = 'Demande supprimée.';
+          this.alertType = 'success';
+          this.alert = true;
+          this.fetchData();
+          this.popupDelete = false;
+          this.deleteLoading = false;
+        },
+        (error) => {
+          this.alertMessage = constants.erreur500;
+          this.alertType = 'error';
+          this.alert = true;
+          this.popupDelete = false;
+          this.deleteLoading = false;
+          if (error.response.status === 401) {
+            this.$emit('logout');
+          }
+        },
+      );
+    },
+    deleteDemWithPreservation() {
+      this.deleteLoading = true;
+      axios({
+        headers: { Authorization: this.user.jwt },
+        method: 'GET',
+        url: `${process.env.VUE_APP_ROOT_API}supprimerDemande?numDemande=${this.current}&type=${this.modif}`,
       }).then(
         () => {
           this.alertMessage = 'Demande supprimée.';
