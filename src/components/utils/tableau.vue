@@ -148,7 +148,7 @@
                 <!--STA--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip></td>
                           <td v-if="!item.isClickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip></td>
                 <!--TL1--><td>
-                <v-menu bottom left v-if="item.codeStatut >= 2"><template v-slot:activator="{ on }"><v-btn aria-label="Télécharger les fichiers" class="cloudButton" color="info" small v-on="on"><v-icon>cloud_download</v-icon></v-btn></template>
+                <v-menu bottom left v-if="item.codeStatut >= 2"><template v-slot:activator="{ on }"><v-btn aria-label="Télécharger les fichiers" class="cloudButton" color="info" small v-on="on" title="Télécharger"><v-icon>cloud_download</v-icon></v-btn></template>
                   <!-- FICHIERS MODIF -->
                   <v-list v-if="item.codeStatut >= 3 && modif === 'MODIF'">
                     <v-list-item @click="downloadFile(item.num, 'ppn')"><v-list-item-title>Télécharger le fichier initial des PPN</v-list-item-title></v-list-item>
@@ -163,10 +163,10 @@
               </td>
                 <!--AR2--><td class="text-center" v-if="!archive">
                 <span v-if="item.codeStatut < 5 && user.iln == item.iln">
-                  <v-btn @click="current = item.num; popupDelete = true;" aria-label="Supprimer" icon><v-icon>delete</v-icon></v-btn>
+                  <v-btn @click="current = item.num; popupDelete = true;" aria-label="Supprimer" icon title="Télécharger"><v-icon>delete</v-icon></v-btn>
                 </span>
                 <span v-else-if="item.codeStatut == 7 && user.iln == item.iln">
-                  <v-btn @click="current = item.num; popupArchive = true;" aria-label="Archiver" icon><v-icon>archive</v-icon></v-btn>
+                  <v-btn @click="current = item.num; popupArchive = true;" aria-label="Archiver" icon title="Archiver"><v-icon>archive</v-icon></v-btn>
                 </span>
               </td>
               </tr>
@@ -211,7 +211,7 @@
                 <!--STA--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip></td>
                           <td v-if="!item.isClickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip></td>
                 <!--TL1--><td>
-                <v-menu bottom left v-if="item.codeStatut >= 2"><template v-slot:activator="{ on }"><v-btn aria-label="Télécharger les fichiers" class="cloudButton" color="info" small v-on="on"><v-icon>cloud_download</v-icon></v-btn></template>
+                <v-menu bottom left v-if="item.codeStatut >= 2"><template v-slot:activator="{ on }"><v-btn aria-label="Télécharger les fichiers" class="cloudButton" color="info" small v-on="on" title="Télécharger"><v-icon>cloud_download</v-icon></v-btn></template>
                   <!-- FICHIERS RECOUV -->
                   <v-list v-if="item.codeStatut >= 3 && modif === 'RECOUV'">
                     <v-list-item @click="downloadFile(item.num, 'initRecouv')"><v-list-item-title>Télécharger le fichier déposé</v-list-item-title></v-list-item>
@@ -224,10 +224,10 @@
               </td>
                 <!--AR2--><td class="text-center" v-if="!archive">
                 <span v-if="item.codeStatut < 5 && user.iln === item.iln">
-                  <v-btn @click="current = item.num; popupDelete = true;" aria-label="Supprimer" icon><v-icon>delete</v-icon></v-btn>
+                  <v-btn @click="current = item.num; popupDelete = true;" aria-label="Supprimer" icon title="Télécharger"><v-icon>delete</v-icon></v-btn>
                 </span>
                 <span v-else-if="item.codeStatut === 7 && user.iln === item.iln">
-                  <v-btn @click="current = item.num; popupArchive = true;" aria-label="Archiver" icon><v-icon>archive</v-icon></v-btn>
+                  <v-btn @click="current = item.num; popupArchive = true;" aria-label="Archiver" icon title="Archiver"><v-icon>archive</v-icon></v-btn>
                 </span>
               </td>
                 <!--Zone de commentaire associée à un item-->
@@ -267,7 +267,7 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn @click="popupDelete = false" aria-label="Annuler" text>Annuler</v-btn>
-            <v-btn :disabled="deleteLoading" :loading="deleteLoading" @click="deleteDem"  aria-label="Confirmer" text>Confirmer</v-btn>
+            <v-btn :disabled="deleteLoading" :loading="deleteLoading" @click="deleteDemWithPreservation"  aria-label="Confirmer" text>Confirmer</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -723,7 +723,7 @@ export default {
             statut = 'En saisie';
           } else if (currentValue.statut === 'En cours de traitement') {
             statut = 'En cours de traitement';
-          } else if (currentValue.statut === 'Terminé' || currentValue.statut === 'Archivée') {
+          } else if (currentValue.statut === 'Terminé' || currentValue.statut === 'Archivé') {
             statut = 'Terminé';
           } else if (currentValue.statut === 'En attente') {
             statut = 'En attente';
@@ -801,7 +801,7 @@ export default {
           for (let i = 0; i < result.data.length; i++) {
             if (
               result.data[i].libelle === 'Preparée'
-                                || result.data[i].libelle === 'Archivée'
+                                || result.data[i].libelle === 'Archivé'
                                 || result.data[i].libelle === 'A compléter'
                                 || result.data[i].libelle === 'En simulation'
                                 || result.data[i].libelle === 'En saisie'
@@ -893,6 +893,33 @@ export default {
         },
       );
     },
+    deleteDemWithPreservation() {
+      this.deleteLoading = true;
+      axios({
+        headers: { Authorization: this.user.jwt },
+        method: 'GET',
+        url: `${process.env.VUE_APP_ROOT_API}supprimerDemande?numDemande=${this.current}&type=${this.modif}`,
+      }).then(
+        () => {
+          this.alertMessage = 'Demande supprimée.';
+          this.alertType = 'success';
+          this.alert = true;
+          this.fetchData();
+          this.popupDelete = false;
+          this.deleteLoading = false;
+        },
+        (error) => {
+          this.alertMessage = constants.erreur500;
+          this.alertType = 'error';
+          this.alert = true;
+          this.popupDelete = false;
+          this.deleteLoading = false;
+          if (error.response.status === 401) {
+            this.$emit('logout');
+          }
+        },
+      );
+    },
     archiveDem() {
       this.deleteLoading = true;
       axios({
@@ -925,7 +952,7 @@ export default {
         case 'En erreur': return 'red';
         case 'En attente': return 'orange';
         case 'Terminé': return 'green';
-        case 'Archivée': return 'brown';
+        case 'Archivé': return 'brown';
         default: return 'none';
       }
     },

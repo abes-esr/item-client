@@ -1,7 +1,7 @@
 <template>
     <v-footer height="auto" color="secondary">
       <v-row>
-          <v-chip color="secondary" href="http://abes.fr/">&copy; 2019 — ABES</v-chip>
+          <v-chip color="secondary" href="http://abes.fr/">&copy; 2020 — ABES</v-chip>
            <v-spacer></v-spacer>
         <v-tooltip v-if="applicationVersion !== ''" top>
           <template v-slot:activator="{ on }">
