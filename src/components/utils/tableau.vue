@@ -148,7 +148,7 @@
                 <!--STA--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip></td>
                           <td v-if="!item.isClickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip></td>
                 <!--TL1--><td>
-                <v-menu bottom left v-if="item.codeStatut >= 2"><template v-slot:activator="{ on }"><v-btn aria-label="Télécharger les fichiers" class="cloudButton" color="info" small v-on="on"><v-icon>cloud_download</v-icon></v-btn></template>
+                <v-menu bottom left v-if="item.codeStatut >= 2"><template v-slot:activator="{ on }"><v-btn aria-label="Télécharger les fichiers" class="cloudButton" color="info" small v-on="on" title="Télécharger"><v-icon>cloud_download</v-icon></v-btn></template>
                   <!-- FICHIERS MODIF -->
                   <v-list v-if="item.codeStatut >= 3 && modif === 'MODIF'">
                     <v-list-item @click="downloadFile(item.num, 'ppn')"><v-list-item-title>Télécharger le fichier initial des PPN</v-list-item-title></v-list-item>
@@ -163,10 +163,10 @@
               </td>
                 <!--AR2--><td class="text-center" v-if="!archive">
                 <span v-if="item.codeStatut < 5 && user.iln == item.iln">
-                  <v-btn @click="current = item.num; popupDelete = true;" aria-label="Supprimer" icon><v-icon>delete</v-icon></v-btn>
+                  <v-btn @click="current = item.num; popupDelete = true;" aria-label="Supprimer" icon title="Télécharger"><v-icon>delete</v-icon></v-btn>
                 </span>
                 <span v-else-if="item.codeStatut == 7 && user.iln == item.iln">
-                  <v-btn @click="current = item.num; popupArchive = true;" aria-label="Archiver" icon><v-icon>archive</v-icon></v-btn>
+                  <v-btn @click="current = item.num; popupArchive = true;" aria-label="Archiver" icon title="Archiver"><v-icon>archive</v-icon></v-btn>
                 </span>
               </td>
               </tr>
@@ -211,7 +211,7 @@
                 <!--STA--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip></td>
                           <td v-if="!item.isClickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip></td>
                 <!--TL1--><td>
-                <v-menu bottom left v-if="item.codeStatut >= 2"><template v-slot:activator="{ on }"><v-btn aria-label="Télécharger les fichiers" class="cloudButton" color="info" small v-on="on"><v-icon>cloud_download</v-icon></v-btn></template>
+                <v-menu bottom left v-if="item.codeStatut >= 2"><template v-slot:activator="{ on }"><v-btn aria-label="Télécharger les fichiers" class="cloudButton" color="info" small v-on="on" title="Télécharger"><v-icon>cloud_download</v-icon></v-btn></template>
                   <!-- FICHIERS RECOUV -->
                   <v-list v-if="item.codeStatut >= 3 && modif === 'RECOUV'">
                     <v-list-item @click="downloadFile(item.num, 'initRecouv')"><v-list-item-title>Télécharger le fichier déposé</v-list-item-title></v-list-item>
@@ -224,10 +224,10 @@
               </td>
                 <!--AR2--><td class="text-center" v-if="!archive">
                 <span v-if="item.codeStatut < 5 && user.iln === item.iln">
-                  <v-btn @click="current = item.num; popupDelete = true;" aria-label="Supprimer" icon><v-icon>delete</v-icon></v-btn>
+                  <v-btn @click="current = item.num; popupDelete = true;" aria-label="Supprimer" icon title="Télécharger"><v-icon>delete</v-icon></v-btn>
                 </span>
                 <span v-else-if="item.codeStatut === 7 && user.iln === item.iln">
-                  <v-btn @click="current = item.num; popupArchive = true;" aria-label="Archiver" icon><v-icon>archive</v-icon></v-btn>
+                  <v-btn @click="current = item.num; popupArchive = true;" aria-label="Archiver" icon title="Archiver"><v-icon>archive</v-icon></v-btn>
                 </span>
               </td>
                 <!--Zone de commentaire associée à un item-->
