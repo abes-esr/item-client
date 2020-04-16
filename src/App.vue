@@ -204,7 +204,7 @@ export default {
       isAdmin: false,
       dialog: false,
       wrapped: '',
-      applicationVersion: 'actualisez la page pour connaitre l\'etat en cours',
+      applicationVersion: 'Etat application item partie serveur : KO (actualisez la page règulièrement)',
     };
   },
   created() {

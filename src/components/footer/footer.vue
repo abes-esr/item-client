@@ -18,7 +18,7 @@
               Version / Etat
             </v-chip>
           </template>
-          <span>Etat application item partie serveur : KO</span>
+          <span>Etat application item partie serveur : KO <br> (actualisez la page règulièrement)</span>
         </v-tooltip>
         <!--A la première arrivée sur la page, si on n'a pas récupéré la variable-->
         <v-tooltip v-if="applicationVersion === undefined" top>
@@ -27,7 +27,7 @@
               Version / Etat
             </v-chip>
           </template>
-          <span>Acutalisez la page pour connaitre l'état de l'application</span>
+          <span>Etat application item partie serveur : KO <br> (actualisez la page règulièrement)</span>
         </v-tooltip>
           <v-chip color="secondary" @click="$router.push({ name: 'donnees' })">
             Données Personnelles
