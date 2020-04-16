@@ -204,7 +204,7 @@ export default {
       isAdmin: false,
       dialog: false,
       wrapped: '',
-      applicationVersion: '',
+      applicationVersion: 'actualisez la page pour connaitre l\'etat en cours',
     };
   },
   created() {
@@ -218,10 +218,6 @@ export default {
     if (localStorage.dark === 'true') {
       this.$vuetify.theme.dark = true;
     }
-
-    // recupération du statut des bases même si l'utilisateur n'est pas connecté
-    this.getApplicationVersion();
-    this.getStatusOfServices();
 
     this.getUserData();
 
