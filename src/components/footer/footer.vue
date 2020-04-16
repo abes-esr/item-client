@@ -6,7 +6,7 @@
         <v-tooltip v-if="applicationVersion !== ''" top>
           <template v-slot:activator="{ on }">
             <v-chip color="secondary" v-on="on">
-            Version / Etats
+            Version / Etat
           </v-chip>
           </template>
           <span>{{ applicationVersion }}</span>
@@ -15,7 +15,7 @@
         <v-tooltip v-if="applicationVersion === ''" top>
           <template v-slot:activator="{ on }">
             <v-chip color="secondary" v-on="on">
-              Version / Etats
+              Version / Etat
             </v-chip>
           </template>
           <span>Etat application item partie serveur : KO</span>
