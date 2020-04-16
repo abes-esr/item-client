@@ -241,6 +241,7 @@ export default {
       this.authenticated = status;
       this.getUserData();
       this.getApplicationVersion();
+      this.getStatusOfServices();
     },
     // récupère le numero de version de l'application
     getApplicationVersion() {
@@ -252,6 +253,19 @@ export default {
         (result) => {
           console.log(result);
           this.applicationVersion = result.data;
+        },
+      );
+    },
+    // récupère le statut actuel des services
+    getStatusOfServices() {
+      return axios({
+        headers: { Authorization: this.user.jwt },
+        method: 'GET',
+        url: `${process.env.VUE_APP_ROOT_API}test`,
+      }).then(
+        (result) => {
+          console.log(result);
+          this.applicationVersion += result.data;
         },
       );
     },
