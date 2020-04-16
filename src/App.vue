@@ -207,6 +207,11 @@ export default {
       applicationVersion: '',
     };
   },
+  created() {
+    // recupération du statut des bases même si l'utilisateur n'est pas connecté
+    this.getApplicationVersion();
+    this.getStatusOfServices();
+  },
   mounted() {
     // Récupération du thème sombre/clair en localStorage
     // le 'true' est une String car le localStorage gère mal les booléens

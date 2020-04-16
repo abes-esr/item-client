@@ -11,6 +11,15 @@
           </template>
           <span>{{ applicationVersion }}</span>
         </v-tooltip>
+        <!--Si l'application n'est pas lancée en local ou sur le serveur (plantée) on retourne KO pour le back-->
+        <v-tooltip v-if="applicationVersion === ''" top>
+          <template v-slot:activator="{ on }">
+            <v-chip color="secondary" v-on="on">
+              Version / Etat
+            </v-chip>
+          </template>
+          <span>Etat application item partie serveur : KO</span>
+        </v-tooltip>
           <v-chip color="secondary" @click="$router.push({ name: 'donnees' })">
             Données Personnelles
           </v-chip>
