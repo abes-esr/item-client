@@ -219,6 +219,10 @@ export default {
       this.$vuetify.theme.dark = true;
     }
 
+    // recupération du statut des bases même si l'utilisateur n'est pas connecté
+    this.getApplicationVersion();
+    this.getStatusOfServices();
+
     this.getUserData();
 
     // Bannière pour prévenir de l'utilisation de cookies
