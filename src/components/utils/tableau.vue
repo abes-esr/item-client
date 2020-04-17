@@ -90,7 +90,7 @@
                   <!-- FICHIERS EXEMPLARISATION -->
                   <v-list v-if="item.codeStatut >= 4 && modif === 'EXEMP'">
                     <v-list-item @click="downloadFile(item.num, 'initEx')"><v-list-item-title>Télécharger le fichier déposé</v-list-item-title></v-list-item>
-                    <v-list-item @click="downloadFile(item.num, 'resultatEx')" v-if="item.codeStatut >= 7"><v-list-item-title>Télécharger le fichier résultat</v-list-item-title></v-list-item>
+                    <v-list-item @click="downloadFile(item.num, 'resultatEx')" v-if="item.codeStatut >= 7 && item.codeStatut !== 8"><v-list-item-title>Télécharger le fichier résultat</v-list-item-title></v-list-item>
                   </v-list>
                 </v-menu>
                 <span v-if="item.codeStatut <= 3">
@@ -154,7 +154,7 @@
                     <v-list-item @click="downloadFile(item.num, 'ppn')"><v-list-item-title>Télécharger le fichier initial des PPN</v-list-item-title></v-list-item>
                     <v-list-item @click="downloadFile(item.num, 'epn')"><v-list-item-title>Télécharger le fichier de correspondance PPN/EPN</v-list-item-title></v-list-item>
                     <v-list-item @click="downloadFile(item.num, 'enrichi')" v-if="item.codeStatut >= 4"><v-list-item-title>Télécharger le fichier enrichi</v-list-item-title></v-list-item>
-                    <v-list-item @click="downloadFile(item.num, 'resultat')" v-if="item.codeStatut >= 7"><v-list-item-title>Télécharger le fichier résultat</v-list-item-title></v-list-item>
+                    <v-list-item @click="downloadFile(item.num, 'resultat')" v-if="item.codeStatut >= 7 && item.codeStatut !== 8"><v-list-item-title>Télécharger le fichier résultat</v-list-item-title></v-list-item>
                   </v-list>
                 </v-menu>
                 <span v-if="item.codeStatut == 1">
@@ -215,7 +215,7 @@
                   <!-- FICHIERS RECOUV -->
                   <v-list v-if="item.codeStatut >= 3 && modif === 'RECOUV'">
                     <v-list-item @click="downloadFile(item.num, 'initRecouv')"><v-list-item-title>Télécharger le fichier déposé</v-list-item-title></v-list-item>
-                    <v-list-item @click="downloadFile(item.num, 'resultatRecouv')" v-if="item.codeStatut >= 7"><v-list-item-title>Télécharger le fichier résultat</v-list-item-title></v-list-item>
+                    <v-list-item @click="downloadFile(item.num, 'resultatRecouv')" v-if="item.codeStatut >= 7 && item.codeStatut !== 8"><v-list-item-title>Télécharger le fichier résultat</v-list-item-title></v-list-item>
                   </v-list>
                 </v-menu>
                 <span v-if="item.codeStatut === 1">
