@@ -268,6 +268,7 @@ export default {
       exemplairesPresentsSurNoticeEnCours: false,
       autorisationExemplairesMultiples: false,
       typeExemplarisation: '',
+      indexRecherche: '',
     };
   },
   props: {
@@ -330,6 +331,7 @@ export default {
           this.demande = result.data;
           this.autorisationExemplairesMultiples = this.demande.exemplairesMultiplesAutorise;
           this.getSimulation();
+          this.indexRecherche = result.data.indexRecherche.numIndexRecherche;
         },
         (error) => {
           this.loading = false;

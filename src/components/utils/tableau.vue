@@ -33,7 +33,12 @@
                       </template>
                       <v-card>
                         <v-card-title class="headline">Affichage restrictif</v-card-title>
-                        <v-card-text>Permet en tant qu'administrateur de visualiser également les demandes terminées et en erreur des autres ILN</v-card-text>
+                        <v-card-text>Permet en tant qu'administrateur de visualiser également sur <strong>tous les ILN</strong>, les demandes en statut : <br><br>
+                          <v-chip color="orange" style="margin-right: 3px">En attente</v-chip>
+                          <v-chip color="grey" style="margin-right: 3px">En cours de traitement</v-chip>
+                          <v-chip color="green" style="margin-right: 3px">Terminé</v-chip>
+                          <v-chip color="red">En erreur</v-chip>
+                        </v-card-text>
                         <v-card-actions>
                           <div class="flex-grow-1"></div>
                           <v-btn text @click="popupAffichageRestrictif = false">Ok</v-btn>
@@ -83,8 +88,8 @@
                           <td v-if="!item.isClickable">{{ item.typeExemp }}</td>
                 <!--IND--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.indexRecherche }}</td>
                           <td v-if="!item.isClickable">{{ item.indexRecherche }}</td>
-                <!--STA--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip></td>
-                          <td v-if="!item.isClickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip></td>
+                <!--STA--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip> <div v-if="item.codeStatut === 6">{{ item.percentOfProgression + ' %' }}</div><div v-if="item.codeStatut === 5 && item.indexRecherche === 'Date;Auteur;Titre'">{{ 'traité à partir de 20h' }}</div></td>
+                          <td v-if="!item.isClickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip> <div v-if="item.codeStatut === 6">{{ item.percentOfProgression + ' %' }}</div><div v-if="item.codeStatut === 5 && item.indexRecherche === 'Date;Auteur;Titre'" title="Une demande utilisant le type d'index date;auteur;titre dans le fichier est traitée à partir de 20h.">{{ 'traité à partir de 20h' }}</div></td>
                 <!--TL1--><td>
                 <v-menu bottom left v-if="item.codeStatut >= 4"><template v-slot:activator="{ on }"><v-btn aria-label="Télécharger les fichiers" class="cloudButton" color="info" small v-on="on" title="Télécharger"><v-icon>cloud_download</v-icon></v-btn></template>
                   <!-- FICHIERS EXEMPLARISATION -->
@@ -145,8 +150,8 @@
                           <td v-if="!item.isClickable">{{ item.zoneSousZone }}</td>
                 <!--TRT--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.typeExemp }}</td>
                           <td v-if="!item.isClickable">{{ item.typeExemp }}</td>
-                <!--STA--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip></td>
-                          <td v-if="!item.isClickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip></td>
+                <!--STA--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip><div v-if="item.codeStatut === 6">{{ item.percentOfProgression + ' %' }}</div></td>
+                          <td v-if="!item.isClickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip><div v-if="item.codeStatut === 6">{{ item.percentOfProgression + ' %' }}</div></td>
                 <!--TL1--><td>
                 <v-menu bottom left v-if="item.codeStatut >= 2"><template v-slot:activator="{ on }"><v-btn aria-label="Télécharger les fichiers" class="cloudButton" color="info" small v-on="on" title="Télécharger"><v-icon>cloud_download</v-icon></v-btn></template>
                   <!-- FICHIERS MODIF -->
@@ -208,8 +213,8 @@
                           <td v-if="!item.isClickable">{{ item.rcr }}</td>
                 <!--IND--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.indexRecherche }}</td>
                           <td v-if="!item.isClickable">{{ item.indexRecherche }}</td>
-                <!--STA--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip></td>
-                          <td v-if="!item.isClickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip></td>
+                <!--STA--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip><div v-if="item.codeStatut === 6">{{ item.percentOfProgression + ' %' }}</div><div v-if="item.codeStatut === 5 && item.indexRecherche === 'Date;Auteur;Titre'">{{ 'traité à partir de 20h' }}</div></td></td>
+                          <td v-if="!item.isClickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip><div v-if="item.codeStatut === 6">{{ item.percentOfProgression + ' %' }}</div><div v-if="item.codeStatut === 5 && item.indexRecherche === 'Date;Auteur;Titre'" title="Une demande utilisant le type d'index date;auteur;titre dans le fichier est traitée à partir de 20h.">{{ 'traité à partir de 20h' }}</div></td></td>
                 <!--TL1--><td>
                 <v-menu bottom left v-if="item.codeStatut >= 2"><template v-slot:activator="{ on }"><v-btn aria-label="Télécharger les fichiers" class="cloudButton" color="info" small v-on="on" title="Télécharger"><v-icon>cloud_download</v-icon></v-btn></template>
                   <!-- FICHIERS RECOUV -->
@@ -684,6 +689,7 @@ export default {
                 codeStatut: result.data[key].etatDemande.numEtat,
                 isClickable: isLocalClickable,
                 commentaire: result.data[key].commentaire,
+                percentOfProgression: result.data[key].pourcentageProgressionTraitement,
               });
             }
 

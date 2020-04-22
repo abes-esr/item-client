@@ -200,7 +200,6 @@ export default {
     },
     turnOffPopup() {
       this.dialogFinished = false;
-      console.log(this.modif);
       switch (this.modif) {
         case TYPEDEMANDE.DEMANDE_EXEMPLARISATION:
           this.$router.replace({ name: 'tabExemp' });

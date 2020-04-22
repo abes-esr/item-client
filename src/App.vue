@@ -256,7 +256,6 @@ export default {
         url: `${process.env.VUE_APP_ROOT_API}applicationVersion`,
       }).then(
         (result) => {
-          console.log(result);
           this.applicationVersion = result.data;
         },
       );
@@ -269,7 +268,6 @@ export default {
         url: `${process.env.VUE_APP_ROOT_API}test`,
       }).then(
         (result) => {
-          console.log(result);
           this.applicationVersion += result.data;
         },
       );
