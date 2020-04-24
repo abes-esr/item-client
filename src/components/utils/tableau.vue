@@ -254,7 +254,7 @@
               </td>
                 <!--AR2--><td class="text-center" v-if="!archive">
                 <span v-if="item.codeStatut < 5 && user.iln === item.iln">
-                  <v-btn @click="current = item.num; popupDelete = true;" aria-label="Supprimer" icon title="Télécharger"><v-icon>delete</v-icon></v-btn>
+                  <v-btn @click="current = item.num; popupDelete = true;" aria-label="Supprimer" icon title="Supprimer"><v-icon>delete</v-icon></v-btn>
                 </span>
                 <span v-else-if="item.codeStatut === 7 && user.iln === item.iln">
                   <v-btn @click="current = item.num; popupArchive = true;" aria-label="Archiver" icon title="Archiver"><v-icon>archive</v-icon></v-btn>
