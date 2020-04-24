@@ -88,8 +88,22 @@
                           <td v-if="!item.isClickable">{{ item.typeExemp }}</td>
                 <!--IND--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.indexRecherche }}</td>
                           <td v-if="!item.isClickable">{{ item.indexRecherche }}</td>
-                <!--STA--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip> <div v-if="item.codeStatut === 6">{{ item.percentOfProgression + ' %' }}</div><div v-if="item.codeStatut === 5 && item.indexRecherche === 'Date;Auteur;Titre'">{{ 'traité à partir de 20h' }}</div></td>
-                          <td v-if="!item.isClickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip> <div v-if="item.codeStatut === 6">{{ item.percentOfProgression + ' %' }}</div><div v-if="item.codeStatut === 5 && item.indexRecherche === 'Date;Auteur;Titre'" title="Une demande utilisant le type d'index date;auteur;titre dans le fichier est traitée à partir de 20h.">{{ 'traité à partir de 20h' }}</div></td>
+                <!--STA--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">
+                              <v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip> <!--Chip de statut-->
+                              <div v-if="item.codeStatut === 6">{{ item.percentOfProgression + ' %' }}</div> <!--% de progression quand la demande est en cours de traitement-->
+                          </td>
+                          <td v-if="!item.isClickable">
+                            <v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip>
+                            <div style="float: right; margin-left: -2em; margin-top: 0.25em" v-if="item.codeStatut === 5 && item.indexRecherche === 'Date;Auteur;Titre'">
+                            <v-tooltip bottom dark>
+                              <template v-slot:activator="{ on }">
+                                <v-icon color="orange"  dark v-on="on">info</v-icon>
+                              </template>
+                              <span>Les requêtes date;auteur;titre sont traitées entre 20h et 8h. (J+1)</span>
+                            </v-tooltip>
+                            </div>
+                            <div v-if="item.codeStatut === 6">{{ item.percentOfProgression + ' %' }}</div>
+                          </td>
                 <!--TL1--><td>
                 <v-menu bottom left v-if="item.codeStatut >= 4"><template v-slot:activator="{ on }"><v-btn aria-label="Télécharger les fichiers" class="cloudButton" color="info" small v-on="on" title="Télécharger"><v-icon>cloud_download</v-icon></v-btn></template>
                   <!-- FICHIERS EXEMPLARISATION -->
@@ -213,8 +227,19 @@
                           <td v-if="!item.isClickable">{{ item.rcr }}</td>
                 <!--IND--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable">{{ item.indexRecherche }}</td>
                           <td v-if="!item.isClickable">{{ item.indexRecherche }}</td>
-                <!--STA--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip><div v-if="item.codeStatut === 6">{{ item.percentOfProgression + ' %' }}</div><div v-if="item.codeStatut === 5 && item.indexRecherche === 'Date;Auteur;Titre'">{{ 'traité à partir de 20h' }}</div></td></td>
-                          <td v-if="!item.isClickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip><div v-if="item.codeStatut === 6">{{ item.percentOfProgression + ' %' }}</div><div v-if="item.codeStatut === 5 && item.indexRecherche === 'Date;Auteur;Titre'" title="Une demande utilisant le type d'index date;auteur;titre dans le fichier est traitée à partir de 20h.">{{ 'traité à partir de 20h' }}</div></td></td>
+                <!--STA--><td v-if="item.isClickable" @click="clickRow(item.num, item.codeStatut)" class="clickable"><v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip><div v-if="item.codeStatut === 6">{{ item.percentOfProgression + ' %' }}</div></td>
+                          <td v-if="!item.isClickable">
+                            <v-chip :color="getColor(item.statut)" dark>{{ item.statut }}</v-chip>
+                            <div v-if="item.codeStatut === 6">{{ item.percentOfProgression + ' %' }}</div>
+                            <div style="float: right; margin-left: -2em; margin-top: 0.25em" v-if="item.codeStatut === 5 && item.indexRecherche === 'Date;Auteur;Titre'">
+                              <v-tooltip bottom dark>
+                                <template v-slot:activator="{ on }">
+                                  <v-icon color="orange"  dark v-on="on">info</v-icon>
+                                </template>
+                                <span>Les requêtes date;auteur;titre sont traitées entre 20h et 8h. (J+1)</span>
+                              </v-tooltip>
+                            </div>
+                          </td>
                 <!--TL1--><td>
                 <v-menu bottom left v-if="item.codeStatut >= 2"><template v-slot:activator="{ on }"><v-btn aria-label="Télécharger les fichiers" class="cloudButton" color="info" small v-on="on" title="Télécharger"><v-icon>cloud_download</v-icon></v-btn></template>
                   <!-- FICHIERS RECOUV -->
@@ -336,6 +361,7 @@ export default {
       blobName: 'demande.csv',
       popupDownloadFile: false,
       popupAffichageRestrictif: false,
+      popupDemandeDat: false,
       fileReady: false,
       menuCreation: false,
       menuModification: false,
