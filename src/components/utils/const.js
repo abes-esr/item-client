@@ -203,10 +203,10 @@ export default {
       text: 'Index', align: 'center', value: 'indexRecherche', width: '10%',
     },
     {
-      text: 'Téléchargement', align: 'center', value: 'codeStatut', width: '10%',
+      text: 'Statut', align: 'center', value: 'codeStatut', width: '10%',
     },
     {
-      text: 'Action', align: 'center', value: 'delete', width: '18%',
+      text: 'Téléchargement', align: 'center', value: 'delete', width: '18%',
     },
   ],
   headerExempArchive: [
