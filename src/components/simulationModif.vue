@@ -95,7 +95,7 @@
               <v-col :key="1" cols="12" sm="12" style="margin-top: 1em">
                 <!--Message de visualisation de la simulation-->
                 <v-alert type="warning" dense prominent border="left">
-                  Cet écran n'est qu'une <strong>visualisation</strong> du traitement.<br>
+                  Cet écran est une <strong>prévisualisation</strong> du traitement.<br>
                   Les <strong>règles de validation</strong> ne sont pas prises en compte lors de cette simulation.<br>
                   Il s'agit de la <strong>dernière étape</strong> avant de lancer le traitement en <strong>base de
                   production</strong>.
