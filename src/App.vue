@@ -299,7 +299,13 @@ export default {
       }
     },
     saveTheme() {
-      localStorage.dark = this.$vuetify.theme.dark;
+      if (localStorage.dark === undefined) {
+        localStorage.dark = true;
+      } else if (localStorage.dark === 'false') {
+        localStorage.dark = 'true';
+      } else {
+        localStorage.dark = 'false';
+      }
     },
   },
 };
