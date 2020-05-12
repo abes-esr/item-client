@@ -20,7 +20,7 @@
               <!--Zone de case à cocher pour affichage restrictif si administrateur uniquement en modif et admin-->
               <v-col cols="12" sm="12" md="8">
                 <!--Zone de case à cocher pour affichage restrictif - tableaux classiques-->
-                <div v-if="user.role === 'ADMIN' && !archive" class="item-flexbox-for-checkbox">
+                <div v-if="user.role === 'ADMIN'" class="item-flexbox-for-checkbox">
                   <div class="item-margin-right-app-bar">
                     <v-checkbox value="restrictDisplay" id="restrictDisplay" @click.native="switchRestrictionAffichage()" label="Affichage étendu"></v-checkbox>
                   </div>
@@ -31,7 +31,7 @@
                           <v-icon>info</v-icon>
                         </v-btn>
                       </template>
-                      <v-card>
+                      <v-card v-if="!archive">
                         <v-card-title class="headline">Affichage étendu</v-card-title>
                         <v-card-text>Permet en tant qu'administrateur de visualiser également sur <strong>tous les ILN</strong>, les demandes en statut : <br><br>
                           <v-chip color="grey" style="margin-right: 3px">En saisie</v-chip>
@@ -39,6 +39,15 @@
                           <v-chip color="grey" style="margin-right: 3px">En cours de traitement</v-chip>
                           <v-chip color="green" style="margin-right: 3px">Terminé</v-chip>
                           <v-chip color="red">En erreur</v-chip>
+                        </v-card-text>
+                        <v-card-actions>
+                          <div class="flex-grow-1"></div>
+                          <v-btn text @click="popupAffichageRestrictif = false">Ok</v-btn>
+                        </v-card-actions>
+                      </v-card>
+                      <v-card v-if="archive">
+                        <v-card-title class="headline">Affichage étendu</v-card-title>
+                        <v-card-text>Permet en tant qu'administrateur de visualiser également sur <strong>tous les ILN</strong>, les demandes archivées.
                         </v-card-text>
                         <v-card-actions>
                           <div class="flex-grow-1"></div>
@@ -379,7 +388,7 @@ export default {
       commentButton: false,
       expanded: [],
       listTraitements: [],
-      affichageRestrictifAdmin: false,
+      affichageEtenduAdmin: false,
       dialogNote: {},
       commentaireMaj: '',
     };
@@ -602,11 +611,11 @@ export default {
         if (this.archive) { // retour des demandes archivées
           url = `${process.env.VUE_APP_ROOT_API}chercherArchives?userNum=${
             this.user.userNum
-          }&type=${this.modif}`;
+          }&type=${this.modif}&extension=${this.affichageEtenduAdmin}`;
         } else if (this.user.role === 'ADMIN') { // retour de l'ensemble des demandes pour un administrateur
           url = `${process.env.VUE_APP_ROOT_API}demandes?userNum=${
             this.user.userNum
-          }&type=${this.modif}&restriction=${this.affichageRestrictifAdmin}`;
+          }&type=${this.modif}&extension=${this.affichageEtenduAdmin}`;
         } else { // retour de l'ensemble des demandes pour un utilisateur
           url = `${process.env.VUE_APP_ROOT_API}chercherDemandes?userNum=${
             this.user.userNum
@@ -991,7 +1000,7 @@ export default {
     },
     switchRestrictionAffichage() {
       const elt = document.getElementById('restrictDisplay');
-      this.affichageRestrictifAdmin = elt.checked;
+      this.affichageEtenduAdmin = elt.checked;
       this.fetchData();
     },
     fetchComment(comment) {
