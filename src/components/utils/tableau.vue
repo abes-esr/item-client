@@ -32,8 +32,9 @@
                         </v-btn>
                       </template>
                       <v-card>
-                        <v-card-title class="headline">Affichage restrictif</v-card-title>
+                        <v-card-title class="headline">Affichage étendu</v-card-title>
                         <v-card-text>Permet en tant qu'administrateur de visualiser également sur <strong>tous les ILN</strong>, les demandes en statut : <br><br>
+                          <v-chip color="grey" style="margin-right: 3px">En saisie</v-chip>
                           <v-chip color="orange" style="margin-right: 3px">En attente</v-chip>
                           <v-chip color="grey" style="margin-right: 3px">En cours de traitement</v-chip>
                           <v-chip color="green" style="margin-right: 3px">Terminé</v-chip>
