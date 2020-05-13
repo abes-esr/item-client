@@ -13,8 +13,8 @@ export default {
       const user = JSON.parse(sessionStorage.getItem('user'));
       axios({
         headers: { Authorization: user.jwt },
-        method: 'DELETE',
-        url: `${process.env.VUE_APP_ROOT_API}demandes/${numDemande}?type=${modif}`,
+        method: 'GET',
+        url: `${process.env.VUE_APP_ROOT_API}supprimerDemande?numDemande=${numDemande}&type=${modif}`,
       }).then(
         () => {
           this.loading = false;

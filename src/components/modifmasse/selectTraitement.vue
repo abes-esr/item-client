@@ -58,7 +58,7 @@
             <v-spacer></v-spacer>
             <v-btn color="primary" text @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
             <!-- supprimerDemande(numDem) est contenue dans le mixin delete.js importé plus bas -->
-            <v-btn color="primary" text @click="supprimerDemande(numDem, this.modif)" aria-label="Confirmer">Confirmer</v-btn>
+            <v-btn color="primary" text @click="supprimerDemande(numDem, modif)" aria-label="Confirmer">Confirmer</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>

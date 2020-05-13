@@ -60,7 +60,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="primary" text @click="popupDelete = false" aria-label="Annuler">Annuler</v-btn>
-          <v-btn color="primary" text @click="$emit('supprimer')" aria-label="Confirmer">Confirmer</v-btn>
+          <v-btn color="primary" text @click="supprimerDemande(numDem, modif)" aria-label="Confirmer">Confirmer</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -71,9 +71,11 @@
 import loading from 'vue-full-loading';
 import { showAt } from 'vue-breakpoints';
 import TYPEDEMANDE from '../../enums/typeDemande';
+import supprMixin from '@/mixins/delete';
 
 export default {
   name: 'upload',
+  mixins: [supprMixin],
   components: {
     loading,
     showAt,
@@ -131,11 +133,13 @@ export default {
         value => value.type,
       ],
       displayPreviousButton: true,
+      numDem: 0,
     };
   },
   mounted() {
     // On récupère les infos utilisateur en session car on a besoin du jwt afin d'appeler les WS REST
     this.user = JSON.parse(sessionStorage.getItem('user'));
+    this.numDem = sessionStorage.getItem('dem');
     if (this.modif === TYPEDEMANDE.DEMANDE_RECOUVREMENT) {
       this.displayPreviousButton = false;
     }
