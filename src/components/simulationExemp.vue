@@ -365,9 +365,9 @@ export default {
             this.noticeAvant = result.data[1]; // Exemplaires existants
           }
           if (result.data[2] === '') {
-            this.noticeApres = 'Vous n\'avez pas autorisé la création d\'exemplaires\nen cas '
-                + 'd\'exemplaires déja présents sur cette notice\npour ce RCR, '
-                + 'lors de l\'Etape précédente\nde cette Demande.';
+            this.noticeApres = 'Vous n\'avez pas autorisé la création '
+                + '\n d\'exemplaires supplémentaires sur cette notice'
+                + '\npour ce RCR, à l\'Etape précédente.';
           } else {
             this.noticeApres = result.data[2]; // Exemplaires à créer
           }
