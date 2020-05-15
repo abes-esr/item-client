@@ -203,7 +203,7 @@
             </template>
           </v-data-table>
           <!--Ligne d'entête du tableau de RECOUVREMENT-->
-          <v-data-table :sort-by.sync="sortBy" :sort-desc.sync="descending" v-if="modif === 'RECOUV'" :headers="headers" :items="computedItems('guess')" :items-per-page="10" class="elevation-1" item-key="num" loading-text="chargement.." no-data-text="Aucune demande trouvée" no-results-text="Aucun resultat trouvé" :headers-length="3" :footer-props="{showFirstLastPage: true, itemsPerPageOptions:[10,25,-1], itemsPerPageAllText:'Toutes', itemsPerPageText:'Lignes par page'}">
+          <v-data-table :custom-sort="customSort" :sort-by.sync="sortBy" :sort-desc.sync="descending" v-if="modif === 'RECOUV'" :headers="headers" :items="computedItems('guess')" :items-per-page="10" class="elevation-1" item-key="num" loading-text="chargement.." no-data-text="Aucune demande trouvée" no-results-text="Aucun resultat trouvé" :headers-length="3" :footer-props="{showFirstLastPage: true, itemsPerPageOptions:[10,25,-1], itemsPerPageAllText:'Toutes', itemsPerPageText:'Lignes par page'}">
           <!--Tableau de RECOUVREMENT-->
             <template v-slot:body="{ items }">
             <!--Ligne avec les champs de recherche : RECOUVREMENT-->
@@ -430,7 +430,7 @@ export default {
     this.getCommentColor();
 
     // Tri par défaut sur les numéros demandes
-    this.changeSort('num');
+    this.customSort('num');
     this.pagination.descending = true;
   },
   beforeDestroy() {
@@ -825,13 +825,28 @@ export default {
         return false;
       });
     },
-    changeSort(column) {
-      if (this.pagination.sortBy === column) {
-        this.pagination.descending = !this.pagination.descending;
-      } else {
-        this.pagination.sortBy = column;
-        this.pagination.descending = false;
-      }
+    customSort(items, index, isDesc) {
+      console.log(items);
+      console.log(`index${index}`);
+      console.log(`isDesc${isDesc}`);
+      items.sort((a, b) => {
+        if (index[0] === 'date') {
+          if (!isDesc[0]) {
+            return a.time_stamp - b.time_stamp;
+          }
+          return b.time_stamp - a.time_stamp;
+        } if (!(isNaN(a[index[0]]))) {
+          if (!isDesc[0]) {
+            return (a[index[0]] - b[index[0]]);
+          }
+          return (b[index[0]] - a[index[0]]);
+        }
+        if (!isDesc[0]) {
+          return (a[index[0]] < b[index[0]]) ? -1 : 1;
+        }
+        return (b[index[0]] < a[index[0]]) ? -1 : 1;
+      });
+      return items;
     },
     getListStatus() {
       axios({
