@@ -61,7 +61,7 @@
             </v-row>
           </v-container>
           <!--Ligne d'entête du tableau d'EXEMPLARISATION-->
-          <v-data-table :sort-by.sync="sortBy" :sort-desc.sync="descending" v-if="modif === 'EXEMP'" :headers="headers" :items="computedItems('guess')" :items-per-page="10" class="elevation-1" item-key="num" loading-text="chargement.." no-data-text="Aucune demande trouvée" no-results-text="Aucun resultat trouvé" :headers-length="3" :footer-props="{showFirstLastPage: true, itemsPerPageOptions:[10,25,-1], itemsPerPageAllText:'Toutes', itemsPerPageText:'Lignes par page'}">
+          <v-data-table :custom-sort="customSort" :sort-by.sync="sortBy" :sort-desc.sync="descending" v-if="modif === 'EXEMP'" :headers="headers" :items="computedItems('guess')" :items-per-page="10" class="elevation-1" item-key="num" loading-text="chargement.." no-data-text="Aucune demande trouvée" no-results-text="Aucun resultat trouvé" :headers-length="3" :footer-props="{showFirstLastPage: true, itemsPerPageOptions:[10,25,-1], itemsPerPageAllText:'Toutes', itemsPerPageText:'Lignes par page'}">
             <!--Tableau d'exemplarisation-->
             <template v-slot:body="{ items }">
               <!--Ligne avec les champs de recherche : EXEMPLARISATION-->
@@ -140,7 +140,7 @@
             </template>
           </v-data-table>
           <!--Ligne d'entête du tableau de MODIFICATION-->
-          <v-data-table :sort-by.sync="sortBy" :sort-desc.sync="descending" v-if="modif === 'MODIF'" :headers="headers" :items="computedItems('guess')" :items-per-page="10" class="elevation-1" item-key="num" loading-text="chargement.." no-data-text="Aucune demande trouvée" no-results-text="Aucun resultat trouvé" :headers-length="3" :footer-props="{showFirstLastPage: true, itemsPerPageOptions:[10,25,-1], itemsPerPageAllText:'Toutes', itemsPerPageText:'Lignes par page'}">
+          <v-data-table :custom-sort="customSort" :sort-by.sync="sortBy" :sort-desc.sync="descending" v-if="modif === 'MODIF'" :headers="headers" :items="computedItems('guess')" :items-per-page="10" class="elevation-1" item-key="num" loading-text="chargement.." no-data-text="Aucune demande trouvée" no-results-text="Aucun resultat trouvé" :headers-length="3" :footer-props="{showFirstLastPage: true, itemsPerPageOptions:[10,25,-1], itemsPerPageAllText:'Toutes', itemsPerPageText:'Lignes par page'}">
             <!--Tableau de modification-->
             <template v-slot:body="{ items }">
               <!--Ligne avec les champs de recherche : MODIFICATION-->
@@ -710,8 +710,10 @@ export default {
                 default:
                   isLocalClickable = false; break;
               }
+              console.log(result.data[key].traitement);
               this.items.push({
                 dateCreation: moment(String(result.data[key].dateCreation)).format('DD/MM/YYYY HH:mm'),
+                dateCreationBrute: result.data[key].dateCreation,
                 dateModification: moment(String(result.data[key].dateModification)).format('DD/MM/YYYY HH:mm'),
                 dateModificationBrute: result.data[key].dateModification,
                 rcr: `${result.data[key].rcr}`,
@@ -826,16 +828,64 @@ export default {
       });
     },
     customSort(items, index, isDesc) {
-      console.log(items);
-      console.log(`index${index}`);
-      console.log(`isDesc${isDesc}`);
       items.sort((a, b) => {
-        if (index[0] === 'date') {
+        console.log(index[0]);
+        if (index[0] === 'num') {
           if (!isDesc[0]) {
-            return a.time_stamp - b.time_stamp;
+            return a.num - b.num;
           }
-          return b.time_stamp - a.time_stamp;
-        } if (!(isNaN(a[index[0]]))) {
+          return b.num - a.num;
+        }
+        if (index[0] === 'dateCreation') {
+          if (!isDesc[0]) {
+            return new Date(a.dateCreationBrute) - new Date(b.dateCreationBrute);
+          }
+          return new Date(b.dateCreationBrute) - new Date(a.dateCreationBrute);
+        }
+        if (index[0] === 'dateModification') {
+          if (!isDesc[0]) {
+            return new Date(a.dateModificationBrute) - new Date(b.dateModificationBrute);
+          }
+          return new Date(b.dateModificationBrute) - new Date(a.dateModificationBrute);
+        }
+        if (index[0] === 'iln') {
+          if (!isDesc[0]) {
+            return a.iln - b.iln;
+          }
+          return b.iln - a.iln;
+        }
+        if (index[0] === 'rcr') {
+          if (!isDesc[0]) {
+            return a.rcr - b.rcr;
+          }
+          return b.rcr - a.rcr;
+        }
+        if (index[0] === 'indexRecherche') {
+          if (!isDesc[0]) {
+            return (a.indexRecherche).localeCompare(b.indexRecherche);
+          }
+          return (b.indexRecherche).localeCompare(a.indexRecherche);
+        }
+        if (index[0] === 'statut') {
+          if (!isDesc[0]) {
+            return (a.statut).localeCompare(b.statut);
+          }
+          return (b.statut).localeCompare(a.statut);
+        }
+        if (index[0] === 'typeExemp') {
+          if (!isDesc[0]) {
+            return (a.typeExemp).localeCompare(b.typeExemp);
+          }
+          return (b.typeExemp).localeCompare(a.typeExemp);
+        }
+        if (index[0] === 'zoneSousZone') {
+          if (!isDesc[0]) {
+            return (a.zoneSousZone).localeCompare(b.zoneSousZone);
+          }
+          return (b.zoneSousZone).localeCompare(a.zoneSousZone);
+        }
+        // TODO ulterieurement le traitement en modification pour le tri a faire
+        if (!(isNaN(a[index[0]]))) {
           if (!isDesc[0]) {
             return (a[index[0]] - b[index[0]]);
           }
