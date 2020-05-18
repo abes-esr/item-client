@@ -885,6 +885,7 @@ export default {
           return (b.zoneSousZone).localeCompare(a.zoneSousZone);
         }
         // TODO ulterieurement le traitement en modification pour le tri a faire
+        // eslint-disable-next-line no-restricted-globals
         if (!(isNaN(a[index[0]]))) {
           if (!isDesc[0]) {
             return (a[index[0]] - b[index[0]]);
