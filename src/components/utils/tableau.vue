@@ -710,7 +710,6 @@ export default {
                 default:
                   isLocalClickable = false; break;
               }
-              console.log(result.data[key].traitement);
               this.items.push({
                 dateCreation: moment(String(result.data[key].dateCreation)).format('DD/MM/YYYY HH:mm'),
                 dateCreationBrute: result.data[key].dateCreation,
@@ -829,7 +828,6 @@ export default {
     },
     customSort(items, index, isDesc) {
       items.sort((a, b) => {
-        console.log(index[0]);
         if (index[0] === 'num') {
           if (!isDesc[0]) {
             return a.num - b.num;
