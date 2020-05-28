@@ -339,7 +339,7 @@ export default {
   name: 'tableauComponent',
   data() {
     return {
-      sortBy: 'dateModificationBrute',
+      sortBy: 'dateModification',
       descending: true,
       pagination: {
         sortBy: 'name',
@@ -419,6 +419,7 @@ export default {
     this.user = JSON.parse(sessionStorage.getItem('user'));
     this.initHeader();
     this.fetchData();
+
     // Rafraichissement des données toutes les 10 sec
     this.polling = setInterval(() => { this.fetchData(); }, 10000);
     this.getListTypeExemp();
@@ -428,9 +429,6 @@ export default {
 
     // Couleur de l'icone de commentaire
     this.getCommentColor();
-
-    // Tri par défaut sur les numéros demandes
-    this.pagination.descending = true;
   },
   beforeDestroy() {
     clearInterval(this.polling);
@@ -882,7 +880,7 @@ export default {
           return (b.zoneSousZone).localeCompare(a.zoneSousZone);
         }
         // TODO ulterieurement le traitement en modification pour le tri a faire
-        if (!(isNaN(a[index[0]]))) {
+        if (!(Number.isNaN(a[index[0]]))) {
           if (!isDesc[0]) {
             return (a[index[0]] - b[index[0]]);
           }
