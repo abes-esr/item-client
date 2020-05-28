@@ -2,7 +2,7 @@
   "name": "item-ui",
   "version": "2.0.5-SNAPSHOT",
   "private": true,
-  "description": "Front-end Kopya",
+  "description": "Front-end Item",
   "scripts": {
     "serve": "vue-cli-service serve --port 3000",
     "lint": "vue-cli-service lint",
