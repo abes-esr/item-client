@@ -46,6 +46,6 @@
   },
   "artifactory": {
     "artifactId": "front",
-    "groupId": "fr.abes.kopya"
+    "groupId": "fr.abes.item"
   }
 }
