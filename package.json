@@ -1,6 +1,6 @@
 {
   "name": "item-ui",
-  "version": "2.0.5-SNAPSHOT",
+  "version": "2.0.6-SNAPSHOT",
   "private": true,
   "description": "Front-end Item",
   "scripts": {
@@ -15,7 +15,7 @@
     "core-js": "^3.6.4",
     "express": "^4.17.1",
     "moment": "^2.24.0",
-    "npm": "^6.14.2",
+    "npm": "^6.14.5",
     "sass-loader": "^8.0.2",
     "vue": "^2.6.11",
     "vue-breakpoints": "^1.1.0",

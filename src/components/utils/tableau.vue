@@ -127,7 +127,7 @@
                 </span>
               </td>
                 <!--AR2--><td class="text-center" v-if="!archive">
-                <span v-if="item.codeStatut < 5 && user.iln === item.iln">
+                <span v-if="(item.codeStatut < 5 && user.iln === item.iln) || (item.codeStatut < 5 && user.iln === '1')">
                       <v-btn @click="current = item.num; popupDelete = true;" aria-label="Supprimer" icon title="Supprimer"><v-icon>delete</v-icon></v-btn>
                 </span>
                 <span v-else-if="item.codeStatut === 7 && user.iln === item.iln">
@@ -191,7 +191,7 @@
                 </span>
               </td>
                 <!--AR2--><td class="text-center" v-if="!archive">
-                <span v-if="item.codeStatut < 5 && user.iln == item.iln">
+                <span v-if="(item.codeStatut < 5 && user.iln === item.iln) || (item.codeStatut < 5 && user.iln === '1')">
                   <v-btn @click="current = item.num; popupDelete = true;" aria-label="Supprimer" icon title="Supprimer"><v-icon>delete</v-icon></v-btn>
                 </span>
                 <span v-else-if="item.codeStatut == 7 && user.iln == item.iln">
@@ -263,7 +263,7 @@
                 </span>
               </td>
                 <!--AR2--><td class="text-center" v-if="!archive">
-                <span v-if="item.codeStatut < 5 && user.iln === item.iln">
+                <span v-if="(item.codeStatut < 5 && user.iln === item.iln) || (item.codeStatut < 5 && user.iln === '1')">
                   <v-btn @click="current = item.num; popupDelete = true;" aria-label="Supprimer" icon title="Supprimer"><v-icon>delete</v-icon></v-btn>
                 </span>
                 <span v-else-if="item.codeStatut === 7 && user.iln === item.iln">
