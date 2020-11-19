@@ -561,13 +561,13 @@ export default {
     redirectionModif(codeStatut) {
       switch (codeStatut) {
         case 1:
-          this.$router.push('type');
+          this.$router.push('fichierModif');
           break;
         case 3:
-          this.$router.push('fichierModification'); // TODO controler les routes
+          this.$router.push('traitement');
           break;
         case 4:
-          this.$router.push('simulationTest');
+          this.$router.push('simulation');
           break;
         default:
           break;
