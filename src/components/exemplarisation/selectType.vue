@@ -99,6 +99,7 @@ export default {
     // Récupération du numéro de demande courant depuis sessionStorage
     // Il est enregistré par rcr.vue lors de la création, ou depuis le tableau lorsque l'on clique sur une demande
     this.numDem = sessionStorage.getItem('dem');
+    // eslint-disable-next-line
     this.modif = TYPEDEMANDE.DEMANDE_EXEMPLARISATION;
   },
   methods: {

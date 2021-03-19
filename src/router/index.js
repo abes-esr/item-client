@@ -25,7 +25,6 @@ const simulationTest = () => import('@/components/simulationExemp.vue');
 const homeComponent = () => import('@/components/home.vue');
 const typeComponent = () => import('@/components/exemplarisation/selectType.vue');
 
-
 Vue.use(Router);
 
 // Routes de l'appli
@@ -258,7 +257,7 @@ const router = new Router({
 // eslint-disable-next-line consistent-return
 router.beforeResolve((to, from, next) => {
   const user = JSON.parse(sessionStorage.getItem('user'));
-  if (to.matched.some(record => record.meta.requiresAuth)) {
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (user == null || user.jwt == null) {
       next({
         replace: true,

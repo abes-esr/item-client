@@ -1,0 +1,32 @@
+#update version of npm
+npm install npm@latest
+#scan vulnerabilities
+npm audit
+#scan vulnerabilities verbose
+npm audit -json
+#fix vulnerabilities
+npm audit fix
+#fix vulnerabilities with major version (warning)
+npm audit fix --force
+#what does it mean package are looking for funding
+npm fund
+-> shows the packages created by companies that need money
+
+#force resolution with vulnerabilities and conflicts
+npx npm-force-resolutions
+-> in package.json, write this bloc, after showed conflicts with npm audit
+"resolutions": {
+    "[NAME_OF_PACKAGE]": "[VERSION_OF_PACKAGE_WITH_COMPATIBILITY]"
+  },
+-> then,
+npx npm-force-resolutions
+ncu -u
+-> delete folder node_modules
+npm install
+
+#now tape npm audit on terminal and see there are no vulnerabilities
+-> run the project
+-> check if everything is ok locally
+-> push on branch with git, and push on remote
+-> deploy
+done.

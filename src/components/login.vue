@@ -63,7 +63,7 @@ export default {
       alertMessage: "Nom d'utilisateur ou mot de passe incorrect",
       loading: false,
       rules: {
-        required: value => !!value || 'Champ obligatoire.',
+        required: (value) => !!value || 'Champ obligatoire.',
       },
     };
   },

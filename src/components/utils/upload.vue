@@ -70,8 +70,8 @@
 <script>
 import loading from 'vue-full-loading';
 import { showAt } from 'vue-breakpoints';
-import TYPEDEMANDE from '../../enums/typeDemande';
 import supprMixin from '@/mixins/delete';
+import TYPEDEMANDE from '../../enums/typeDemande';
 
 export default {
   name: 'upload',
@@ -127,10 +127,10 @@ export default {
       dialog: false,
       fichierCharge: [],
       rules: [
-        value => !value || ((value.type === undefined) || (value.type === 'text/csv') || (value.type === 'application/vnd.ms-excel') || (value.type === 'text/plain')) || 'Le fichier chargé n\'est pas dans un format autorisé (.txt ou .csv)',
+        (value) => !value || ((value.type === undefined) || (value.type === 'text/csv') || (value.type === 'application/vnd.ms-excel') || (value.type === 'text/plain')) || 'Le fichier chargé n\'est pas dans un format autorisé (.txt ou .csv)',
       ],
       typeFile: [
-        value => value.type,
+        (value) => value.type,
       ],
       displayPreviousButton: true,
       numDem: 0,

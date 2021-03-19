@@ -3,8 +3,8 @@
 </template>
 
 <script>
-import TYPEDEMANDE from '../../enums/typeDemande';
 import tableau from '@/components/utils/tableau.vue';
+import TYPEDEMANDE from '../../enums/typeDemande';
 
 export default {
   name: 'gererTableauExemp',

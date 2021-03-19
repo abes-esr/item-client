@@ -1,6 +1,6 @@
 <template>
     <!-- POPUP AFIN DE PREVENIR L'UTILISATEUR QUAND IL EST DECONNECTE AUTOMATIQUEMENT SI LA SESSION EXPIRE -->
-    <v-dialog v-model="popupDeconnect" width="500">
+    <v-dialog v-model="/* eslint-disable */popupDeconnect" width="500">
       <v-card>
         <v-card-title class="headline red white--text" primary-title>
           Déconnexion

@@ -1,3 +1,13 @@
+##Note en cas de probleme l'ors du premier pull du projet
+
+Sur une nouvelle machine, en cas de probleme au premier pull du projet,
+taper la commande suivante en terminal
+```
+npm i @vue/cli-plugin-babel
+```
+
+Pour reinstaller le plugin cli-plugin-babel
+
 # item-client
 
 **I**nterface de **T**raitement des **E**xemplaires en **M**asse dans le Sudoc (partie client).

@@ -591,8 +591,6 @@ export default {
       } else if (this.user.role === 'ADMIN') {
         if (this.modif === 'MODIF') { this.headers = constants.headerModifAdmin; } else if (this.modif === 'EXEMP') { this.headers = constants.headerExempAdmin; } else if (this.modif === 'RECOUV') { this.headers = constants.headerRecouvAdmin; }
       } else if (this.modif === 'MODIF') { this.headers = constants.headerModif; } else if (this.modif === 'EXEMP') { this.headers = constants.headerExemp; } else if (this.modif === 'RECOUV') { this.headers = constants.headerRecouv; }
-
-
       this.searchCombo = Object.assign([], this.headers);
       this.searchCombo.splice(this.searchCombo.length - 1, 1);
       for (let i = 0; i < this.searchCombo.length; i += 1) {
@@ -934,7 +932,7 @@ export default {
     },
     saveComment(numDem, comment) {
       this.commentButton = true;
-      const demande = this.itemsUnaltered.find(element => element.numDemande === numDem);
+      const demande = this.itemsUnaltered.find((element) => element.numDemande === numDem);
       demande.commentaire = comment;
       let typeDemandeLocal;
       switch (this.modif) {
