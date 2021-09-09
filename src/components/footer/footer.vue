@@ -1,33 +1,20 @@
 <template>
-    <v-footer height="auto" color="secondary">
+    <v-footer height="50" color="secondary">
       <v-row>
           <v-chip color="secondary" href="http://abes.fr/">&copy; 2020 — ABES</v-chip>
            <v-spacer></v-spacer>
-        <v-tooltip v-if="applicationVersion !== ''" top>
+        <v-tooltip top>
           <template v-slot:activator="{ on }">
             <v-chip color="secondary" v-on="on">
             Version / Etat
           </v-chip>
           </template>
-          <span>{{ applicationVersion }}</span>
-        </v-tooltip>
-        <!--Si l'application n'est pas lancée en local ou sur le serveur (plantée) on retourne KO pour le back-->
-        <v-tooltip v-if="applicationVersion === ''" top>
-          <template v-slot:activator="{ on }">
-            <v-chip color="secondary" v-on="on">
-              Version / Etat
-            </v-chip>
-          </template>
-          <span>Etat application item partie serveur : KO <br> (actualisez la page règulièrement)</span>
-        </v-tooltip>
-        <!--A la première arrivée sur la page, si on n'a pas récupéré la variable-->
-        <v-tooltip v-if="applicationVersion === undefined" top>
-          <template v-slot:activator="{ on }">
-            <v-chip color="secondary" v-on="on">
-              Version / Etat
-            </v-chip>
-          </template>
-          <span>Etat application item partie serveur : KO <br> (actualisez la page règulièrement)</span>
+          <span>Front <v-chip x-small color="yellow">{{ applicationVersion[0][0] }}</v-chip>
+            Back <v-chip x-small color="yellow">{{ applicationVersion[0][1] }}</v-chip>
+            Etat CBS <v-chip v-if="applicationVersion[1][0] === 'OK'" x-small color="green">{{ applicationVersion[1][0] }}</v-chip><v-chip v-if="applicationVersion[1][0] === 'KO'" x-small color="red">{{ applicationVersion[1][0] }}</v-chip>
+            Etat Base Xml <v-chip v-if="applicationVersion[1][1] === 'OK'" x-small color="green">{{ applicationVersion[1][1] }}</v-chip><v-chip v-if="applicationVersion[1][1] === 'KO'" x-small color="red">{{ applicationVersion[1][1] }}</v-chip>
+            Etat BDD Item <v-chip v-if="applicationVersion[1][2] === 'OK'" x-small color="green">{{ applicationVersion[1][2] }}</v-chip><v-chip v-if="applicationVersion[1][2] === 'KO'" x-small color="red">{{ applicationVersion[1][2] }}</v-chip>
+          </span>
         </v-tooltip>
           <v-chip color="secondary" @click="$router.push({ name: 'donnees' })">
             Données Personnelles
@@ -53,8 +40,7 @@ export default {
   },
   props: {
     applicationVersion: {
-      type: String,
-      default: '',
+      type: Array,
     },
   },
   created() {

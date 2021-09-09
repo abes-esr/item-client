@@ -204,7 +204,8 @@ export default {
       isAdmin: false,
       dialog: false,
       wrapped: '',
-      applicationVersion: 'Etat application item partie serveur : KO (actualisez la page règulièrement)',
+      // eslint-disable-next-line no-sequences
+      applicationVersion: [[], []],
     };
   },
   created() {
@@ -256,7 +257,8 @@ export default {
         url: `${process.env.VUE_APP_ROOT_API}applicationVersion`,
       }).then(
         (result) => {
-          this.applicationVersion = result.data;
+          const versionNumbers = result.data.split(';');
+          versionNumbers.forEach((value) => this.applicationVersion[0].push(value));
         },
       );
     },
@@ -268,7 +270,8 @@ export default {
         url: `${process.env.VUE_APP_ROOT_API}test`,
       }).then(
         (result) => {
-          this.applicationVersion += result.data;
+          const arrayStatus = result.data.split(';');
+          arrayStatus.forEach((value) => this.applicationVersion[1].push(value));
         },
       );
     },
