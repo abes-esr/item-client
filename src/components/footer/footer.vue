@@ -3,17 +3,30 @@
       <v-row>
           <v-chip color="secondary" href="http://abes.fr/">&copy; 2020 — ABES</v-chip>
            <v-spacer></v-spacer>
+
         <v-tooltip top>
           <template v-slot:activator="{ on }">
             <v-chip color="secondary" v-on="on">
-            Version / Etat
+              Détails Application
+            </v-chip>
+          </template>
+          <span>
+          <div v-for="(value, name) in applicationDetails" :key="name">
+            {{ name }} : {{ value }}
+          </div>
+          </span>
+        </v-tooltip>
+
+        <v-tooltip top>
+          <template v-slot:activator="{ on }">
+            <v-chip color="secondary" v-on="on">
+            Etat des serveurs
           </v-chip>
           </template>
-          <span>Front <v-chip x-small color="yellow">{{ applicationVersion[0][0] }}</v-chip>
-            Back <v-chip x-small color="yellow">{{ applicationVersion[0][1] }}</v-chip>
-            Etat CBS <v-chip v-if="applicationVersion[1][0] === 'OK'" x-small color="green">{{ applicationVersion[1][0] }}</v-chip><v-chip v-if="applicationVersion[1][0] === 'KO'" x-small color="red">{{ applicationVersion[1][0] }}</v-chip>
-            Etat Base Xml <v-chip v-if="applicationVersion[1][1] === 'OK'" x-small color="green">{{ applicationVersion[1][1] }}</v-chip><v-chip v-if="applicationVersion[1][1] === 'KO'" x-small color="red">{{ applicationVersion[1][1] }}</v-chip>
-            Etat BDD Item <v-chip v-if="applicationVersion[1][2] === 'OK'" x-small color="green">{{ applicationVersion[1][2] }}</v-chip><v-chip v-if="applicationVersion[1][2] === 'KO'" x-small color="red">{{ applicationVersion[1][2] }}</v-chip>
+          <span>
+          <div v-for="(value, name) in applicationStatus" :key="name">
+            {{ name }} : {{ convertBooleanHumanReadeable(value) }}
+          </div>
           </span>
         </v-tooltip>
           <v-chip color="secondary" @click="$router.push({ name: 'donnees' })">
@@ -36,15 +49,37 @@ export default {
   data() {
     return {
       user: {},
+      applicationDetailsKeys: [],
+      applicationDetailsValues: [],
+      applicationStatusKeys: [],
+      applicationStatusEntries: [],
     };
   },
   props: {
-    applicationVersion: {
-      type: Array,
+    applicationDetails: {
+      type: Object,
+    },
+    applicationStatus: {
+      type: Object,
     },
   },
   created() {
     this.user = JSON.parse(sessionStorage.getItem('user'));
+  },
+  beforeUpdate() {
+    this.feedApplicationDetails();
+  },
+  methods: {
+    feedApplicationDetails() {
+      this.applicationDetailsKeys = Object.keys(this.applicationDetails);
+      this.applicationDetailsValues = Object.values(this.applicationDetails);
+    },
+    convertBooleanHumanReadeable(value) {
+      if (value === true) {
+        return 'FONCTIONNEL';
+      }
+      return 'HORS SERVICE';
+    },
   },
 };
 </script>
@@ -55,3 +90,8 @@ export default {
       background: transparent;
  }
  </style>
+
+for (const resultKey in this.applicationDetails) {
+console.log(resultKey);
+console.log(this.applicationDetails[resultKey]);
+}

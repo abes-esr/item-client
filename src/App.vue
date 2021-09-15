@@ -177,7 +177,7 @@
     </v-content>
     <!-- FOOTER -->
     <footerDesc v-if="!authenticated"></footerDesc>
-    <footerAbes :applicationVersion="this.applicationVersion"></footerAbes>
+    <footerAbes :applicationStatus="this.applicationStatus" :applicationDetails="this.applicationDetails"></footerAbes>
     <!-- POPUP EN CAS DE DECONNEXION AUTOMATIQUE -->
     <logout :dialog=dialog @closePopup="dialog = false;"></logout>
   </v-app>
@@ -204,8 +204,8 @@ export default {
       isAdmin: false,
       dialog: false,
       wrapped: '',
-      // eslint-disable-next-line no-sequences
-      applicationVersion: [[], []],
+      applicationDetails: null,
+      applicationStatus: null,
     };
   },
   created() {
@@ -254,11 +254,10 @@ export default {
       return axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
-        url: `${process.env.VUE_APP_ROOT_API}applicationVersion`,
+        url: `${process.env.VUE_APP_ROOT_API}applicationDetails`,
       }).then(
         (result) => {
-          const versionNumbers = result.data.split(';');
-          versionNumbers.forEach((value) => this.applicationVersion[0].push(value));
+          this.applicationDetails = result.data;
         },
       );
     },
@@ -267,11 +266,10 @@ export default {
       return axios({
         headers: { Authorization: this.user.jwt },
         method: 'GET',
-        url: `${process.env.VUE_APP_ROOT_API}test`,
+        url: `${process.env.VUE_APP_ROOT_API}applicationStatutServices`,
       }).then(
         (result) => {
-          const arrayStatus = result.data.split(';');
-          arrayStatus.forEach((value) => this.applicationVersion[1].push(value));
+          this.applicationStatus = result.data;
         },
       );
     },
@@ -281,7 +279,6 @@ export default {
       sessionStorage.clear();
       this.user = {};
       this.isAdmin = false;
-
       this.$router.push({ name: 'login' });
     },
     // Affiche la popup de déconnexion automatique, puis lance la déconnexion
