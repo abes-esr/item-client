@@ -90,8 +90,3 @@ export default {
       background: transparent;
  }
  </style>
-
-for (const resultKey in this.applicationDetails) {
-console.log(resultKey);
-console.log(this.applicationDetails[resultKey]);
-}
