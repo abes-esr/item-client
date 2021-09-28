@@ -619,123 +619,129 @@ export default {
           headers: { Authorization: this.user.jwt },
           method: 'GET',
           url,
-        }).then(
-          (result) => {
-            this.items = [];
-            this.itemsUnaltered = result.data;
-            for (const key in result.data) {
-              // Controle que la zone et la sous zone on déjà été selectionnée afin d'eviter d'afficher null
-              let tempIndexRecherche = '';
-              let tempTypeExemp = '';
-              let tempStatus = '';
+        })
+          .then(
+            (result) => {
+              this.items = [];
+              this.itemsUnaltered = result.data;
+              for (const key in result.data) {
+                // Controle que la zone et la sous zone on déjà été selectionnée afin d'eviter d'afficher null
+                let tempIndexRecherche = '';
+                let tempTypeExemp = '';
+                let tempStatus = '';
 
-              // Pour savoir si l'item correspondant dans le tableau (la ligne) sera cliquable
-              let isLocalClickable = true;
+                // Pour savoir si l'item correspondant dans le tableau (la ligne) sera cliquable
+                let isLocalClickable = true;
 
-              // En cas de modification
-              let tempZone = '';
-              let tempSousZone = '';
+                // En cas de modification
+                let tempZone = '';
+                let tempSousZone = '';
 
-              if (result.data[key].etatDemande.libelle === 'A compléter'
-                                    || result.data[key].etatDemande.libelle === 'En saisie'
-                                    || result.data[key].etatDemande.libelle === 'En simulation'
-                                    || result.data[key].etatDemande.libelle === 'En préparation'
-              ) {
-                tempStatus = 'En saisie';
-              } else {
-                tempStatus = result.data[key].etatDemande.libelle;
-              }
-
-              // Si l'on est en modification
-              if (this.modif === 'MODIF') {
-                if (result.data[key].zone === null) {
-                  tempZone = '';
+                if (result.data[key].etatDemande.libelle === 'A compléter'
+                  || result.data[key].etatDemande.libelle === 'En saisie'
+                  || result.data[key].etatDemande.libelle === 'En simulation'
+                  || result.data[key].etatDemande.libelle === 'En préparation'
+                ) {
+                  tempStatus = 'En saisie';
                 } else {
-                  tempZone = result.data[key].zone;
-                }
-                if (result.data[key].sousZone === null) {
-                  tempSousZone = '';
-                } else {
-                  tempSousZone = result.data[key].sousZone;
-                }
-              }
-
-              // Si l'on est en exemplarisation
-              if (this.modif === 'EXEMP') {
-                if ((result.data[key].indexRecherche === null) || (result.data[key].indexRecherche === undefined)) {
-                  tempIndexRecherche = '';
-                } else {
-                  tempIndexRecherche = result.data[key].indexRecherche.libelle;
+                  tempStatus = result.data[key].etatDemande.libelle;
                 }
 
-                if ((result.data[key].typeExemp === null) || (result.data[key].typeExemp === undefined)) {
-                  tempTypeExemp = 'Non défini';
-                } else {
-                  tempTypeExemp = result.data[key].typeExemp.libelle;
-                }
                 // Si l'on est en modification
-              } else if (this.modif === 'MODIF') {
-                if ((result.data[key].traitement === null) || (result.data[key].traitement === undefined)) {
-                  tempTypeExemp = 'Non défini';
-                } else {
-                  tempTypeExemp = result.data[key].traitement.libelle;
+                if (this.modif === 'MODIF') {
+                  if (result.data[key].zone === null) {
+                    tempZone = '';
+                  } else {
+                    tempZone = result.data[key].zone;
+                  }
+                  if (result.data[key].sousZone === null) {
+                    tempSousZone = '';
+                  } else {
+                    tempSousZone = result.data[key].sousZone;
+                  }
                 }
-              }
-              if (this.modif === 'RECOUV') {
-                if ((result.data[key].indexRecherche === null) || (result.data[key].indexRecherche === undefined)) {
-                  tempIndexRecherche = '';
-                } else {
-                  tempIndexRecherche = result.data[key].indexRecherche.libelle;
+
+                // Si l'on est en exemplarisation
+                if (this.modif === 'EXEMP') {
+                  if ((result.data[key].indexRecherche === null) || (result.data[key].indexRecherche === undefined)) {
+                    tempIndexRecherche = '';
+                  } else {
+                    tempIndexRecherche = result.data[key].indexRecherche.libelle;
+                  }
+
+                  if ((result.data[key].typeExemp === null) || (result.data[key].typeExemp === undefined)) {
+                    tempTypeExemp = 'Non défini';
+                  } else {
+                    tempTypeExemp = result.data[key].typeExemp.libelle;
+                  }
+                  // Si l'on est en modification
+                } else if (this.modif === 'MODIF') {
+                  if ((result.data[key].traitement === null) || (result.data[key].traitement === undefined)) {
+                    tempTypeExemp = 'Non défini';
+                  } else {
+                    tempTypeExemp = result.data[key].traitement.libelle;
+                  }
                 }
+                if (this.modif === 'RECOUV') {
+                  if ((result.data[key].indexRecherche === null) || (result.data[key].indexRecherche === undefined)) {
+                    tempIndexRecherche = '';
+                  } else {
+                    tempIndexRecherche = result.data[key].indexRecherche.libelle;
+                  }
+                }
+
+                switch (result.data[key].etatDemande.numEtat) {
+                  case 1: // En saisie
+                  case 2: // Préparée
+                  case 3: // A compléter
+                  case 4: // En simulation
+                    isLocalClickable = true;
+                    break;
+                  case 5: // En attente
+                  case 6: // En cours de traitement
+                  case 7: // Terminé
+                  case 8: // En erreur
+                  case 9: // Archivée
+                    isLocalClickable = false;
+                    break;
+                  default:
+                    isLocalClickable = false;
+                    break;
+                }
+                this.items.push({
+                  dateCreation: moment(String(result.data[key].dateCreation))
+                    .format('DD/MM/YYYY HH:mm'),
+                  dateCreationBrute: result.data[key].dateCreation,
+                  dateModification: moment(String(result.data[key].dateModification))
+                    .format('DD/MM/YYYY HH:mm'),
+                  dateModificationBrute: result.data[key].dateModification,
+                  rcr: `${result.data[key].rcr}`,
+                  iln: result.data[key].iln,
+                  num: result.data[key].numDemande,
+                  zoneSousZone: `${tempZone} ${tempSousZone}`,
+                  indexRecherche: `${tempIndexRecherche}`,
+                  // index: result.data[key].indexRecherche.libelle,
+                  typeExemp: tempTypeExemp,
+                  statut: tempStatus,
+                  codeStatut: result.data[key].etatDemande.numEtat,
+                  isClickable: isLocalClickable,
+                  commentaire: result.data[key].commentaire,
+                  percentOfProgression: result.data[key].pourcentageProgressionTraitement,
+                });
               }
 
-              switch (result.data[key].etatDemande.numEtat) {
-                case 1: // En saisie
-                case 2: // Préparée
-                case 3: // A compléter
-                case 4: // En simulation
-                  isLocalClickable = true; break;
-                case 5: // En attente
-                case 6: // En cours de traitement
-                case 7: // Terminé
-                case 8: // En erreur
-                case 9: // Archivée
-                  isLocalClickable = false; break;
-                default:
-                  isLocalClickable = false; break;
+              this.tableLoading = false;
+            },
+            (error) => {
+              this.alertMessage = constants.erreur500;
+              this.alert = true;
+              this.alertType = 'error';
+
+              if (error.response.status === 401) {
+                this.$emit('logout');
               }
-              this.items.push({
-                dateCreation: moment(String(result.data[key].dateCreation)).format('DD/MM/YYYY HH:mm'),
-                dateCreationBrute: result.data[key].dateCreation,
-                dateModification: moment(String(result.data[key].dateModification)).format('DD/MM/YYYY HH:mm'),
-                dateModificationBrute: result.data[key].dateModification,
-                rcr: `${result.data[key].rcr}`,
-                iln: result.data[key].iln,
-                num: result.data[key].numDemande,
-                zoneSousZone: `${tempZone} ${tempSousZone}`,
-                indexRecherche: `${tempIndexRecherche}`,
-                // index: result.data[key].indexRecherche.libelle,
-                typeExemp: tempTypeExemp,
-                statut: tempStatus,
-                codeStatut: result.data[key].etatDemande.numEtat,
-                isClickable: isLocalClickable,
-                commentaire: result.data[key].commentaire,
-                percentOfProgression: result.data[key].pourcentageProgressionTraitement,
-              });
-            }
-
-            this.tableLoading = false;
-          },
-          (error) => {
-            this.alertMessage = constants.erreur500;
-            this.alert = true;
-            this.alertType = 'error';
-
-            if (error.response.status === 401) {
-              this.$emit('logout');
-            }
-          },
-        );
+            },
+          );
       }
     },
     computedItems(type) {
