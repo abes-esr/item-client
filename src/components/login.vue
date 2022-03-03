@@ -63,14 +63,7 @@ export default {
       user: {},
       alert: true,
       alertMessage: "Nom d'utilisateur ou mot de passe incorrect",
-      disabledMessage: "Suite aux nombreux dysfonctionnement constatés, une opération de maintenance doit être programmée sur l'application ITEM.\n"
-        + 'Cette opération nous oblige à une fermeture du service à compter du jeudi 03/03/22 18H00.\n'
-        + '\n'
-        + 'Une communication sera faite pour annoncer la reprise du service.\n'
-        + '\n'
-        + 'Nous vous remercions pour votre compréhension.\n'
-        + 'Cordialement,\n'
-        + "L'équipe ITEM",
+      disabledMessage: "Suite à des dysfonctionnements récurrents sur l'application ITEM, une opération de maintenance a dû être programmée, nécessitant la fermeture provisoire du service à compter du jeudi 03/03/2022 à 18 heures. Une communication sera faite ultérieurement lors de la reprise du service. Nous vous prions de bien vouloir nous excuser pour la gêne occasionnée et vous remercions pour votre compréhension. Cordialement, l'équipe ITEM,",
       loading: false,
       rules: {
         required: (value) => !!value || 'Champ obligatoire.',
