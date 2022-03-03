@@ -19,6 +19,7 @@
                 placeholder="Nom utilisateur"
                 :rules="[rules.required]"
                 v-on:keyup.enter="login"
+                disabled
               />
               <v-text-field
                 prepend-icon="lock"
@@ -30,15 +31,16 @@
                 :rules="[rules.required]"
                 v-on:keyup.enter="login"
                 autocomplete="on"
+                disabled
               />
             </v-form>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn :loading="loading" :disabled="loading" color="primary" v-on:click="login()">Se connecter</v-btn>
+            <v-btn :loading="loading" :disabled="loading" color="primary" v-on:click="login()" disabled>Se connecter</v-btn>
           </v-card-actions>
         </v-card>
-        <v-alert :value="alert" type="error" transition="scale-transition">{{ alertMessage }}</v-alert>
+        <v-alert :value="alert" type="error" transition="scale-transition">{{ disabledMessage }}</v-alert>
       </v-col>
     </v-row>
   </v-container>
@@ -59,8 +61,16 @@ export default {
       },
       authUser: {},
       user: {},
-      alert: false,
+      alert: true,
       alertMessage: "Nom d'utilisateur ou mot de passe incorrect",
+      disabledMessage: "Suite aux nombreux dysfonctionnement constatés, une opération de maintenance doit être programmée sur l'application ITEM.\n"
+        + 'Cette opération nous oblige à une fermeture du service à compter du jeudi 03/03/22 18H00.\n'
+        + '\n'
+        + 'Une communication sera faite pour annoncer la reprise du service.\n'
+        + '\n'
+        + 'Nous vous remercions pour votre compréhension.\n'
+        + 'Cordialement,\n'
+        + "L'équipe ITEM",
       loading: false,
       rules: {
         required: (value) => !!value || 'Champ obligatoire.',
@@ -73,8 +83,8 @@ export default {
       // Si on passe la validation (et non vide)
       if (
         this.$refs.form.validate()
-          && this.input.username !== ''
-          && this.input.password !== ''
+        && this.input.username !== ''
+        && this.input.password !== ''
       ) {
         this.loading = true;
         axios
