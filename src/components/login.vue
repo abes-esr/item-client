@@ -19,7 +19,6 @@
                 placeholder="Nom utilisateur"
                 :rules="[rules.required]"
                 v-on:keyup.enter="login"
-                disabled
               />
               <v-text-field
                 prepend-icon="lock"
@@ -31,7 +30,6 @@
                 :rules="[rules.required]"
                 v-on:keyup.enter="login"
                 autocomplete="on"
-                disabled
               />
             </v-form>
           </v-card-text>
