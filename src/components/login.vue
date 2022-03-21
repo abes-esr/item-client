@@ -35,7 +35,7 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn :loading="loading" :disabled="loading" color="primary" v-on:click="login()" disabled>Se connecter</v-btn>
+            <v-btn :loading="loading" :disabled="loading" color="primary" v-on:click="login()">Se connecter</v-btn>
           </v-card-actions>
         </v-card>
         <v-alert :value="alert" type="error" transition="scale-transition">{{ alertMessage }}</v-alert>
