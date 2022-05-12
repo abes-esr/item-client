@@ -32,11 +32,14 @@
           <v-chip color="secondary" @click="$router.push({ name: 'donnees' })">
             Données Personnelles
           </v-chip>
-          <v-chip color="secondary" @click="$router.push({ name: 'cgu' })">
+          <v-chip color="secondary" href="https://abes.fr/pages-cgu/conditions-generales-utilisation-sites-abes.html" target="_blank">
             Conditions Générales d'Utilisation (CGU)
           </v-chip>
-          <v-chip color="secondary" @click="$router.push({ name: 'mentions' })">
+          <v-chip color="secondary" href="https://abes.fr/pages-mentions-legales/item.sudoc.html" target="_blank">
             Mentions Légales
+          </v-chip>
+          <v-chip color="secondary" href="https://abes.fr/pages-accessibilite/item.sudoc.html" target="_blank">
+            Accessibilité numérique
           </v-chip>
       </v-row>
     </v-footer>
