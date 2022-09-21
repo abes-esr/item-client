@@ -28,7 +28,7 @@
     "vue-reactive-storage": "git+https://github.com/ropbla9/vue-reactive-storage.git",
     "vue-router": "^3.5.1",
     "vue-truncate": "^1.0.0",
-    "vuetify": "^2.4.7"
+    "vuetify": "^2.6.10"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.5.12",
