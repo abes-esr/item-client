@@ -324,8 +324,8 @@ export default {
       }).then(
         (result) => {
           this.numeroPPNNotice = result.data[0];
-          this.noticeAvant = result.data[1];
-          this.noticeApres = result.data[2];
+          this.noticeAvant = result.data[1].replaceAll('\u001F', '').replaceAll('\u001E', '');
+          this.noticeApres = result.data[2].replaceAll('\u001F', '').replaceAll('\u001E', '');
           this.loading = false;
         },
         (error) => {

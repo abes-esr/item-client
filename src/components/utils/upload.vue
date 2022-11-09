@@ -14,29 +14,6 @@
       <v-card-text style="margin-bottom: -2.8em">
         <v-file-input color="info" truncate-length=75 accept=".csv,.txt" :rules="rules" for="files" show-size outlined prepend-icon="attachment" type="file" aria-label="Dépôt du fichier" v-model="fichierCharge" @change="autorisationEnvoi" ref="fileInput" :label="text"></v-file-input>
       </v-card-text>
-      <!--Zone de Choix d'exemplarisation multiple ne s'affiche pas si modif = true (en modification)-->
-      <div v-if="this.modif === 'EXEMP'" class="item-flexbox-for-checkbox">
-        <div class="item-margin-right-app-bar" style="margin-left:auto; margin-right:0">
-              <v-checkbox value="exempMulti" id="exempMulti" @click.native="getExemplairesMultiples()" label="Je souhaite créer des exemplaires supplémentaires"></v-checkbox>
-        </div>
-        <div class="item-margin-right-app-bar" style="margin-bottom: 0.5em; padding-left: 5px">
-              <v-dialog v-model="popupMultiplesCopies" persistent max-width="400">
-                <template v-slot:activator="{ on }">
-                  <v-btn text small icon v-on="on">
-                    <v-icon>info</v-icon>
-                  </v-btn>
-                </template>
-                <v-card>
-                  <v-card-title class="headline">Précisions</v-card-title>
-                  <v-card-text>Si des exemplaires sont déjà présents sur les notices et que vous souhaitez en créer de nouveaux, cochez cette case.</v-card-text>
-                  <v-card-actions>
-                    <div class="flex-grow-1"></div>
-                    <v-btn text @click="popupMultiplesCopies = false">Ok</v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
-        </div>
-      </div>
       <v-card-actions>
         <v-spacer></v-spacer>
         <div v-if="displayPreviousButton" style="margin-right: 0.5em"><v-btn color="info" v-if="precedent" @click="$emit('precedent')" aria-label="Annuler">Précédent</v-btn></div>
@@ -122,7 +99,6 @@ export default {
       popupDelete: false,
       popupMultiplesCopies: false,
       user: {},
-      exemplairesMultiplesChild: false,
       dialogFinished: false,
       dialog: false,
       fichierCharge: [],
@@ -171,11 +147,6 @@ export default {
     getRefName() {
       // Obligatoire car $refs n'est plus réactif depuis Vue 2.0
       this.filename = this.$refs.fileInput.files[0].name;
-    },
-    getExemplairesMultiples() {
-      const elt = document.getElementById('exempMulti');
-      this.exemplairesMultiplesChild = elt.checked;
-      this.$emit('eventName', this.exemplairesMultiplesChild);
     },
     displayDialog() {
       this.$emit('upload', this.fichierCharge);
