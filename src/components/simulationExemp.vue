@@ -267,7 +267,6 @@ export default {
       numDem: 0,
       popupDelete: false,
       exemplairesPresentsSurNoticeEnCours: false,
-      autorisationExemplairesMultiples: false,
       typeExemplarisation: '',
       indexRecherche: '',
     };
@@ -330,7 +329,6 @@ export default {
       }).then(
         (result) => {
           this.demande = result.data;
-          this.autorisationExemplairesMultiples = this.demande.exemplairesMultiplesAutorise;
           this.getSimulation();
           this.indexRecherche = result.data.indexRecherche.numIndexRecherche;
         },
@@ -362,15 +360,9 @@ export default {
             this.noticeAvant = 'Il n\'y a pas d\'exemplaires\n'
                 + 'déjà existants pour cette\nnotice sur ce RCR.';
           } else {
-            this.noticeAvant = result.data[1]; // Exemplaires existants
+            this.noticeAvant = result.data[1].replaceAll('\u001F', '').replaceAll('\u001E', ''); // Exemplaires existants
           }
-          if (result.data[2] === '') {
-            this.noticeApres = 'Vous n\'avez pas autorisé la création '
-                + '\n d\'exemplaires supplémentaires sur cette notice'
-                + '\npour ce RCR, à l\'Etape précédente.';
-          } else {
-            this.noticeApres = result.data[2]; // Exemplaires à créer
-          }
+          this.noticeApres = result.data[2].replaceAll('\u001F', '').replaceAll('\u001E', ''); // Exemplaires à créer
 
           // TODO corriger en back pour avoir un retour vide ou nul
           if (result.data[1] !== '\r\n') {
