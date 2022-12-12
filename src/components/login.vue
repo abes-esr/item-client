@@ -39,6 +39,7 @@
           </v-card-actions>
         </v-card>
         <v-alert :value="alert" type="error" transition="scale-transition">{{ alertMessage }}</v-alert>
+        <v-alert v-if="temporaryAlert" type="warning">{{ temporaryMessage }}</v-alert>
       </v-col>
     </v-row>
   </v-container>
@@ -61,6 +62,8 @@ export default {
       user: {},
       alert: false,
       alertMessage: "Nom d'utilisateur ou mot de passe incorrect",
+      temporaryAlert: true,
+      temporaryMessage: 'Service momentanément indisponible. Nous vous remercions pour votre patience',
       disabledMessage: "Suite à des dysfonctionnements récurrents sur l'application ITEM, une opération de maintenance a dû être programmée, nécessitant la fermeture provisoire du service à compter du jeudi 03/03/2022 à 18 heures. Une communication sera faite ultérieurement lors de la reprise du service. Nous vous prions de bien vouloir nous excuser pour la gêne occasionnée et vous remercions pour votre compréhension. Cordialement, l'équipe ITEM",
       loading: false,
       rules: {
