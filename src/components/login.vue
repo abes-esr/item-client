@@ -39,7 +39,7 @@
           </v-card-actions>
         </v-card>
         <v-alert :value="alert" type="error" transition="scale-transition">{{ alertMessage }}</v-alert>
-        <v-alert type="warning">Service momentanément indisponible. Nous vous remercions pour votre patience.</v-alert>
+        <!--Decommenter si service indisponible<v-alert type="warning">Service momentanément indisponible. Nous vous remercions pour votre patience.</v-alert>-->
       </v-col>
     </v-row>
   </v-container>
