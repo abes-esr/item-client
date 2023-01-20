@@ -24,7 +24,7 @@ COPY ./*.js                         /build/
 COPY ./*.json                       /build/
 COPY ./src/                         /build/src/
 COPY ./public/                      /build/public/
-RUN npm run build
+RUN npm run build-prod
 
 
 
