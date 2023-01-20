@@ -1,0 +1,5 @@
+# .env pour vuejs qui permet de positionner un placeholder
+# à la place de l'URL de l'API de item-api
+# pour injecter une URL de l'API au moment de la création du conteneur
+# et éviter ainsi d'avoir une URL de l'API en static dans l'image docker
+VUE_APP_ROOT_API=ITEM_PLACEHOLDER_VUE_APP_ROOT_API
