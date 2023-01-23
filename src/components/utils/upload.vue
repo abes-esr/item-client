@@ -171,7 +171,7 @@ export default {
       padding: 50px 0;
     }
     .input-file {
-      opacity: 0; /* invisible but it's there! */
+      opacity: 0;
       width: 100%;
       height: 200px;
       position: absolute;

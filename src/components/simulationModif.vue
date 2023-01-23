@@ -429,9 +429,9 @@ export default {
 <style scoped>
   pre {
     text-align: left !important;
-    white-space: pre-wrap; /* Since CSS 2.1 */
-    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
-    word-wrap: break-word; /* Internet Explorer 5.5+ */
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    word-wrap: break-word;
   }
   .v-card {
     width: 100%;

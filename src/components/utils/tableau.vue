@@ -1087,7 +1087,6 @@ export default {
   table.v-table thead th {
     font-size: 14px;
   }
-  /* Ne me demandez pas pourquoi, mais ça marche pour aligner les barres de recherche... */
   .v-select {
     height: 43px !important;
   }

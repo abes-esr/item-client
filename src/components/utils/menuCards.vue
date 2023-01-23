@@ -45,7 +45,7 @@ export default {
 };
 </script>
 
-<style> //Utiliser ce scope pour faire des imports globaux de propriétés css dans chaque component
+<style>
   .group {
     border-radius: 5%;
     display: flex;
