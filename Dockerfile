@@ -17,14 +17,21 @@ RUN npm install
 # via des variables d'environement Docker
 # Par exemple, cela permet d'injecter l'URL où se trouvent les API (back) différente
 # si on est en dev, test ou prod ou local.
+RUN echo 'Copy des fichier env'
 COPY ./docker/vuejs_env_placeholder /build/.env
 #COPY ./.browserslistrc              /build/.browserslistrc
 #COPY ./.eslintrc.js                 /build/.eslintrc.js
+RUN echo 'Copy des fichier js'
 COPY ./*.js                         /build/
+RUN echo 'Copy des fichier json'
 COPY ./*.json                       /build/
+RUN echo 'Copy des fichier src'
 COPY ./src/                         /build/src/
+RUN echo 'Copy des fichier public'
 COPY ./public/                      /build/public/
 RUN npm run build-prod
+COPY ./dist-prod/                    /build/dist-prod/
+
 
 
 
@@ -32,7 +39,7 @@ RUN npm run build-prod
 ###
 # Serveur web (nginx) pour exec l'appli vuejs
 FROM nginx:1.20.2 as front-image
-COPY --from=build-image /build/dist/ /usr/share/nginx/html.orig/
+COPY --from=build-image /build/dist-prod/ /usr/share/nginx/html.orig/
 COPY ./docker/nginx-default.conf /etc/nginx/conf.d/default.conf
 COPY ./docker/docker-entrypoint.sh /docker-entrypoint.sh
 ENTRYPOINT ["/docker-entrypoint.sh"]
