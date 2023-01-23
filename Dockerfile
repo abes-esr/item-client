@@ -7,7 +7,7 @@ WORKDIR /build/
 COPY ./package*.json /build/
 # si on a un node_modules/ local on peut décommenter la ligne suivante pour
 # éviter que npm retélécharge toutes les dépendances
-#COPY ./node_modules/ /build/node_modules/
+COPY ./node_modules/ /build/node_modules/
 RUN npm install
 
 # Compilation du TS en JS compilé
@@ -29,8 +29,8 @@ RUN echo 'Copy des fichier src'
 COPY ./src/                         /build/src/
 RUN echo 'Copy des fichier public'
 COPY ./public/                      /build/public/
-RUN npm run build-prod
-COPY ./dist-prod/                    /build/dist-prod/
+RUN npm run build
+
 
 
 
@@ -39,7 +39,7 @@ COPY ./dist-prod/                    /build/dist-prod/
 ###
 # Serveur web (nginx) pour exec l'appli vuejs
 FROM nginx:1.20.2 as front-image
-COPY --from=build-image /build/dist-prod/ /usr/share/nginx/html.orig/
+COPY --from=build-image /build/dist/ /usr/share/nginx/html.orig/
 COPY ./docker/nginx-default.conf /etc/nginx/conf.d/default.conf
 COPY ./docker/docker-entrypoint.sh /docker-entrypoint.sh
 ENTRYPOINT ["/docker-entrypoint.sh"]

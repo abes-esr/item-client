@@ -6,9 +6,7 @@
   "scripts": {
     "serve": "vue-cli-service serve --port 3000",
     "lint": "vue-cli-service lint",
-    "build-dev": "vue-cli-service build --mode development",
-    "build-prod": "vue-cli-service build",
-    "build-test": "vue-cli-service build --mode staging"
+    "build": "vue-cli-service build"
   },
   "resolutions": {
     "minimist": "1.2.3"
