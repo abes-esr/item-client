@@ -356,13 +356,19 @@ export default {
       }).then(
         (result) => {
           this.numeroPPNNotice = result.data[0];
+          console.log("first" + result.data[1]);
+          console.log("second" + result.data[2]);
           if (result.data[1] === '' || result.data[1] === '\r\n') {
             this.noticeAvant = 'Il n\'y a pas d\'exemplaires\n'
                 + 'déjà existants pour cette\nnotice sur ce RCR.';
           } else {
             this.noticeAvant = result.data[1].replaceAll('\u001F', '').replaceAll('\u001E', ''); // Exemplaires existants
           }
-          this.noticeApres = result.data[2].replaceAll('\u001F', '').replaceAll('\u001E', ''); // Exemplaires à créer
+          if (result.data[2] !== undefined) {
+            this.noticeApres = result.data[2].replaceAll('\u001F', '').replaceAll('\u001E', ''); // Exemplaires à créer
+          } else {
+            this.noticeApres = 'Simulation impossible. Voir message ci-dessus.';
+          }
 
           // TODO corriger en back pour avoir un retour vide ou nul
           if (result.data[1] !== '\r\n') {
