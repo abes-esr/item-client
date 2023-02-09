@@ -56,3 +56,17 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+## Versions des dépendances de référence (pour problèmes de compatibilité)
+
+- "dependencies"
+- "vue": "2.7.10",
+- "vue-router": "3.6.5",
+- "vuetify": "2.6.14"
+- "sass-loader": "10.4.1",
+----
+- "devDependencies"
+- "sass": "~1.32.6",
+----
+- "resolutions"
+- "@nuxtjs/vuetify/**/sass": "1.32.12"
