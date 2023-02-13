@@ -118,8 +118,7 @@
                 <v-alert type="warning" dense prominent border="left">
                   Cet écran est une <strong>prévisualisation</strong> du traitement.<br>
                   Il s'agit de la <strong>dernière étape</strong> avant de lancer le traitement en <strong>base de
-                  production</strong>.
-                  Merci de <strong>vérifier vos données</strong> et le <strong>choix du nombre d'exemplaires</strong>.
+                  production</strong>. Merci de <strong>vérifier vos données</strong>.
                 </v-alert>
               </v-col>
               <v-col :key="2" cols="12" sm="12"> <!--Ligne du fichier-->
