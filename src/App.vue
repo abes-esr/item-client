@@ -1,5 +1,6 @@
 <template>
   <v-app id="inspire">
+    <warning></warning>
     <!--BARRE DU HAUT DE L'APP-->
     <v-app-bar color="primary" max-height="4.2em" dark>
       <div class="item-margin-left-app-bar"></div> <!--Marge à gauche des icones de la barre de navigation-->
@@ -188,10 +189,12 @@ import axios from 'axios';
 import footerAbes from '@/components/footer/footer.vue';
 import footerDesc from '@/components/footer/desc.vue';
 import logout from '@/components/utils/logoutPopup.vue';
+import Warning from '@/components/utils/warning.vue';
 
 export default {
   name: 'App',
   components: {
+    Warning,
     footerAbes,
     logout,
     footerDesc,
@@ -205,7 +208,7 @@ export default {
       dialog: false,
       wrapped: '',
       applicationDetails: null,
-      applicationStatus: null,
+      applicationStatus: null
     };
   },
   created() {
