@@ -19,7 +19,7 @@ export default {
   name: 'warning',
   data() {
     return {
-      warningDialog: true,
+      warningDialog: false,
     }
   }
 };
