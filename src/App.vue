@@ -1,6 +1,5 @@
 <template>
   <v-app id="inspire">
-    <warning></warning>
     <!--BARRE DU HAUT DE L'APP-->
     <v-app-bar color="primary" max-height="4.2em" dark>
       <div class="item-margin-left-app-bar"></div> <!--Marge à gauche des icones de la barre de navigation-->
