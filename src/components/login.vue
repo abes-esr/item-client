@@ -32,14 +32,13 @@
                 autocomplete="on"
               />
             </v-form>
+            <v-alert type="warning" v-if="activatIncident">{{ messageIncident }}</v-alert>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn :loading="loading" :disabled="loading" color="primary" v-on:click="login()">Se connecter</v-btn>
           </v-card-actions>
         </v-card>
-        <v-alert :value="alert" type="error" transition="scale-transition">{{ alertMessage }}</v-alert>
-        <!--Decommenter si service indisponible<v-alert type="warning">Service momentanément indisponible. Nous vous remercions pour votre patience.</v-alert>-->
       </v-col>
     </v-row>
   </v-container>
@@ -62,7 +61,8 @@ export default {
       user: {},
       alert: false,
       alertMessage: "Nom d'utilisateur ou mot de passe incorrect",
-      disabledMessage: "Suite à des dysfonctionnements récurrents sur l'application ITEM, une opération de maintenance a dû être programmée, nécessitant la fermeture provisoire du service à compter du jeudi 03/03/2022 à 18 heures. Une communication sera faite ultérieurement lors de la reprise du service. Nous vous prions de bien vouloir nous excuser pour la gêne occasionnée et vous remercions pour votre compréhension. Cordialement, l'équipe ITEM",
+      activatIncident: true,
+      messageIncident: "Le service est en maintenance. Nous vous remercions de patienter jusqu'à une information de levée d'alerte pour reprendre votre travail dans l'application. Merci pour votre compréhension.",
       loading: false,
       rules: {
         required: (value) => !!value || 'Champ obligatoire.',
