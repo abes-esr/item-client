@@ -1,6 +1,6 @@
 {
   "name": "item-ui",
-  "version": "2.4.7-SNAPSHOT",
+  "version": "2.4.8",
   "private": true,
   "description": "Front-end Item",
   "scripts": {
