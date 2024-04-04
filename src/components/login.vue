@@ -32,7 +32,7 @@
                 autocomplete="on"
               />
             </v-form>
-            <v-alert type="error" icon="do_disturb_on">Le service est en maintenance. Nous vous remercions de patienter jusqu'à une information de levée d'alerte pour reprendre votre travail dans l'application. Merci pour votre compréhension</v-alert>
+            <!--<v-alert type="error" icon="do_disturb_on">Le service est en maintenance. Nous vous remercions de patienter jusqu'à une information de levée d'alerte pour reprendre votre travail dans l'application. Merci pour votre compréhension</v-alert>-->
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
