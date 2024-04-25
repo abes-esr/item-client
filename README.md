@@ -1,72 +1,79 @@
-# item-client
+# Vuetify (Default)
 
-[![build-test-pubtodockerhub](https://github.com/abes-esr/item-client/actions/workflows/build-test-pubtodockerhub.yml/badge.svg)](https://github.com/abes-esr/item-client/actions/workflows/build-test-pubtodockerhub.yml) [![Docker Pulls](https://img.shields.io/docker/pulls/abesesr/item.svg)](https://hub.docker.com/r/abesesr/item/)
+This is the official scaffolding tool for Vuetify, designed to give you a head start in building your new Vuetify application. It sets up a base template with all the necessary configurations and standard directory structure, enabling you to begin development without the hassle of setting up the project from scratch.
 
-**I**nterface de **T**raitement des **E**xemplaires en **M**asse dans le Sudoc (partie client).
+## ❗️ Important Links
 
-- URL de production : https://item.sudoc.fr
-- Documentation utilisateur : http://documentation.abes.fr/aideitem/index.html
+- 📄 [Docs](https://vuetifyjs.com/)
+- 🚨 [Issues](https://issues.vuetifyjs.com/)
+- 🏬 [Store](https://store.vuetifyjs.com/)
+- 🎮 [Playground](https://play.vuetifyjs.com/)
+- 💬 [Discord](https://community.vuetifyjs.com)
 
-Ce dépôt héberge le code source de l'interface utilisateur de item (développée en VueJS).  
-Cette interface utilisateur fonctionne avec son API développée en Java : https://github.com/abes-esr/item-api/  
-Et l'application item complète peut être déployée via Docker à l'aide de ce dépôt : https://github.com/abes-esr/item-docker/
+## 💿 Install
 
-## Project setup
-```
-npm install
-```
+Set up your project using your preferred package manager. Use the corresponding command to install the dependencies:
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-### Compiles for dev
-```
-npm run build-dev
-```
+| Package Manager                                                | Command        |
+|---------------------------------------------------------------|----------------|
+| [yarn](https://yarnpkg.com/getting-started)                   | `yarn install` |
+| [npm](https://docs.npmjs.com/cli/v7/commands/npm-install)     | `npm install`  |
+| [pnpm](https://pnpm.io/installation)                          | `pnpm install` |
+| [bun](https://bun.sh/#getting-started)                        | `bun install`  |
 
-### Compiles for test
-```
-npm run build-test
-```
-### Compiles and minifies for production
-```
-npm run build
-```
+After completing the installation, your environment is ready for Vuetify development.
 
-### Run your tests
-```
-npm run test
-```
+## ✨ Features
 
-### Lints and fixes files
-```
-npm run lint
-```
+- 🖼️ **Optimized Front-End Stack**: Leverage the latest Vue 3 and Vuetify 3 for a modern, reactive UI development experience. [Vue 3](https://v3.vuejs.org/) | [Vuetify 3](https://vuetifyjs.com/en/)
+- 🗃️ **State Management**: Integrated with [Pinia](https://pinia.vuejs.org/), the intuitive, modular state management solution for Vue.
+- 🚦 **Routing and Layouts**: Utilizes Vue Router for SPA navigation and vite-plugin-vue-layouts for organizing Vue file layouts. [Vue Router](https://router.vuejs.org/) | [vite-plugin-vue-layouts](https://github.com/JohnCampionJr/vite-plugin-vue-layouts)
+- ⚡ **Next-Gen Tooling**: Powered by Vite, experience fast cold starts and instant HMR (Hot Module Replacement). [Vite](https://vitejs.dev/)
+- 🧩 **Automated Component Importing**: Streamline your workflow with unplugin-vue-components, automatically importing components as you use them. [unplugin-vue-components](https://github.com/antfu/unplugin-vue-components)
 
-## Note en cas de probleme l'ors du premier pull du projet
+These features are curated to provide a seamless development experience from setup to deployment, ensuring that your Vuetify application is both powerful and maintainable.
 
-Sur une nouvelle machine, en cas de probleme au premier pull du projet,
-taper la commande suivante en terminal
-```
-npm i @vue/cli-plugin-babel
+## 💡 Usage
+
+This section covers how to start the development server and build your project for production.
+
+### Starting the Development Server
+
+To start the development server with hot-reload, run the following command. The server will be accessible at [http://localhost:3000](http://localhost:3000):
+
+```bash
+yarn dev
 ```
 
-Pour reinstaller le plugin cli-plugin-babel
+(Repeat for npm, pnpm, and bun with respective commands.)
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+> Add NODE_OPTIONS='--no-warnings' to suppress the JSON import warnings that happen as part of the Vuetify import mapping. If you are on Node [v21.3.0](https://nodejs.org/en/blog/release/v21.3.0) or higher, you can change this to NODE_OPTIONS='--disable-warning=5401'. If you don't mind the warning, you can remove this from your package.json dev script.
 
-## Versions des dépendances de référence (pour problèmes de compatibilité)
+### Building for Production
 
-- "dependencies"
-- "vue": "2.7.10",
-- "vue-router": "3.6.5",
-- "vuetify": "2.6.14"
-- "sass-loader": "10.4.1",
-----
-- "devDependencies"
-- "sass": "~1.32.6",
-----
-- "resolutions"
-- "@nuxtjs/vuetify/**/sass": "1.32.12"
+To build your project for production, use:
+
+```bash
+yarn build
+```
+
+(Repeat for npm, pnpm, and bun with respective commands.)
+
+Once the build process is completed, your application will be ready for deployment in a production environment.
+
+## 💪 Support Vuetify Development
+
+This project is built with [Vuetify](https://vuetifyjs.com/en/), a UI Library with a comprehensive collection of Vue components. Vuetify is an MIT licensed Open Source project that has been made possible due to the generous contributions by our [sponsors and backers](https://vuetifyjs.com/introduction/sponsors-and-backers/). If you are interested in supporting this project, please consider:
+
+- [Requesting Enterprise Support](https://support.vuetifyjs.com/)
+- [Sponsoring John on Github](https://github.com/users/johnleider/sponsorship)
+- [Sponsoring Kael on Github](https://github.com/users/kaelwd/sponsorship)
+- [Supporting the team on Open Collective](https://opencollective.com/vuetify)
+- [Becoming a sponsor on Patreon](https://www.patreon.com/vuetify)
+- [Becoming a subscriber on Tidelift](https://tidelift.com/subscription/npm/vuetify)
+- [Making a one-time donation with Paypal](https://paypal.me/vuetify)
+
+## 📑 License
+[MIT](http://opensource.org/licenses/MIT)
+
+Copyright (c) 2016-present Vuetify, LLC
