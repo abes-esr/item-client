@@ -38,7 +38,7 @@
           </v-card>
         </v-col>
 
-        <v-col cols="6">
+        <v-col cols="12" md="6" class="text-center" >
           <v-card
             class="py-4"
             color="surface-variant"
@@ -60,7 +60,7 @@
             />
           </v-card>
         </v-col>
-        <v-col cols="6">
+        <v-col cols="12" md="6" class="text-center" >
           <v-card
             class="py-4"
             color="surface-variant"
@@ -83,7 +83,7 @@
           </v-card>
         </v-col>
 
-        <v-col cols="6">
+        <v-col cols="12" md="6" class="text-center" >
           <v-card
             class="py-4"
             color="surface-variant"
@@ -105,7 +105,7 @@
             />
           </v-card>
         </v-col>
-        <v-col cols="6">
+        <v-col cols="12" md="6" class="text-center" >
           <v-card
             class="py-4"
             color="surface-variant"
@@ -128,7 +128,7 @@
           </v-card>
         </v-col>
 
-        <v-col cols="6">
+        <v-col cols="12" md="6" class="text-center" >
           <v-card
             class="py-4"
             color="surface-variant"
@@ -150,7 +150,7 @@
             />
           </v-card>
         </v-col>
-        <v-col cols="6">
+        <v-col cols="12" md="6" class="text-center" >
           <v-card
             class="py-4"
             color="surface-variant"
