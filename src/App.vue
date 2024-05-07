@@ -2,7 +2,7 @@
   <v-app>
     <AppHeader />
     <v-main>
-      <AppMain />
+      <AppTable />
     </v-main>
 
     <AppFooter />

@@ -4,7 +4,7 @@
 
     <div class="text-caption text-disabled" style="position: absolute; right: 16px;">{{ currentYear }} <span class="d-none d-sm-inline-block">- ABES</span></div>
   </v-footer>
-  <v-navigation-drawer v-model="drawer">
+  <v-navigation-drawer v-model="drawer" class="mt-6 border-none">
     <v-list-item title="Détails application"><v-chip variant="text">Interface :</v-chip><br><v-chip variant="text">API Item :</v-chip><br><v-chip variant="text">Batch ITEM :</v-chip><br><v-chip variant="text">Accès CBS :</v-chip></v-list-item>
     <v-divider></v-divider>
     <v-list-item title="Etat des serveurs">

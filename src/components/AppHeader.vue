@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar color="primary" max-height="4.2em" dark>
+  <v-app-bar color="primary" max-height="4.2em" dark elevate-on-scroll="false">
     <div class="item-margin-left-app-bar"></div> <!--Marge à gauche des icones de la barre de navigation-->
     <v-app-bar-nav-icon @click.stop="drawer = !drawer" aria-label="menu latéral" v-if="authenticated">
       <v-icon large>menu</v-icon>
@@ -11,12 +11,12 @@
     <div class="flex-grow-1"></div>
     <div class="item-margin-around-single-icon">
       <v-btn class="mx-2 item-margin-around-single-icon" fab dark small color="primary">
-        <span><a href="https://stp.abes.fr/node/3?origine=sudocpro" title="Assistance" rel="noopener" target="_blank"><img alt="icone assistance" height="41px" href="https://stp.abes.fr/node/3?origine=sudocpro" src="@/assets/item_assistance.svg" target="_blank" width="41px"></a></span>
+        <span><a href="https://stp.abes.fr/node/3?origine=sudocpro" title="Assistance" rel="noopener" target="_blank"><img alt="icone assistance" height="41px" href="https://stp.abes.fr/node/3?origine=sudocpro" src="@/assets/item_assistance.svg" target="_blank" width="41px" style="transform: translateY(-3px);"></a></span>
       </v-btn>
     </div>
     <div class="item-margin-around-single-icon">
       <v-btn class="mx-2 item-margin-around-single-icon" fab dark small color="primary">
-        <span><a href="http://documentation.abes.fr/aideitem/index.html" title="Documentation" rel="noopener" target="_blank"><img alt="icone documentation" height="41px" href="http://documentation.abes.fr/aideitem/index.html" src="@/assets/item_documentation.svg" target="_blank" width="41px"></a></span>
+        <span><a href="http://documentation.abes.fr/aideitem/index.html" title="Documentation" rel="noopener" target="_blank"><img alt="icone documentation" height="41px" href="http://documentation.abes.fr/aideitem/index.html" src="@/assets/item_documentation.svg" target="_blank" width="41px" style="transform: translateY(-3px);"></a></span>
       </v-btn>
     </div>
     <div class="item-margin-around-single-icon">
