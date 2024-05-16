@@ -7,15 +7,16 @@
     :loading="loading"
     item-value="name"
     @update:options="loadItems"><!--@update pour les tris asc/desc-->
+    <!--TODO placer message d'erreur à l'utilisateur en cas de service indisponible pour récupéer les dmeandes du tableau-->
     <template v-slot:body.prepend>
       <tr>
-        <td><v-text-field v-model="numDemandeSearchField" hide-details @input="handleNM" variant="underlined" ></v-text-field></td>
-        <td><v-text-field v-model="dateCreationSearchField" hide-details @input="handleDC" variant="underlined" ></v-text-field></td>
-        <td><v-text-field v-model="dateModificationSearchField" hide-details @input="handleDM" variant="underlined" ></v-text-field></td>
-        <td><v-text-field v-model="ilnSearchField" hide-details @input="handleILN" variant="underlined" ></v-text-field></td>
-        <td><v-text-field v-model="rcrSearchField" hide-details @input="handleRCR" variant="underlined" ></v-text-field></td>
-        <td><v-text-field v-model="indexRechercheSearchField" @input="handleIR" hide-details  variant="underlined" ></v-text-field></td>
-        <td><v-text-field v-model="statutSearchField" @input="handleST" hide-details variant="underlined" ></v-text-field></td>
+        <td><v-text-field v-model="numDemandeSearchField" hide-details @input="handleNM" variant="underlined"></v-text-field></td>
+        <td><v-text-field v-model="dateCreationSearchField" hide-details @input="handleDC" variant="underlined"></v-text-field></td>
+        <td><v-text-field v-model="dateModificationSearchField" hide-details @input="handleDM" variant="underlined"></v-text-field></td>
+        <td><v-text-field v-model="ilnSearchField" hide-details @input="handleILN" variant="underlined"></v-text-field></td>
+        <td><v-text-field v-model="rcrSearchField" hide-details @input="handleRCR" variant="underlined"></v-text-field></td>
+        <td><v-text-field v-model="indexRechercheSearchField" @input="handleIR" hide-details  variant="underlined"></v-text-field></td>
+        <td><v-text-field v-model="statutSearchField" @input="handleST" hide-details variant="underlined"></v-text-field></td>
       </tr>
     </template>
   </v-data-table-server>
@@ -69,6 +70,8 @@ const rcrSearchField = ref('')
 const indexRechercheSearchField = ref('')
 const statutSearchField = ref('')
 
+const errorMessageWhileFetching = ref('');
+
 const handleNM = (event) => {
   numDemandeSearchField.value = event.target.value
   loadItems({page: 1, sortBy: 'asc'})
@@ -100,7 +103,7 @@ const handleST = (event) => {
 
 const loadItems = ({ page, sortBy }) => {
   loading.value = true
-  fetchDemandes({
+  fetchDemandesTrue({
     type: 'EXEMP',
     extension: true,
     page : page,
@@ -149,6 +152,19 @@ const FakeAPI = {
   },
 }
 
+async function fetchDemandesTrue(type, extension) {
+  try {
+    loading.value = false
+    const response = await service.getDemandesPaginated(type, extension, page, itemPerPage)
+    console.log(response)
+  } catch (error) {
+    errorMessageWhileFetching.value = error.message
+    console.log('Error fetching demandes:', error)
+    loading.value = false
+  }
+}
+
+
 const fetchDemandes = async ({ type, extension, page, itemsPerPage, sortBy, search }) => {
   try {
     const response = await service.getDemandesPaginated(type, extension, page, itemsPerPage);
@@ -179,5 +195,6 @@ const fetchDemandes = async ({ type, extension, page, itemsPerPage, sortBy, sear
     console.error('Error fetching demandes:', error);
     throw error;
   }
+
 }
 </script>
