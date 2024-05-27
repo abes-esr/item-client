@@ -1,14 +1,49 @@
 <template>
-  <v-app>
-    <AppHeader />
-    <v-main>
-      <AppTable />
+	<v-app>
+		<AppHeader />
+		<v-main>
+      <v-alert color="red" :title="backendErrorMessage" variant='outlined' density='compact' type='warning' :text='backendErrorDescription' closable v-if="backendError"></v-alert>
+      <AppTable @backendError="setBackendError" @backendSuccess="liftErrors" />
     </v-main>
-
-    <AppFooter />
-  </v-app>
+		<AppFooter />
+    <p><strong>e</strong></p>
+	</v-app>
 </template>
 
 <script setup>
-  //
+import {ref} from 'vue'
+
+const backendError = ref(false)
+const backendErrorMessage = ref('')
+const backendErrorDescription = ref('')
+
+function setBackendError(error) {
+  backendError.value = true
+  let titleMessage = ''
+  if(!error.response){
+    backendErrorMessage.value = 'Erreur réseau : ' + error.code
+    backendErrorDescription.value = 'Le serveur ne répond pas. Vérifiez sa disponibilité.'
+  }else{
+    if(error.response.status === 403){
+      titleMessage = 'Accès rejeté par le serveur'
+      backendErrorDescription.value = 'Vérifiez que vos urls d\'appel au serveur soient correctes ainsi que vos clés d\'autorisation ' + '(' + error.config.baseURL + error.config.url + ')'
+    }
+    if(error.response.status === 400){
+      titleMessage = 'Accès rejeté par le serveur'
+      backendErrorDescription.value = 'Mauvaise requête : contrôlez les paramètres de votre requête et observez les logs du serveur pour plus d\'informations ' + '(' + error.config.baseURL + error.config.url + ')'
+    }
+    if(error.response.status.toString().startsWith('5')){
+      titleMessage = 'Problème de disponibilité du serveur'
+      backendErrorDescription.value = 'Retentez plus tard. Vérifiez la disponibilité de la base de donnée (Etat des serveurs) en cliquant en bas à gauche sur l\'icone de paramètres. Si le problème perdure, contactez l\'assistance'
+    }
+    backendErrorMessage.value = 'Erreur ' + error.response.status + ' : ' + titleMessage
+  }
+  if(error.response.data.detail){
+    backendErrorDescription.value = error.response.data.detail
+  }
+}
+
+function liftErrors() {
+  backendError.value = false
+}
 </script>

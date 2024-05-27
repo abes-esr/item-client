@@ -1,22 +1,17 @@
+import axios from 'axios';
+
 export class DemandesService {
-    baseURL = import.meta.env.VITE_API_URL;
-    authToken = import.meta.env.VITE_API_TOKEN;
+	//authToken = import.meta.env.VITE_API_TOKEN
 
-    async fetchDemandes(type, extension) {
-      console.log(type, extension)
-        const url = new URL(`${this.baseURL}demandes`);
-        url.searchParams.append('type', type);
-        url.searchParams.append('extension', extension);
+  client = axios.create({
+    baseURL: import.meta.env.VITE_API_URL,
+    headers: { Authorization: `Bearer ${import.meta.env.VITE_API_TOKEN}`}
+  });
 
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.authToken}`
-            },
-        });
-        return response.json();
-    }
+  axiosFetchDemandes(type, extension) {
+    console.info('appel: ' + import.meta.env.VITE_API_URL + `demandes?type=${type}&extension=${extension}`)
+    return this.client.get(`demandes?type=${type}&extension=${extension}`)
+  }
 }
 
-export default new DemandesService();
+export default new DemandesService()
