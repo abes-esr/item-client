@@ -42,11 +42,11 @@
 
     <!-- Colonne Téléchargement -->
     <template v-slot:item.filesToDownload="{ item }">
-      <v-tooltip top><template v-slot:activator="{ props }">
-      <span v-bind="props"><v-icon>mdi-download</v-icon></span></template><span>Fichier déposé</span>
+      <v-tooltip top><template v-slot:activator="{ props }" v-if="fileDepositedAvailability">
+      <span v-bind="props"><v-icon @click="console.log('e')">mdi-download</v-icon></span></template><span>Fichier déposé</span>
       </v-tooltip>
 
-      <v-tooltip top><template v-slot:activator="{ props }">
+      <v-tooltip top><template v-slot:activator="{ props }" v-if="fileResultedAvailability">
       <span v-bind="props"><v-icon>mdi-download</v-icon></span></template><span>Fichier résultat</span>
       </v-tooltip>
     </template>
@@ -58,7 +58,7 @@
 
     <!-- Colonne de progression-->
     <template v-slot:item.pourcentageProgressionTraitement="{ item }">
-      <v-progress-linear v-model="item.pourcentageProgressionTraitement" :height="18" :striped="false" color="grey-lighten-1" style="border: 1px solid black; font-weight: bolder">{{ item.pourcentageProgressionTraitement }} %</v-progress-linear>
+      <v-progress-linear v-model="item.pourcentageProgressionTraitement" :height="18" :striped="false" color="grey-lighten-1" style="border: 1px solid grey; font-weight: bolder">{{ item.pourcentageProgressionTraitement }} %</v-progress-linear>
     </template>
 	</v-data-table>
 </template>
@@ -103,10 +103,9 @@ const contentsDemandesFromServer = ref([
 	}
 ])
 const contentsDemandesFrontFiltered = ref([])
-
 const totalItemsFound = ref(0)
-//Progress bar displayed while fetching data
 
+//Progress bar displayed while fetching data
 const isDataLoaded = ref(false)
 
 //Search fields columns
@@ -119,6 +118,10 @@ const typeExempSearchField = ref('')
 const indexRechercheSearchField = ref('')
 const statutSearchField = ref('')
 
+//Files per demand to download
+const fileDepositedAvailability = ref(false)
+const fileResultedAvailability = ref(false)
+
 //Data initialisation
 onMounted(() => {
   loadItems('EXEMP')
@@ -128,7 +131,6 @@ onMounted(() => {
 function loadItems(type) {
   service.axiosFetchDemandes(type, extendedAllILN.value)
     .then(response => {
-      console.log(response)
       contentsDemandesFromServer.value = response.data
       contentsDemandesFrontFiltered.value = [...response.data]
       isDataLoaded.value = true
@@ -147,9 +149,10 @@ function filterItems() {
     const matchesDateModification = dateModificationSearchField.value === '' || demande.dateModification.toString().includes(dateModificationSearchField.value)
     const matchesRCR = rcrSearchField.value === '' || demande.rcr.toString().includes(rcrSearchField.value)
     const matchesILN = ilnSearchField.value === '' || demande.iln.toString().includes(ilnSearchField.value)
-    const matchesTypeExemp = typeExempSearchField.value === '' || demande.typeExemp.toString().includes(typeExempSearchField.value)
+    const matchesTypeExemp = typeExempSearchField.value === '' || demande.typeExemp && demande.typeExemp.includes(typeExempSearchField.value)
+    const matchesIndexSearch = indexRechercheSearchField.value === '' || demande.indexRecherche && demande.indexRecherche.includes(indexRechercheSearchField.value)
     const matchesEtatDemande = statutSearchField.value === '' || demande.etatDemande.toString().includes(statutSearchField.value)
-    return matchesNumDemande && matchesDateCreation && matchesDateModification && matchesRCR && matchesILN && matchesTypeExemp && matchesEtatDemande
+    return matchesNumDemande && matchesDateCreation && matchesDateModification && matchesRCR && matchesILN && matchesTypeExemp && matchesIndexSearch && matchesEtatDemande
   })
 }
 
