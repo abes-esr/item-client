@@ -42,12 +42,12 @@
 
     <!-- Colonne Téléchargement -->
     <template v-slot:item.filesToDownload="{ item }">
-      <v-tooltip top><template v-slot:activator="{ props }" v-if="fileDepositedAvailability">
-      <span v-bind="props"><v-icon @click="console.log('e')">mdi-download</v-icon></span></template><span>Fichier déposé</span>
+      <v-tooltip top><template v-slot:activator="{ props }" v-if="fileUploadedAvailability[item.id]">
+      <span v-bind="props"><v-icon @click='downloadFile(item.id)'>mdi-file-upload</v-icon></span></template><span>Fichier enrichi (fichier déposé)</span>
       </v-tooltip>
 
-      <v-tooltip top><template v-slot:activator="{ props }" v-if="fileResultedAvailability">
-      <span v-bind="props"><v-icon>mdi-download</v-icon></span></template><span>Fichier résultat</span>
+      <v-tooltip top><template v-slot:activator="{ props }" v-if="false">
+      <span v-bind="props"><v-icon>mdi-file-download</v-icon></span></template><span>Fichier résultat</span>
       </v-tooltip>
     </template>
 
@@ -84,24 +84,10 @@ const headingsDemandes = ref([
 	{title: 'Index', key: 'indexRecherche', align: 'end'},
 	{title: 'Statut', key: 'etatDemande', align: 'end'},
   {title: 'Progression', key: 'pourcentageProgressionTraitement', value: 'pourcentageProgressionTraitement', align: 'end'},
-	{title: 'Téléchargement', key: 'filesToDownload', value: 'filesToDownload', align: 'end'},
+	{title: 'Fichiers', key: 'filesToDownload', value: 'filesToDownload', align: 'end'},
 	{title: 'Action', key: 'archiveOrCancel', value: 'archiveOrCancel', align: 'end'}
 ])
-const contentsDemandesFromServer = ref([
-	{
-		type: 'EXEMP',
-		id: 7,
-		rcr: '341725201',
-		iln: 1,
-		etatDemande: 'A compléter',
-		commentaire: '',
-		pourcentageProgressionTraitement: 0,
-		dateCreation: '22/04/2024 07:46',
-		dateModification: '22/04/2024 09:58',
-		typeExemp: 'Monographies électroniques',
-		indexRecherche: null
-	}
-])
+const contentsDemandesFromServer = ref([])
 const contentsDemandesFrontFiltered = ref([])
 const totalItemsFound = ref(0)
 
@@ -119,8 +105,9 @@ const indexRechercheSearchField = ref('')
 const statutSearchField = ref('')
 
 //Files per demand to download
-const fileDepositedAvailability = ref(false)
-const fileResultedAvailability = ref(false)
+const fileUploadedAvailability = ref({})
+const fileDownloadAvailability = ref({})
+
 
 //Data initialisation
 onMounted(() => {
@@ -128,18 +115,20 @@ onMounted(() => {
   contentsDemandesFromServer.value = [...contentsDemandesFromServer.value]
 })
 
-function loadItems(type) {
-  service.axiosFetchDemandes(type, extendedAllILN.value)
-    .then(response => {
-      contentsDemandesFromServer.value = response.data
-      contentsDemandesFrontFiltered.value = [...response.data]
-      isDataLoaded.value = true
-      emit('backendSuccess')
-    })
-    .catch(error => {
-      console.error(error)
-      emit('backendError', error)
-    });
+async function loadItems(type) {
+  try {
+    const response = await service.axiosFetchDemandes(type, extendedAllILN.value);
+    contentsDemandesFromServer.value = response.data;
+    contentsDemandesFrontFiltered.value = [...response.data];
+
+    fileUploadedAvailability.value = await updateFileAvailability(response.data);
+
+    isDataLoaded.value = true;
+    emit('backendSuccess');
+  } catch (error) {
+    console.error(error);
+    emit('backendError', error);
+  }
 }
 
 function filterItems() {
@@ -154,6 +143,36 @@ function filterItems() {
     const matchesEtatDemande = statutSearchField.value === '' || demande.etatDemande.toString().includes(statutSearchField.value)
     return matchesNumDemande && matchesDateCreation && matchesDateModification && matchesRCR && matchesILN && matchesTypeExemp && matchesIndexSearch && matchesEtatDemande
   })
+}
+
+function downloadFile(demandeNumber){
+  return service.axiosGetFile('fichier_enrichi', demandeNumber, 'csv')
+    .catch((error) => {
+      console.error(error)
+    })
+}
+
+//Fonctions to checking every availability files on each demand
+async function updateFileAvailability(responseData) {
+  // Créer un tableau de promesses pour chaque élément
+  const availabilityPromises = responseData.map(item => isAvailableFile(item.id));
+  // Attendre que toutes les promesses soient résolues
+  const availabilityResults = await Promise.all(availabilityPromises);
+  // Créer un objet de disponibilité à partir des résultats
+  const availability = {};
+  responseData.forEach((item, index) => {
+    availability[item.id] = availabilityResults[index];
+  });
+
+  return availability;
+}
+function isAvailableFile(demandeNumber) {
+  return service.axiosHeadFile('fichier_enrichi', demandeNumber, 'csv')
+    .then((response) => response.status !== 500)
+    .catch((error) => {
+      console.error(error);
+      return false;
+    });
 }
 
 </script>
