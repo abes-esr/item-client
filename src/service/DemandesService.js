@@ -8,9 +8,9 @@ export class DemandesService {
     headers: { Authorization: `Bearer ${import.meta.env.VITE_API_TOKEN}`}
   });
 
-  axiosFetchDemandes(type, extension) {
-    console.info('appel: ' + import.meta.env.VITE_API_URL + `demandes?type=${type}&extension=${extension}`)
-    return this.client.get(`demandes?type=${type}&extension=${extension}`)
+  axiosFetchDemandes(type, archive, extensionIln) {
+    console.info('appel: ' + import.meta.env.VITE_API_URL + `demandes?type=${type}&archive=${archive}&extension=${extensionIln}`)
+    return this.client.get(`demandes?type=${type}&archive=${archive}&extension=${extensionIln}`)
   }
 
   axiosGetFile(filetype, demandeNumber, fileFormat) {

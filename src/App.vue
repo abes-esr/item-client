@@ -18,6 +18,7 @@ const backendErrorMessage = ref('')
 const backendErrorDescription = ref('')
 
 function setBackendError(error) {
+  console.log(error.config.url.includes('files'))
   backendError.value = true
   let titleMessage = ''
   if(!error.response){
@@ -40,6 +41,13 @@ function setBackendError(error) {
   }
   if(error.response.data.detail){
     backendErrorDescription.value = error.response.data.detail
+  }
+  if(error.request.url){
+    backendErrorDescription.value = 'Problème de disponibilité du fichier demandé'
+  }
+  if(error.config.url.includes('files')){
+    backendErrorMessage.value = error.config.url
+    backendErrorDescription.value = 'Fichier non disponible'
   }
 }
 

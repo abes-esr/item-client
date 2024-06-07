@@ -42,18 +42,19 @@
 
     <!-- Colonne Téléchargement -->
     <template v-slot:item.filesToDownload="{ item }">
-      <v-tooltip top><template v-slot:activator="{ props }" v-if="fileUploadedAvailability[item.id]">
-      <span v-bind="props"><v-icon @click='downloadFile(item.id)'>mdi-file-upload</v-icon></span></template><span>Fichier enrichi (fichier déposé)</span>
+      <v-tooltip top><template v-slot:activator="{ props }">
+      <span v-bind="props"><v-icon @click='downloadFile(item.id, "fichier_enrichi")'>mdi-file-upload</v-icon></span></template><span>Fichier enrichi (fichier déposé)</span>
       </v-tooltip>
 
-      <v-tooltip top><template v-slot:activator="{ props }" v-if="false">
-      <span v-bind="props"><v-icon>mdi-file-download</v-icon></span></template><span>Fichier résultat</span>
+      <v-tooltip top><template v-slot:activator="{ props }">
+      <span v-bind="props"><v-icon @click='downloadFile(item.id, "fichier_resultat")'>mdi-file-download</v-icon></span></template><span>Fichier résultat</span>
       </v-tooltip>
     </template>
 
     <!-- Colonne Action -->
     <template v-slot:item.archiveOrCancel="{ item }">
-      <v-icon>mdi-dots-vertical</v-icon>
+      <v-icon v-if="canArchive(item)">mdi-archive</v-icon>
+      <v-icon v-else-if="canCancel(item)">mdi-delete</v-icon>
     </template>
 
     <!-- Colonne de progression-->
@@ -72,7 +73,7 @@ const service = DemandesService
 const emit = defineEmits(['backendError', 'backendSuccess'])
 
 //Data
-const extendedAllILN = ref(true)
+const extendedAllILN = ref(false)
 const headingsDemandes = ref([
   {title: '', key: 'data-table-expand', align: 'end'},
 	{title: 'Demande', key: 'id', align: 'end'},
@@ -117,11 +118,13 @@ onMounted(() => {
 
 async function loadItems(type) {
   try {
-    const response = await service.axiosFetchDemandes(type, extendedAllILN.value);
-    contentsDemandesFromServer.value = response.data;
-    contentsDemandesFrontFiltered.value = [...response.data];
+    const response = await service.axiosFetchDemandes(type, false, extendedAllILN.value)
+    contentsDemandesFromServer.value = response.data
+    contentsDemandesFrontFiltered.value = [...response.data]
 
-    fileUploadedAvailability.value = await updateFileAvailability(response.data);
+    //Disponiblité des fichiers au téléchargement
+    //fileUploadedAvailability.value = await updateFileAvailability(response.data, 'fichier_enrichi')
+    //fileDownloadAvailability.value = await updateFileAvailability(response.data, 'fichier_resultat')
 
     isDataLoaded.value = true;
     emit('backendSuccess');
@@ -145,17 +148,18 @@ function filterItems() {
   })
 }
 
-function downloadFile(demandeNumber){
-  return service.axiosGetFile('fichier_enrichi', demandeNumber, 'csv')
+function downloadFile(demandeNumber, filePrefix){
+  return service.axiosGetFile(filePrefix, demandeNumber, 'csv')
     .catch((error) => {
       console.error(error)
+      emit('backendError', error)
     })
 }
 
 //Fonctions to checking every availability files on each demand
-async function updateFileAvailability(responseData) {
+async function updateFileAvailability(responseData, filename) {
   // Créer un tableau de promesses pour chaque élément
-  const availabilityPromises = responseData.map(item => isAvailableFile(item.id));
+  const availabilityPromises = responseData.map(item => isAvailableFile(item.id, filename));
   // Attendre que toutes les promesses soient résolues
   const availabilityResults = await Promise.all(availabilityPromises);
   // Créer un objet de disponibilité à partir des résultats
@@ -166,13 +170,22 @@ async function updateFileAvailability(responseData) {
 
   return availability;
 }
-function isAvailableFile(demandeNumber) {
-  return service.axiosHeadFile('fichier_enrichi', demandeNumber, 'csv')
+function isAvailableFile(demandeNumber, filename) {
+  return service.axiosHeadFile(filename, demandeNumber, 'csv')
     .then((response) => response.status !== 500)
     .catch((error) => {
       console.error(error);
       return false;
     });
+}
+
+//Action d'archivage ou suppression selon état de la demande
+function canArchive(item) {
+  return item.etatDemande === 'Terminé';
+}
+
+function canCancel(item) {
+  return item.etatDemande !== 'Terminé' && item.etatDemande !== 'En cours de traitement' && item.etatDemande !== 'En attente';
 }
 
 </script>
