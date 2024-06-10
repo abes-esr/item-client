@@ -1,12 +1,14 @@
 <template>
   <v-container fluid>
-  <v-chip style="margin-right: 10px">Créations d'exemplaires</v-chip>
-  <v-chip variant="plain" @click="">Créations d'exemplaires archivées</v-chip>
+  <v-chip v-if="!archiveFalseActiveTrue" style="margin-right: 10px" @click="switchArchiveActiveDisplay(!archiveFalseActiveTrue)">Créations d'exemplaires</v-chip>
+  <v-chip v-if="archiveFalseActiveTrue" variant="plain" style="margin-right: 10px" @click="switchArchiveActiveDisplay(!archiveFalseActiveTrue)">Créations d'exemplaires</v-chip>
+  <v-chip v-if="archiveFalseActiveTrue" @click="switchArchiveActiveDisplay(!archiveFalseActiveTrue)">Créations d'exemplaires archivées</v-chip>
+  <v-chip v-if="!archiveFalseActiveTrue" variant="plain" @click="switchArchiveActiveDisplay(!archiveFalseActiveTrue)">Créations d'exemplaires archivées</v-chip>
     <v-chip variant="text">
       <v-tooltip activator="parent" location="bottom">
         <template v-slot:activator="{ props }">
           <label>
-            <input type="checkbox" v-model="extendedAllILN" style="margin-right: 5px" @change="loadItems('EXEMP')">
+            <input type="checkbox" v-model="extendedAllILN" style="margin-right: 5px" @change="loadItems('EXEMP', archiveFalseActiveTrue)">
             <span v-bind="props">Affichage étendu sur tous les ILN</span>
           </label>
         </template>
@@ -141,15 +143,23 @@ const typeExempSearchField = ref('')
 const indexRechercheSearchField = ref('')
 const statutSearchField = ref('')
 
+//Actives or archives demands displayed
+const archiveFalseActiveTrue = ref(false)
+
 //Data initialisation
 onMounted(() => {
-  loadItems('EXEMP')
+  loadItems('EXEMP', archiveFalseActiveTrue.value)
   contentsDemandesFromServer.value = [...contentsDemandesFromServer.value]
 })
 
-async function loadItems(type) {
+function switchArchiveActiveDisplay(value) {
+  archiveFalseActiveTrue.value = value;
+  loadItems('EXEMP', archiveFalseActiveTrue.value)
+}
+
+async function loadItems(type, archive) {
   try {
-    const response = await service.fetchDemandes(type, false, extendedAllILN.value);
+    const response = await service.fetchDemandes(type, archive, extendedAllILN.value);
     contentsDemandesFromServer.value = response.data;
     contentsDemandesFrontFiltered.value = response.data.map((item) => ({
       ...item,
@@ -235,6 +245,7 @@ async function onMouseOverRow(item) {
   //console.log('Souris sur la ligne :', item);
   item.highlighted = true;
   // Faites quelque chose avec l'élément 'item' lorsque la souris passe dessus
+  //TODO mettre en place une fonction qui maj une valeur item.progress toutes les x secondes pour savoir si le serveur est en train de traiter la demande
   // Vérifier la disponibilité des fichiers pour chaque type de fichier
   item.fichier_enrichi = await isAvailableFile(item.id, 'fichier_enrichi');
   item.fichier_resultat = await isAvailableFile(item.id, 'fichier_resultat');
