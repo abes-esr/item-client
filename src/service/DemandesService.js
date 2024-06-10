@@ -8,12 +8,12 @@ export class DemandesService {
     headers: { Authorization: `Bearer ${import.meta.env.VITE_API_TOKEN}`}
   });
 
-  axiosFetchDemandes(type, archive, extensionIln) {
+  fetchDemandes(type, archive, extensionIln) {
     console.info('appel: ' + import.meta.env.VITE_API_URL + `demandes?type=${type}&archive=${archive}&extension=${extensionIln}`)
     return this.client.get(`demandes?type=${type}&archive=${archive}&extension=${extensionIln}`)
   }
 
-  axiosGetFile(filetype, demandeNumber, fileFormat) {
+  getFile(filetype, demandeNumber, fileFormat) {
     const url = `https://item-dev.sudoc.fr/api/v1/files/${filetype}_${demandeNumber}.${fileFormat}?id=${demandeNumber}`;
     console.info('appel: ' + url);
 
@@ -37,8 +37,8 @@ export class DemandesService {
       });
   }
 
-  //.head
-  axiosHeadFile(filetype, demandeNumber, fileFormat) {
+  //.head = controle de la disponibilité de l'url d'appel
+  headFile(filetype, demandeNumber, fileFormat) {
     const url = `https://item-dev.sudoc.fr/api/v1/files/${filetype}_${demandeNumber}.${fileFormat}?id=${demandeNumber}`;
 
     return this.client.head(url)
@@ -55,6 +55,20 @@ export class DemandesService {
         }
       });
   }
+
+  archiverDemande(type, numDemande) {
+    const url = `archiverDemande?type=${type}&numDemande=${numDemande}`;
+    console.info('appel: ' + import.meta.env.VITE_API_URL + url);
+    return this.client.get(url);
+  }
+
+  supprimerDemande(type, numDemande) {
+    const url = `supprimerDemande?type=${type}&numDemande=${numDemande}`;
+    console.info('appel: ' + import.meta.env.VITE_API_URL + url);
+    return this.client.get(url);
+  }
+
+
 }
 
 export default new DemandesService()

@@ -20,7 +20,7 @@
       </v-tooltip>
     </v-chip>
   </v-container>
-	<v-data-table :headers="headingsDemandes" :items="contentsDemandesFrontFiltered" :items-length="totalItemsFound" :loading="!isDataLoaded" show-expand :sort-by="[{ key: 'dateModification', order: 'desc' }]">
+	<v-data-table :headers="headingsDemandes" :items="contentsDemandesFrontFiltered" :items-length="totalItemsFound" :loading="!isDataLoaded" show-expand :sort-by="[{ key: 'dateModification', order: 'desc' }]" item-key="id">
 		<template v-slot:body.prepend>
 			<tr>
         <td></td>
@@ -35,31 +35,67 @@
 			</tr>
 		</template>
 
-    <!-- Pavé de commentaires -->
-    <template v-slot:expanded-row="{ columns, item }">
-      <tr><td :colspan="columns.length"><v-textarea label="Commentaire" v-model="item.commentaire" hide-details variant="underlined" auto-grow rows="1"></v-textarea></td></tr>
-    </template>
-
     <!-- Colonne Téléchargement -->
     <template v-slot:item.filesToDownload="{ item }">
-      <v-tooltip top><template v-slot:activator="{ props }">
+      <v-tooltip top><template v-slot:activator="{ props }" v-if="item.fileUploadedAvailable">
       <span v-bind="props"><v-icon @click='downloadFile(item.id, "fichier_enrichi")'>mdi-file-upload</v-icon></span></template><span>Fichier enrichi (fichier déposé)</span>
       </v-tooltip>
 
-      <v-tooltip top><template v-slot:activator="{ props }">
+      <v-tooltip top><template v-slot:activator="{ props }" v-if="item.fileDownloadAvailable">
       <span v-bind="props"><v-icon @click='downloadFile(item.id, "fichier_resultat")'>mdi-file-download</v-icon></span></template><span>Fichier résultat</span>
       </v-tooltip>
     </template>
 
     <!-- Colonne Action -->
     <template v-slot:item.archiveOrCancel="{ item }">
-      <v-icon v-if="canArchive(item)">mdi-archive</v-icon>
-      <v-icon v-else-if="canCancel(item)">mdi-delete</v-icon>
+      <v-icon v-if="canArchive(item)" @click="archiverDemande(item)">mdi-archive</v-icon>
+      <v-icon v-else-if="canCancel(item)" @click="supprimerDemande(item)">mdi-delete</v-icon>
     </template>
 
     <!-- Colonne de progression-->
     <template v-slot:item.pourcentageProgressionTraitement="{ item }">
       <v-progress-linear v-model="item.pourcentageProgressionTraitement" :height="18" :striped="false" color="grey-lighten-1" style="border: 1px solid grey; font-weight: bolder">{{ item.pourcentageProgressionTraitement }} %</v-progress-linear>
+    </template>
+
+    <template v-slot:item="{ item, expand }">
+      <tr @click="onRowClick" @mouseover="onMouseOverRow(item)" @mouseleave="onMouseLeaveRow(item)" :class="{ 'highlighted-row': item.highlighted }" style="cursor: pointer;">
+        <td>
+          <v-btn icon="mdi-chevron-up" @click="item.expanded = !item.expanded" variant="text">
+            <v-icon>{{ item.expanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+          </v-btn>
+        </td>
+        <td class="text-right">{{ item.id }}</td>
+        <td class="text-right">{{ item.dateCreation }}</td>
+        <td class="text-right">{{ item.dateModification }}</td>
+        <td class="text-right">{{ item.iln }}</td>
+        <td class="text-right">{{ item.rcr }}</td>
+        <td class="text-right">{{ item.typeExemp }}</td>
+        <td class="text-right">{{ item.indexRecherche }}</td>
+        <td class="text-right">{{ item.etatDemande }}</td>
+        <td class="text-right">
+          <v-progress-linear v-model="item.pourcentageProgressionTraitement" :height="18" :striped="false" color="grey-lighten-1" style="border: 1px solid grey; font-weight: bolder">{{ item.pourcentageProgressionTraitement }} %</v-progress-linear>
+        </td>
+        <td class="text-right">
+          <!-- Colonne Téléchargement -->
+          <v-tooltip top><template v-slot:activator="{ props }" v-if="item.fichier_enrichi">
+            <span v-bind="props"><v-icon @click='downloadFile(item.id, "fichier_enrichi")'>mdi-file-upload</v-icon></span></template><span>Fichier enrichi (fichier déposé)</span>
+          </v-tooltip>
+
+          <v-tooltip top><template v-slot:activator="{ props }" v-if="item.fichier_resultat">
+            <span v-bind="props"><v-icon @click='downloadFile(item.id, "fichier_resultat")'>mdi-file-download</v-icon></span></template><span>Fichier résultat</span>
+          </v-tooltip>
+        </td>
+        <td class="text-right">
+          <!-- Colonne Action -->
+          <v-icon v-if="canArchive(item)" @click="archiverDemande(item)">mdi-archive</v-icon>
+          <v-icon v-else-if="canCancel(item)" @click="supprimerDemande(item)">mdi-delete</v-icon>
+        </td>
+      </tr>
+      <tr v-if="item.expanded">
+        <td :colspan="headingsDemandes.length">
+          <v-textarea label="Commentaire" v-model="item.commentaire" hide-details variant="underlined" auto-grow rows="1"></v-textarea>
+        </td>
+      </tr>
     </template>
 	</v-data-table>
 </template>
@@ -105,11 +141,6 @@ const typeExempSearchField = ref('')
 const indexRechercheSearchField = ref('')
 const statutSearchField = ref('')
 
-//Files per demand to download
-const fileUploadedAvailability = ref({})
-const fileDownloadAvailability = ref({})
-
-
 //Data initialisation
 onMounted(() => {
   loadItems('EXEMP')
@@ -118,13 +149,14 @@ onMounted(() => {
 
 async function loadItems(type) {
   try {
-    const response = await service.axiosFetchDemandes(type, false, extendedAllILN.value)
-    contentsDemandesFromServer.value = response.data
-    contentsDemandesFrontFiltered.value = [...response.data]
-
-    //Disponiblité des fichiers au téléchargement
-    //fileUploadedAvailability.value = await updateFileAvailability(response.data, 'fichier_enrichi')
-    //fileDownloadAvailability.value = await updateFileAvailability(response.data, 'fichier_resultat')
+    const response = await service.fetchDemandes(type, false, extendedAllILN.value);
+    contentsDemandesFromServer.value = response.data;
+    contentsDemandesFrontFiltered.value = response.data.map((item) => ({
+      ...item,
+      expanded: false,
+      fichier_enrichi: false,
+      fichier_resultat: false,
+    }));
 
     isDataLoaded.value = true;
     emit('backendSuccess');
@@ -149,29 +181,15 @@ function filterItems() {
 }
 
 function downloadFile(demandeNumber, filePrefix){
-  return service.axiosGetFile(filePrefix, demandeNumber, 'csv')
+  return service.getFile(filePrefix, demandeNumber, 'csv')
     .catch((error) => {
       console.error(error)
       emit('backendError', error)
     })
 }
 
-//Fonctions to checking every availability files on each demand
-async function updateFileAvailability(responseData, filename) {
-  // Créer un tableau de promesses pour chaque élément
-  const availabilityPromises = responseData.map(item => isAvailableFile(item.id, filename));
-  // Attendre que toutes les promesses soient résolues
-  const availabilityResults = await Promise.all(availabilityPromises);
-  // Créer un objet de disponibilité à partir des résultats
-  const availability = {};
-  responseData.forEach((item, index) => {
-    availability[item.id] = availabilityResults[index];
-  });
-
-  return availability;
-}
 function isAvailableFile(demandeNumber, filename) {
-  return service.axiosHeadFile(filename, demandeNumber, 'csv')
+  return service.headFile(filename, demandeNumber, 'csv')
     .then((response) => response.status !== 500)
     .catch((error) => {
       console.error(error);
@@ -179,13 +197,64 @@ function isAvailableFile(demandeNumber, filename) {
     });
 }
 
-//Action d'archivage ou suppression selon état de la demande
+//Action d'archivage ou suppression selon état de la demande dans le TDB
 function canArchive(item) {
   return item.etatDemande === 'Terminé';
 }
-
 function canCancel(item) {
   return item.etatDemande !== 'Terminé' && item.etatDemande !== 'En cours de traitement' && item.etatDemande !== 'En attente';
 }
 
+//Suppression d'une demande
+async function supprimerDemande(item) {
+  try {
+    await service.supprimerDemande('EXEMP', item.id);
+    // Mettre à jour les données après la suppression réussie
+    await loadItems('EXEMP');
+    emit('backendSuccess');
+  } catch (error) {
+    console.error(error);
+    emit('backendError', error);
+  }
+}
+
+//Archivage d'une demande
+async function archiverDemande(item) {
+  try {
+    await service.archiverDemande('EXEMP', item.id);
+    // Mettre à jour les données après l'archivage réussi
+    await loadItems('EXEMP');
+    emit('backendSuccess');
+  } catch (error) {
+    console.error(error);
+    emit('backendError', error);
+  }
+}
+
+async function onMouseOverRow(item) {
+  //console.log('Souris sur la ligne :', item);
+  item.highlighted = true;
+  // Faites quelque chose avec l'élément 'item' lorsque la souris passe dessus
+  // Vérifier la disponibilité des fichiers pour chaque type de fichier
+  item.fichier_enrichi = await isAvailableFile(item.id, 'fichier_enrichi');
+  item.fichier_resultat = await isAvailableFile(item.id, 'fichier_resultat');
+}
+
+function onMouseLeaveRow(item) {
+  item.highlighted = false;
+  item.fichier_enrichi = false;
+  item.fichier_resultat = false;
+}
+
+function onRowClick(item) {
+  console.log('Ligne cliquée avec la demande :', item.id);
+  // Faites quelque chose lorsque la ligne est cliquée, par exemple naviguer vers une page de détails de la demande
+}
+
 </script>
+
+<style scoped>
+.highlighted-row {
+  background-color: #f5f5f5;
+}
+</style>
