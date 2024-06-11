@@ -1,14 +1,14 @@
 <template>
   <v-container fluid>
-  <v-chip v-if="!archiveFalseActiveTrue" style="margin-right: 10px" @click="switchArchiveActiveDisplay(!archiveFalseActiveTrue)">Créations d'exemplaires</v-chip>
-  <v-chip v-if="archiveFalseActiveTrue" variant="plain" style="margin-right: 10px" @click="switchArchiveActiveDisplay(!archiveFalseActiveTrue)">Créations d'exemplaires</v-chip>
-  <v-chip v-if="archiveFalseActiveTrue" @click="switchArchiveActiveDisplay(!archiveFalseActiveTrue)">Créations d'exemplaires archivées</v-chip>
-  <v-chip v-if="!archiveFalseActiveTrue" variant="plain" @click="switchArchiveActiveDisplay(!archiveFalseActiveTrue)">Créations d'exemplaires archivées</v-chip>
+  <v-chip v-if="!archiveFalseActiveTrue" style="margin-right: 10px" @click="switchArchiveActiveDisplay(!archiveFalseActiveTrue)">Modification d'exemplaires</v-chip>
+  <v-chip v-if="archiveFalseActiveTrue" variant="plain" style="margin-right: 10px" @click="switchArchiveActiveDisplay(!archiveFalseActiveTrue)">Modification d'exemplaires</v-chip>
+  <v-chip v-if="archiveFalseActiveTrue" @click="switchArchiveActiveDisplay(!archiveFalseActiveTrue)">Modification d'exemplaires archivées</v-chip>
+  <v-chip v-if="!archiveFalseActiveTrue" variant="plain" @click="switchArchiveActiveDisplay(!archiveFalseActiveTrue)">Modification d'exemplaires archivées</v-chip>
     <v-chip variant="text">
       <v-tooltip activator="parent" location="bottom">
         <template v-slot:activator="{ props }">
           <label>
-            <input type="checkbox" v-model="extendedAllILN" style="margin-right: 5px" @change="loadItems('EXEMP', archiveFalseActiveTrue)">
+            <input type="checkbox" v-model="extendedAllILN" style="margin-right: 5px" @change="loadItems('MODIF', archiveFalseActiveTrue)">
             <span v-bind="props">Affichage étendu sur tous les ILN</span>
           </label>
         </template>
@@ -31,33 +31,11 @@
 				<td><v-text-field v-model="dateModificationSearchField" hide-details @input="filterItems" variant="underlined"></v-text-field></td>
 				<td><v-text-field v-model="ilnSearchField" hide-details @input="filterItems" variant="underlined"></v-text-field></td>
 				<td><v-text-field v-model="rcrSearchField" hide-details @input="filterItems" variant="underlined"></v-text-field></td>
-        <td><v-text-field v-model="typeExempSearchField" hide-details @input="filterItems" variant="underlined"></v-text-field></td>
-				<td><v-text-field v-model="indexRechercheSearchField" @input="filterItems" hide-details variant="underlined"></v-text-field></td>
+        <td><v-text-field v-model="zoneSearchField" hide-details @input="filterItems" variant="underlined"></v-text-field></td>
+				<td><v-text-field v-model="traitementSearchField" @input="filterItems" hide-details variant="underlined"></v-text-field></td>
 				<td><v-text-field v-model="statutSearchField" @input="filterItems" hide-details variant="underlined"></v-text-field></td>
 			</tr>
 		</template>
-
-    <!-- Colonne Téléchargement -->
-    <template v-slot:item.filesToDownload="{ item }">
-      <v-tooltip top><template v-slot:activator="{ props }" v-if="item.fileUploadedAvailable">
-      <span v-bind="props"><v-icon @click='downloadFile(item.id, "fichier_enrichi")'>mdi-file-upload</v-icon></span></template><span>Fichier enrichi (fichier déposé)</span>
-      </v-tooltip>
-
-      <v-tooltip top><template v-slot:activator="{ props }" v-if="item.fileDownloadAvailable">
-      <span v-bind="props"><v-icon @click='downloadFile(item.id, "fichier_resultat")'>mdi-file-download</v-icon></span></template><span>Fichier résultat</span>
-      </v-tooltip>
-    </template>
-
-    <!-- Colonne Action -->
-    <template v-slot:item.archiveOrCancel="{ item }">
-      <v-icon v-if="canArchive(item)" @click="archiverDemande(item)">mdi-archive</v-icon>
-      <v-icon v-else-if="canCancel(item)" @click="supprimerDemande(item)">mdi-delete</v-icon>
-    </template>
-
-    <!-- Colonne de progression-->
-    <template v-slot:item.pourcentageProgressionTraitement="{ item }">
-      <v-progress-linear v-model="item.pourcentageProgressionTraitement" :height="18" :striped="false" color="grey-lighten-1" style="border: 1px solid grey; font-weight: bolder">{{ item.pourcentageProgressionTraitement }} %</v-progress-linear>
-    </template>
 
     <template v-slot:item="{ item, expand }">
       <tr @click="onRowClick" @mouseover="onMouseOverRow(item)" @mouseleave="onMouseLeaveRow(item)" :class="{ 'highlighted-row': item.highlighted }" style="cursor: pointer;">
@@ -71,14 +49,22 @@
         <td class="text-right">{{ item.dateModification }}</td>
         <td class="text-right">{{ item.iln }}</td>
         <td class="text-right">{{ item.rcr }}</td>
-        <td class="text-right">{{ item.typeExemp }}</td>
-        <td class="text-right">{{ item.indexRecherche }}</td>
+        <td class="text-right">{{ item.zone }}</td>
+        <td class="text-right">{{ item.traitement }}</td>
         <td class="text-right">{{ item.etatDemande }}</td>
         <td class="text-right">
           <v-progress-linear v-model="item.pourcentageProgressionTraitement" :height="18" :striped="false" color="grey-lighten-1" style="border: 1px solid grey; font-weight: bolder">{{ item.pourcentageProgressionTraitement }} %</v-progress-linear>
         </td>
         <td class="text-right">
           <!-- Colonne Téléchargement -->
+          <v-tooltip top><template v-slot:activator="{ props }" v-if="item.fichier_initial">
+            <span v-bind="props"><v-icon @click='downloadFile(item.id, "fichier_initial")'>mdi-file-upload</v-icon></span></template><span>Fichier initial des PPN</span>
+          </v-tooltip>
+
+          <v-tooltip top><template v-slot:activator="{ props }" v-if="item.fichier_prepare">
+            <span v-bind="props"><v-icon @click='downloadFile(item.id, "fichier_prepare")'>mdi-file-download</v-icon></span></template><span>Fichier de correspondance PPN/EPN</span>
+          </v-tooltip>
+
           <v-tooltip top><template v-slot:activator="{ props }" v-if="item.fichier_enrichi">
             <span v-bind="props"><v-icon @click='downloadFile(item.id, "fichier_enrichi")'>mdi-file-upload</v-icon></span></template><span>Fichier enrichi (fichier déposé)</span>
           </v-tooltip>
@@ -119,8 +105,8 @@ const headingsDemandes = ref([
 	{title: 'Mise à jour', key: 'dateModification', align: 'end'},
 	{title: 'ILN', key: 'iln', align: 'end'},
 	{title: 'RCR', key: 'rcr', align: 'end'},
-  {title: 'Type', key: 'typeExemp', align: 'end'},
-	{title: 'Index', key: 'indexRecherche', align: 'end'},
+  {title: 'Zones et sous zones', key: 'zone', align: 'end'},
+	{title: 'Traitement', key: 'traitement', align: 'end'},
 	{title: 'Statut', key: 'etatDemande', align: 'end'},
   {title: 'Progression', key: 'pourcentageProgressionTraitement', value: 'pourcentageProgressionTraitement', align: 'end'},
 	{title: 'Fichiers', key: 'filesToDownload', value: 'filesToDownload', align: 'end'},
@@ -139,8 +125,8 @@ const dateCreationSearchField = ref('')
 const dateModificationSearchField = ref('')
 const ilnSearchField = ref('')
 const rcrSearchField = ref('')
-const typeExempSearchField = ref('')
-const indexRechercheSearchField = ref('')
+const zoneSearchField = ref('')
+const traitementSearchField = ref('')
 const statutSearchField = ref('')
 
 //Actives or archives demands displayed
@@ -148,13 +134,13 @@ const archiveFalseActiveTrue = ref(false)
 
 //Data initialisation
 onMounted(() => {
-  loadItems('EXEMP', archiveFalseActiveTrue.value)
+  loadItems('MODIF', archiveFalseActiveTrue.value)
   contentsDemandesFromServer.value = [...contentsDemandesFromServer.value]
 })
 
 function switchArchiveActiveDisplay(value) {
   archiveFalseActiveTrue.value = value;
-  loadItems('EXEMP', archiveFalseActiveTrue.value)
+  loadItems('MODIF', archiveFalseActiveTrue.value)
 }
 
 async function loadItems(type, archive) {
@@ -164,6 +150,8 @@ async function loadItems(type, archive) {
     contentsDemandesFrontFiltered.value = response.data.map((item) => ({
       ...item,
       expanded: false,
+      fichier_initial: false,
+      fichier_correspondance: false,
       fichier_enrichi: false,
       fichier_resultat: false,
     }));
@@ -183,10 +171,10 @@ function filterItems() {
     const matchesDateModification = dateModificationSearchField.value === '' || demande.dateModification.toString().includes(dateModificationSearchField.value)
     const matchesRCR = rcrSearchField.value === '' || demande.rcr.toString().includes(rcrSearchField.value)
     const matchesILN = ilnSearchField.value === '' || demande.iln.toString().includes(ilnSearchField.value)
-    const matchesTypeExemp = typeExempSearchField.value === '' || demande.typeExemp && demande.typeExemp.includes(typeExempSearchField.value)
-    const matchesIndexSearch = indexRechercheSearchField.value === '' || demande.indexRecherche && demande.indexRecherche.includes(indexRechercheSearchField.value)
+    const matchesZone = zoneSearchField.value === '' || demande.zone && demande.zone.includes(zoneSearchField.value)
+    const matchesTraitement = traitementSearchField.value === '' || demande.traitement && demande.traitement.includes(traitementSearchField.value)
     const matchesEtatDemande = statutSearchField.value === '' || demande.etatDemande.toString().includes(statutSearchField.value)
-    return matchesNumDemande && matchesDateCreation && matchesDateModification && matchesRCR && matchesILN && matchesTypeExemp && matchesIndexSearch && matchesEtatDemande
+    return matchesNumDemande && matchesDateCreation && matchesDateModification && matchesRCR && matchesILN && matchesZone && matchesTraitement && matchesEtatDemande
   })
 }
 
@@ -218,9 +206,9 @@ function canCancel(item) {
 //Suppression d'une demande
 async function supprimerDemande(item) {
   try {
-    await service.supprimerDemande('EXEMP', item.id);
+    await service.supprimerDemande('MODIF', item.id);
     // Mettre à jour les données après la suppression réussie
-    await loadItems('EXEMP');
+    await loadItems('MODIF');
     emit('backendSuccess');
   } catch (error) {
     console.error(error);
@@ -231,9 +219,9 @@ async function supprimerDemande(item) {
 //Archivage d'une demande
 async function archiverDemande(item) {
   try {
-    await service.archiverDemande('EXEMP', item.id);
+    await service.archiverDemande('MODIF', item.id);
     // Mettre à jour les données après l'archivage réussi
-    await loadItems('EXEMP');
+    await loadItems('MODIF');
     emit('backendSuccess');
   } catch (error) {
     console.error(error);
@@ -247,14 +235,20 @@ async function onMouseOverRow(item) {
   // Faites quelque chose avec l'élément 'item' lorsque la souris passe dessus
   //TODO mettre en place une fonction qui maj une valeur item.progress toutes les x secondes pour savoir si le serveur est en train de traiter la demande
   // Vérifier la disponibilité des fichiers pour chaque type de fichier
+  item.fichier_initial = await isAvailableFile(item.id, 'fichier_initial');
+  item.fichier_prepare = await isAvailableFile(item.id, 'fichier_prepare');
   item.fichier_enrichi = await isAvailableFile(item.id, 'fichier_enrichi');
   item.fichier_resultat = await isAvailableFile(item.id, 'fichier_resultat');
 }
 
 function onMouseLeaveRow(item) {
   item.highlighted = false;
-  item.fichier_enrichi = false;
-  item.fichier_resultat = false;
+  setTimeout(() => {
+    item.fichier_initial = false;
+    item.fichier_prepare = false;
+    item.fichier_enrichi = false;
+    item.fichier_resultat = false;
+  }, 1000);
 }
 
 function onRowClick(item) {

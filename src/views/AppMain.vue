@@ -49,12 +49,11 @@
 					<v-card
 						class="py-4"
 						color="surface-variant"
-						href="https://vuetifyjs.com/introduction/why-vuetify/#feature-guides"
+						:href="'/exemplarisationTableau'"
 						prepend-icon="mdi-chart-bar"
 						rel="noopener noreferrer"
 						rounded="lg"
 						subtitle="Gérer ses exemplarisations"
-						target="_blank"
 						title="Exemplarisation"
 						variant="text"
 					>
@@ -66,12 +65,11 @@
 					<v-card
 						class="py-4"
 						color="surface-variant"
-						href="https://vuetifyjs.com/components/all"
+            :href="'/modificationTableau'"
 						prepend-icon="mdi-pencil"
 						rel="noopener noreferrer"
 						rounded="lg"
 						subtitle="Modifier des exemplaires"
-						target="_blank"
 						title="Modification"
 						variant="text"
 					>
@@ -82,12 +80,11 @@
 					<v-card
 						class="py-4"
 						color="surface-variant"
-						href="https://discord.vuetifyjs.com"
+            :href="'/modificationTableau'"
 						prepend-icon="mdi-chart-bar"
 						rel="noopener noreferrer"
 						rounded="lg"
 						subtitle="Gérer ses modifications"
-						target="_blank"
 						title="Modification"
 						variant="text"
 					>
@@ -115,12 +112,11 @@
 					<v-card
 						class="py-4"
 						color="surface-variant"
-						href="https://discord.vuetifyjs.com"
+            :href="'/recouvrementTableau'"
 						prepend-icon="mdi-chart-bar"
 						rel="noopener noreferrer"
 						rounded="lg"
 						subtitle="Gérer ses taux de recouvrement"
-						target="_blank"
 						title="Recouvrement"
 						variant="text"
 					>

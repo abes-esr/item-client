@@ -3,7 +3,8 @@
 		<AppHeader />
 		<v-main>
       <v-alert color="red" :title="backendErrorMessage" variant='outlined' density='compact' type='warning' :text='backendErrorDescription' closable v-if="backendError"></v-alert>
-      <AppTable @backendError="setBackendError" @backendSuccess="liftErrors" />
+      <router-view></router-view>
+     <!--<AppTable @backendError="setBackendError" @backendSuccess="liftErrors" />-->
     </v-main>
 		<AppFooter />
     <p><strong>e</strong></p>
@@ -12,6 +13,8 @@
 
 <script setup>
 import {ref} from 'vue'
+import AppHeader from '@/views/AppHeader.vue'
+import AppFooter from '@/views/AppFooter.vue'
 
 const backendError = ref(false)
 const backendErrorMessage = ref('')
