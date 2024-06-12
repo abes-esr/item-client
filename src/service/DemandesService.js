@@ -13,8 +13,8 @@ export class DemandesService {
     return this.client.get(`demandes?type=${type}&archive=${archive}&extension=${extensionIln}`)
   }
 
-  getFile(filetype, demandeNumber, fileFormat) {
-    const url = `https://item-dev.sudoc.fr/api/v1/files/${filetype}_${demandeNumber}.${fileFormat}?id=${demandeNumber}`;
+  getFile(filetype, demandeNumber, fileFormat, typeDemande) {
+    const url = import.meta.env.VITE_API_URL + `files/${filetype}_${demandeNumber}.${fileFormat}?id=${demandeNumber}&type=${typeDemande}`;
     console.info('appel: ' + url);
 
     return this.client({
@@ -37,13 +37,16 @@ export class DemandesService {
       });
   }
 
-  //.head = controle de la disponibilité de l'url d'appel
-  headFile(filetype, demandeNumber, fileFormat) {
-    const url = `https://item-dev.sudoc.fr/api/v1/files/${filetype}_${demandeNumber}.${fileFormat}?id=${demandeNumber}`;
+  //.head = controle de la disponibilité de l'url d'appel (pas de retour de data)
+  headFile(filetype, demandeNumber, fileFormat, typeDemande) {
+    const url = import.meta.env.VITE_API_URL + `files/${filetype}_${demandeNumber}.${fileFormat}?id=${demandeNumber}&type=${typeDemande}`;
 
     return this.client.head(url)
-      .then((response) => response)
+      .then((response) => {
+        return response
+      })
       .catch((error) => {
+        console.log(JSON.stringify(error))
         if (error.response && error.response.status === 500) {
           // Masquer l'erreur 500 dans la console
           return Promise.resolve({ status: 500, data: null });
@@ -68,7 +71,21 @@ export class DemandesService {
     return this.client.get(url);
   }
 
+  authentifierUtilisateur(login, password) {
+    const url = import.meta.env.VITE_API_URL + `signin`
+    console.info('appel:' + url)
 
+    this.client({
+      url: url,
+      method: "POST"
+    }).then((response) => {
+      let authuser = {}
+      console.info(JSON.stringify(response))
+      return true
+    }).catch((onreject) => {
+      return false
+    })
+  }
 }
 
 export default new DemandesService()

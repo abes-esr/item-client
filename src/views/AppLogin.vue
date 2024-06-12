@@ -3,7 +3,7 @@
 		<v-responsive class="align-centerfill-height mx-auto" max-width="900">
 			<div class="py-4" />
 
-			<v-row v-if="true">
+			<v-row v-if="incident">
 				<v-col cols="12">
 					<v-card class="py-4" color="surface-variant" prepend-icon="mdi-warning" rounded="lg" variant="outlined">
 						<template #title>
@@ -25,30 +25,31 @@
 			<v-row>
 				<v-col cols="12">
 					<div>
-						<v-img class="mx-auto my-6" max-width="228" src="https://cdn.vuetifyjs.com/docs/images/logos/vuetify-logo-v3-slim-text-light.svg"></v-img>
+						<v-img class="mx-auto my-6" max-width="228" src=""></v-img>
 
 						<v-card class="mx-auto pa-12 pb-8" max-width="448">
-							<div class="text-subtitle-1 text-medium-emphasis">Account</div>
+							<div class="text-subtitle-1 text-medium-emphasis" v-if="false">Nom utilisateur</div>
 
-							<v-text-field density="compact" placeholder="Email address" prepend-inner-icon="mdi-email-outline" variant="outlined"></v-text-field>
+							<v-text-field density="compact" placeholder="Nom utilisateur" prepend-inner-icon="mdi-email-outline" variant="outlined" v-model="userLogin"></v-text-field>
 
-							<div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
+							<div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between" v-if="false">
 								Password
 
-								<a class="text-caption text-decoration-none text-blue" href="#" rel="noopener noreferrer" target="_blank"> Forgot login password?</a>
+								<a class="text-caption text-decoration-none text-blue" href="#" rel="noopener noreferrer" target="_blank" v-if="false"> Forgot login password?</a>
 							</div>
 
 							<v-text-field
 								:append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
 								:type="visible ? 'text' : 'password'"
 								density="compact"
-								placeholder="Enter your password"
+								placeholder="Mot de passe"
 								prepend-inner-icon="mdi-lock-outline"
 								variant="outlined"
 								@click:append-inner="visible = !visible"
+                v-model="userPassword"
 							></v-text-field>
 
-							<v-btn class="mb-8" color="blue" size="large" variant="tonal" block> Log In </v-btn>
+							<v-btn class="mb-8" color="blue" size="large" variant="tonal" block @click="login()"> Se connecter </v-btn>
 						</v-card>
 					</div>
 				</v-col>
@@ -57,6 +58,21 @@
 	</v-container>
 </template>
 <script setup>
+import {ref} from 'vue'
+import {DemandesService} from '@/service/DemandesService'
+
+const service = DemandesService
+
+const incident = ref(false)
+const userLogin = ref('')
+const userPassword = ref('')
+
+
 //TODO mettre en place une alimentation du message par lecture d'une table dans la BDD item evenement dans une base de donnée pour éviter un redéploiement en cas d'incident utilisateur
 //TODO si la table est vide, ne pas afficher le v-row
+function login() {
+  console.log(userLogin.value)
+  console.log(userPassword.value)
+  service
+}
 </script>

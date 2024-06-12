@@ -3,7 +3,7 @@
 		<AppHeader />
 		<v-main>
       <v-alert color="red" :title="backendErrorMessage" variant='outlined' density='compact' type='warning' :text='backendErrorDescription' closable v-if="backendError"></v-alert>
-      <router-view></router-view>
+      <router-view @backendError="setBackendError" @backendSuccess="liftErrors"></router-view>
      <!--<AppTable @backendError="setBackendError" @backendSuccess="liftErrors" />-->
     </v-main>
 		<AppFooter />
@@ -13,6 +13,7 @@
 
 <script setup>
 import {ref} from 'vue'
+import AppTable from '@/components/exemplarisation/ExempTable.vue'
 import AppHeader from '@/views/AppHeader.vue'
 import AppFooter from '@/views/AppFooter.vue'
 
@@ -21,20 +22,23 @@ const backendErrorMessage = ref('')
 const backendErrorDescription = ref('')
 
 function setBackendError(error) {
-  console.log(error.config.url.includes('files'))
   backendError.value = true
   let titleMessage = ''
   if(!error.response){
     backendErrorMessage.value = 'Erreur réseau : ' + error.code
     backendErrorDescription.value = 'Le serveur ne répond pas. Vérifiez sa disponibilité.'
   }else{
+    if(error.response.status === 404){
+      titleMessage = 'Impossible de récupérer les données'
+      backendErrorDescription.value = 'Vérifiez que vos urls d\'appel au serveur sont correctes ainsi que vos clés d\'autorisation ' + '(' + error.config.url + ')'
+    }
     if(error.response.status === 403){
       titleMessage = 'Accès rejeté par le serveur'
-      backendErrorDescription.value = 'Vérifiez que vos urls d\'appel au serveur soient correctes ainsi que vos clés d\'autorisation ' + '(' + error.config.baseURL + error.config.url + ')'
+      backendErrorDescription.value = 'Vérifiez que vos urls d\'appel au serveur sont correctes ainsi que vos clés d\'autorisation ' + '(' + error.config.url + ')'
     }
     if(error.response.status === 400){
       titleMessage = 'Accès rejeté par le serveur'
-      backendErrorDescription.value = 'Mauvaise requête : contrôlez les paramètres de votre requête et observez les logs du serveur pour plus d\'informations ' + '(' + error.config.baseURL + error.config.url + ')'
+      backendErrorDescription.value = 'Mauvaise requête : contrôlez les paramètres de votre requête et observez les logs du serveur pour plus d\'informations ' + '(' + error.config.url + ')'
     }
     if(error.response.status.toString().startsWith('5')){
       titleMessage = 'Problème de disponibilité du serveur'
@@ -47,10 +51,6 @@ function setBackendError(error) {
   }
   if(error.request.url){
     backendErrorDescription.value = 'Problème de disponibilité du fichier demandé'
-  }
-  if(error.config.url.includes('files')){
-    backendErrorMessage.value = error.config.url
-    backendErrorDescription.value = 'Fichier non disponible'
   }
 }
 

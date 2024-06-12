@@ -178,7 +178,7 @@ function filterItems() {
 }
 
 function downloadFile(demandeNumber, filePrefix){
-  return service.getFile(filePrefix, demandeNumber, 'csv')
+  return service.getFile(filePrefix, demandeNumber, 'csv', 'RECOUV')
     .catch((error) => {
       console.error(error)
       emit('backendError', error)
@@ -186,9 +186,10 @@ function downloadFile(demandeNumber, filePrefix){
 }
 
 function isAvailableFile(demandeNumber, filename) {
-  return service.headFile(filename, demandeNumber, 'csv')
+  return service.headFile(filename, demandeNumber, 'csv', 'RECOUV')
     .then((response) => response.status !== 500)
     .catch((error) => {
+      console.log(JSON.stringify(error))
       console.error(error);
       return false;
     });

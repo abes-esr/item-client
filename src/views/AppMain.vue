@@ -65,7 +65,7 @@
 					<v-card
 						class="py-4"
 						color="surface-variant"
-            :href="'/modificationTableau'"
+            :href="'/modificationNouvelleDemande'"
 						prepend-icon="mdi-pencil"
 						rel="noopener noreferrer"
 						rounded="lg"
