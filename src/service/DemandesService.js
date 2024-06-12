@@ -4,8 +4,8 @@ export class DemandesService {
 	//authToken = import.meta.env.VITE_API_TOKEN
 
   client = axios.create({
-    baseURL: import.meta.env.VITE_API_URL,
-    headers: { Authorization: `Bearer ${import.meta.env.VITE_API_TOKEN}`}
+    baseURL: import.meta.env.VITE_API_URL
+    //headers: { Authorization: `Bearer ${import.meta.env.VITE_API_TOKEN}`}
   });
 
   fetchDemandes(type, archive, extensionIln) {
@@ -75,16 +75,39 @@ export class DemandesService {
     const url = import.meta.env.VITE_API_URL + `signin`
     console.info('appel:' + url)
 
-    this.client({
-      url: url,
-      method: "POST"
-    }).then((response) => {
-      let authuser = {}
-      console.info(JSON.stringify(response))
-      return true
-    }).catch((onreject) => {
-      return false
-    })
+    this.client.post(`signin`, {username: login, password: password})
+      .then((response) => {
+        let authuser = {}
+        authuser.login = login
+        authuser.shortname = response.data.shortname
+        authuser.token = `Bearer ${response.data.accessToken}`
+        authuser.userNum = response.data.userNum;
+        authuser.iln = response.data.iln;
+        authuser.role = response.data.role;
+        authuser.email = response.data.email;
+        sessionStorage.setItem('user', JSON.stringify(authuser));
+      })
+  }
+
+  isAuthenticated() {
+    const user = JSON.parse(sessionStorage.getItem('user'));
+    if (user && user.token) {
+      // Vérifiez la validité du token en effectuant une requête à votre API
+      return this.client.get('/checkToken', {
+        headers: { Authorization: user.token }
+      })
+        .then(response => {
+          // Le token est valide
+          return true;
+        })
+        .catch(error => {
+          // Le token est invalide ou a expiré
+          return false;
+        });
+    } else {
+      // Aucun token trouvé
+      return Promise.resolve(false);
+    }
   }
 }
 

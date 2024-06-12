@@ -59,20 +59,19 @@
 </template>
 <script setup>
 import {ref} from 'vue'
-import {DemandesService} from '@/service/DemandesService'
+import DemandesService from '@/service/DemandesService'
 
 const service = DemandesService
 
 const incident = ref(false)
 const userLogin = ref('')
 const userPassword = ref('')
+const visible = ref(false)
 
 
 //TODO mettre en place une alimentation du message par lecture d'une table dans la BDD item evenement dans une base de donnée pour éviter un redéploiement en cas d'incident utilisateur
 //TODO si la table est vide, ne pas afficher le v-row
 function login() {
-  console.log(userLogin.value)
-  console.log(userPassword.value)
-  service
+  service.authentifierUtilisateur(userLogin.value, userPassword.value)
 }
 </script>
