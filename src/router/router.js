@@ -5,7 +5,6 @@ import ModifTable from '@/components/modification/ModifTable.vue'
 import RecouvTable from '@/components/recouvrement/RecouvTable.vue'
 import ModifSteps from '@/components/modification/ModifSteps.vue'
 import AppMain from '@/views/AppMain.vue'
-import DemandesService from '@/service/DemandesService'
 
 const routes = [
   { path: '/', component: AppMain, meta:{requiresAuth: true}},
@@ -27,8 +26,9 @@ router.beforeEach(async (to, from, next) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 
   if (requiresAuth) {
+    const user = JSON.parse(sessionStorage.getItem('user'))
     // Vérifiez si l'utilisateur est authentifié
-    const isAuthenticated = await DemandesService.isAuthenticated();
+    const isAuthenticated = user && user.token
     if (isAuthenticated) {
       // L'utilisateur est authentifié, autorisez l'accès à la page
       next();

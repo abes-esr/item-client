@@ -72,6 +72,6 @@ const visible = ref(false)
 //TODO mettre en place une alimentation du message par lecture d'une table dans la BDD item evenement dans une base de donnée pour éviter un redéploiement en cas d'incident utilisateur
 //TODO si la table est vide, ne pas afficher le v-row
 function login() {
-  service.authentifierUtilisateur(userLogin.value, userPassword.value)
+  service.login(userLogin.value, userPassword.value)
 }
 </script>

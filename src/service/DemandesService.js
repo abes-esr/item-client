@@ -1,12 +1,34 @@
 import axios from 'axios';
 
 export class DemandesService {
-	//authToken = import.meta.env.VITE_API_TOKEN
 
   client = axios.create({
     baseURL: import.meta.env.VITE_API_URL
-    //headers: { Authorization: `Bearer ${import.meta.env.VITE_API_TOKEN}`}
   });
+
+  login(login, password) {
+    const url = import.meta.env.VITE_API_URL + `signin`
+    console.info('appel:' + url)
+
+    this.client.post(`signin`, {username: login, password: password})
+      .then((response) => {
+        sessionStorage.setItem('user', JSON.stringify({
+          login: login,
+          shortname: response.data.shortname,
+          token: `Bearer ${response.data.accessToken}`,
+          userNum: response.data.userNum,
+          iln: response.data.iln,
+          role: response.data.role,
+          email: response.data.email
+        }));
+        this.client.defaults.headers.common['Authorization'] = `Bearer ${response.data.accessToken}`;
+      })
+  }
+
+  logout() {
+    sessionStorage.removeItem('user');
+    delete this.client.defaults.headers.common['Authorization'];
+  }
 
   fetchDemandes(type, archive, extensionIln) {
     console.info('appel: ' + import.meta.env.VITE_API_URL + `demandes?type=${type}&archive=${archive}&extension=${extensionIln}`)
@@ -38,7 +60,7 @@ export class DemandesService {
   }
 
   //.head = controle de la disponibilité de l'url d'appel (pas de retour de data)
-  headFile(filetype, demandeNumber, fileFormat, typeDemande) {
+  checkFileExistence(filetype, demandeNumber, fileFormat, typeDemande) {
     const url = import.meta.env.VITE_API_URL + `files/${filetype}_${demandeNumber}.${fileFormat}?id=${demandeNumber}&type=${typeDemande}`;
 
     return this.client.head(url)
@@ -69,45 +91,6 @@ export class DemandesService {
     const url = `supprimerDemande?type=${type}&numDemande=${numDemande}`;
     console.info('appel: ' + import.meta.env.VITE_API_URL + url);
     return this.client.get(url);
-  }
-
-  authentifierUtilisateur(login, password) {
-    const url = import.meta.env.VITE_API_URL + `signin`
-    console.info('appel:' + url)
-
-    this.client.post(`signin`, {username: login, password: password})
-      .then((response) => {
-        let authuser = {}
-        authuser.login = login
-        authuser.shortname = response.data.shortname
-        authuser.token = `Bearer ${response.data.accessToken}`
-        authuser.userNum = response.data.userNum;
-        authuser.iln = response.data.iln;
-        authuser.role = response.data.role;
-        authuser.email = response.data.email;
-        sessionStorage.setItem('user', JSON.stringify(authuser));
-      })
-  }
-
-  isAuthenticated() {
-    const user = JSON.parse(sessionStorage.getItem('user'));
-    if (user && user.token) {
-      // Vérifiez la validité du token en effectuant une requête à votre API
-      return this.client.get('/checkToken', {
-        headers: { Authorization: user.token }
-      })
-        .then(response => {
-          // Le token est valide
-          return true;
-        })
-        .catch(error => {
-          // Le token est invalide ou a expiré
-          return false;
-        });
-    } else {
-      // Aucun token trouvé
-      return Promise.resolve(false);
-    }
   }
 }
 
