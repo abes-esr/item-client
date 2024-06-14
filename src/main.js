@@ -7,7 +7,7 @@ import App from './App.vue'
 // Composables
 import {createApp} from 'vue'
 import { createVuetify } from 'vuetify'
-import router from './router/router'
+import router from '@/router'
 import {en, fr} from 'vuetify/locale'
 
 const app = createApp(App)

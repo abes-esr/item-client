@@ -60,6 +60,7 @@
 <script setup>
 import {ref} from 'vue'
 import DemandesService from '@/service/DemandesService'
+import router from "@/router";
 
 const service = DemandesService
 
@@ -73,5 +74,10 @@ const visible = ref(false)
 //TODO si la table est vide, ne pas afficher le v-row
 function login() {
   service.login(userLogin.value, userPassword.value)
+  let usr = sessionStorage.getItem('user');
+  console.log(JSON.stringify(usr));
+  if(usr){
+    router.push('accueil');
+  }
 }
 </script>

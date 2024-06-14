@@ -13,7 +13,7 @@
 
 <script setup>
 import {ref} from 'vue'
-import AppTable from '@/components/exemplarisation/ExempTable.vue'
+import AppTable from '@/views/ExempTable.vue'
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 
