@@ -60,7 +60,7 @@
 <script setup>
 import {ref} from 'vue'
 import DemandesService from '@/service/DemandesService'
-import router from '@/router/router'
+import router from "@/router";
 
 const service = DemandesService
 

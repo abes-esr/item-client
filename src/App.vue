@@ -12,6 +12,8 @@
 </template>
 
 <script setup>
+import {ref} from 'vue'
+import AppTable from '@/views/ExempTable.vue'
 import {onMounted, ref} from 'vue'
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
@@ -62,6 +64,7 @@ function setBackendError(error) {
     backendErrorDescription.value = 'Problème de disponibilité du fichier demandé'
   }
 }
+
 function liftErrors() {
   backendError.value = false
 }
