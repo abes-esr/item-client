@@ -10,7 +10,7 @@ export class DemandesService {
     const url = import.meta.env.VITE_API_URL + `signin`
     console.info('appel:' + url)
 
-    return this.client.post(`signin`, {username: login, password: password})
+    return axios.post(import.meta.env.VITE_API_URL + `signin`, {username: login, password: password})
       .then((response) => {
         sessionStorage.setItem('user', JSON.stringify({
           login: login,
@@ -32,6 +32,7 @@ export class DemandesService {
 
   logout() {
     sessionStorage.removeItem('user');
+    sessionStorage.clear()
     delete this.client.defaults.headers.common['Authorization'];
   }
 

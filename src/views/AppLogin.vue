@@ -30,7 +30,7 @@
 						<v-card class="mx-auto pa-12 pb-8" max-width="448" variant="flat">
 							<div class="text-subtitle-1 text-medium-emphasis" v-if="false">Nom utilisateur</div>
 
-							<v-text-field density="compact" placeholder="Nom utilisateur" prepend-inner-icon="mdi-email-outline" variant="outlined" v-model="userLogin"></v-text-field>
+							<v-text-field density="compact" placeholder="Utilisateur" prepend-inner-icon="mdi-account-outline" variant="outlined" v-model="userLogin"></v-text-field>
 
 							<div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between" v-if="false">
 								Password
@@ -43,7 +43,7 @@
 								:type="visible ? 'text' : 'password'"
 								density="compact"
 								placeholder="Mot de passe"
-								prepend-inner-icon="mdi-lock-outline"
+								prepend-inner-icon="mdi-key-outline"
 								variant="outlined"
 								@click:append-inner="visible = !visible"
                 v-model="userPassword"
@@ -60,11 +60,12 @@
 <script setup>
 import {ref} from 'vue'
 import DemandesService from '@/service/DemandesService'
+import router from '@/router/router'
 
 const service = DemandesService
 
 //Emit
-const emit = defineEmits(['backendError', 'backendSuccess'])
+const emit = defineEmits(['backendError', 'backendSuccess', 'login-success'])
 
 const incident = ref(false)
 const userLogin = ref('')
@@ -75,6 +76,8 @@ async function login() {
   try{
     await service.login(userLogin.value, userPassword.value)
     emit('backendSuccess')
+    emit('login-success');
+    await router.push('/accueil');
   }catch(error){
     emit('backendError', error);
   }

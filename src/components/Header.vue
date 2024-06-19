@@ -50,8 +50,8 @@
 		<div class="item-margin-right-app-bar"></div>
 		<!--Marge à droite des icones de la barre de navigation-->
 	</v-app-bar>
-	<!--BARRE LATERALE DE MENU-->
-	<v-navigation-drawer width="18em" app v-if="authenticated" v-model="drawer" temporary>
+	<!--BARRE LATERALE DE MENU remplacer false par authenticated-->
+	<v-navigation-drawer width="18em" app v-if="false" v-model="drawer" temporary>
 		<v-list-item three-line>
 			<v-list-item>
 				<v-list-item-title class="title wrap-text">
@@ -192,6 +192,21 @@
 </template>
 
 <script setup>
-import {ref} from 'vue'
-const authenticated = ref(false)
+import DemandesService from '@/service/DemandesService'
+
+const emit = defineEmits(['logout-success'])
+
+defineProps({
+  authenticated: {
+    type: Boolean,
+    required: true,
+  },
+})
+
+function logout () {
+  DemandesService.logout()
+  emit('logout-success')
+}
+
+
 </script>
