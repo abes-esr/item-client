@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export class DemandesService {
-
+  //todo: renommer le service
   client = axios.create({
     baseURL: import.meta.env.VITE_API_URL
   });
@@ -92,6 +92,15 @@ export class DemandesService {
     console.info('appel: ' + import.meta.env.VITE_API_URL + url);
     return this.client.get(url);
   }
+
+  modifierEmail(id, email){
+    return this.client.put(`utilisateurs/${id}`,{
+      email: email,
+      numUser: id,
+      nbtentatives: 0 //je sais pas ce que c'est mais c'est comme la v1
+    })
+  }
+
 }
 
 export default new DemandesService()

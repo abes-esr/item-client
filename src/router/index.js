@@ -5,6 +5,7 @@ import ModifTable from '@/views/ModifTable.vue';
 import RecouvTable from '@/views/RecouvTable.vue';
 import ModifSteps from '@/views/ModifSteps.vue';
 import Accueil from '@/views/Accueil.vue';
+import PremiereConnexion from '@/views/PremiereConnexion.vue';
 
 const routes = [
   {
@@ -22,6 +23,12 @@ const routes = [
     path: '/accueil',
     name: 'accueil',
     component: Accueil,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/premiere-connexion',
+    name: 'premiere-connexion',
+    component: PremiereConnexion,
     meta: { requiresAuth: true }
   },
   {
