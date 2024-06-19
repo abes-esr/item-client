@@ -12,12 +12,10 @@
 </template>
 
 <script setup>
-import {ref} from 'vue'
-import AppTable from '@/views/ExempTable.vue'
 import {onMounted, ref} from 'vue'
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
-import router from '@/router/router'
+import router from '@/router/index'
 
 const backendError = ref(false)
 const backendErrorMessage = ref('')
