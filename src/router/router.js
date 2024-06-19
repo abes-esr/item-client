@@ -4,6 +4,7 @@ import ExempTable from '@/components/exemplarisation/ExempTable.vue'
 import ModifTable from '@/components/modification/ModifTable.vue'
 import RecouvTable from '@/components/recouvrement/RecouvTable.vue'
 import AppMain from '@/views/AppMain.vue'
+import DemandesService from '@/service/DemandesService'
 
 //TODO au fur a mesure de la construction des composants les placer dans la rubrique component des routes
 const routes = [
@@ -46,10 +47,17 @@ router.beforeEach(async (to, from, next) => {
     const user = JSON.parse(sessionStorage.getItem('user'))
     // Vérifiez si il y a la présence d'un utilisateur et d'un jeton dans le session storage
     const isAuthenticated = user && user.token
-    // Vérifiez la validité du jeton auprès du serveur
+
     if (isAuthenticated) {
-      // L'utilisateur est authentifié, autorisez l'accès à la page
-      next();
+      try {
+        // Vérifiez la validité du jeton auprès du serveur
+        await DemandesService.checkToken();
+        // L'utilisateur est authentifié, autorisez l'accès à la page
+        next();
+      } catch (error) {
+        // Le jeton n'est pas valide, redirigez l'utilisateur vers la page de connexion
+        next('/identification');
+      }
     } else {
       // L'utilisateur n'est pas authentifié, redirigez-le vers la page de connexion
       next('/identification');

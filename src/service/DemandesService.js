@@ -10,6 +10,7 @@ export class DemandesService {
     const url = import.meta.env.VITE_API_URL + `signin`
     console.info('appel:' + url)
 
+    //NOTE : this.client.post semble provoquer des appels multiples asynchrone (erreurs console)
     return axios.post(import.meta.env.VITE_API_URL + `signin`, {username: login, password: password})
       .then((response) => {
         sessionStorage.setItem('user', JSON.stringify({
@@ -97,6 +98,12 @@ export class DemandesService {
     const url = `supprimerDemande?type=${type}&numDemande=${numDemande}`;
     console.info('appel: ' + import.meta.env.VITE_API_URL + url);
     return this.client.get(url);
+  }
+
+  checkToken(){
+    const url = `checkToken`;
+    console.info('appel: ' + import.meta.env.VITE_API_URL + url);
+    return this.client.get(url)
   }
 }
 
