@@ -4,13 +4,13 @@ import ExempTable from '@/views/ExempTable.vue';
 import ModifTable from '@/views/ModifTable.vue';
 import RecouvTable from '@/views/RecouvTable.vue';
 import ModifSteps from '@/views/ModifSteps.vue';
-import AppMain from '@/views/AppMain.vue';
+import Accueil from '@/views/Accueil.vue';
 
 const routes = [
   {
     path: '/',
-    component: AppMain,
-    meta: { requiresAuth: true }
+    component: Accueil,
+    // meta: { requiresAuth: true }
   },
   {
     path: '/login',
@@ -21,7 +21,7 @@ const routes = [
   {
     path: '/accueil',
     name: 'accueil',
-    component: AppMain,
+    component: Accueil,
     meta: { requiresAuth: true }
   },
   {
@@ -65,7 +65,7 @@ router.beforeEach(async (to, from, next) => {
     const isAuthenticated = user && user.token;
     if (!isAuthenticated) {
       // L'utilisateur n'est pas authentifié, redirigez-le vers la page de connexion
-      next('/login');
+      // next('/login');
     }
   }
   // La page ne nécessite pas d'authentification, autorisez l'accès

@@ -4,34 +4,34 @@
       <div class="py-5"/>
       <v-row>
         <v-col class="text-center" cols="12" md="6">
-          <bouton-item icon="mdi-percent" route="tauxRecouv">
+          <BtnAccueil icon="mdi-percent" route="tauxRecouv">
             Calculer mon taux de recouvrement
-          </bouton-item>
+          </BtnAccueil>
         </v-col>
         <v-col class="text-center" cols="12" md="6">
-          <bouton-item icon="mdi-chart-bar" route="recouvrementTableau">
+          <BtnAccueil icon="mdi-chart-bar" route="recouvrementTableau">
             Gérer mes taux de recouvrement
-          </bouton-item>
+          </BtnAccueil>
         </v-col>
         <v-col class="text-center" cols="12" md="6">
-          <bouton-item icon="mdi-plus" route="nouveauxExemplaires">
+          <BtnAccueil icon="mdi-plus" route="nouveauxExemplaires">
             Créer des exemplaires
-          </bouton-item>
+          </BtnAccueil>
         </v-col>
         <v-col class="text-center" cols="12" md="6">
-          <bouton-item icon="mdi-chart-bar" route="exemplarisationTableau">
+          <BtnAccueil icon="mdi-chart-bar" route="exemplarisationTableau">
             Gérer mes créations
-          </bouton-item>
+          </BtnAccueil>
         </v-col>
         <v-col class="text-center" cols="12" md="6">
-          <bouton-item icon="mdi-pencil" route="modifExempl">
+          <BtnAccueil icon="mdi-pencil" route="modifExempl">
             Modifier des exemplaires
-          </bouton-item>
+          </BtnAccueil>
         </v-col>
         <v-col class="text-center" cols="12" md="6">
-          <bouton-item icon="mdi-chart-bar" route="modificationTableau">
+          <BtnAccueil icon="mdi-chart-bar" route="modificationTableau">
             Gérer mes modifications
-          </bouton-item>
+          </BtnAccueil>
         </v-col>
       </v-row>
     </v-responsive>
@@ -39,5 +39,5 @@
 </template>
 
 <script setup>
-import BoutonItem from '@/components/Home/BoutonItem.vue';
+import BtnAccueil from '@/components/Home/BtnAccueil.vue';
 </script>
