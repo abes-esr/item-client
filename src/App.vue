@@ -22,6 +22,7 @@ const backendErrorMessage = ref('')
 const backendErrorDescription = ref('')
 
 function setBackendError(error) {
+  console.log('e')
   backendError.value = true
   let titleMessage = ''
   if(!error.response){
@@ -35,6 +36,10 @@ function setBackendError(error) {
     if(error.response.status === 403){
       titleMessage = 'Accès rejeté par le serveur'
       backendErrorDescription.value = 'Vérifiez que vos urls d\'appel au serveur sont correctes ainsi que vos clés d\'autorisation ' + '(' + error.config.url + ')'
+    }
+    if(error.response.status === 401){
+      titleMessage = 'Accès refusé par le serveur'
+      backendErrorDescription.value = error.response.data.message + '(' + error.config.url + ')'
     }
     if(error.response.status === 400){
       titleMessage = 'Accès rejeté par le serveur'

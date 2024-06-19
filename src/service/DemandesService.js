@@ -10,7 +10,7 @@ export class DemandesService {
     const url = import.meta.env.VITE_API_URL + `signin`
     console.info('appel:' + url)
 
-    this.client.post(`signin`, {username: login, password: password})
+    return this.client.post(`signin`, {username: login, password: password})
       .then((response) => {
         sessionStorage.setItem('user', JSON.stringify({
           login: login,
@@ -22,6 +22,11 @@ export class DemandesService {
           email: response.data.email
         }));
         this.client.defaults.headers.common['Authorization'] = `Bearer ${response.data.accessToken}`;
+      })
+      .catch(error => {
+        console.error(error)
+        sessionStorage.clear()
+        throw error
       })
   }
 
