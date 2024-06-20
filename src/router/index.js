@@ -41,25 +41,25 @@ const routes = [
   {
     path: '/exemplarisation-tableau',
     name: 'exemplarisation-tableau',
-    component: Accueil,
+    component: ExempTable,
     meta: {requiresAuth: true}
   },
   {
     path: '/modification-tableau',
     name: 'modification-tableau',
-    component: Accueil,
+    component: ModifTable,
     meta: {requiresAuth: true}
   },
   {
     path: '/recouvrement-tableau',
     name: 'recouvrement-tableau',
-    component: Accueil,
+    component: RecouvTable,
     meta: {requiresAuth: true}
   },
   {
     path: '/modification-etape-1-selection-rcr',
     name: 'modification-etape-1-selection-rcr',
-    component: Accueil,
+    component: ModifSteps,
     meta: {requiresAuth: true}
   },
   {
