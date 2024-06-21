@@ -165,10 +165,12 @@ router.beforeEach(async (to, from, next) => {
   if (requiresAuth) {
     const user = JSON.parse(sessionStorage.getItem('user'))
     const isAuthenticated = user && user.token
+    console.log(JSON.stringify(sessionStorage))
 
     if (isAuthenticated) {
       try {
         const valid = await DemandesService.checkToken();
+        console.log(valid)
         if (valid.data) {
           next();
         } else {

@@ -2,9 +2,25 @@ import axios from 'axios';
 
 export class DemandesService {
 
-  client = axios.create({
-    baseURL: import.meta.env.VITE_API_URL
-  });
+  constructor() {
+    this.client = axios.create({
+      baseURL: import.meta.env.VITE_API_URL
+    });
+
+    // Ajout de l'intercepteur
+    this.client.interceptors.request.use(
+      (config) => {
+        const user = JSON.parse(sessionStorage.getItem('user'));
+        if (user && user.token) {
+          config.headers.Authorization = user.token;
+        }
+        return config;
+      },
+      (error) => {
+        return Promise.reject(error);
+      }
+    );
+  }
 
   login(login, password) {
     const url = import.meta.env.VITE_API_URL + `signin`
