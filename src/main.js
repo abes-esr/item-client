@@ -11,6 +11,7 @@ import router from '@/router'
 import {en, fr} from 'vuetify/locale'
 
 const app = createApp(App)
+app.config.productionTip = false;
 
 const vuetify = createVuetify({
   locale: {
