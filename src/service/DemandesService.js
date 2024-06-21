@@ -2,15 +2,32 @@ import axios from 'axios';
 
 export class DemandesService {
 
-  client = axios.create({
-    baseURL: import.meta.env.VITE_API_URL
-  });
+  constructor() {
+    this.client = axios.create({
+      baseURL: import.meta.env.VITE_API_URL
+    });
+
+    // Ajout de l'intercepteur
+    this.client.interceptors.request.use(
+      (config) => {
+        const user = JSON.parse(sessionStorage.getItem('user'));
+        if (user && user.token) {
+          config.headers.Authorization = user.token;
+        }
+        return config;
+      },
+      (error) => {
+        return Promise.reject(error);
+      }
+    );
+  }
 
   login(login, password) {
     const url = import.meta.env.VITE_API_URL + `signin`
     console.info('appel:' + url)
 
-    this.client.post(`signin`, {username: login, password: password})
+    //NOTE : this.client.post semble provoquer des appels multiples asynchrone (erreurs console)
+    return axios.post(import.meta.env.VITE_API_URL + `signin`, {username: login, password: password})
       .then((response) => {
         sessionStorage.setItem('user', JSON.stringify({
           login: login,
@@ -21,13 +38,19 @@ export class DemandesService {
           role: response.data.role,
           email: response.data.email
         }));
-        this.client.defaults.headers.common['Authorization'] = `Bearer ${response.data.accessToken}`;
+        this.client.defaults.headers.common.Authorization = `Bearer ${response.data.accessToken}`;
+      })
+      .catch(error => {
+        console.error(error)
+        sessionStorage.clear()
+        throw error
       })
   }
 
   logout() {
     sessionStorage.removeItem('user');
-    delete this.client.defaults.headers.common['Authorization'];
+    sessionStorage.clear()
+    delete this.client.defaults.headers.common.Authorization;
   }
 
   fetchDemandes(type, archive, extensionIln) {
@@ -91,6 +114,12 @@ export class DemandesService {
     const url = `supprimerDemande?type=${type}&numDemande=${numDemande}`;
     console.info('appel: ' + import.meta.env.VITE_API_URL + url);
     return this.client.get(url);
+  }
+
+  checkToken(){
+    const url = `checkToken`;
+    console.info('appel: ' + import.meta.env.VITE_API_URL + url);
+    return this.client.get(url)
   }
 }
 
