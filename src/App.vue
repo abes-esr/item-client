@@ -3,7 +3,14 @@
 		<Header :authenticated="authenticated" @logout-success="onLogout"/>
 		<v-main>
       <v-alert color="red" :title="backendErrorMessage" variant='outlined' density='compact' type='warning' :text='backendErrorDescription' closable v-if="backendError"></v-alert>
-      <router-view @backendError="setBackendError" @backendSuccess="liftErrors" @login-success="onLoginSuccess"></router-view>
+      <router-view v-slot="{ Component }">
+        <component
+          :is="Component"
+          @backendError="setBackendError"
+          @backendSuccess="liftErrors"
+          @login-success="onLoginSuccess"
+        />
+      </router-view>
      <!--<AppTable @backendError="setBackendError" @backendSuccess="liftErrors" />-->
     </v-main>
 		<Footer />

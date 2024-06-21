@@ -173,10 +173,12 @@ router.beforeEach(async (to, from, next) => {
           next();
         } else {
           console.error('Token invalide auprès du serveur')
+          DemandesService.logout()
           next('identification')
         }
       } catch (error) {
         console.error(error)
+        DemandesService.logout()
         next('/identification');
       }
     } else {
