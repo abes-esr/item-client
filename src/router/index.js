@@ -1,11 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Main from '@/views/AppLogin.vue'
+import Login from '@/views/Login.vue'
 import ExempTable from '@/views/ExempTable.vue'
 import ModifTable from '@/views/ModifTable.vue'
 import RecouvTable from '@/views/RecouvTable.vue'
 import ModifSteps from '@/views/ModifSteps.vue';
 import Accueil from '@/views/Accueil.vue';
 import PremiereConnexion from '@/views/PremiereConnexion.vue';
+import DemandesService from '@/service/DemandesService'
+
+const service = DemandesService;
 
 const routes = [
   {
@@ -16,13 +19,13 @@ const routes = [
   {
     path: '/identification',
     name: 'identification',
-    component: Main,
+    component: Login,
     meta: { requiresAuth: false }
   },
   {
     path: '/deconnexion',
     name: 'deconnexion',
-    component: Main,
+    component: Login,
     meta: { requiresAuth: true }
   },
   {
@@ -174,18 +177,18 @@ router.beforeEach(async (to, from, next) => {
 
     if (isAuthenticated) {
       try {
-        const valid = await DemandesService.checkToken();
+        const valid = await service.checkToken();
         console.log(valid)
         if (valid.data) {
           next();
         } else {
           console.error('Token invalide auprès du serveur')
-          DemandesService.logout()
-          next('identification')
+          service.logout()
+          next('/identification')
         }
       } catch (error) {
         console.error(error)
-        DemandesService.logout()
+        service.logout()
         next('/identification');
       }
     } else {

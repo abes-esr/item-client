@@ -122,11 +122,7 @@ export class DemandesService {
   }
 
   modifierEmail(id, email){
-    return this.client.put(`utilisateurs/${id}`,{
-      email: email,
-      numUser: id,
-      nbtentatives: 0 //je sais pas ce que c'est mais c'est comme la v1
-    })
+    return this.client.put(`utilisateurs/${id}`, email)
   }
 
 }

@@ -20,6 +20,12 @@
           @keyup.enter="validate()">
         </v-text-field>
       </v-form>
+      <v-alert
+        v-if="messageError"
+        type="error"
+        title="Erreur"
+        :text="messageError"
+      ></v-alert>
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
@@ -68,6 +74,7 @@ const rules = ref([
     return 'mail(s) invalide'
   }
 ]);
+const messageError = ref();
 
 onMounted(() => {
   emailModel.value = props.email;
@@ -76,7 +83,12 @@ onMounted(() => {
 function validate() {
   demandesService.modifierEmail(props.userId, emailModel.value)
     .then(result => {
+      console.log('OK email ' + result.data.email);
       emits('validate', result.data.email);
+    })
+    .catch(err => {
+      messageError.value = err.response.data.message;
+      throw err;
     });
 }
 </script>
