@@ -22,7 +22,7 @@ export class DemandesService {
           role: response.data.role,
           email: response.data.email
         }));
-        this.client.defaults.headers.common['Authorization'] = `Bearer ${response.data.accessToken}`;
+        this.client.defaults.headers.common.Authorization = `Bearer ${response.data.accessToken}`;
       })
       .catch(error => {
         console.error(error)
@@ -34,7 +34,7 @@ export class DemandesService {
   logout() {
     sessionStorage.removeItem('user');
     sessionStorage.clear()
-    delete this.client.defaults.headers.common['Authorization'];
+    delete this.client.defaults.headers.common.Authorization;
   }
 
   fetchDemandes(type, archive, extensionIln) {

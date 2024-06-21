@@ -170,11 +170,18 @@ router.beforeEach(async (to, from, next) => {
     if (isAuthenticated) {
       try {
         // Vérifiez la validité du jeton auprès du serveur
-        await DemandesService.checkToken();
+        const valid = await DemandesService.checkToken();
         // L'utilisateur est authentifié, autorisez l'accès à la page
+        if(valid.data){
+          next();
+        }else{
+          console.error('Token invalide auprès du serveur')
+          next('identification')
+        }
         next();
       } catch (error) {
         // Le jeton n'est pas valide, redirigez l'utilisateur vers la page de connexion
+        console.error(error)
         next('/identification');
       }
     } else {
