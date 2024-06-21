@@ -27,10 +27,10 @@
 					<div>
 						<v-img class="mx-auto my-6" max-width="228" src=""></v-img>
 
-						<v-card class="mx-auto pa-12 pb-8" max-width="448">
+						<v-card class="mx-auto pa-12 pb-8" max-width="448" variant="flat">
 							<div class="text-subtitle-1 text-medium-emphasis" v-if="false">Nom utilisateur</div>
 
-							<v-text-field density="compact" placeholder="Nom utilisateur" prepend-inner-icon="mdi-email-outline" variant="outlined" v-model="userLogin"></v-text-field>
+							<v-text-field density="compact" placeholder="Utilisateur" prepend-inner-icon="mdi-account-outline" variant="outlined" v-model="userLogin"></v-text-field>
 
 							<div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between" v-if="false">
 								Password
@@ -43,13 +43,13 @@
 								:type="visible ? 'text' : 'password'"
 								density="compact"
 								placeholder="Mot de passe"
-								prepend-inner-icon="mdi-lock-outline"
+								prepend-inner-icon="mdi-key-outline"
 								variant="outlined"
 								@click:append-inner="visible = !visible"
                 v-model="userPassword"
 							></v-text-field>
 
-							<v-btn class="mb-8" color="blue" size="large" variant="tonal" block @click="login()"> Se connecter </v-btn>
+							<v-btn class="mb-8" color="blue" size="large" variant="tonal" block @click="login()">Se connecter</v-btn>
 						</v-card>
 					</div>
 				</v-col>
@@ -64,20 +64,22 @@ import router from "@/router";
 
 const service = DemandesService
 
+//Emit
+const emit = defineEmits(['backendError', 'backendSuccess', 'login-success'])
+
 const incident = ref(false)
 const userLogin = ref('')
 const userPassword = ref('')
 const visible = ref(false)
 
-
-//TODO mettre en place une alimentation du message par lecture d'une table dans la BDD item evenement dans une base de donnée pour éviter un redéploiement en cas d'incident utilisateur
-//TODO si la table est vide, ne pas afficher le v-row
-function login() {
-  service.login(userLogin.value, userPassword.value)
-  let usr = sessionStorage.getItem('user');
-  console.log(JSON.stringify(usr));
-  if(usr){
-    router.push('accueil');
+async function login() {
+  try{
+    await service.login(userLogin.value, userPassword.value)
+    emit('backendSuccess')
+    emit('login-success');
+    await router.push('/accueil');
+  }catch(error){
+    emit('backendError', error);
   }
 }
 </script>

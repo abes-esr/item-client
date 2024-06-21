@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Main from '@/views/AppLogin.vue';
-import ExempTable from '@/views/ExempTable.vue';
-import ModifTable from '@/views/ModifTable.vue';
-import RecouvTable from '@/views/RecouvTable.vue';
+import Main from '@/views/AppLogin.vue'
+import ExempTable from '@/views/ExempTable.vue'
+import ModifTable from '@/views/ModifTable.vue'
+import RecouvTable from '@/views/RecouvTable.vue'
 import ModifSteps from '@/views/ModifSteps.vue';
 import Accueil from '@/views/Accueil.vue';
 import PremiereConnexion from '@/views/PremiereConnexion.vue';
@@ -14,10 +14,16 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
-    path: '/login',
-    name: 'login',
+    path: '/identification',
+    name: 'identification',
     component: Main,
     meta: { requiresAuth: false }
+  },
+  {
+    path: '/deconnexion',
+    name: 'deconnexion',
+    component: Main,
+    meta: { requiresAuth: true }
   },
   {
     path: '/accueil',
@@ -32,51 +38,162 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
-    path: '/exemplarisationTableau',
-    name: 'exemplarisationTableau',
+    path: '/modification-adresse-mail',
+    name: 'modification-adresse-mail',
+    component: Accueil,
+    meta: {requiresAuth: true}
+  },
+  {
+    path: '/exemplarisation-tableau',
+    name: 'exemplarisation-tableau',
     component: ExempTable,
-    meta: { requiresAuth: true }
+    meta: {requiresAuth: true}
   },
   {
-    path: '/modificationTableau',
-    name: 'modificationTableau',
+    path: '/modification-tableau',
+    name: 'modification-tableau',
     component: ModifTable,
-    meta: { requiresAuth: true }
+    meta: {requiresAuth: true}
   },
   {
-    path: '/recouvrementTableau',
-    name: 'recouvrementTableau',
+    path: '/recouvrement-tableau',
+    name: 'recouvrement-tableau',
     component: RecouvTable,
-    meta: { requiresAuth: true }
+    meta: {requiresAuth: true}
   },
   {
-    path: '/modificationNouvelleDemande',
-    name: 'modificationNouvelleDemande',
+    path: '/modification-etape-1-selection-rcr',
+    name: 'modification-etape-1-selection-rcr',
     component: ModifSteps,
-    meta: { requiresAuth: true }
+    meta: {requiresAuth: true}
   },
-// Ajoutez d'autres routes selon vos besoins
-];
+  {
+    path: '/modification-etape-2-chargement-liste-ppn',
+    name: 'modification-etape-2-chargement-liste-ppn',
+    component: Accueil,
+    meta: {requiresAuth: true}
+  },
+  {
+    path: '/modification-etape-3-choix-de-traitement',
+    name: 'modification-etape-3-choix-de-traitement',
+    component: Accueil,
+    meta: {requiresAuth: true}
+  },
+  {
+    path: '/modification-etape-4-chargement-fichier-complete',
+    name: 'modification-etape-4-chargement-fichier-complete',
+    component: Accueil,
+    meta: {requiresAuth: true}
+  },
+  {
+    path: '/modification-etape-5-simulation-avant-envoi',
+    name: 'modification-etape-5-simulation-avant-envoi',
+    component: Accueil,
+    meta: {requiresAuth: true}
+  },
+  {
+    path: '/exemplarisation-etape-1-selection-rcr',
+    name: 'exemplarisation-etape-1-selection-rcr',
+    component: Accueil,
+    meta: {requiresAuth: true}
+  },
+  {
+    path: '/exemplarisation-etape-2-choix-type-exemplarisation',
+    name: 'exemplarisation-etape-2-choix-type-exemplarisation',
+    component: Accueil,
+    meta: {requiresAuth: true}
+  },
+  {
+    path: '/exemplarisation-etape-3-chargement-fichier-exemplaires',
+    name: 'exemplarisation-etape-3-chargement-fichier-exemplaires',
+    component: Accueil,
+    meta: {requiresAuth: true}
+  },
+  {
+    path: '/recouvrement-etape-1-selection-rcr',
+    name: 'recouvrement-etape-1-selection-rcr',
+    component: Accueil,
+    meta: {requiresAuth: true}
+  },
+  {
+    path: '/recouvrement-etape-2-chargement-fichier',
+    name: 'recouvrement-etape-2-chargement-fichier',
+    component: Accueil,
+    meta: {requiresAuth: true}
+  },
+  {
+    path: '/donnees-personnelles',
+    name: 'donnees-personnelles',
+    component: Accueil,
+    meta: {requiresAuth: false}
+  },
+  {
+    path: '/sortie-application-vers-assistance',
+    name: 'sortie-application-vers-assistance',
+    component: Accueil,
+    meta: {requiresAuth: false}
+  },
+  {
+    path: '/sortie-application-vers-documentation',
+    name: 'sortie-application-vers-documentation',
+    component: Accueil,
+    meta: {requiresAuth: false}
+  },
+  {
+    path: '/sortie-application-vers-accessibilite',
+    name: 'sortie-application-vers-accessibilite',
+    component: Accueil,
+    meta: {requiresAuth: false}
+  },
+  {
+    path: '/sortie-application-vers-mentions-legales',
+    name: 'sortie-application-vers-mentions-legales',
+    component: Accueil,
+    meta: {requiresAuth: false}
+  },
+  {
+    path: '/sortie-application-vers-cgu',
+    name: 'sortie-application-vers-cgu',
+    component: Accueil,
+    meta: {requiresAuth: false}
+  }
+]
 
 const router = createRouter({
   history: createWebHistory(),
   routes
-});
+})
 
 router.beforeEach(async (to, from, next) => {
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
 
   if (requiresAuth) {
-    const user = JSON.parse(sessionStorage.getItem('user'));
-    // Vérifiez si l'utilisateur est authentifié
-    const isAuthenticated = user && user.token;
-    if (!isAuthenticated) {
-      // L'utilisateur n'est pas authentifié, redirigez-le vers la page de connexion
-      // next('/login');
-    }
-  }
-  // La page ne nécessite pas d'authentification, autorisez l'accès
-  next();
-});
+    const user = JSON.parse(sessionStorage.getItem('user'))
+    const isAuthenticated = user && user.token
+    console.log(JSON.stringify(sessionStorage))
 
-export default router;
+    if (isAuthenticated) {
+      try {
+        const valid = await DemandesService.checkToken();
+        console.log(valid)
+        if (valid.data) {
+          next();
+        } else {
+          console.error('Token invalide auprès du serveur')
+          DemandesService.logout()
+          next('identification')
+        }
+      } catch (error) {
+        console.error(error)
+        DemandesService.logout()
+        next('/identification');
+      }
+    } else {
+      next('/identification');
+    }
+  } else {
+    next();
+  }
+})
+
+export default router

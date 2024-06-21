@@ -1,9 +1,16 @@
 <template>
 	<v-app>
-		<Header />
+		<Header :authenticated="authenticated" @logout-success="onLogout"/>
 		<v-main>
       <v-alert color="red" :title="backendErrorMessage" variant='outlined' density='compact' type='warning' :text='backendErrorDescription' closable v-if="backendError"></v-alert>
-      <router-view @backendError="setBackendError" @backendSuccess="liftErrors"></router-view>
+      <router-view v-slot="{ Component }">
+        <component
+          :is="Component"
+          @backendError="setBackendError"
+          @backendSuccess="liftErrors"
+          @login-success="onLoginSuccess"
+        />
+      </router-view>
      <!--<AppTable @backendError="setBackendError" @backendSuccess="liftErrors" />-->
     </v-main>
 		<Footer />
@@ -12,14 +19,19 @@
 </template>
 
 <script setup>
-import {ref} from 'vue'
-import AppTable from '@/views/ExempTable.vue'
+import {onMounted, ref} from 'vue'
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
+import router from '@/router/index'
 
 const backendError = ref(false)
 const backendErrorMessage = ref('')
 const backendErrorDescription = ref('')
+const authenticated = ref(false);
+
+onMounted(() => {
+  checkAuthentication();
+});
 
 function setBackendError(error) {
   backendError.value = true
@@ -35,6 +47,10 @@ function setBackendError(error) {
     if(error.response.status === 403){
       titleMessage = 'Accès rejeté par le serveur'
       backendErrorDescription.value = 'Vérifiez que vos urls d\'appel au serveur sont correctes ainsi que vos clés d\'autorisation ' + '(' + error.config.url + ')'
+    }
+    if(error.response.status === 401){
+      titleMessage = 'Accès refusé par le serveur'
+      backendErrorDescription.value = error.response.data.message + '(' + error.config.url + ')'
     }
     if(error.response.status === 400){
       titleMessage = 'Accès rejeté par le serveur'
@@ -56,5 +72,16 @@ function setBackendError(error) {
 
 function liftErrors() {
   backendError.value = false
+}
+function onLoginSuccess(){
+  authenticated.value = true
+}
+function onLogout(){
+  authenticated.value = false
+  router.push('/identification')
+}
+function checkAuthentication() {
+  const user = sessionStorage.getItem('user');
+  authenticated.value = !!user;
 }
 </script>
