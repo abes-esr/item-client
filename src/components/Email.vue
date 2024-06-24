@@ -83,7 +83,6 @@ onMounted(() => {
 function validate() {
   demandesService.modifierEmail(props.userId, emailModel.value)
     .then(result => {
-      console.log('OK email ' + result.data.email);
       emits('validate', result.data.email);
     })
     .catch(err => {

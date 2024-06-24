@@ -90,7 +90,6 @@ export class DemandesService {
         return response
       })
       .catch((error) => {
-        console.log(JSON.stringify(error))
         if (error.response && error.response.status === 500) {
           // Masquer l'erreur 500 dans la console
           return Promise.resolve({ status: 500, data: null });
@@ -122,7 +121,8 @@ export class DemandesService {
   }
 
   modifierEmail(id, email){
-    return this.client.put(`utilisateurs/${id}`, email)
+    const config = { headers: {'Content-Type': 'text/plain'} };
+    return this.client.put(`utilisateurs/${id}`, email, config)
   }
 
 }

@@ -5,7 +5,7 @@ import ModifTable from '@/views/ModifTable.vue'
 import RecouvTable from '@/views/RecouvTable.vue'
 import ModifSteps from '@/views/ModifSteps.vue';
 import Accueil from '@/views/Accueil.vue';
-import PremiereConnexion from '@/views/PremiereConnexion.vue';
+import ModificationEmail from '@/views/ModificationEmail.vue';
 import DemandesService from '@/service/DemandesService'
 
 const service = DemandesService;
@@ -37,13 +37,13 @@ const routes = [
   {
     path: '/premiere-connexion',
     name: 'premiere-connexion',
-    component: PremiereConnexion,
+    component: ModificationEmail,
     meta: { requiresAuth: true }
   },
   {
     path: '/modification-adresse-mail',
     name: 'modification-adresse-mail',
-    component: Accueil,
+    component: ModificationEmail,
     meta: {requiresAuth: true}
   },
   {
@@ -173,12 +173,10 @@ router.beforeEach(async (to, from, next) => {
   if (requiresAuth) {
     const user = JSON.parse(sessionStorage.getItem('user'))
     const isAuthenticated = user && user.token
-    console.log(JSON.stringify(sessionStorage))
 
     if (isAuthenticated) {
       try {
         const valid = await service.checkToken();
-        console.log(valid)
         if (valid.data) {
           next();
         } else {
