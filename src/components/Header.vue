@@ -2,8 +2,8 @@
 	<v-app-bar color="primary" max-height="4.2em" dark elevate-on-scroll="false">
 		<div class="item-margin-left-app-bar"></div>
 		<!--Marge à gauche des icones de la barre de navigation-->
-		<v-app-bar-nav-icon @click.stop="drawer = !drawer" aria-label="menu latéral" v-if="authenticated">
-			<v-icon large>menu</v-icon>
+		<v-app-bar-nav-icon @click.stop="drawer = !drawer" aria-label="menu latéral" v-if="authenticated" class="ml-4">
+			<v-icon large>mdi-menu</v-icon>
 		</v-app-bar-nav-icon>
 		<img alt="icone assistance" height="41px" v-on:click="$router.push({path: '/'})" src="../assets/item_logo.svg" target="_blank" width="41px" style="margin-left: 1em" />
 		<v-toolbar-title class="item-margin-left-icon" v-on:click="$router.push({path: '/'})">Item</v-toolbar-title>
