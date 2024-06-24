@@ -1,11 +1,11 @@
 <template>
   <v-card class="elevation-5">
-    <v-card-title>
-      <span class="font-weight-black" v-if="!email">Première connexion</span>
-      <span v-else>Modifier son Email</span>
+    <v-card-title style="background-color: #295494; color: white" >
+      <span v-if="!email">Première connexion</span>
+      <span v-else>Modifier les informations de votre compte</span>
     </v-card-title>
     <v-card-text>
-      <v-form ref="form">
+      <v-form ref="form" class="pt-5">
         <span>
           Votre adresse mail est obligatoire pour utiliser l'application. Pour ajouter plusieurs adresses mail, séparez-les par des points virgules ;
         </span>
