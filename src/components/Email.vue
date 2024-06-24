@@ -30,7 +30,7 @@
     <v-card-actions>
       <v-spacer></v-spacer>
       <v-btn
-        color="info"
+        color="#295494"
         variant="flat"
         :disabled="isDisabled"
         @click="validate()">Valider</v-btn>
