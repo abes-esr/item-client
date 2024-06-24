@@ -23,6 +23,7 @@ import {onMounted, ref} from 'vue'
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 import router from '@/router/index'
+import { HttpStatusCode } from 'axios';
 
 const backendError = ref(false)
 const backendErrorMessage = ref('')
@@ -40,19 +41,19 @@ function setBackendError(error) {
     backendErrorMessage.value = 'Erreur réseau : ' + error.code
     backendErrorDescription.value = 'Le serveur ne répond pas. Vérifiez sa disponibilité.'
   }else{
-    if(error.response.status === 404){
+    if (error.response.status === HttpStatusCode.NotFound){
       titleMessage = 'Impossible de récupérer les données'
       backendErrorDescription.value = 'Vérifiez que vos urls d\'appel au serveur sont correctes ainsi que vos clés d\'autorisation ' + '(' + error.config.url + ')'
     }
-    if(error.response.status === 403){
+    if(error.response.status === HttpStatusCode.Forbidden){
       titleMessage = 'Accès rejeté par le serveur'
       backendErrorDescription.value = 'Vérifiez que vos urls d\'appel au serveur sont correctes ainsi que vos clés d\'autorisation ' + '(' + error.config.url + ')'
     }
-    if(error.response.status === 401){
+    if(error.response.status === HttpStatusCode.Unauthorized){
       titleMessage = 'Accès refusé par le serveur'
       backendErrorDescription.value = error.response.data.message + '(' + error.config.url + ')'
     }
-    if(error.response.status === 400){
+    if(error.response.status === HttpStatusCode.BadRequest){
       titleMessage = 'Accès rejeté par le serveur'
       backendErrorDescription.value = 'Mauvaise requête : contrôlez les paramètres de votre requête et observez les logs du serveur pour plus d\'informations ' + '(' + error.config.url + ')'
     }
