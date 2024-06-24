@@ -7,6 +7,7 @@ import ModifSteps from '@/views/ModifSteps.vue';
 import Accueil from '@/views/Accueil.vue';
 import ModificationEmail from '@/views/ModificationEmail.vue';
 import DemandesService from '@/service/DemandesService'
+import RecouvSteps from '@/views/RecouvSteps.vue';
 
 const service = DemandesService;
 
@@ -115,7 +116,7 @@ const routes = [
   {
     path: '/recouvrement-etape-1-selection-rcr',
     name: 'recouvrement-etape-1-selection-rcr',
-    component: Accueil,
+    component: RecouvSteps,
     meta: {requiresAuth: true}
   },
   {

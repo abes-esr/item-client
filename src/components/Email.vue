@@ -71,7 +71,7 @@ const rules = ref([
       return true;
     }
     isDisabled.value = true;
-    return 'mail(s) invalide'
+    return 'mail(s) invalide';
   }
 ]);
 const messageError = ref();
