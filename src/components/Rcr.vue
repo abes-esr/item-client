@@ -7,7 +7,7 @@ A<template>
       <v-autocomplete
         color="info"
         hide-selected
-        v-model="rcrSelected"
+        v-model="rcr"
         :items="listRcr"
         label="Sélectionnez votre RCR dans la liste"
         no-data-text="Aucun RCR correspondant."
@@ -17,7 +17,7 @@ A<template>
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="info" :disabled="!rcrSelected" @click="selectRCR">Valider</v-btn>
+      <v-btn color="info" :disabled="!rcr" @click="selectRCR">Valider</v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -27,7 +27,7 @@ import idrefService from '@/service/IdrefService';
 import { onMounted, ref } from 'vue';
 
 const listRcr = ref([]);
-const rcrSelected = ref();
+const rcr = defineModel()
 const user = JSON.parse(sessionStorage.getItem('user'));
 
 const emits = defineEmits(['validate'])
