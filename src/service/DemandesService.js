@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export class DemandesService {
-
+  //todo: renommer le service
   constructor() {
     this.client = axios.create({
       baseURL: import.meta.env.VITE_API_URL
@@ -26,8 +26,7 @@ export class DemandesService {
     const url = import.meta.env.VITE_API_URL + `signin`
     console.info('appel:' + url)
 
-    //NOTE : this.client.post semble provoquer des appels multiples asynchrone (erreurs console)
-    return axios.post(import.meta.env.VITE_API_URL + `signin`, {username: login, password: password})
+    this.client.post(`signin`, {username: login, password: password})
       .then((response) => {
         sessionStorage.setItem('user', JSON.stringify({
           login: login,
@@ -91,7 +90,6 @@ export class DemandesService {
         return response
       })
       .catch((error) => {
-        console.log(JSON.stringify(error))
         if (error.response && error.response.status === 500) {
           // Masquer l'erreur 500 dans la console
           return Promise.resolve({ status: 500, data: null });
@@ -121,6 +119,12 @@ export class DemandesService {
     console.info('appel: ' + import.meta.env.VITE_API_URL + url);
     return this.client.get(url)
   }
+
+  modifierEmail(id, email){
+    const config = { headers: {'Content-Type': 'text/plain'} };
+    return this.client.put(`utilisateurs/${id}`, email, config)
+  }
+
 }
 
 export default new DemandesService()

@@ -60,9 +60,8 @@
 <script setup>
 import {ref} from 'vue'
 import DemandesService from '@/service/DemandesService'
-import router from "@/router";
 
-const service = DemandesService
+const service = DemandesService;
 
 //Emit
 const emit = defineEmits(['backendError', 'backendSuccess', 'login-success'])
@@ -77,7 +76,6 @@ async function login() {
     await service.login(userLogin.value, userPassword.value)
     emit('backendSuccess')
     emit('login-success');
-    await router.push('/accueil');
   }catch(error){
     emit('backendError', error);
   }

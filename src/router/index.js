@@ -1,41 +1,49 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Main from '@/views/AppLogin.vue'
+import Login from '@/views/Login.vue'
 import ExempTable from '@/views/ExempTable.vue'
 import ModifTable from '@/views/ModifTable.vue'
 import RecouvTable from '@/views/RecouvTable.vue'
 import ModifSteps from '@/views/ModifSteps.vue';
 import Accueil from '@/views/Accueil.vue';
-
+import ModificationEmail from '@/views/ModificationEmail.vue';
 import DemandesService from '@/service/DemandesService'
+
+const service = DemandesService;
 
 const routes = [
   {
     path: '/',
     component: Accueil,
-    meta: {requiresAuth: true}
+    meta: { requiresAuth: true }
   },
   {
     path: '/identification',
     name: 'identification',
-    component: Main,
-    meta: {requiresAuth: false}
+    component: Login,
+    meta: { requiresAuth: false }
   },
   {
     path: '/deconnexion',
     name: 'deconnexion',
-    component: Main,
-    meta: {requiresAuth: true}
+    component: Login,
+    meta: { requiresAuth: true }
   },
   {
     path: '/accueil',
     name: 'accueil',
     component: Accueil,
-    meta: {requiresAuth: true}
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/premiere-connexion',
+    name: 'premiere-connexion',
+    component: ModificationEmail,
+    meta: { requiresAuth: true }
   },
   {
     path: '/modification-adresse-mail',
     name: 'modification-adresse-mail',
-    component: Accueil,
+    component: ModificationEmail,
     meta: {requiresAuth: true}
   },
   {
@@ -165,22 +173,20 @@ router.beforeEach(async (to, from, next) => {
   if (requiresAuth) {
     const user = JSON.parse(sessionStorage.getItem('user'))
     const isAuthenticated = user && user.token
-    console.log(JSON.stringify(sessionStorage))
 
     if (isAuthenticated) {
       try {
-        const valid = await DemandesService.checkToken();
-        console.log(valid)
+        const valid = await service.checkToken();
         if (valid.data) {
           next();
         } else {
           console.error('Token invalide auprès du serveur')
-          DemandesService.logout()
-          next('identification')
+          service.logout()
+          next('/identification')
         }
       } catch (error) {
         console.error(error)
-        DemandesService.logout()
+        service.logout()
         next('/identification');
       }
     } else {

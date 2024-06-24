@@ -76,10 +76,16 @@ function liftErrors() {
 }
 function onLoginSuccess(){
   authenticated.value = true
+  const user = JSON.parse(sessionStorage.getItem('user'));
+  if( !user.email ){
+    router.push('premiere-connexion')
+  } else {
+    router.push('accueil')
+  }
 }
 function onLogout(){
   authenticated.value = false
-  router.push('/identification')
+  router.push('identification')
 }
 function checkAuthentication() {
   const user = sessionStorage.getItem('user');
