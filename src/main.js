@@ -19,19 +19,9 @@ const vuetify = createVuetify({
     fallback: 'en',
     messages: { fr, en },
   },
-  symbol: {
-    idefault: Symbol('idefault'),
-    idisplay: Symbol('idisplay'),
-    itheme: Symbol('itheme'),
-    iicons: Symbol('iicons'),
-    ilocale: Symbol('ilocale'),
-    idateOptions: Symbol('idateOptions'),
-    iadapter: Symbol('iadapter'),
-    igoto: Symbol('igoto')
-  }
 })
 
 registerPlugins(app)
 
-app.use(router)
+app.use(router).use(vuetify)
 app.mount('#app')
