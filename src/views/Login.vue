@@ -72,11 +72,12 @@ const userPassword = ref('')
 const visible = ref(false)
 
 async function login() {
-  try{
-    await service.login(userLogin.value, userPassword.value)
-    emit('backendSuccess')
-    emit('login-success');
-  }catch(error){
+  try {
+    const userData = await service.login(userLogin.value, userPassword.value);
+    emit('backendSuccess');
+    emit('login-success', userData);
+  } catch (error) {
+    console.error('Login error:', error);
     emit('backendError', error);
   }
 }
