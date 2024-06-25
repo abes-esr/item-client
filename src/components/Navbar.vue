@@ -33,9 +33,9 @@
         <v-list-item-title>Modifier mon adresse mail</v-list-item-title>
       </v-list-item>
 
-      <v-list-item @click="toggleTheme">
+      <v-list-item @click="changeTheme">
         <template v-slot:prepend>
-          <v-icon>{{ isDark ? 'mdi-weather-night' : 'mdi-weather-sunny' }}</v-icon>
+          <v-icon>{{ currentThemeIcon }}</v-icon>
         </template>
         <v-list-item-title>Changer de thème</v-list-item-title>
       </v-list-item>
@@ -150,23 +150,32 @@ const props = defineProps({
 const router = useRouter()
 
 const theme = useTheme()
-const isDark = computed({
-  get() {
-    return theme.global.name.value === 'dark'
-  },
-  set(value) {
-    theme.global.name.value = value ? 'dark' : 'light'
-  },
-})
+const themes = ['light', 'dark', 'blackAndWhite']
 
 const isAdmin = ref(false)
 
-function toggleTheme() {
-  isDark.value = !isDark.value
-}
+const currentThemeIcon = computed(() => {
+  const currentTheme = theme.global.name.value
+  switch (currentTheme) {
+    case 'light':
+      return 'mdi-weather-sunny'
+    case 'dark':
+      return 'mdi-weather-night'
+    case 'blackAndWhite':
+      return 'mdi-brightness-6'
+    default:
+      return 'mdi-theme-light-dark'
+  }
+})
 
 function navigateTo(routeName) {
   router.push({ name: routeName }).catch(err => {})
+}
+
+function changeTheme() {
+  const currentIndex = themes.indexOf(theme.global.name.value)
+  const nextIndex = (currentIndex + 1) % themes.length
+  theme.global.name.value = themes[nextIndex]
 }
 
 // TODO create axios call to set isAdmin value
