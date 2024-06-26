@@ -144,8 +144,7 @@ export class DemandesService {
     }};
     const data = new FormData();
     data.append('file',file);
-    data.append('numDemande', id);
-    return this.client.post(`uploadDemande/${typeDemande}`,data,config);
+    return this.client.post(`uploadDemande/${typeDemande}/${id}`,data,config);
   }
 
   getDemande(id, typeDemande){
