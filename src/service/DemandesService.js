@@ -132,12 +132,15 @@ export class DemandesService {
     return this.client.post(`demandes/${typeDemande}?rcr=${rcr}`);
   }
 
-  modifierDemande(id, rcr, typeDemande){
+  modifierRcrDemande(id, rcr, typeDemande){
     return this.client.patch(`demandes/${typeDemande}/${id}?rcr=${rcr}`);
   }
 
-  uploadDemande(id, file, typeDemande){
+  modifierTypeExempDemande(id, typeExemp){
+    return this.client.patch(`demandes/EXEMP/${id}?typeExemp=${typeExemp}`);
+  }
 
+  uploadDemande(id, file, typeDemande){
     const config = { headers: {
       'Content-Type': 'multipart/form-data',
         'charset': 'utf-8'

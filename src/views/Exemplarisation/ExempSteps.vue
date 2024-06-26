@@ -5,7 +5,9 @@
         <v-stepper v-model="currentStep" alt-labels>
           <v-stepper-header>
             <v-stepper-item
-              editable
+              :color="currentStep >= 0 ? '#295494' : ''"
+              :complete="currentStep > 0"
+              :editable="currentStep > 0"
               icon="mdi-numeric-1"
               title="Séléction du RCR"
               :subtitle="demande ? 'Demande n°'+demande.id : 'Demande'"
@@ -13,15 +15,19 @@
             </v-stepper-item>
             <v-divider></v-divider>
             <v-stepper-item
-              editable
+              :color="currentStep >= 1 ? '#295494' : ''"
+              :complete="currentStep > 1"
+              :editable="currentStep > 1"
               icon="mdi-numeric-2"
               title="Type Document"
-              :subtitle="typeDocumentSelected"
+              :subtitle="typeDocumentSelected ? typeDocumentSelected.libelle : ''"
             >
             </v-stepper-item>
             <v-divider></v-divider>
             <v-stepper-item
-              editable
+              :color="currentStep >= 2 ? '#295494' : ''"
+              :complete="currentStep > 2"
+              :editable="currentStep > 2"
               icon="mdi-numeric-3"
               title="Chargement"
             >
@@ -46,29 +52,32 @@
                   Valider
                 </v-btn>
               </v-container>
-              <v-btn @click="next">
-                next
-              </v-btn>
             </v-stepper-window-item>
             <v-stepper-window-item>
-              <type-exemp></type-exemp>
+              <type-exemp v-model="typeDocumentSelected" @click="modifiTypeExemp"></type-exemp>
               <v-container class="d-flex justify-space-between">
                 <v-btn @click="prev">
                   prev
-                </v-btn>
-                <v-btn @click="next">
-                  next
                 </v-btn>
               </v-container>
             </v-stepper-window-item>
             <v-stepper-window-item>
-              <upload-file v-model="fileSelected" >Charger le fichier des exemplaires à traiter</upload-file>
+              <upload-file v-model="fileSelected" :is-loading="isLoading">Charger le fichier des exemplaires à traiter</upload-file>
+              <v-alert
+                v-if="alertMessage"
+                :type="alertType"
+              >
+                <span v-html="alertMessage"></span>
+              </v-alert>
               <v-container class="d-flex justify-space-between">
                 <v-btn @click="prev">
                   prev
                 </v-btn>
-                <v-btn @click="next">
-                  next
+                <v-btn
+                  :disabled="!fileSelected"
+                  @click="launchTraitement"
+                >
+                  Lancer le traitement en simulation
                 </v-btn>
               </v-container>
             </v-stepper-window-item>
@@ -94,29 +103,67 @@ import UploadFile from '@/components/UploadFile.vue';
 import Rcr from '@/components/Rcr.vue';
 import DemandesService from '@/service/DemandesService';
 import TypeExemp from '@/components/TypeExemp.vue';
+import router from '@/router';
+
+const emits = defineEmits(['backendError'])
 
 const demande = ref();
 const currentStep = ref(0);
 const typeDocumentSelected = ref();
 const rcrSelected = ref()
 const fileSelected = ref();
+const alertMessage = ref();
+const alertType = ref();
+const isLoading = ref(false);
 
 function createDemande() {
   if (demande.value && (rcrSelected.value === demande.value.rcr)) {
     next();
   } else if (demande.value) {
-    DemandesService.modifierDemande(demande.value.id, rcrSelected.value, 'EXEMP')
+    DemandesService.modifierRcrDemande(demande.value.id, rcrSelected.value, 'EXEMP')
       .then(response => {
         demande.value = response.data;
         next();
-      });
+      }).catch(err => {
+      emits('backendError',err);
+    });
   } else {
     DemandesService.creerDemande(rcrSelected.value, 'EXEMP')
       .then(response => {
         demande.value = response.data;
         next();
-      });
+      }).catch(err => {
+      emits('backendError',err);
+    });
   }
+}
+
+function modifiTypeExemp() {
+  DemandesService.modifierTypeExempDemande(demande.value.id, typeDocumentSelected.value.id)
+    .then(response => {
+      demande.value = response.data
+      next()
+    }).catch(err => {
+      emits('backendError',err);
+  })
+}
+
+function launchTraitement() {
+  alertMessage.value = '';
+  alertType.value = 'success';
+  isLoading.value = true;
+  DemandesService.uploadDemande(demande.value.id, fileSelected.value, 'EXEMP')
+    .then(() => {
+      alertMessage.value = "Fichier envoyé";
+      next();
+    })
+    .catch(err => {
+      alertMessage.value = err.response.data.message;
+      alertType.value = 'error';
+    })
+    .finally(() => {
+      isLoading.value = false;
+    });
 }
 
 function next() {
