@@ -122,9 +122,19 @@ export class DemandesService {
 
   modifierEmail(id, email){
     const config = { headers: {'Content-Type': 'text/plain'} };
-    return this.client.put(`utilisateurs/${id}`, email, config)
+    return this.client.patch(`utilisateurs/${id}`, email, config);
+  }
+  creerEmail(id, email){
+    const config = { headers: {'Content-Type': 'text/plain'} };
+    return this.client.post(`utilisateurs/${id}`, email, config);
+  }
+  creerDemande(rcr, typeDemande){
+    return this.client.post(`demandes?rcr=${rcr}&type=${typeDemande}`);
   }
 
+  modifierDemande(id, rcr, typeDemande){
+    return this.client.patch(`demandes/${id}?rcr=${rcr}&type=${typeDemande}`);
+  }
 }
 
 export default new DemandesService()

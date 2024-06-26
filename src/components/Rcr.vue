@@ -15,10 +15,6 @@ A<template>
         persistent-hint
       ></v-autocomplete>
     </v-card-text>
-    <v-card-actions>
-      <v-spacer></v-spacer>
-      <v-btn color="info" :disabled="!rcr" @click="selectRCR">Valider</v-btn>
-    </v-card-actions>
   </v-card>
 </template>
 
@@ -29,8 +25,6 @@ import { onMounted, ref } from 'vue';
 const listRcr = ref([]);
 const rcr = defineModel()
 const user = JSON.parse(sessionStorage.getItem('user'));
-
-const emits = defineEmits(['validate'])
 
 onMounted(() => {
   idrefService.getRcrByIln(user.iln)
@@ -65,8 +59,4 @@ onMounted(() => {
       }
     });
 });
-
-function selectRCR(){
-  emits('validate',rcrSelected.value);
-}
 </script>

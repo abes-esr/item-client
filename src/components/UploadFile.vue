@@ -20,18 +20,12 @@
       >
       </v-file-input>
     </v-card-text>
-    <v-card-actions>
-      <v-spacer></v-spacer>
-      <v-btn :disabled="!isValidFile" @click="validate">Valider</v-btn>
-    </v-card-actions>
   </v-card>
 </template>
 <script setup>
 import { ref } from 'vue';
 
-const emits = defineEmits(["validate"])
-
-const fileCharged = ref();
+const fileCharged = defineModel();
 const isValidFile = ref(false)
 const rules = ref([
   value => {
@@ -47,8 +41,4 @@ const rules = ref([
     return 'Le fichier chargé n\'est pas dans un format autorisé (.txt ou .csv)';
   }
 ])
-
-function validate(){
-  emits('validate', fileCharged.value);
-}
 </script>

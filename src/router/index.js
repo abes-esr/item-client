@@ -114,15 +114,9 @@ const routes = [
     meta: {requiresAuth: true}
   },
   {
-    path: '/recouvrement-etape-1-selection-rcr',
-    name: 'recouvrement-etape-1-selection-rcr',
+    path: '/recouvrement',
+    name: 'recouvrement',
     component: RecouvSteps,
-    meta: {requiresAuth: true}
-  },
-  {
-    path: '/recouvrement-etape-2-chargement-fichier',
-    name: 'recouvrement-etape-2-chargement-fichier',
-    component: Accueil,
     meta: {requiresAuth: true}
   },
   {
