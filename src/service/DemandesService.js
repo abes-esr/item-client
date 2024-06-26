@@ -53,8 +53,8 @@ export class DemandesService {
   }
 
   fetchDemandes(type, archive, extensionIln) {
-    console.info('appel: ' + import.meta.env.VITE_API_URL + `demandes?type=${type}&archive=${archive}&extension=${extensionIln}`)
-    return this.client.get(`demandes?type=${type}&archive=${archive}&extension=${extensionIln}`)
+    console.info('appel: ' + import.meta.env.VITE_API_URL + `demandes/${type}?archive=${archive}&extension=${extensionIln}`)
+    return this.client.get(`demandes/${type}?archive=${archive}&extension=${extensionIln}`)
   }
 
   getFile(filetype, demandeNumber, fileFormat, typeDemande) {
@@ -103,13 +103,13 @@ export class DemandesService {
   }
 
   archiverDemande(type, numDemande) {
-    const url = `archiverDemande?type=${type}&numDemande=${numDemande}`;
+    const url = `archiverDemande/${type}/${numDemande}`;
     console.info('appel: ' + import.meta.env.VITE_API_URL + url);
     return this.client.get(url);
   }
 
   supprimerDemande(type, numDemande) {
-    const url = `supprimerDemande?type=${type}&numDemande=${numDemande}`;
+    const url = `supprimerDemande/${type}/${numDemande}`;
     console.info('appel: ' + import.meta.env.VITE_API_URL + url);
     return this.client.get(url);
   }
@@ -122,9 +122,35 @@ export class DemandesService {
 
   modifierEmail(id, email){
     const config = { headers: {'Content-Type': 'text/plain'} };
-    return this.client.put(`utilisateurs/${id}`, email, config)
+    return this.client.patch(`utilisateurs/${id}`, email, config);
+  }
+  creerEmail(id, email){
+    const config = { headers: {'Content-Type': 'text/plain'} };
+    return this.client.post(`utilisateurs/${id}`, email, config);
+  }
+  creerDemande(rcr, typeDemande){
+    return this.client.post(`demandes/${typeDemande}?rcr=${rcr}`);
   }
 
+  modifierDemande(id, rcr, typeDemande){
+    return this.client.patch(`demandes/${typeDemande}/${id}?rcr=${rcr}`);
+  }
+
+  uploadDemande(id, file, typeDemande){
+
+    const config = { headers: {
+      'Content-Type': 'multipart/form-data',
+        'charset': 'utf-8'
+    }};
+    const data = new FormData();
+    data.append('file',file);
+    data.append('numDemande', id);
+    return this.client.post(`uploadDemande/${typeDemande}`,data,config);
+  }
+
+  getDemande(id, typeDemande){
+    return this.client.get(`demandes/${typeDemande}/${id}`);
+  }
 }
 
 export default new DemandesService()

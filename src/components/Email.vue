@@ -71,7 +71,7 @@ const rules = ref([
       return true;
     }
     isDisabled.value = true;
-    return 'mail(s) invalide'
+    return 'mail(s) invalide';
   }
 ]);
 const messageError = ref();
@@ -81,13 +81,24 @@ onMounted(() => {
 });
 
 function validate() {
-  demandesService.modifierEmail(props.userId, emailModel.value)
-    .then(result => {
-      emits('validate', result.data.email);
-    })
-    .catch(err => {
-      messageError.value = err.response.data.message;
-      throw err;
-    });
+  if(props.email){
+    demandesService.creerEmail(props.userId, emailModel.value)
+      .then(result => {
+        emits('validate', result.data.email);
+      })
+      .catch(err => {
+        messageError.value = err.response.data.message;
+        throw err;
+      });
+  } else {
+    demandesService.modifierEmail(props.userId, emailModel.value)
+      .then(result => {
+        emits('validate', result.data.email);
+      })
+      .catch(err => {
+        messageError.value = err.response.data.message;
+        throw err;
+      });
+  }
 }
 </script>
