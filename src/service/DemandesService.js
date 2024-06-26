@@ -150,6 +150,10 @@ export class DemandesService {
   getDemande(id, typeDemande){
     return this.client.get(`demandes/${typeDemande}/${id}`);
   }
+
+  getTypeExemp(){
+    return this.client.get('typeExemp');
+  }
 }
 
 export default new DemandesService()

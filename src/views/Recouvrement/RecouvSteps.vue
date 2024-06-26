@@ -14,7 +14,7 @@
             <v-divider></v-divider>
             <v-stepper-item
               icon="mdi-numeric-2"
-              title="Téléchargement"
+              title="Chargement"
               subtitle="du fichier"
             >
             </v-stepper-item>
@@ -34,7 +34,7 @@
               </v-container>
             </v-stepper-window-item>
             <v-stepper-window-item>
-              <upload-file v-model="fileSelected" :is-loading="isLoading"></upload-file>
+              <upload-file v-model="fileSelected" :is-loading="isLoading">Charger le fichier du taux de recouvrement</upload-file>
               <v-alert
                 v-if="alertMessage"
                 :type="alertType"

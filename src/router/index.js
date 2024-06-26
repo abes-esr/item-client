@@ -1,13 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Login from '@/views/Login.vue'
-import ExempTable from '@/views/ExempTable.vue'
-import ModifTable from '@/views/ModifTable.vue'
-import RecouvTable from '@/views/RecouvTable.vue'
-import ModifSteps from '@/views/ModifSteps.vue';
+import Login from '@/views/Utilisateur/Login.vue'
+import ExempTable from '@/views/Exemplarisation/ExempTable.vue'
+import ModifTable from '@/views/Modification/ModifTable.vue'
+import RecouvTable from '@/views/Recouvrement/RecouvTable.vue'
+import ModifSteps from '@/views/Modification/ModifSteps.vue';
 import Accueil from '@/views/Accueil.vue';
-import ModificationEmail from '@/views/ModificationEmail.vue';
+import ModificationEmail from '@/views/Utilisateur/ModificationEmail.vue';
 import DemandesService from '@/service/DemandesService'
-import RecouvSteps from '@/views/RecouvSteps.vue';
+import RecouvSteps from '@/views/Recouvrement/RecouvSteps.vue';
+import ExempSteps from '@/views/Exemplarisation/ExempSteps.vue';
 
 const service = DemandesService;
 
@@ -96,21 +97,9 @@ const routes = [
     meta: {requiresAuth: true}
   },
   {
-    path: '/exemplarisation-etape-1-selection-rcr',
-    name: 'exemplarisation-etape-1-selection-rcr',
-    component: Accueil,
-    meta: {requiresAuth: true}
-  },
-  {
-    path: '/exemplarisation-etape-2-choix-type-exemplarisation',
-    name: 'exemplarisation-etape-2-choix-type-exemplarisation',
-    component: Accueil,
-    meta: {requiresAuth: true}
-  },
-  {
-    path: '/exemplarisation-etape-3-chargement-fichier-exemplaires',
-    name: 'exemplarisation-etape-3-chargement-fichier-exemplaires',
-    component: Accueil,
+    path: '/exemplarisation',
+    name: 'exemplarisation',
+    component: ExempSteps,
     meta: {requiresAuth: true}
   },
   {
