@@ -117,6 +117,14 @@ const routes = [
     path: '/recouvrement',
     name: 'recouvrement',
     component: RecouvSteps,
+    props: true,
+    meta: {requiresAuth: true}
+  },
+  {
+    path: '/recouvrement/:id',
+    name: 'recouvrementWithId',
+    component: RecouvSteps,
+    props: true,
     meta: {requiresAuth: true}
   },
   {

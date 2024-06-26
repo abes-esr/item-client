@@ -1,10 +1,11 @@
 <template>
-  <v-card class="elevation-12">
+  <v-card>
     <v-card-title style="background-color: #295494; color: white">
       <span>Charger le fichier du taux de recouvrement</span>
     </v-card-title>
     <v-card-text class="pt-5">
       <v-file-input
+        :loading="isLoading"
         color="info"
         truncate-length=75
         accept=".csv,.txt"
@@ -26,6 +27,7 @@
 import { ref } from 'vue';
 
 const fileCharged = defineModel();
+const props = defineProps(  {isLoading: { type: Boolean}})
 const isValidFile = ref(false)
 const rules = ref([
   value => {
