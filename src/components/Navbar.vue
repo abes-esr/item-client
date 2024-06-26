@@ -19,14 +19,14 @@
     <v-divider></v-divider>
 
     <v-list density="compact" nav>
-      <v-list-item @click="navigateTo('home')">
+      <v-list-item @click="navigateTo('accueil')">
         <template v-slot:prepend>
           <v-icon>mdi-home</v-icon>
         </template>
         <v-list-item-title>Accueil</v-list-item-title>
       </v-list-item>
 
-      <v-list-item @click="navigateTo('profil')">
+      <v-list-item @click="navigateTo('modification-adresse-mail')">
         <template v-slot:prepend>
           <v-icon>mdi-account</v-icon>
         </template>
@@ -48,26 +48,20 @@
         <v-list-item-title class="text-h6">Recouvrement</v-list-item-title>
       </v-list-item>
 
-      <v-list-item @click="navigateTo('rcrRecouv')">
+      <v-list-item @click="navigateTo('recouvrement-etape-1-selection-rcr')">
         <template v-slot:prepend>
           <v-icon>mdi-percent</v-icon>
         </template>
         <v-list-item-title>Calculer mon taux <br />de recouvrement</v-list-item-title>
       </v-list-item>
 
-      <v-list-item @click="navigateTo('tabRecouv')">
+      <v-list-item @click="navigateTo('recouvrement-tableau')">
         <template v-slot:prepend>
           <v-icon>mdi-format-list-bulleted</v-icon>
         </template>
-        <v-list-item-title>Gérer mes taux<br />de recouvrement</v-list-item-title>
+        <v-list-item-title>Tableau des calculs <br>de taux de recouvrement</v-list-item-title>
       </v-list-item>
 
-      <v-list-item @click="navigateTo('archiveRecouv')">
-        <template v-slot:prepend>
-          <v-icon>mdi-archive</v-icon>
-        </template>
-        <v-list-item-title>Gérer mes taux<br />de recouvrement archivés</v-list-item-title>
-      </v-list-item>
     </v-list>
 
     <v-divider></v-divider>
@@ -84,19 +78,13 @@
         <v-list-item-title>Créer des exemplaires</v-list-item-title>
       </v-list-item>
 
-      <v-list-item @click="navigateTo('tabExemp')">
+      <v-list-item @click="navigateTo('exemplarisation-tableau')">
         <template v-slot:prepend>
           <v-icon>mdi-format-list-bulleted</v-icon>
         </template>
-        <v-list-item-title>Gérer mes créations</v-list-item-title>
+        <v-list-item-title>Tableau des <br>créations d'exemplaires</v-list-item-title>
       </v-list-item>
 
-      <v-list-item @click="navigateTo('archiveEx')">
-        <template v-slot:prepend>
-          <v-icon>mdi-archive</v-icon>
-        </template>
-        <v-list-item-title>Gérer mes créations<br />archivées</v-list-item-title>
-      </v-list-item>
     </v-list>
 
     <v-divider></v-divider>
@@ -113,18 +101,11 @@
         <v-list-item-title>Modifier des exemplaires</v-list-item-title>
       </v-list-item>
 
-      <v-list-item @click="navigateTo('tabModif')">
+      <v-list-item @click="navigateTo('modification-tableau')">
         <template v-slot:prepend>
           <v-icon>mdi-format-list-bulleted</v-icon>
         </template>
-        <v-list-item-title>Gérer mes modifications</v-list-item-title>
-      </v-list-item>
-
-      <v-list-item @click="navigateTo('archive')">
-        <template v-slot:prepend>
-          <v-icon>mdi-archive</v-icon>
-        </template>
-        <v-list-item-title>Gérer mes modifications<br />archivées</v-list-item-title>
+        <v-list-item-title>Tableau des <br>modifications d'exemplaires</v-list-item-title>
       </v-list-item>
 
     </v-list>
@@ -154,6 +135,8 @@ const themes = ['light', 'dark', 'blackAndWhite']
 
 const isAdmin = ref(false)
 
+const emit = defineEmits(['close'])
+
 const currentThemeIcon = computed(() => {
   const currentTheme = theme.global.name.value
   switch (currentTheme) {
@@ -170,6 +153,7 @@ const currentThemeIcon = computed(() => {
 
 function navigateTo(routeName) {
   router.push({ name: routeName }).catch(err => {})
+  emit('close')
 }
 
 function changeTheme() {

@@ -1,7 +1,7 @@
 <template>
 	<v-app>
     <Header :authenticated="authenticated" @logout-success="onLogout" @toggle-drawer="toggleDrawer2"/>
-    <Navbar :authenticated="authenticated" :drawer2="drawer2" v-if="authenticated"/>
+    <Navbar :authenticated="authenticated" :drawer2="drawer2" v-if="authenticated" @close="drawer2 = false"/>
 		<Footer />
     <v-main>
       <v-alert color="red" :title="backendErrorMessage" variant='outlined' density='compact' type='warning' :text='backendErrorDescription' closable v-if="backendError"></v-alert>
