@@ -1,17 +1,12 @@
 <template>
-  <v-navigation-drawer v-if="authenticated && drawer2" width="18em" temporary>
+  <v-navigation-drawer v-if="authenticated && drawer" width="18em" temporary>
     <v-list-item three-line>
       <v-list-item>
         <v-list-item-title class="text-h6 text-wrap">
-          Utilisateur
+          <p>{{ rights.title }}</p>
         </v-list-item-title>
         <v-list-item-subtitle class="text-wrap">
-          <span v-if="!isAdmin">
-            Vous êtes habilité à intervenir<br />
-            sur les exemplaires des RCR de<br />
-            l'ILN à renseigner
-          </span>
-          <span v-else>Vous disposez des permissions <br />administrateur</span>
+            <p>{{ rights.message }}</p>
         </v-list-item-subtitle>
       </v-list-item>
     </v-list-item>
@@ -33,11 +28,11 @@
         <v-list-item-title>Modifier mon adresse mail</v-list-item-title>
       </v-list-item>
 
-      <v-list-item @click="changeTheme">
+      <v-list-item @click="toggleTheme">
         <template v-slot:prepend>
-          <v-icon>{{ currentThemeIcon }}</v-icon>
+          <v-icon>{{ theme.global.current.value.dark ? 'mdi-weather-night' : 'mdi-weather-sunny' }}</v-icon>
         </template>
-        <v-list-item-title>Changer de thème</v-list-item-title>
+        <v-list-item-title>{{ theme.global.current.value.dark ? 'Thème clair' : 'Thème sombre' }}</v-list-item-title>
       </v-list-item>
     </v-list>
 
@@ -113,12 +108,12 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import {ref, computed, onMounted} from 'vue'
+import router from '@/router'
 import { useTheme } from 'vuetify'
 
-const props = defineProps({
-  drawer2: {
+defineProps({
+  drawer: {
     type: Boolean,
     required: true,
   },
@@ -128,39 +123,39 @@ const props = defineProps({
   },
 })
 
-const router = useRouter()
-
 const theme = useTheme()
-const themes = ['light', 'dark', 'blackAndWhite']
-
-const isAdmin = ref(false)
-
 const emit = defineEmits(['close'])
-
-const currentThemeIcon = computed(() => {
-  const currentTheme = theme.global.name.value
-  switch (currentTheme) {
-    case 'light':
-      return 'mdi-weather-sunny'
-    case 'dark':
-      return 'mdi-weather-night'
-    case 'blackAndWhite':
-      return 'mdi-brightness-6'
-    default:
-      return 'mdi-theme-light-dark'
-  }
-})
 
 function navigateTo(routeName) {
   router.push({ name: routeName }).catch(err => {})
   emit('close')
 }
 
-function changeTheme() {
-  const currentIndex = themes.indexOf(theme.global.name.value)
-  const nextIndex = (currentIndex + 1) % themes.length
-  theme.global.name.value = themes[nextIndex]
+function toggleTheme() {
+  theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
+  localStorage.setItem('theme', theme.global.name.value)
 }
 
-// TODO create axios call to set isAdmin value
+const rights = computed(() => {
+  const user = JSON.parse(sessionStorage.getItem('user'))
+  if(user.role === 'ADMIN'){
+    rights.title = `Manager ${user.login}`
+    rights.message = `ILN ${user.iln} : Vous disposez des
+permissions administrateur`
+  }
+  if(user.role === 'USER'){
+    rights.title = `Utilisateur ${user.login}`
+    rights.message = `Vous êtes habilité à intervenir
+sur les exemplaires des RCR
+de l'ILN ${user.iln}`
+  }
+  return rights
+})
+
 </script>
+
+<style scoped>
+p {
+  white-space: pre-line;
+}
+</style>

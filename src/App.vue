@@ -1,7 +1,7 @@
 <template>
 	<v-app>
-    <Header :authenticated="authenticated" @logout-success="onLogout" @toggle-drawer="toggleDrawer2"/>
-    <Navbar :authenticated="authenticated" :drawer2="drawer2" v-if="authenticated" @close="drawer2 = false"/>
+    <Header :authenticated="authenticated" @logout-success="onLogout" @toggle-drawer="toggleDrawer"/>
+    <Navbar :authenticated="authenticated" :drawer="drawer" v-if="authenticated" @close="drawer = false"/>
 		<Footer />
     <v-main>
       <v-alert color="red" :title="backendErrorMessage" variant='outlined' density='compact' type='warning' :text='backendErrorDescription' closable v-if="backendError"></v-alert>
@@ -25,22 +25,27 @@ import Footer from '@/components/Footer.vue'
 import router from '@/router/index'
 import { HttpStatusCode } from 'axios';
 import DemandesService from '@/service/DemandesService'
+import {useTheme} from 'vuetify'
 
 const backendError = ref(false)
 const backendErrorMessage = ref('')
 const backendErrorDescription = ref('')
 const authenticated = ref(false)
-const drawer2 = ref(false)
+const drawer = ref(false)
+
+const theme = useTheme()
 
 onMounted(() => {
   checkAuthentication();
+  const savedTheme = localStorage.getItem('theme')
+  if (savedTheme) {
+    theme.global.name.value = savedTheme
+  }
 });
 
 function setBackendError(error) {
   backendError.value = true
   let titleMessage = ''
-  console.log(JSON.stringify(error))
-  console.log(JSON.stringify(error.response))
   if(!error.response){
     backendErrorMessage.value = 'Erreur réseau : ' + error.code
     backendErrorDescription.value = 'Le serveur ne répond pas. Vérifiez sa disponibilité.'
@@ -104,7 +109,7 @@ function checkAuthentication() {
       });
   }
 }
-function toggleDrawer2() {
-  drawer2.value = !drawer2.value;
+function toggleDrawer() {
+  drawer.value = !drawer.value;
 }
 </script>
