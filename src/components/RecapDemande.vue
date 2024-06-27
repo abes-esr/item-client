@@ -1,6 +1,6 @@
 <template>
   <!-- INFOS GENERALES DE LA DEMANDE -->
-  <div id="demInfos" class="elevation-2">
+  <div id="demInfos" class="elevation-2 mb-4 mt-2">
     <h3 class="d-flex justify-center">Ma demande</h3>
     <v-container fluid>
       <v-row>

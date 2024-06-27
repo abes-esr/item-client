@@ -2,7 +2,7 @@
   <v-container :class="(currentStep === 3) ? '' : 'fill-height'" fluid>
     <v-row align="center" justify="center">
       <v-col :md="(currentStep === 3) ? '' : '7'">
-        <v-stepper  v-model="currentStep">
+        <v-stepper  v-model="currentStep" alt-labels>
           <v-stepper-header>
             <v-stepper-item
               :color="currentStep >= 0 ? '#295494' : ''"
