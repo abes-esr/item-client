@@ -1,8 +1,8 @@
 <template>
-  <v-container class="fill-height" fluid>
+  <v-container :class="(currentStep === 3) ? '' : 'fill-height'" fluid>
     <v-row align="center" justify="center">
-      <v-col md="7">
-        <v-stepper v-model="currentStep" alt-labels>
+      <v-col :md="(currentStep === 3) ? '' : '7'">
+        <v-stepper  v-model="currentStep">
           <v-stepper-header>
             <v-stepper-item
               :color="currentStep >= 0 ? '#295494' : ''"
@@ -33,7 +33,9 @@
             >
             </v-stepper-item>
             <v-divider></v-divider>
+            <!-- TODO ENLEVER LE EDITABLE -->
             <v-stepper-item
+              editable
               icon="mdi-numeric-4"
               title="Simulation"
             >
@@ -57,7 +59,7 @@
               <type-exemp v-model="typeDocumentSelected" @click="modifiTypeExemp"></type-exemp>
               <v-container class="d-flex justify-space-between">
                 <v-btn @click="prev">
-                  prev
+                  précédent
                 </v-btn>
               </v-container>
             </v-stepper-window-item>
@@ -71,7 +73,7 @@
               </v-alert>
               <v-container class="d-flex justify-space-between">
                 <v-btn @click="prev">
-                  prev
+                  précédent
                 </v-btn>
                 <v-btn
                   :disabled="!fileSelected"
@@ -82,10 +84,10 @@
               </v-container>
             </v-stepper-window-item>
             <v-stepper-window-item>
-              <p>simulation</p>
+              <simulation :demande="demande"></simulation>
               <v-container class="d-flex justify-space-between">
                 <v-btn @click="prev">
-                  prev
+                  précédent
                 </v-btn>
               </v-container>
             </v-stepper-window-item>
@@ -94,6 +96,7 @@
       </v-col>
     </v-row>
   </v-container>
+  <v-btn @click="console.log(demande)">demande</v-btn>
 </template>
 
 <script setup>
@@ -103,9 +106,9 @@ import UploadFile from '@/components/UploadFile.vue';
 import Rcr from '@/components/Rcr.vue';
 import DemandesService from '@/service/DemandesService';
 import TypeExemp from '@/components/TypeExemp.vue';
-import router from '@/router';
+import Simulation from "@/components/Simulation.vue";
 
-const emits = defineEmits(['backendError'])
+const emits = defineEmits(['backendError', 'backendSuccess', 'login-success'])
 
 const demande = ref();
 const currentStep = ref(0);
