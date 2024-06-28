@@ -44,6 +44,7 @@
 
           <v-stepper-window>
             <v-stepper-window-item>
+              <v-btn class="position-absolute"> supprimer </v-btn>
               <rcr v-model="rcrSelected" :is-loading="isLoading"></rcr>
               <v-container class="d-flex justify-space-between">
                 <v-spacer></v-spacer>
@@ -56,7 +57,7 @@
               </v-container>
             </v-stepper-window-item>
             <v-stepper-window-item>
-              <type-exemp v-model="typeDocumentSelected" :is-loading="isLoading" @click="modifiTypeExemp"></type-exemp>
+              <type-exemp v-model="typeDocumentSelected" :is-loading="isLoading" @deleted="deleteDemande()" @click="modifiTypeExemp"></type-exemp>
               <v-container class="d-flex justify-space-between">
                 <v-btn @click="prev">
                   précédent
@@ -64,7 +65,7 @@
               </v-container>
             </v-stepper-window-item>
             <v-stepper-window-item>
-              <upload-file v-model="fileSelected" :is-loading="isLoading">Charger le fichier des exemplaires à traiter</upload-file>
+              <upload-file v-model="fileSelected" :is-loading="isLoading" @deleted="deleteDemande()">Charger le fichier des exemplaires à traiter</upload-file>
               <v-alert
                 v-if="alertMessage"
                 :type="alertType"
@@ -84,7 +85,7 @@
               </v-container>
             </v-stepper-window-item>
             <v-stepper-window-item>
-              <simulation :demande="demande"></simulation>
+              <simulation :demande="demande" @deleted="deleteDemande()"></simulation>
               <v-container class="d-flex justify-space-between">
                 <v-btn @click="prev">
                   précédent
@@ -105,13 +106,13 @@
 <script setup>
 
 import { onMounted, ref } from 'vue';
+import DemandesService from '@/service/DemandesService';
+import router from '@/router';
 import UploadFile from '@/components/UploadFile.vue';
 import Rcr from '@/components/Rcr.vue';
-import DemandesService from '@/service/DemandesService';
 import TypeExemp from '@/components/TypeExemp.vue';
 import Simulation from "@/components/Simulation.vue";
 import DialogLancerTraitement from '@/components/DialogLancerTraitement.vue';
-import router from '@/router';
 
 const emits = defineEmits(['backendError', 'backendSuccess', 'login-success'])
 const props = defineProps({id : {type: String}});
@@ -234,6 +235,15 @@ function launchDemande(){
       demande.value = response.data;
     }).finally(() => {
       isLoading.value = false;
+  })
+}
+
+function deleteDemande(){
+  DemandesService.deleteDemande(demande.value.id, 'EXEMP')
+    .then(()=>{
+      router.push('/accueil');
+    }).catch(err => {
+      emits('backendError', err);
   })
 }
 

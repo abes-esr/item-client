@@ -176,6 +176,10 @@ export class DemandesService {
   lancerDemande(id, typeDemande){
     return this.client.patch(`passerEnAttente/${typeDemande}/${id}`);
   }
+
+  deleteDemande(id, typeDemande) {
+    return this.client.delete(`demandes/${typeDemande}/${id}`);
+  }
 }
 
 export default new DemandesService()

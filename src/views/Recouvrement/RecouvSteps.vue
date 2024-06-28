@@ -38,7 +38,7 @@
               </v-container>
             </v-stepper-window-item>
             <v-stepper-window-item>
-              <upload-file v-model="fileSelected" :is-loading="isLoading">Charger le fichier du taux de recouvrement</upload-file>
+              <upload-file v-model="fileSelected" :is-loading="isLoading" @deleted="deleteDemande()">Charger le fichier du taux de recouvrement</upload-file>
               <v-alert
                 v-if="alertMessage"
                 :type="alertType"
@@ -156,6 +156,15 @@ function launchTraitement() {
     .finally(() => {
       isLoading.value = false;
     });
+}
+
+function deleteDemande(){
+  DemandesService.deleteDemande(demande.value.id, 'RECOUV')
+    .then(()=>{
+      router.push('/accueil');
+    }).catch(err => {
+    emits('backendError', err);
+  })
 }
 
 function next() {

@@ -11,8 +11,9 @@
   </v-overlay>
   <!-- CONTENU SIMULATION -->
   <v-card>
-    <v-card-title style="background-color: #295494; color: white">
+    <v-card-title style="background-color: #295494; color: white" class="d-flex justify-space-between">
       <span>Ecran de simulation</span>
+      <v-btn depressed variant="text" @click="deleted()" prepend-icon="mdi-delete">Supprimer</v-btn>
     </v-card-title>
     <!--TEMPLATE DE SIMULATION-->
     <v-alert type="warning" align="center" class="my-3 pa-2" dense prominent border="left">
@@ -65,6 +66,7 @@ const props = defineProps({
     required: true
   }
 });
+const emits = defineEmits(['deleted'])
 
 const nbNotice = ref({
   nbNoticeEnCours: 0,
@@ -105,6 +107,9 @@ function refresh() {
     });
 }
 
+function deleted() {
+  emits('deleted');
+}
 </script>
 
 <style>
