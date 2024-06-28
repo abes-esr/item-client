@@ -71,7 +71,7 @@
     </template>
 
     <template v-slot:item="{ item, expand }">
-      <tr @click="onRowClick" @mouseover="onMouseOverRow(item)" @mouseleave="onMouseLeaveRow(item)"
+      <tr @click="onRowClick(item)" @mouseover="onMouseOverRow(item)" @mouseleave="onMouseLeaveRow(item)"
           :class="{ 'highlighted-row': item.highlighted }" style="cursor: pointer;">
         <td>
           <v-btn icon="mdi-chevron-up" @click="item.expanded = !item.expanded" variant="text">
@@ -127,6 +127,7 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import DemandesService from '@/service/DemandesService';
+import router from '@/router';
 
 const service = DemandesService;
 
@@ -343,6 +344,10 @@ function onMouseLeaveRow(item) {
 function onRowClick(item) {
   console.log('Ligne cliquée avec la demande :', item.id);
   // Faites quelque chose lorsque la ligne est cliquée, par exemple naviguer vers une page de détails de la demande
+
+  if(item.etatDemande === 'En préparation' || item.etatDemande === 'A compléter' || item.etatDemande === 'En simulation' ){
+    router.push('/exemplarisation/'+item.id);
+  }
 }
 
 </script>

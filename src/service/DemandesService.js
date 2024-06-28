@@ -172,6 +172,10 @@ export class DemandesService {
   choixEtape(id, numEtape, typeDemande){
     return this.client.patch(`etapeChoisie/${typeDemande}/${id}?etape=${numEtape}`);
   }
+
+  lancerDemande(id, typeDemande){
+    return this.client.patch(`passerEnAttente/${typeDemande}/${id}`);
+  }
 }
 
 export default new DemandesService()

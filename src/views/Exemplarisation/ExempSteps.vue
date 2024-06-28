@@ -89,6 +89,9 @@
                 <v-btn @click="prev">
                   précédent
                 </v-btn>
+                <v-btn large @click="dialog = true"
+                       aria-label="Lancer le traitement en production">Lancer le traitement en production
+                </v-btn>
               </v-container>
             </v-stepper-window-item>
           </v-stepper-window>
@@ -96,18 +99,22 @@
       </v-col>
     </v-row>
   </v-container>
+  <dialog-lancer-traitement v-model="dialog" :is-loading="isLoading" @launch="launchDemande()"></dialog-lancer-traitement>
 </template>
 
 <script setup>
 
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import UploadFile from '@/components/UploadFile.vue';
 import Rcr from '@/components/Rcr.vue';
 import DemandesService from '@/service/DemandesService';
 import TypeExemp from '@/components/TypeExemp.vue';
 import Simulation from "@/components/Simulation.vue";
+import DialogLancerTraitement from '@/components/DialogLancerTraitement.vue';
+import router from '@/router';
 
 const emits = defineEmits(['backendError', 'backendSuccess', 'login-success'])
+const props = defineProps({id : {type: String}});
 
 const demande = ref();
 const currentStep = ref(0);
@@ -117,6 +124,42 @@ const fileSelected = ref();
 const alertMessage = ref();
 const alertType = ref();
 const isLoading = ref(false);
+const dialog = ref(false);
+
+onMounted(()=>{
+  console.log(props.id);
+  if(props.id){
+    DemandesService.getDemande(props.id, "EXEMP")
+      .then(response => {
+        console.log(response.data);
+        demande.value = response.data;
+        switch (demande.value.etatDemande) {
+          case 'En préparation':
+            currentStep.value = 1;
+            rcrSelected.value = demande.value.rcr;
+            break;
+          case 'A compléter':
+            currentStep.value = 2;
+            rcrSelected.value = demande.value.rcr;
+            typeDocumentSelected.value = {
+              id: -1,
+              libelle: demande.value.typeExemp
+            };
+            break;
+          case 'En simulation':
+            currentStep.value = 3;
+            rcrSelected.value = demande.value.rcr;
+            typeDocumentSelected.value = {
+              id: -1,
+              libelle: demande.value.typeExemp
+            };
+            break;
+        }
+      }).catch(() => {
+      router.replace("/exemplarisation");
+    })
+  }
+})
 
 function createDemande() {
   if (demande.value && (rcrSelected.value === demande.value.rcr)) {
@@ -182,6 +225,16 @@ function launchTraitement() {
     .finally(() => {
       isLoading.value = false;
     });
+}
+
+function launchDemande(){
+  isLoading.value = true;
+  DemandesService.lancerDemande(demande.value.id,'EXEMP')
+    .then(response => {
+      demande.value = response.data;
+    }).finally(() => {
+      isLoading.value = false;
+  })
 }
 
 function next() {

@@ -103,10 +103,16 @@ const routes = [
     meta: {requiresAuth: true}
   },
   {
+    path: '/exemplarisation/:id',
+    name: 'exemplarisationWithId',
+    props: true,
+    component: ExempSteps,
+    meta: {requiresAuth: true}
+  },
+  {
     path: '/recouvrement',
     name: 'recouvrement',
     component: RecouvSteps,
-    props: true,
     meta: {requiresAuth: true}
   },
   {
