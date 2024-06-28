@@ -23,12 +23,12 @@ export class DemandesService {
   }
 
   login(login, password) {
-    const url = import.meta.env.VITE_API_URL + `signin`
-    console.info('appel:' + url)
+    const url = import.meta.env.VITE_API_URL + `signin`;
+    console.info('appel:' + url);
 
-    this.client.post(`signin`, {username: login, password: password})
+    return this.client.post(`signin`, {username: login, password: password})
       .then((response) => {
-        sessionStorage.setItem('user', JSON.stringify({
+        const userData = {
           login: login,
           shortname: response.data.shortname,
           token: `Bearer ${response.data.accessToken}`,
@@ -36,14 +36,16 @@ export class DemandesService {
           iln: response.data.iln,
           role: response.data.role,
           email: response.data.email
-        }));
+        };
+        sessionStorage.setItem('user', JSON.stringify(userData));
         this.client.defaults.headers.common.Authorization = `Bearer ${response.data.accessToken}`;
+        return userData;
       })
       .catch(error => {
-        console.error(error)
-        sessionStorage.clear()
-        throw error
-      })
+        console.error(error);
+        sessionStorage.clear();
+        throw error;
+      });
   }
 
   logout() {
