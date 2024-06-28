@@ -33,9 +33,7 @@
             >
             </v-stepper-item>
             <v-divider></v-divider>
-            <!-- TODO ENLEVER LE EDITABLE -->
             <v-stepper-item
-              editable
               icon="mdi-numeric-4"
               title="Simulation"
             >
