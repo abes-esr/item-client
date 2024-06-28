@@ -67,33 +67,9 @@ const routes = [
     meta: {requiresAuth: true}
   },
   {
-    path: '/modification-etape-1-selection-rcr',
-    name: 'modification-etape-1-selection-rcr',
+    path: '/modification',
+    name: 'modification',
     component: ModifSteps,
-    meta: {requiresAuth: true}
-  },
-  {
-    path: '/modification-etape-2-chargement-liste-ppn',
-    name: 'modification-etape-2-chargement-liste-ppn',
-    component: Accueil,
-    meta: {requiresAuth: true}
-  },
-  {
-    path: '/modification-etape-3-choix-de-traitement',
-    name: 'modification-etape-3-choix-de-traitement',
-    component: Accueil,
-    meta: {requiresAuth: true}
-  },
-  {
-    path: '/modification-etape-4-chargement-fichier-complete',
-    name: 'modification-etape-4-chargement-fichier-complete',
-    component: Accueil,
-    meta: {requiresAuth: true}
-  },
-  {
-    path: '/modification-etape-5-simulation-avant-envoi',
-    name: 'modification-etape-5-simulation-avant-envoi',
-    component: Accueil,
     meta: {requiresAuth: true}
   },
   {

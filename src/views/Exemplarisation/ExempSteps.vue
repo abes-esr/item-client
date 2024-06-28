@@ -42,7 +42,6 @@
 
           <v-stepper-window>
             <v-stepper-window-item>
-              <v-btn class="position-absolute"> supprimer </v-btn>
               <rcr v-model="rcrSelected" :is-loading="isLoading"></rcr>
               <v-container class="d-flex justify-space-between">
                 <v-spacer></v-spacer>
@@ -182,8 +181,7 @@ function createDemande() {
         next();
       }).catch(err => {
         emits('backendError',err);
-      })
-      .finally(() => {
+      }).finally(() => {
         isLoading.value = false;
       });
   }

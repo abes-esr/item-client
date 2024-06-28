@@ -7,7 +7,7 @@
 			<v-icon large>mdi-menu</v-icon>
 		</v-app-bar-nav-icon>
     <!--Icone et titre de l'application-->
-		<img alt="icone assistance" height="41px" v-on:click="$router.push({path: '/'})" src="../assets/item_logo.svg" target="_blank" width="41px" style="margin-left: 1em" />
+		<img alt="icone assistance" height="41px" v-on:click="$router.push({path: '/'})" src="../../assets/item_logo.svg" target="_blank" width="41px" style="margin-left: 1em" />
 		<v-toolbar-title class="item-margin-left-icon" v-on:click="$router.push({path: '/'})">Item</v-toolbar-title>
 		<!--Icones de la barre de menu à droite-->
 		<div class="flex-grow-1"></div>
@@ -19,7 +19,7 @@
 							alt="icone assistance"
 							height="41px"
 							href="https://stp.abes.fr/node/3?origine=sudocpro"
-							src="../assets/item_assistance.svg"
+							src="../../assets/item_assistance.svg"
 							target="_blank"
 							width="41px"
 							style="transform: translateY(-3px)" /></a
@@ -34,7 +34,7 @@
 							alt="icone documentation"
 							height="41px"
 							href="http://documentation.abes.fr/aideitem/index.html"
-							src="../assets/item_documentation.svg"
+							src="../../assets/item_documentation.svg"
 							target="_blank"
 							width="41px"
 							style="transform: translateY(-3px)" /></a
@@ -44,7 +44,7 @@
 		<div class="item-margin-around-single-icon">
 			<v-btn class="mx-2 item-margin-around-single-icon" fab dark small color="primary" v-if="authenticated">
 				<span @click="logout()" title="Déconnexion"
-					><a><img alt="icone déconnexion" height="41px" src="../assets/item_deconnexion.svg" width="41px" /></a
+					><a><img alt="icone déconnexion" height="41px" src="../../assets/item_deconnexion.svg" width="41px" /></a
 				></span>
 			</v-btn>
 		</div>
