@@ -6,7 +6,7 @@
       :disabled="nbNotice.nbNoticeEnCours === 0"
       large
       dark
-      @click="nbNotice.nbNoticeEnCours = 0"
+      @click="first"
       aria-label="Première notice">
       <v-icon>mdi-page-first</v-icon>
     </v-btn>
@@ -20,7 +20,7 @@
       :disabled="nbNotice.nbNoticeEnCours === 0"
       large
       dark
-      @click="nbNotice.nbNoticeEnCours--"
+      @click="prev"
       aria-label="Notice précédente">
       <v-icon>mdi-chevron-left</v-icon>
     </v-btn>
@@ -34,7 +34,7 @@
       :disabled="nbNotice.nbNoticeEnCours === nbNotice.nbTotalNotice - 1"
       large
       dark
-      @click="nbNotice.nbNoticeEnCours++"
+      @click="next"
       aria-label="Notice suivante">
       <v-icon>mdi-chevron-right</v-icon>
     </v-btn>
@@ -48,7 +48,7 @@
       :disabled="nbNotice.nbNoticeEnCours === nbNotice.nbTotalNotice - 1"
       large
       dark
-      @click="nbNotice.nbNoticeEnCours = nbNotice.nbTotalNotice - 1"
+      @click="last"
       aria-label="Dernière notice">
       <v-icon>mdi-page-last</v-icon>
     </v-btn>
@@ -59,4 +59,21 @@
 </template>
 <script setup>
 const nbNotice = defineModel();
+const emits = defineEmits(['clicked']);
+function first(){
+  nbNotice.value.nbNoticeEnCours = 0;
+  emits('clicked');
+}
+function last(){
+  nbNotice.value.nbNoticeEnCours = nbNotice.value.nbTotalNotice - 1;
+  emits('clicked');
+}
+function next(){
+  nbNotice.value.nbNoticeEnCours++;
+  emits('clicked');
+}
+function prev(){
+  nbNotice.value.nbNoticeEnCours--;
+  emits('clicked');
+}
 </script>

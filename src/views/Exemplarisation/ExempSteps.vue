@@ -2,7 +2,7 @@
   <v-container :class="(currentStep === 3) ? '' : 'fill-height'" fluid>
     <v-row align="center" justify="center">
       <v-col :md="(currentStep === 3) ? '' : '7'">
-        <v-stepper  v-model="currentStep" alt-labels>
+        <v-stepper  v-model="currentStep" @update:model-value="changeEtat()" alt-labels>
           <v-stepper-header>
             <v-stepper-item
               :color="currentStep >= 0 ? '#295494' : ''"
@@ -44,7 +44,7 @@
 
           <v-stepper-window>
             <v-stepper-window-item>
-              <rcr v-model="rcrSelected"></rcr>
+              <rcr v-model="rcrSelected" :is-loading="isLoading"></rcr>
               <v-container class="d-flex justify-space-between">
                 <v-spacer></v-spacer>
                 <v-btn
@@ -56,7 +56,7 @@
               </v-container>
             </v-stepper-window-item>
             <v-stepper-window-item>
-              <type-exemp v-model="typeDocumentSelected" @click="modifiTypeExemp"></type-exemp>
+              <type-exemp v-model="typeDocumentSelected" :is-loading="isLoading" @click="modifiTypeExemp"></type-exemp>
               <v-container class="d-flex justify-space-between">
                 <v-btn @click="prev">
                   précédent
@@ -96,7 +96,6 @@
       </v-col>
     </v-row>
   </v-container>
-  <v-btn @click="console.log(demande)">demande</v-btn>
 </template>
 
 <script setup>
@@ -123,32 +122,48 @@ function createDemande() {
   if (demande.value && (rcrSelected.value === demande.value.rcr)) {
     next();
   } else if (demande.value) {
+    isLoading.value = true;
     DemandesService.modifierRcrDemande(demande.value.id, rcrSelected.value, 'EXEMP')
       .then(response => {
         demande.value = response.data;
         next();
       }).catch(err => {
-      emits('backendError',err);
-    });
+        emits('backendError',err);
+      }).finally(() => {
+        isLoading.value = false;
+      });
   } else {
+    isLoading.value = true;
     DemandesService.creerDemande(rcrSelected.value, 'EXEMP')
       .then(response => {
         demande.value = response.data;
         next();
       }).catch(err => {
-      emits('backendError',err);
-    });
+        emits('backendError',err);
+      })
+      .finally(() => {
+        isLoading.value = false;
+      });
   }
 }
 
 function modifiTypeExemp() {
-  DemandesService.modifierTypeExempDemande(demande.value.id, typeDocumentSelected.value.id)
-    .then(response => {
-      demande.value = response.data
-      next()
-    }).catch(err => {
-      emits('backendError',err);
-  })
+  if(demande.value.typeExemp === typeDocumentSelected.value.libelle){
+    next();
+  } else {
+    isLoading.value = true;
+    DemandesService.modifierTypeExempDemande(demande.value.id, typeDocumentSelected.value.id)
+      .then(response => {
+        demande.value = response.data
+        next()
+      })
+      .catch(err => {
+        emits('backendError', err);
+      })
+      .finally(() => {
+        isLoading.value = false;
+      });
+  }
 }
 
 function launchTraitement() {
@@ -174,5 +189,15 @@ function next() {
 }
 function prev() {
   currentStep.value--;
+  changeEtat();
+}
+
+function changeEtat() {
+  if((currentStep.value + 1) === 3) { //Changement d'etat pour le chargement du fichier car le back est perdu sinon
+    DemandesService.choixEtape(demande.value.id, currentStep.value + 1, 'EXEMP')
+      .then(response => {
+        demande.value = response.data;
+      });
+  }
 }
 </script>

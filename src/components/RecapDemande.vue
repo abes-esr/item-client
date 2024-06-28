@@ -26,15 +26,8 @@
 </template>
 
 <script setup>
-
-
-import {onMounted} from "vue";
-
 const props = defineProps({
   demande: {type: Object, required: true}
 });
 
-onMounted(() => {
-  console.log(props.demande)
-})
 </script>

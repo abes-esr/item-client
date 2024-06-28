@@ -157,6 +157,19 @@ export class DemandesService {
   getTypeExemp(){
     return this.client.get('typeExemp');
   }
+
+  getNbLigneFichier(id, typeDemande){
+    return this.client.get(`nbLignesFichier/${typeDemande}/${id}`);
+  }
+
+  simulerLigne(id, nbLigne,typeDemande){
+    return this.client.get(`simulerLigne/${typeDemande}/${id}/${nbLigne}`);
+
+  }
+
+  choixEtape(id, numEtape, typeDemande){
+    return this.client.patch(`etapeChoisie/${typeDemande}/${id}?etape=${numEtape}`);
+  }
 }
 
 export default new DemandesService()

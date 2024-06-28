@@ -1,15 +1,15 @@
 <template>
-  <v-card elevation="1">
+  <v-card elevation="1" :loading="isLoading">
     <v-card-title style="background-color: #295494; color: white" >
       <span>Choix du type d'exemplarisation</span>
     </v-card-title>
     <v-card-text class="pa-0 ma-0">
-      <div class="btn-perso elevation-1 pa-8 d-flex justify-space-between" @click="onClick(exemp)" v-for="exemp in listExemp" :key="exemp.numTypeExemp">
+      <btn class="btn-perso elevation-1 pa-8 d-flex justify-space-between" @click="onClick(exemp)" v-for="exemp in listExemp" :key="exemp.numTypeExemp">
         <v-row class="align-center">
           <v-col cols="12" sm="3" class="d-flex justify-center"><v-icon size="x-large" dark color="primary">{{getIcon(exemp)}}</v-icon></v-col>
           <v-col cols="12" sm="9" class="d-flex justify-start"><span class="group">{{ exemp.libelle }}</span></v-col>
         </v-row>
-      </div>
+      </btn>
     </v-card-text>
   </v-card>
 </template>
@@ -21,6 +21,7 @@ import DemandesService from '@/service/DemandesService';
 
 const typeExemp = defineModel();
 const emits = defineEmits(['click'])
+const props = defineProps(  {isLoading: { type: Boolean}})
 const listExemp = ref([]);
 
 onMounted(() => {
