@@ -1,10 +1,11 @@
 A<template>
-  <v-card>
+  <v-card elevation="0">
     <v-card-title style="background-color: #295494; color: white">
       <span>Sélection du RCR</span>
     </v-card-title>
     <v-card-text class="pt-5">
       <v-autocomplete
+        :loading="isLoading"
         color="info"
         hide-selected
         v-model="rcr"
@@ -25,6 +26,7 @@ import { onMounted, ref } from 'vue';
 const listRcr = ref([]);
 const rcr = defineModel()
 const user = JSON.parse(sessionStorage.getItem('user'));
+const props = defineProps(  {isLoading: { type: Boolean}})
 
 onMounted(() => {
   idrefService.getRcrByIln(user.iln)

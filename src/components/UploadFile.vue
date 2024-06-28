@@ -1,7 +1,8 @@
 <template>
-  <v-card>
-    <v-card-title style="background-color: #295494; color: white">
-      <span>Charger le fichier du taux de recouvrement</span>
+  <v-card elevation="0">
+    <v-card-title style="background-color: #295494; color: white" class="d-flex justify-space-between">
+      <span><slot></slot></span>
+      <v-btn depressed variant="text" @click="deleted()" prepend-icon="mdi-delete">Supprimer</v-btn>
     </v-card-title>
     <v-card-text class="pt-5">
       <v-file-input
@@ -17,7 +18,7 @@
         aria-label="Dépôt du fichier"
         v-model="fileCharged"
         ref="fileInput"
-        label="Fichier de recouvrement"
+        label="Cliquez pour charger votre fichier complété (format .txt ou .csv obligatoire)"
       >
       </v-file-input>
     </v-card-text>
@@ -28,6 +29,8 @@ import { ref } from 'vue';
 
 const fileCharged = defineModel();
 const props = defineProps(  {isLoading: { type: Boolean}})
+const emits = defineEmits(['deleted']);
+
 const isValidFile = ref(false)
 const rules = ref([
   value => {
@@ -43,4 +46,8 @@ const rules = ref([
     return 'Le fichier chargé n\'est pas dans un format autorisé (.txt ou .csv)';
   }
 ])
+
+function deleted() {
+  emits('deleted');
+}
 </script>

@@ -14,7 +14,7 @@
           </BtnAccueil>
         </v-col>
         <v-col class="text-center" cols="12" md="6">
-          <BtnAccueil id="btn-exemplarisation" icon="mdi-plus" route="exemplarisation-etape-1-selection-rcr">
+          <BtnAccueil id="btn-exemplarisation" icon="mdi-plus" route="exemplarisation">
             Créer des exemplaires
           </BtnAccueil>
         </v-col>

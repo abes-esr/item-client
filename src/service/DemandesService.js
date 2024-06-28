@@ -134,12 +134,15 @@ export class DemandesService {
     return this.client.post(`demandes/${typeDemande}?rcr=${rcr}`);
   }
 
-  modifierDemande(id, rcr, typeDemande){
+  modifierRcrDemande(id, rcr, typeDemande){
     return this.client.patch(`demandes/${typeDemande}/${id}?rcr=${rcr}`);
   }
 
-  uploadDemande(id, file, typeDemande){
+  modifierTypeExempDemande(id, typeExemp){
+    return this.client.patch(`demandes/EXEMP/${id}?typeExemp=${typeExemp}`);
+  }
 
+  uploadDemande(id, file, typeDemande){
     const config = { headers: {
       'Content-Type': 'multipart/form-data',
         'charset': 'utf-8'
@@ -151,6 +154,31 @@ export class DemandesService {
 
   getDemande(id, typeDemande){
     return this.client.get(`demandes/${typeDemande}/${id}`);
+  }
+
+  getTypeExemp(){
+    return this.client.get('typeExemp');
+  }
+
+  getNbLigneFichier(id, typeDemande){
+    return this.client.get(`nbLignesFichier/${typeDemande}/${id}`);
+  }
+
+  simulerLigne(id, nbLigne,typeDemande){
+    return this.client.get(`simulerLigne/${typeDemande}/${id}/${nbLigne}`);
+
+  }
+
+  choixEtape(id, numEtape, typeDemande){
+    return this.client.patch(`etapeChoisie/${typeDemande}/${id}?etape=${numEtape}`);
+  }
+
+  lancerDemande(id, typeDemande){
+    return this.client.patch(`passerEnAttente/${typeDemande}/${id}`);
+  }
+
+  deleteDemande(id, typeDemande) {
+    return this.client.delete(`demandes/${typeDemande}/${id}`);
   }
 }
 

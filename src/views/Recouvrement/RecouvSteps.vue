@@ -5,7 +5,9 @@
         <v-stepper v-model="currentStep" alt-labels>
           <v-stepper-header>
             <v-stepper-item
-              editable
+              :color="currentStep >= 0 ? '#295494' : ''"
+              :complete="currentStep > 0"
+              :editable="demande"
               icon="mdi-numeric-1"
               title="Séléction du RCR"
               :subtitle="demande ? 'Demande n°'+demande.id : 'Demande'"
@@ -13,8 +15,10 @@
             </v-stepper-item>
             <v-divider></v-divider>
             <v-stepper-item
+              :color="currentStep >= 1 ? '#295494' : ''"
+              :editable="fileSelected"
               icon="mdi-numeric-2"
-              title="Téléchargement"
+              title="Chargement"
               subtitle="du fichier"
             >
             </v-stepper-item>
@@ -34,7 +38,7 @@
               </v-container>
             </v-stepper-window-item>
             <v-stepper-window-item>
-              <upload-file v-model="fileSelected" :is-loading="isLoading"></upload-file>
+              <upload-file v-model="fileSelected" :is-loading="isLoading" @deleted="deleteDemande()">Charger le fichier du taux de recouvrement</upload-file>
               <v-alert
                 v-if="alertMessage"
                 :type="alertType"
@@ -87,8 +91,8 @@ import { onMounted, ref } from 'vue';
 import DemandesService from '@/service/DemandesService';
 import router from '@/router';
 
-const props = defineProps({id : {type: String}})
-
+const props = defineProps({id : {type: String}});
+const emits = defineEmits(['backendError']);
 const demande = ref();
 const rcrSelected = ref();
 const fileSelected = ref();
@@ -97,6 +101,7 @@ const alertMessage = ref();
 const alertType = ref();
 const isLoading = ref(false);
 const dialog = ref(false);
+
 
 onMounted(() => {
   if(props.id){
@@ -117,17 +122,21 @@ function createDemande() {
   if (demande.value && (rcrSelected.value === demande.value.rcr)) {
     next();
   } else if (demande.value) {
-    DemandesService.modifierDemande(demande.value.id, rcrSelected.value, 'RECOUV')
+    DemandesService.modifierRcrDemande(demande.value.id, rcrSelected.value, 'RECOUV')
       .then(response => {
         demande.value = response.data;
         next();
-      });
+      }).catch(err => {
+        emits('backendError',err);
+    });
   } else {
     DemandesService.creerDemande(rcrSelected.value, 'RECOUV')
       .then(response => {
         demande.value = response.data;
         next();
-      });
+      }).catch(err => {
+        emits('backendError',err);
+    });
   }
 }
 
@@ -147,6 +156,15 @@ function launchTraitement() {
     .finally(() => {
       isLoading.value = false;
     });
+}
+
+function deleteDemande(){
+  DemandesService.deleteDemande(demande.value.id, 'RECOUV')
+    .then(()=>{
+      router.push('/accueil');
+    }).catch(err => {
+    emits('backendError', err);
+  })
 }
 
 function next() {
