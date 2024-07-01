@@ -38,7 +38,7 @@
               </v-container>
             </v-stepper-window-item>
             <v-stepper-window-item>
-              <upload-file v-model="fileSelected" :is-loading="isLoading" @deleted="deleteDemande()">Charger le fichier du taux de recouvrement</upload-file>
+              <select-file v-model="fileSelected" :is-loading="isLoading" @deleted="deleteDemande()">Charger le fichier du taux de recouvrement</select-file>
               <v-alert
                 v-if="alertMessage"
                 :type="alertType"
@@ -86,7 +86,7 @@
 
 <script setup>
 import Rcr from '@/components/Rcr.vue';
-import UploadFile from '@/components/UploadFile.vue';
+import SelectFile from '@/components/SelectFile.vue';
 import { onMounted, ref } from 'vue';
 import DemandesService from '@/service/DemandesService';
 import router from '@/router';
