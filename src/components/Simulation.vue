@@ -10,7 +10,7 @@
     ></v-progress-circular>
   </v-overlay>
   <!-- CONTENU SIMULATION -->
-  <v-card>
+  <v-card flat class="pb-2">
     <v-card-title style="background-color: #295494; color: white" class="d-flex justify-space-between">
       <span>Ecran de simulation</span>
       <v-btn depressed variant="text" @click="deleted()" prepend-icon="mdi-delete">Supprimer</v-btn>
@@ -28,13 +28,9 @@
       <v-col cols="12" sm="12" md="5"> <!--Exemplaires existants-->
         <!--Carte activée si présence exemplaires pour cette notice-->
         <v-card class="pa-1" outlined tile>
-          <span>Exemplaire(s) existant(s)</span>
-          <v-container id="scroll-target" style="max-height: 400px" class="overflow-y-auto">
-            <pre style="text-align: left; padding-top: 1em">
-              <span class="inner-pre" style="text-align: left; padding-top: 1em; overflow-x:scroll;">
-                {{ noticeAvant }}
-              </span>
-            </pre>
+          <h5 class="d-flex justify-center">{{ labelBefore }}</h5>
+          <v-container id="scroll-target" style="max-height: 400px" class="overflow-auto">
+            <pre style="text-align: left" class="py-4">{{ noticeAvant }}</pre>
           </v-container>
         </v-card>
       </v-col>
@@ -43,10 +39,8 @@
       </v-col>
       <v-col cols="12" sm="12" md="5"> <!--Exemplaire à créer-->
         <v-card class="pa-1" outlined tile>
-          <span>Exemplaire à créer</span>
-          <pre style="text-align: left; padding-top: 1em; overflow-x:scroll;">
-            {{ noticeApres }}
-          </pre>
+          <h5 class="d-flex justify-center">{{ labelAfter }}</h5>
+          <pre style="text-align: left" class="py-4 overflow-auto">{{ noticeApres }}</pre>
         </v-card>
       </v-col>
     </v-row>
@@ -64,6 +58,14 @@ const props = defineProps({
   demande: {
     type: Object,
     required: true
+  },
+  labelBefore: {
+    type: String,
+    default: 'Avant'
+  },
+  labelAfter: {
+    type: String,
+    default: 'Après'
   }
 });
 const emits = defineEmits(['deleted'])
@@ -73,17 +75,17 @@ const nbNotice = ref({
   nbTotalNotice: 0
 });
 const numeroPPNNotice = ref();
-const noticeAvant = ref();
-const noticeApres = ref();
+const noticeAvant = ref("");
+const noticeApres = ref("");
 const isLoading = ref(true);
 
 onMounted(() => {
-  demandesService.getNbLigneFichier(props.demande.id, 'EXEMP')
+  demandesService.getNbLigneFichier(props.demande.id, props.demande.type)
     .then(response => {
       console.log(response.data);
       nbNotice.value.nbTotalNotice = response.data;
     });
-  demandesService.simulerLigne(props.demande.id, 0, 'EXEMP')
+  demandesService.simulerLigne(props.demande.id, 0, props.demande.type)
     .then(response => {
       numeroPPNNotice.value = response.data[0];
       noticeAvant.value = response.data[1];
@@ -96,7 +98,7 @@ onMounted(() => {
 
 function refresh() {
   isLoading.value = true;
-  demandesService.simulerLigne(props.demande.id, nbNotice.value.nbNoticeEnCours, 'EXEMP')
+  demandesService.simulerLigne(props.demande.id, nbNotice.value.nbNoticeEnCours, props.demande.type)
     .then(response => {
       numeroPPNNotice.value = response.data[0];
       noticeAvant.value = response.data[1];
@@ -119,7 +121,11 @@ h3 {
 }
 
 h4 {
-  font-size: large;
+  font-size: x-large;
+  font-weight: normal;
+}
+h5 {
+  font-size: x-large;
   font-weight: normal;
 }
 </style>

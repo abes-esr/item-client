@@ -73,6 +73,13 @@ const routes = [
     meta: {requiresAuth: true}
   },
   {
+    path: '/modification/:id',
+    name: 'modificationWithId',
+    component: ModifSteps,
+    props: true,
+    meta: {requiresAuth: true}
+  },
+  {
     path: '/exemplarisation',
     name: 'exemplarisation',
     component: ExempSteps,

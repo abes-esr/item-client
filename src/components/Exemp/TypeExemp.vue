@@ -54,8 +54,6 @@ function deleted() {
 
 <style scoped>
 .btn-perso:hover {
-  background-color: lightgrey;
-  transition-duration: 0.3s;
   cursor: pointer;
 }
 

@@ -82,7 +82,7 @@
               </v-container>
             </v-stepper-window-item>
             <v-stepper-window-item>
-              <simulation :demande="demande" @deleted="deleteDemande()"></simulation>
+              <simulation :demande="demande" label-before="Exemplaire(s) existant(s)" label-after="Exemplaire à créer" @deleted="deleteDemande()"></simulation>
               <v-container class="d-flex justify-space-between">
                 <v-btn @click="prev">
                   précédent
@@ -125,7 +125,6 @@ const isLoading = ref(false);
 const dialog = ref(false);
 
 onMounted(()=>{
-  console.log(props.id);
   if(props.id){
     DemandesService.getDemande(props.id, "EXEMP")
       .then(response => {

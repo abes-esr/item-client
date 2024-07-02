@@ -57,6 +57,10 @@ function deleted() {
 </script>
 
 <style scoped>
+.btn-perso:hover {
+  cursor: pointer;
+}
+
 .group {
   font-size: x-large;
 }
