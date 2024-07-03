@@ -75,7 +75,7 @@
                 </v-btn>
                 <v-btn
                   :disabled="!fileSelected"
-                  @click="launchTraitement"
+                  @click="uploadFile"
                 >
                   Lancer le traitement en simulation
                 </v-btn>
@@ -97,7 +97,8 @@
       </v-col>
     </v-row>
   </v-container>
-  <dialog-lancer-traitement v-model="dialog" :is-loading="isLoading" @launch="launchDemande()"></dialog-lancer-traitement>
+  <dialog-lancer-traitement v-model="dialog" :is-loading="isLoading" route="/exemplarisation-tableau" @launch="launchDemande()"></dialog-lancer-traitement>
+  <dialog-suppression  v-model="suppDialog" :demande="demande" return-to-accueil></dialog-suppression>
 </template>
 
 <script setup>
@@ -110,6 +111,7 @@ import Rcr from '@/components/Rcr.vue';
 import TypeExemp from '@/components/Exemp/TypeExemp.vue';
 import Simulation from "@/components/Simulation.vue";
 import DialogLancerTraitement from '@/components/DialogLancerTraitement.vue';
+import DialogSuppression from '@/components/DialogSuppression.vue';
 
 const emits = defineEmits(['backendError', 'backendSuccess', 'login-success'])
 const props = defineProps({id : {type: String}});
@@ -123,6 +125,7 @@ const alertMessage = ref();
 const alertType = ref();
 const isLoading = ref(false);
 const dialog = ref(false);
+const suppDialog = ref(false);
 
 onMounted(()=>{
   if(props.id){
@@ -205,7 +208,7 @@ function modifiTypeExemp() {
   }
 }
 
-function launchTraitement() {
+function uploadFile() {
   alertMessage.value = '';
   alertType.value = 'success';
   isLoading.value = true;
@@ -234,12 +237,7 @@ function launchDemande(){
 }
 
 function deleteDemande(){
-  DemandesService.deleteDemande(demande.value.id, 'EXEMP')
-    .then(()=>{
-      router.push('/accueil');
-    }).catch(err => {
-      emits('backendError', err);
-  })
+  suppDialog.value = true;
 }
 
 function next() {

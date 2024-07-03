@@ -82,6 +82,7 @@
       </v-col>
     </v-row>
   </v-container>
+  <dialog-suppression v-model="suppDialog" :demande="demande" return-to-accueil></dialog-suppression>
 </template>
 
 <script setup>
@@ -90,6 +91,7 @@ import SelectFile from '@/components/SelectFile.vue';
 import { onMounted, ref } from 'vue';
 import DemandesService from '@/service/DemandesService';
 import router from '@/router';
+import DialogSuppression from '@/components/DialogSuppression.vue';
 
 const props = defineProps({id : {type: String}});
 const emits = defineEmits(['backendError']);
@@ -101,6 +103,8 @@ const alertMessage = ref();
 const alertType = ref();
 const isLoading = ref(false);
 const dialog = ref(false);
+const suppDialog = ref(false);
+
 
 
 onMounted(() => {
@@ -159,12 +163,7 @@ function launchTraitement() {
 }
 
 function deleteDemande(){
-  DemandesService.deleteDemande(demande.value.id, 'RECOUV')
-    .then(()=>{
-      router.push('/accueil');
-    }).catch(err => {
-    emits('backendError', err);
-  })
+  suppDialog.value = true;
 }
 
 function next() {

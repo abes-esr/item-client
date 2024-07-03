@@ -146,6 +146,8 @@
       </v-col>
     </v-row>
   </v-container>
+  <dialog-lancer-traitement v-model="dialog" :is-loading="isLoading" route="/modification-tableau" @launch="launchDemande()"></dialog-lancer-traitement>
+  <dialog-suppression v-model="suppDialog" :demande="demande" return-to-accueil></dialog-suppression>
 </template>
 
 <script setup>
@@ -157,6 +159,8 @@ import SelectFile from '@/components/SelectFile.vue';
 import DownloadFile from '@/components/Modif/DownloadFile.vue';
 import TypeTraitement from '@/components/Modif/TypeTraitement.vue';
 import Simulation from "@/components/Simulation.vue";
+import DialogLancerTraitement from '@/components/DialogLancerTraitement.vue';
+import DialogSuppression from '@/components/DialogSuppression.vue';
 
 
 const currentStep = ref(0);
@@ -169,6 +173,8 @@ const alertType = ref();
 const isLoaded = ref(false);
 const isLoading = ref(false);
 const isDownloaded = ref(false);
+const dialog = ref(false);
+const suppDialog = ref(false);
 const fileLink = ref('');
 const fileName = ref('');
 const typeTraitementSelected = ref();
@@ -303,17 +309,22 @@ function modifierTypeTraitementModifDemande() {
   });
 }
 
+function launchDemande(){
+  isLoading.value = true;
+  demandesService.lancerDemande(demande.value.id,'MODIF')
+    .then(response => {
+      demande.value = response.data;
+    }).finally(() => {
+    isLoading.value = false;
+  })
+}
+
 function downloaded() {
   isDownloaded.value = true;
 }
 
 function deleteDemande() {
-  demandesService.deleteDemande(demande.value.id, 'MODIF')
-    .then(() => {
-      router.push('/accueil');
-    }).catch(err => {
-    emits('backendError', err);
-  })
+  suppDialog.value = true;
 }
 
 function next() {
