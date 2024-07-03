@@ -40,29 +40,35 @@
         <td></td>
         <td>
           <v-text-field v-model="numDemandeSearchField" hide-details @input="filterItems"
-                        variant="underlined"></v-text-field>
+                        variant="underlined" append-inner-icon="mdi-magnify"></v-text-field>
         </td>
         <td>
           <v-text-field v-model="dateCreationSearchField" hide-details @input="filterItems"
-                        variant="underlined"></v-text-field>
+                        variant="underlined" append-inner-icon="mdi-magnify"></v-text-field>
         </td>
         <td>
           <v-text-field v-model="dateModificationSearchField" hide-details @input="filterItems"
-                        variant="underlined"></v-text-field>
+                        variant="underlined" append-inner-icon="mdi-magnify"></v-text-field>
         </td>
         <td>
-          <v-text-field v-model="ilnSearchField" hide-details @input="filterItems" variant="underlined"></v-text-field>
+          <v-text-field v-model="ilnSearchField" hide-details @input="filterItems" variant="underlined"
+                        append-inner-icon="mdi-magnify"></v-text-field>
         </td>
         <td>
-          <v-text-field v-model="rcrSearchField" hide-details @input="filterItems" variant="underlined"></v-text-field>
+          <v-text-field v-model="rcrSearchField" hide-details @input="filterItems" variant="underlined"
+                        append-inner-icon="mdi-magnify"></v-text-field>
         </td>
         <td>
-          <v-text-field v-model="typeExempSearchField" hide-details @input="filterItems"
-                        variant="underlined"></v-text-field>
+          <v-select
+            v-model="typeExempSearchField" hide-details variant="underlined" :items="listTypeExemp"
+            @update:menu="filterItems"
+            @click:clear="filterItems" clearable clear-icon="mdi-close" no-data-text="Aucun type d'exemplaire trouvé."
+            aria-label="Recherche par type d'exemplaire"
+          ></v-select>
         </td>
         <td>
           <v-text-field v-model="indexRechercheSearchField" @input="filterItems" hide-details
-                        variant="underlined"></v-text-field>
+                        variant="underlined" append-inner-icon="mdi-magnify"></v-text-field>
         </td>
         <td>
           <v-select :items="listStatut" variant="underlined" hide-details @update:menu="filterItems"
@@ -84,7 +90,7 @@
         <td @click="onRowClick(item)" class="text-center">{{ item.dateModification }}</td>
         <td @click="onRowClick(item)" class="text-center">{{ item.iln }}</td>
         <td @click="onRowClick(item)" class="text-center">{{ item.rcr }}</td>
-        <td @click="onRowClick(item)" class="text-center">{{ item.typeExemp }}</td>
+        <td @click="onRowClick(item)" class="text-center">{{ item.typeExemp ? item.typeExemp : 'Non défini' }}</td>
         <td @click="onRowClick(item)" class="text-center">{{ item.indexRecherche }}</td>
         <td @click="onRowClick(item)" class="text-center">
           <v-chip color="grey" variant="flat"
@@ -136,16 +142,15 @@
       </tr>
     </template>
   </v-data-table>
-  <dialog-suppression v-model="suppDialog" :demande="suppDemande" @supp="loadItems('EXEMP', archiveFalseActiveTrue)"></dialog-suppression>
+  <dialog-suppression v-model="suppDialog" :demande="suppDemande"
+                      @supp="loadItems('EXEMP', archiveFalseActiveTrue)"></dialog-suppression>
 </template>
 
 <script setup>
 import { onMounted, ref } from 'vue';
-import DemandesService from '@/service/DemandesService';
 import router from '@/router';
 import DialogSuppression from '@/components/DialogSuppression.vue';
-
-const service = DemandesService;
+import demandesService from '@/service/DemandesService';
 
 //Emit
 const emit = defineEmits(['backendError', 'backendSuccess']);
@@ -224,6 +229,7 @@ const listStatut = [
   'Terminé',
   'En erreur'
 ];
+const listTypeExemp = ref([]);
 const contentsDemandesFromServer = ref([]);
 const contentsDemandesFrontFiltered = ref([]);
 const totalItemsFound = ref(0);
@@ -239,7 +245,7 @@ const dateCreationSearchField = ref('');
 const dateModificationSearchField = ref('');
 const ilnSearchField = ref('');
 const rcrSearchField = ref('');
-const typeExempSearchField = ref('');
+const typeExempSearchField = ref();
 const indexRechercheSearchField = ref('');
 const statutSearchField = ref();
 
@@ -250,6 +256,14 @@ const archiveFalseActiveTrue = ref(false);
 onMounted(() => {
   loadItems('EXEMP', archiveFalseActiveTrue.value);
   contentsDemandesFromServer.value = [...contentsDemandesFromServer.value];
+  demandesService.getTypeExemp()
+    .then(response => {
+      response.data.forEach(type => {
+        listTypeExemp.value.push(type.libelle);
+      });
+      listTypeExemp.value.sort();
+      listTypeExemp.value.push('Non défini');
+    });
 });
 
 function switchArchiveActiveDisplay(value) {
@@ -259,7 +273,7 @@ function switchArchiveActiveDisplay(value) {
 
 async function loadItems(type, archive) {
   try {
-    const response = await service.fetchDemandes(type, archive, extendedAllILN.value);
+    const response = await demandesService.fetchDemandes(type, archive, extendedAllILN.value);
     contentsDemandesFromServer.value = response.data;
     contentsDemandesFrontFiltered.value = response.data.map((item) => ({
       ...item,
@@ -288,7 +302,7 @@ function filterItems() {
       .includes(rcrSearchField.value);
     const matchesILN = ilnSearchField.value === '' || demande.iln.toString()
       .includes(ilnSearchField.value);
-    const matchesTypeExemp = typeExempSearchField.value === '' || demande.typeExemp && demande.typeExemp.includes(typeExempSearchField.value);
+    const matchesTypeExemp = typeExempSearchField.value === undefined || typeExempSearchField.value === null || typeExempSearchField.value === '' || (demande.typeExemp && demande.typeExemp.includes(typeExempSearchField.value)) || (!demande.typeExemp && typeExempSearchField.value === 'Non défini');
     const matchesIndexSearch = indexRechercheSearchField.value === '' || demande.indexRecherche && demande.indexRecherche.includes(indexRechercheSearchField.value);
     const matchesEtatDemande = statutSearchField.value === undefined || statutSearchField.value === null || statutSearchField.value === '' || demande.etatDemande.toString()
       .includes(statutSearchField.value) || ((statutSearchField.value === 'En saisie') && (demande.etatDemande === 'En simulation' || demande.etatDemande === 'En préparation' || demande.etatDemande === 'A compléter'));
@@ -297,7 +311,7 @@ function filterItems() {
 }
 
 function downloadFile(demandeNumber, filePrefix) {
-  return service.getFile(filePrefix, demandeNumber, 'csv', 'EXEMP')
+  return demandesService.getFile(filePrefix, demandeNumber, 'csv', 'EXEMP')
     .catch((error) => {
       console.error(error);
       emit('backendError', error);
@@ -305,7 +319,7 @@ function downloadFile(demandeNumber, filePrefix) {
 }
 
 function isAvailableFile(demandeNumber, filename) {
-  return service.headFile(filename, demandeNumber, 'csv', 'EXEMP')
+  return demandesService.headFile(filename, demandeNumber, 'csv', 'EXEMP')
     .then((response) => response.status !== 500)
     .catch((error) => {
       console.error(error);
@@ -331,7 +345,7 @@ function supprimerDemande(item) {
 //Archivage d'une demande
 async function archiverDemande(item) {
   try {
-    await service.archiverDemande('EXEMP', item.id);
+    await demandesService.archiverDemande('EXEMP', item.id);
     // Mettre à jour les données après l'archivage réussi
     await loadItems('EXEMP');
     emit('backendSuccess');

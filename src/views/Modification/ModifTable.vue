@@ -39,28 +39,36 @@
         <td></td>
         <td>
           <v-text-field v-model="numDemandeSearchField" hide-details @input="filterItems"
-                        variant="underlined"></v-text-field>
+                        variant="underlined" append-inner-icon="mdi-magnify"></v-text-field>
         </td>
         <td>
           <v-text-field v-model="dateCreationSearchField" hide-details @input="filterItems"
-                        variant="underlined"></v-text-field>
+                        variant="underlined" append-inner-icon="mdi-magnify"></v-text-field>
         </td>
         <td>
           <v-text-field v-model="dateModificationSearchField" hide-details @input="filterItems"
-                        variant="underlined"></v-text-field>
+                        variant="underlined" append-inner-icon="mdi-magnify"></v-text-field>
         </td>
         <td>
-          <v-text-field v-model="ilnSearchField" hide-details @input="filterItems" variant="underlined"></v-text-field>
+          <v-text-field v-model="ilnSearchField" hide-details @input="filterItems" variant="underlined"
+                        append-inner-icon="mdi-magnify"></v-text-field>
         </td>
         <td>
-          <v-text-field v-model="rcrSearchField" hide-details @input="filterItems" variant="underlined"></v-text-field>
+          <v-text-field v-model="rcrSearchField" hide-details @input="filterItems" variant="underlined"
+                        append-inner-icon="mdi-magnify"></v-text-field>
         </td>
         <td>
-          <v-text-field v-model="zoneSearchField" hide-details @input="filterItems" variant="underlined"></v-text-field>
+          <v-text-field v-model="zoneSearchField" hide-details @input="filterItems" variant="underlined"
+                        append-inner-icon="mdi-magnify"></v-text-field>
         </td>
         <td>
-          <v-text-field v-model="traitementSearchField" @input="filterItems" hide-details
-                        variant="underlined"></v-text-field>
+          <v-select
+            v-model="traitementSearchField" hide-details variant="underlined" :items="listTypeTraitement"
+            @update:menu="filterItems"
+            @click:clear="filterItems" clearable clear-icon="mdi-close" no-data-text="Aucun type de traitement trouvé."
+            aria-label="Recherche par type de traitement"
+          ></v-select>
+
         </td>
         <td>
           <v-select :items="listStatut" variant="underlined" hide-details @update:menu="filterItems"
@@ -83,7 +91,7 @@
         <td @click="onRowClick(item)" class="text-center">{{ item.iln }}</td>
         <td @click="onRowClick(item)" class="text-center">{{ item.rcr }}</td>
         <td @click="onRowClick(item)" class="text-center">{{ item.zone }}</td>
-        <td @click="onRowClick(item)" class="text-center">{{ item.traitement }}</td>
+        <td @click="onRowClick(item)" class="text-center">{{ item.traitement ? item.traitement : 'Non défini' }}</td>
         <td @click="onRowClick(item)" class="text-center">
           <v-chip color="grey" variant="flat"
                   v-if="item.etatDemande === 'En simulation' || item.etatDemande === 'En préparation' || item.etatDemande === 'Préparée' || item.etatDemande === 'A compléter'">
@@ -104,34 +112,7 @@
           </v-progress-linear>
         </td>
         <td class="text-center">
-          <!-- Colonne Téléchargement -->
-          <v-tooltip top>
-            <template v-slot:activator="{ props }" v-if="item.fichier_initial">
-              <span v-bind="props"><v-icon
-                @click='downloadFile(item.id, "fichier_initial")'>mdi-file-upload</v-icon></span></template>
-            <span>Fichier initial des PPN</span>
-          </v-tooltip>
 
-          <v-tooltip top>
-            <template v-slot:activator="{ props }" v-if="item.fichier_prepare">
-              <span v-bind="props"><v-icon @click='downloadFile(item.id, "fichier_prepare")'>mdi-file-download</v-icon></span>
-            </template>
-            <span>Fichier de correspondance PPN/EPN</span>
-          </v-tooltip>
-
-          <v-tooltip top>
-            <template v-slot:activator="{ props }" v-if="item.fichier_enrichi">
-              <span v-bind="props"><v-icon
-                @click='downloadFile(item.id, "fichier_enrichi")'>mdi-file-upload</v-icon></span></template>
-            <span>Fichier enrichi (fichier déposé)</span>
-          </v-tooltip>
-
-          <v-tooltip top>
-            <template v-slot:activator="{ props }" v-if="item.fichier_resultat">
-              <span v-bind="props"><v-icon @click='downloadFile(item.id, "fichier_resultat")'>mdi-file-download</v-icon></span>
-            </template>
-            <span>Fichier résultat</span>
-          </v-tooltip>
         </td>
         <td class="text-center">
           <!-- Colonne Action -->
@@ -147,16 +128,15 @@
       </tr>
     </template>
   </v-data-table>
-  <dialog-suppression v-model="suppDialog" :demande="suppDemande" @supp="loadItems('MODIF', archiveFalseActiveTrue)"></dialog-suppression>
+  <dialog-suppression v-model="suppDialog" :demande="suppDemande"
+                      @supp="loadItems('MODIF', archiveFalseActiveTrue)"></dialog-suppression>
 </template>
 
 <script setup>
 import { onMounted, ref } from 'vue';
-import DemandesService from '@/service/DemandesService';
-import router from "@/router";
+import router from '@/router';
 import DialogSuppression from '@/components/DialogSuppression.vue';
-
-const service = DemandesService;
+import demandesService from '@/service/DemandesService';
 
 //Emit
 const emit = defineEmits(['backendError', 'backendSuccess']);
@@ -235,6 +215,7 @@ const listStatut = [
   'Terminé',
   'En erreur'
 ];
+const listTypeTraitement = ref([]);
 const contentsDemandesFromServer = ref([]);
 const contentsDemandesFrontFiltered = ref([]);
 const totalItemsFound = ref(0);
@@ -251,7 +232,7 @@ const dateModificationSearchField = ref('');
 const ilnSearchField = ref('');
 const rcrSearchField = ref('');
 const zoneSearchField = ref('');
-const traitementSearchField = ref('');
+const traitementSearchField = ref();
 const statutSearchField = ref();
 
 //Actives or archives demands displayed
@@ -261,6 +242,14 @@ const archiveFalseActiveTrue = ref(false);
 onMounted(() => {
   loadItems('MODIF', archiveFalseActiveTrue.value);
   contentsDemandesFromServer.value = [...contentsDemandesFromServer.value];
+  demandesService.getTypeTraitement()
+    .then(response => {
+      response.data.forEach(type => {
+        listTypeTraitement.value.push(type.libelle);
+      });
+      listTypeTraitement.value.sort();
+      listTypeTraitement.value.push('Non défini');
+    });
 });
 
 function switchArchiveActiveDisplay(value) {
@@ -270,15 +259,12 @@ function switchArchiveActiveDisplay(value) {
 
 async function loadItems(type, archive) {
   try {
-    const response = await service.fetchDemandes(type, archive, extendedAllILN.value);
+    const response = await demandesService.fetchDemandes(type, archive, extendedAllILN.value);
     contentsDemandesFromServer.value = response.data;
     contentsDemandesFrontFiltered.value = response.data.map((item) => ({
       ...item,
       expanded: false,
-      fichier_initial: false,
-      fichier_correspondance: false,
-      fichier_enrichi: false,
-      fichier_resultat: false,
+
     }));
 
     isDataLoaded.value = true;
@@ -302,23 +288,17 @@ function filterItems() {
     const matchesILN = ilnSearchField.value === '' || demande.iln.toString()
       .includes(ilnSearchField.value);
     const matchesZone = zoneSearchField.value === '' || demande.zone && demande.zone.includes(zoneSearchField.value);
-    const matchesTraitement = traitementSearchField.value === '' || demande.traitement && demande.traitement.includes(traitementSearchField.value);
+    const matchesTraitement = traitementSearchField.value === undefined || traitementSearchField.value === null || traitementSearchField.value === '' || (demande.traitement && demande.traitement.includes(traitementSearchField.value)) || (!demande.traitement && traitementSearchField.value === 'Non défini');
     const matchesEtatDemande = statutSearchField.value === undefined || statutSearchField.value === null || statutSearchField.value === '' || demande.etatDemande.toString()
       .includes(statutSearchField.value) || ((statutSearchField.value === 'En saisie') && (demande.etatDemande === 'En simulation' || demande.etatDemande === 'En préparation' || demande.etatDemande === 'Préparée' || demande.etatDemande === 'A compléter'));
     return matchesNumDemande && matchesDateCreation && matchesDateModification && matchesRCR && matchesILN && matchesZone && matchesTraitement && matchesEtatDemande;
   });
 }
 
-function downloadFile(demandeNumber, filePrefix) {
-  return service.getFile(filePrefix, demandeNumber, 'csv', 'MODIF')
-    .catch((error) => {
-      console.error(error);
-      emit('backendError', error);
-    });
-}
+
 
 function isAvailableFile(demandeNumber, filename) {
-  return service.headFile(filename, demandeNumber, 'csv', 'MODIF')
+  return demandesService.headFile(filename, demandeNumber, 'csv', 'MODIF')
     .then((response) => response.status !== 500)
     .catch((error) => {
       console.error(error);
@@ -344,7 +324,7 @@ function supprimerDemande(item) {
 //Archivage d'une demande
 async function archiverDemande(item) {
   try {
-    await service.archiverDemande('MODIF', item.id);
+    await demandesService.archiverDemande('MODIF', item.id);
     // Mettre à jour les données après l'archivage réussi
     await loadItems('MODIF');
     emit('backendSuccess');
@@ -353,34 +333,11 @@ async function archiverDemande(item) {
     emit('backendError', error);
   }
 }
-
-async function onMouseOverRow(item) {
-  //console.log('Souris sur la ligne :', item);
-  item.highlighted = true;
-  // Faites quelque chose avec l'élément 'item' lorsque la souris passe dessus
-  //TODO mettre en place une fonction qui maj une valeur item.progress toutes les x secondes pour savoir si le serveur est en train de traiter la demande
-  // Vérifier la disponibilité des fichiers pour chaque type de fichier
-  item.fichier_initial = await isAvailableFile(item.id, 'fichier_initial');
-  item.fichier_prepare = await isAvailableFile(item.id, 'fichier_prepare');
-  item.fichier_enrichi = await isAvailableFile(item.id, 'fichier_enrichi');
-  item.fichier_resultat = await isAvailableFile(item.id, 'fichier_resultat');
-}
-
-function onMouseLeaveRow(item) {
-  item.highlighted = false;
-  setTimeout(() => {
-    item.fichier_initial = false;
-    item.fichier_prepare = false;
-    item.fichier_enrichi = false;
-    item.fichier_resultat = false;
-  }, 1000);
-}
-
 function onRowClick(item) {
   console.log('Ligne cliquée avec la demande :', item);
   // Faites quelque chose lorsque la ligne est cliquée, par exemple naviguer vers une page de détails de la demande
-  if(item.etatDemande === 'En préparation' || item.etatDemande === 'Préparée' || item.etatDemande === 'A compléter' || item.etatDemande === 'En simulation' ){
-    router.push('/modification/'+item.id);
+  if (item.etatDemande === 'En préparation' || item.etatDemande === 'Préparée' || item.etatDemande === 'A compléter' || item.etatDemande === 'En simulation') {
+    router.push('/modification/' + item.id);
   }
 
 }

@@ -39,25 +39,27 @@
         <td></td>
         <td>
           <v-text-field v-model="numDemandeSearchField" hide-details @input="filterItems"
-                        variant="underlined"></v-text-field>
+                        variant="underlined" append-inner-icon="mdi-magnify"></v-text-field>
         </td>
         <td>
           <v-text-field v-model="dateCreationSearchField" hide-details @input="filterItems"
-                        variant="underlined"></v-text-field>
+                        variant="underlined" append-inner-icon="mdi-magnify"></v-text-field>
         </td>
         <td>
           <v-text-field v-model="dateModificationSearchField" hide-details @input="filterItems"
-                        variant="underlined"></v-text-field>
+                        variant="underlined" append-inner-icon="mdi-magnify"></v-text-field>
         </td>
         <td>
-          <v-text-field v-model="ilnSearchField" hide-details @input="filterItems" variant="underlined"></v-text-field>
+          <v-text-field v-model="ilnSearchField" hide-details @input="filterItems" variant="underlined"
+                        append-inner-icon="mdi-magnify"></v-text-field>
         </td>
         <td>
-          <v-text-field v-model="rcrSearchField" hide-details @input="filterItems" variant="underlined"></v-text-field>
+          <v-text-field v-model="rcrSearchField" hide-details @input="filterItems" variant="underlined"
+                        append-inner-icon="mdi-magnify"></v-text-field>
         </td>
         <td>
           <v-text-field v-model="indexRechercheSearchField" @input="filterItems" hide-details
-                        variant="underlined"></v-text-field>
+                        variant="underlined" append-inner-icon="mdi-magnify"></v-text-field>
         </td>
         <td>
           <v-select :items="listStatut" variant="underlined" hide-details @update:menu="filterItems"
@@ -143,7 +145,8 @@
       </tr>
     </template>
   </v-data-table>
-  <dialog-suppression v-model="suppDialog" :demande="suppDemande" @supp="loadItems('RECOUV', archiveFalseActiveTrue)"></dialog-suppression>
+  <dialog-suppression v-model="suppDialog" :demande="suppDemande"
+                      @supp="loadItems('RECOUV', archiveFalseActiveTrue)"></dialog-suppression>
 </template>
 
 <script setup>

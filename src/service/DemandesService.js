@@ -59,29 +59,22 @@ export class DemandesService {
     return this.client.get(`demandes/${type}?archive=${archive}&extension=${extensionIln}`)
   }
 
-  getFile(filetype, demandeNumber, fileFormat, typeDemande) {
-    const url = import.meta.env.VITE_API_URL + `files/${filetype}_${demandeNumber}.${fileFormat}?id=${demandeNumber}&type=${typeDemande}`;
-    console.info('appel: ' + url);
-
-    return this.client({
-      url: url,
-      method: 'GET',
-      responseType: 'blob', // Indique que la réponse est de type blob (fichier)
-    })
-      .then((response) => {
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', `${filetype}_${demandeNumber}.${fileFormat}`);
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-      })
-      .catch((error) => {
-        console.error(error);
-        throw error;
-      });
-  }
+  // getFile(filetype, demandeNumber, fileFormat, typeDemande) {
+  //   return this.client.get(`files/${typeDemande}/${demandeNumber}/${filetype}_${demandeNumber}.${fileFormat}`)
+  //     .then((response) => {
+  //       const url = window.URL.createObjectURL(new Blob([response.data]));
+  //       const link = document.createElement('a');
+  //       link.href = url;
+  //       link.setAttribute('download', `${filetype}_${demandeNumber}.${fileFormat}`);
+  //       document.body.appendChild(link);
+  //       link.click();
+  //       link.remove();
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //       throw error;
+  //     });
+  // }
 
   //.head = controle de la disponibilité de l'url d'appel (pas de retour de data)
   checkFileExistence(filetype, demandeNumber, fileFormat, typeDemande) {
@@ -185,12 +178,16 @@ export class DemandesService {
     return this.client.delete(`demandes/${typeDemande}/${id}`);
   }
 
-  getFilePreparer(id, typeDemande){
-    return this.client.get(`/files/${typeDemande}/${id}/fichier_prepare_${id}.csv`);
+  getFile(id, typeDemande,prefix){
+    return this.client.get(`/files/${typeDemande}/${id}/fichier_${prefix}_${id}.csv`);
   }
 
   getTypeTraitement(){
     return this.client.get('traitements');
+  }
+
+  getEtatDemande(){
+    //todo faire le getEtatDemande
   }
 }
 
