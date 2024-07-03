@@ -71,21 +71,20 @@
     </template>
 
     <template v-slot:item="{ item, expand }">
-      <tr @click="onRowClick" @mouseover="onMouseOverRow(item)" @mouseleave="onMouseLeaveRow(item)"
-          :class="{ 'highlighted-row': item.highlighted }" style="cursor: pointer;">
+      <tr :class="{ 'highlighted-row': item.highlighted }" style="cursor: pointer;">
         <td>
           <v-btn icon="mdi-chevron-up" @click="item.expanded = !item.expanded" variant="text">
             <v-icon>{{ item.expanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
           </v-btn>
         </td>
-        <td class="text-center">{{ item.id }}</td>
-        <td class="text-center">{{ item.dateCreation }}</td>
-        <td class="text-center">{{ item.dateModification }}</td>
-        <td class="text-center">{{ item.iln }}</td>
-        <td class="text-center">{{ item.rcr }}</td>
-        <td class="text-center">{{ item.zone }}</td>
-        <td class="text-center">{{ item.traitement }}</td>
-        <td class="text-center">
+        <td @click="onRowClick(item)" class="text-center">{{ item.id }}</td>
+        <td @click="onRowClick(item)" class="text-center">{{ item.dateCreation }}</td>
+        <td @click="onRowClick(item)" class="text-center">{{ item.dateModification }}</td>
+        <td @click="onRowClick(item)" class="text-center">{{ item.iln }}</td>
+        <td @click="onRowClick(item)" class="text-center">{{ item.rcr }}</td>
+        <td @click="onRowClick(item)" class="text-center">{{ item.zone }}</td>
+        <td @click="onRowClick(item)" class="text-center">{{ item.traitement }}</td>
+        <td @click="onRowClick(item)" class="text-center">
           <v-chip color="grey" variant="flat"
                   v-if="item.etatDemande === 'En simulation' || item.etatDemande === 'En préparation' || item.etatDemande === 'Préparée' || item.etatDemande === 'A compléter'">
             En saisie
@@ -98,7 +97,7 @@
           <v-chip color="brown" variant="flat" v-else-if="item.etatDemande === 'Archivé'">Archivé</v-chip>
           <v-chip color="red" variant="flat" v-else-if="item.etatDemande === 'En erreur'">En erreur</v-chip>
         </td>
-        <td class="text-center">
+        <td @click="onRowClick(item)" class="text-center">
           <v-progress-linear v-model="item.pourcentageProgressionTraitement" :height="18" :striped="false"
                              color="grey-lighten-1" style="border: 1px solid grey; font-weight: bolder">
             {{ item.pourcentageProgressionTraitement }} %
@@ -136,8 +135,8 @@
         </td>
         <td class="text-center">
           <!-- Colonne Action -->
-          <v-icon v-if="canArchive(item)" @click="archiverDemande(item)">mdi-archive</v-icon>
-          <v-icon v-else-if="canCancel(item)" @click="supprimerDemande(item)">mdi-delete</v-icon>
+          <v-btn v-if="canArchive(item)" variant="plain" icon="mdi-archive" @click="archiverDemande(item)"></v-btn>
+          <v-btn v-else-if="canCancel(item)" variant="plain" icon="mdi-delete" @click="supprimerDemande(item)"></v-btn>
         </td>
       </tr>
       <tr v-if="item.expanded">
@@ -148,11 +147,14 @@
       </tr>
     </template>
   </v-data-table>
+  <dialog-suppression v-model="suppDialog" :demande="suppDemande" @supp="loadItems('MODIF', archiveFalseActiveTrue)"></dialog-suppression>
 </template>
 
 <script setup>
 import { onMounted, ref } from 'vue';
 import DemandesService from '@/service/DemandesService';
+import router from "@/router";
+import DialogSuppression from '@/components/DialogSuppression.vue';
 
 const service = DemandesService;
 
@@ -236,6 +238,8 @@ const listStatut = [
 const contentsDemandesFromServer = ref([]);
 const contentsDemandesFrontFiltered = ref([]);
 const totalItemsFound = ref(0);
+const suppDialog = ref(false);
+const suppDemande = ref({});
 
 //Progress bar displayed while fetching data
 const isDataLoaded = ref(false);
@@ -332,16 +336,9 @@ function canCancel(item) {
 }
 
 //Suppression d'une demande
-async function supprimerDemande(item) {
-  try {
-    await service.supprimerDemande('MODIF', item.id);
-    // Mettre à jour les données après la suppression réussie
-    await loadItems('MODIF');
-    emit('backendSuccess');
-  } catch (error) {
-    console.error(error);
-    emit('backendError', error);
-  }
+function supprimerDemande(item) {
+  suppDialog.value = true;
+  suppDemande.value = item;
 }
 
 //Archivage d'une demande
@@ -380,8 +377,12 @@ function onMouseLeaveRow(item) {
 }
 
 function onRowClick(item) {
-  console.log('Ligne cliquée avec la demande :', item.id);
+  console.log('Ligne cliquée avec la demande :', item);
   // Faites quelque chose lorsque la ligne est cliquée, par exemple naviguer vers une page de détails de la demande
+  if(item.etatDemande === 'En préparation' || item.etatDemande === 'Préparée' || item.etatDemande === 'A compléter' || item.etatDemande === 'En simulation' ){
+    router.push('/modification/'+item.id);
+  }
+
 }
 
 </script>
