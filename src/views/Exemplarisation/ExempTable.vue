@@ -64,35 +64,48 @@
                         variant="underlined"></v-text-field>
         </td>
         <td>
-          <v-text-field v-model="statutSearchField" @input="filterItems" hide-details
-                        variant="underlined"></v-text-field>
+          <v-select :items="listStatut" variant="underlined" hide-details @update:menu="filterItems"
+                    @click:clear="filterItems" aria-label="Recherche par statut" clearable clear-icon="mdi-close"
+                    no-data-text="Aucun statut trouvé." v-model="statutSearchField"></v-select>
         </td>
       </tr>
     </template>
 
     <template v-slot:item="{ item, expand }">
-      <tr @click="onRowClick(item)" @mouseover="onMouseOverRow(item)" @mouseleave="onMouseLeaveRow(item)"
+      <tr @click="onRowClick(item)"
           :class="{ 'highlighted-row': item.highlighted }" style="cursor: pointer;">
         <td>
           <v-btn icon="mdi-chevron-up" @click="item.expanded = !item.expanded" variant="text">
             <v-icon>{{ item.expanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
           </v-btn>
         </td>
-        <td class="text-right">{{ item.id }}</td>
-        <td class="text-right">{{ item.dateCreation }}</td>
-        <td class="text-right">{{ item.dateModification }}</td>
-        <td class="text-right">{{ item.iln }}</td>
-        <td class="text-right">{{ item.rcr }}</td>
-        <td class="text-right">{{ item.typeExemp }}</td>
-        <td class="text-right">{{ item.indexRecherche }}</td>
-        <td class="text-right">{{ item.etatDemande }}</td>
-        <td class="text-right">
+        <td class="text-center">{{ item.id }}</td>
+        <td class="text-center-">{{ item.dateCreation }}</td>
+        <td class="text-center">{{ item.dateModification }}</td>
+        <td class="text-center">{{ item.iln }}</td>
+        <td class="text-center">{{ item.rcr }}</td>
+        <td class="text-center">{{ item.typeExemp }}</td>
+        <td class="text-center">{{ item.indexRecherche }}</td>
+        <td class="text-center">
+          <v-chip color="grey" variant="flat"
+                  v-if="item.etatDemande === 'En simulation' || item.etatDemande === 'En préparation' || item.etatDemande === 'A compléter'">
+            En saisie
+          </v-chip>
+          <v-chip color="orange" variant="flat" v-else-if="item.etatDemande === 'En attente'">En attente</v-chip>
+          <v-chip color="grey" variant="flat" v-else-if="item.etatDemande === 'En cours de traitement'">En cours de
+            traitement
+          </v-chip>
+          <v-chip color="green" variant="flat" v-else-if="item.etatDemande === 'Terminé'">Terminé</v-chip>
+          <v-chip color="brown" variant="flat" v-else-if="item.etatDemande === 'Archivé'">Archivé</v-chip>
+          <v-chip color="red" variant="flat" v-else-if="item.etatDemande === 'En erreur'">En erreur</v-chip>
+        </td>
+        <td class="text-center">
           <v-progress-linear v-model="item.pourcentageProgressionTraitement" :height="18" :striped="false"
                              color="grey-lighten-1" style="border: 1px solid grey; font-weight: bolder">
             {{ item.pourcentageProgressionTraitement }} %
           </v-progress-linear>
         </td>
-        <td class="text-right">
+        <td class="text-center">
           <!-- Colonne Téléchargement -->
           <v-tooltip top>
             <template v-slot:activator="{ props }" v-if="item.fichier_enrichi">
@@ -108,7 +121,7 @@
             <span>Fichier résultat</span>
           </v-tooltip>
         </td>
-        <td class="text-right">
+        <td class="text-center">
           <!-- Colonne Action -->
           <v-icon v-if="canArchive(item)" @click="archiverDemande(item)">mdi-archive</v-icon>
           <v-icon v-else-if="canCancel(item)" @click="supprimerDemande(item)">mdi-delete</v-icon>
@@ -136,71 +149,78 @@ const emit = defineEmits(['backendError', 'backendSuccess']);
 
 //Data
 const extendedAllILN = ref(false);
-const headingsDemandes = ref([
+const headingsDemandes = [
   {
     title: '',
     key: 'data-table-expand',
-    align: 'end'
+    align: 'center'
   },
   {
     title: 'Demande',
     key: 'id',
-    align: 'end'
+    align: 'center'
   },
   {
     title: 'Crée le',
     key: 'dateCreation',
-    align: 'end'
+    align: 'center'
   },
   {
     title: 'Mise à jour',
     key: 'dateModification',
-    align: 'end'
+    align: 'center'
   },
   {
     title: 'ILN',
     key: 'iln',
-    align: 'end'
+    align: 'center'
   },
   {
     title: 'RCR',
     key: 'rcr',
-    align: 'end'
+    align: 'center'
   },
   {
     title: 'Type',
     key: 'typeExemp',
-    align: 'end'
+    align: 'center'
   },
   {
     title: 'Index',
     key: 'indexRecherche',
-    align: 'end'
+    align: 'center'
   },
   {
     title: 'Statut',
     key: 'etatDemande',
-    align: 'end'
+    align: 'center'
   },
   {
     title: 'Progression',
     key: 'pourcentageProgressionTraitement',
     value: 'pourcentageProgressionTraitement',
-    align: 'end'
+    align: 'center'
   },
   {
     title: 'Fichiers',
     key: 'filesToDownload',
     value: 'filesToDownload',
-    align: 'end'
+    align: 'center'
   },
   {
     title: 'Action',
     key: 'archiveOrCancel',
     value: 'archiveOrCancel',
-    align: 'end'
+    align: 'center'
   }
-]);
+];
+const listStatut = [
+  'En saisie',
+  'En attente',
+  'En cours de traitement',
+  'Terminé',
+  'En erreur'
+];
 const contentsDemandesFromServer = ref([]);
 const contentsDemandesFrontFiltered = ref([]);
 const totalItemsFound = ref(0);
@@ -216,7 +236,7 @@ const ilnSearchField = ref('');
 const rcrSearchField = ref('');
 const typeExempSearchField = ref('');
 const indexRechercheSearchField = ref('');
-const statutSearchField = ref('');
+const statutSearchField = ref();
 
 //Actives or archives demands displayed
 const archiveFalseActiveTrue = ref(false);
@@ -265,8 +285,8 @@ function filterItems() {
       .includes(ilnSearchField.value);
     const matchesTypeExemp = typeExempSearchField.value === '' || demande.typeExemp && demande.typeExemp.includes(typeExempSearchField.value);
     const matchesIndexSearch = indexRechercheSearchField.value === '' || demande.indexRecherche && demande.indexRecherche.includes(indexRechercheSearchField.value);
-    const matchesEtatDemande = statutSearchField.value === '' || demande.etatDemande.toString()
-      .includes(statutSearchField.value);
+    const matchesEtatDemande = statutSearchField.value === undefined || statutSearchField.value === null || statutSearchField.value === '' || demande.etatDemande.toString()
+      .includes(statutSearchField.value) || ((statutSearchField.value === 'En saisie') && (demande.etatDemande === 'En simulation' || demande.etatDemande === 'En préparation' || demande.etatDemande === 'A compléter'));
     return matchesNumDemande && matchesDateCreation && matchesDateModification && matchesRCR && matchesILN && matchesTypeExemp && matchesIndexSearch && matchesEtatDemande;
   });
 }
@@ -345,8 +365,8 @@ function onRowClick(item) {
   console.log('Ligne cliquée avec la demande :', item.id);
   // Faites quelque chose lorsque la ligne est cliquée, par exemple naviguer vers une page de détails de la demande
 
-  if(item.etatDemande === 'En préparation' || item.etatDemande === 'A compléter' || item.etatDemande === 'En simulation' ){
-    router.push('/exemplarisation/'+item.id);
+  if (item.etatDemande === 'En préparation' || item.etatDemande === 'A compléter' || item.etatDemande === 'En simulation') {
+    router.push('/exemplarisation/' + item.id);
   }
 }
 
