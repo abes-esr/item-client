@@ -19,9 +19,9 @@
 
 <script setup>
 import {onMounted, ref} from 'vue'
-import Header from '@/components/Header.vue'
-import Navbar from '@/components/Navbar.vue'
-import Footer from '@/components/Footer.vue'
+import Header from '@/components/Structure/Header.vue'
+import Navbar from '@/components/Structure/Navbar.vue'
+import Footer from '@/components/Structure/Footer.vue'
 import router from '@/router/index'
 import { HttpStatusCode } from 'axios';
 import DemandesService from '@/service/DemandesService'

@@ -16,9 +16,13 @@
           <v-row class="d-flex justify-center pa-1">RCR</v-row>
           <v-row class="d-flex justify-center pa-1">{{ demande.rcr }} - {{ demande.shortname }}</v-row>
         </v-col>
-        <v-col>
-          <v-row class="d-flex justify-center pa-1">Type d'exemplarisation</v-row>
+        <v-col v-if="demande.typeExemp">
+          <v-row class="d-flex justify-center pa-1">Type de document</v-row>
           <v-row class="d-flex justify-center pa-1">{{ demande.typeExemp }}</v-row>
+        </v-col>
+        <v-col v-if="demande.traitement">
+          <v-row class="d-flex justify-center pa-1">Type de traitement</v-row>
+          <v-row class="d-flex justify-center pa-1">{{ demande.traitement }}</v-row>
         </v-col>
       </v-row>
     </v-container>
@@ -26,6 +30,7 @@
 </template>
 
 <script setup>
+
 const props = defineProps({
   demande: {type: Object, required: true}
 });

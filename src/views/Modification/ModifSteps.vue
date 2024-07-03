@@ -1,63 +1,364 @@
 <template>
-  <v-stepper v-model="currentStep" vertical>
-    <v-stepper-step :complete="currentStep > 1" step="1">
-      Step one
-      <template v-slot:subtitle>
-        Personal details
-      </template>
-    </v-stepper-step>
+  <v-container :class="(currentStep === 4) ? '' : 'fill-height'" fluid>
+    <v-row align="center" justify="center">
+      <v-col :md="(currentStep === 4) ? '' : '7'">
+        <v-stepper v-model="currentStep" @update:model-value="changeEtape()" alt-labels>
+          <v-stepper-header>
+            <v-stepper-item
+              :color="currentStep >= 0 ? '#295494' : ''"
+              :complete="currentStep > 0"
+              :editable="currentStep > 0"
+              icon="mdi-numeric-1"
+              title="Séléction du RCR"
+              :subtitle="demande ? 'Demande n°'+demande.id : 'Demande'"
+            >
+            </v-stepper-item>
+            <v-divider></v-divider>
+            <v-stepper-item
+              :color="currentStep >= 1 ? '#295494' : ''"
+              :complete="currentStep > 1"
+              :editable="currentStep > 1"
+              icon="mdi-numeric-2"
+              title="PPN/RCR/EPN"
+              subtitle="fichier à récupérer"
+            >
+            </v-stepper-item>
+            <v-divider></v-divider>
+            <v-stepper-item
+              :color="currentStep >= 2 ? '#295494' : ''"
+              :complete="currentStep > 2"
+              :editable="currentStep > 2"
+              icon="mdi-numeric-3"
+              title="Choix traitement"
+              :subtitle="typeTraitementSelected ? typeTraitementSelected.libelle : 'à effectuer'"
+            >
+            </v-stepper-item>
+            <v-divider></v-divider>
+            <v-stepper-item
+              :color="currentStep >= 3 ? '#295494' : ''"
+              :complete="currentStep > 3"
+              :editable="currentStep > 3"
+              icon="mdi-numeric-4"
+              title="Envoi"
+              subtitle="du fichier"
+            >
+            </v-stepper-item>
+            <v-divider></v-divider>
+            <v-stepper-item
+              :color="currentStep >= 4 ? '#295494' : ''"
+              icon="mdi-numeric-5"
+              title="Simulation"
+            >
+            </v-stepper-item>
+          </v-stepper-header>
 
-    <v-stepper-content step="1">
-      <!-- Content for step 1 -->
-      <v-btn color="primary" @click="currentStep = 2">
-        Continue
-      </v-btn>
-    </v-stepper-content>
+          <v-stepper-window>
+            <v-stepper-window-item>
+              <rcr v-model="rcrSelected" :is-loading="isLoading"></rcr>
+              <v-container class="d-flex justify-space-between">
+                <v-spacer></v-spacer>
+                <v-btn
+                  :disabled="!rcrSelected"
+                  @click="createDemande"
+                >
+                  Valider
+                </v-btn>
+              </v-container>
+            </v-stepper-window-item>
+            <v-stepper-window-item>
+              <select-file v-if="!isLoaded" v-model="fileInitSelected" :is-loading="isLoading"
+                           @deleted="deleteDemande()"></select-file>
+              <download-file v-else :file-link="fileLink" :file-name="fileName" @clicked="downloaded">Récupération du
+                fichier de correspondances PPN / EPN
+              </download-file>
+              <v-alert
+                v-if="alertMessage"
+                :type="alertType"
 
-    <v-stepper-step :complete="currentStep > 2" step="2">
-      Step two
-      <template v-slot:subtitle>
-        Additional information
-      </template>
-    </v-stepper-step>
-
-    <v-stepper-content step="2">
-      <!-- Content for step 2 -->
-      <v-btn color="primary" @click="currentStep = 3">
-        Continue
-      </v-btn>
-      <v-btn text @click="currentStep = 1">
-        Back
-      </v-btn>
-    </v-stepper-content>
-
-    <v-stepper-step :complete="currentStep > 3" step="3">
-      Step three
-      <template v-slot:subtitle>
-        Review and submit
-      </template>
-    </v-stepper-step>
-
-    <v-stepper-content step="3">
-      <!-- Content for step 3 -->
-      <v-btn color="primary" @click="onClickFinish">
-        Finish
-      </v-btn>
-      <v-btn text @click="currentStep = 2">
-        Back
-      </v-btn>
-    </v-stepper-content>
-  </v-stepper>
+              >
+                <span v-html="alertMessage"></span>
+              </v-alert>
+              <v-container class="d-flex justify-space-between">
+                <v-btn @click="prev">
+                  précédent
+                </v-btn>
+                <v-btn
+                  :disabled="!fileInitSelected"
+                  @click="uploadFileInit()"
+                  v-if="!isLoaded"
+                >
+                  Envoyé
+                </v-btn>
+                <v-btn
+                  v-else
+                  :disabled="!isDownloaded"
+                  @click="next()"
+                >
+                  Suivant
+                </v-btn>
+              </v-container>
+            </v-stepper-window-item>
+            <v-stepper-window-item>
+              <type-traitement v-model="typeTraitementSelected" :is-loading="isLoading"
+                               @clicked="modifierTypeTraitementModifDemande()"></type-traitement>
+              <v-container class="d-flex justify-space-between">
+                <v-btn @click="prev">
+                  précédent
+                </v-btn>
+              </v-container>
+            </v-stepper-window-item>
+            <v-stepper-window-item>
+              <select-file v-model="fileFinalSelected" :is-loading="isLoading" @deleted="deleteDemande()">Charger le
+                fichier des exemplaires à modifier
+              </select-file>
+              <v-alert
+                v-if="alertMessage"
+                :type="alertType"
+              >
+                <span v-html="alertMessage"></span>
+              </v-alert>
+              <v-container class="d-flex justify-space-between">
+                <v-btn @click="prev">
+                  précédent
+                </v-btn>
+                <v-btn
+                  :disabled="!fileFinalSelected"
+                  @click="uploadFileFinal()"
+                >
+                  Lancer le traitement en simulation
+                </v-btn>
+              </v-container>
+            </v-stepper-window-item>
+            <v-stepper-window-item>
+              <simulation :demande="demande" label-before="Avant traitement" label-after="Après traitement"
+                          @deleted="deleteDemande()"></simulation>
+              <v-container class="d-flex justify-space-between">
+                <v-btn @click="prev">
+                  précédent
+                </v-btn>
+                <v-btn large @click="dialog = true"
+                       aria-label="Lancer le traitement en production">Lancer le traitement en production
+                </v-btn>
+              </v-container>
+            </v-stepper-window-item>
+          </v-stepper-window>
+        </v-stepper>
+      </v-col>
+    </v-row>
+  </v-container>
+  <dialog-lancer-traitement v-model="dialog" :is-loading="isLoading" route="/modification-tableau" @launch="launchDemande()"></dialog-lancer-traitement>
+  <dialog-suppression v-model="suppDialog" :demande="demande" return-to-accueil></dialog-suppression>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import {onMounted, ref} from 'vue';
+import router from '@/router';
+import demandesService from '@/service/DemandesService';
+import Rcr from '@/components/Rcr.vue';
+import SelectFile from '@/components/SelectFile.vue';
+import DownloadFile from '@/components/Modif/DownloadFile.vue';
+import TypeTraitement from '@/components/Modif/TypeTraitement.vue';
+import Simulation from "@/components/Simulation.vue";
+import DialogLancerTraitement from '@/components/DialogLancerTraitement.vue';
+import DialogSuppression from '@/components/DialogSuppression.vue';
 
-const currentStep = ref(1);
-const finished = ref(false);
 
-const onClickFinish = () => {
-  finished.value = true;
-  alert('Finished');
-};
+const currentStep = ref(0);
+const demande = ref();
+const rcrSelected = ref();
+const fileInitSelected = ref();
+const fileFinalSelected = ref();
+const alertMessage = ref();
+const alertType = ref();
+const isLoaded = ref(false);
+const isLoading = ref(false);
+const isDownloaded = ref(false);
+const dialog = ref(false);
+const suppDialog = ref(false);
+const fileLink = ref('');
+const fileName = ref('');
+const typeTraitementSelected = ref();
+
+const emits = defineEmits(['backendError']);
+const props = defineProps({id: {type: String}});
+
+
+onMounted(() => {
+  if (props.id) {
+    demandesService.getDemande(props.id, "MODIF")
+      .then(response => {
+        console.log(response.data);
+        demande.value = response.data;
+        switch (demande.value.etatDemande) {
+          case 'En préparation':
+            currentStep.value = 1;
+            rcrSelected.value = demande.value.rcr;
+            break;
+          case 'Préparée':
+            currentStep.value = 1;
+            rcrSelected.value = demande.value.rcr;
+            break;
+          case 'A compléter':
+            rcrSelected.value = demande.value.rcr;
+            if (demande.value.traitement) {
+              typeTraitementSelected.value = {
+                id: -1,
+                libelle: demande.value.traitement
+              };
+              currentStep.value = 3;
+            } else {
+              currentStep.value = 2;
+            }
+            break;
+          case 'En simulation':
+            currentStep.value = 4;
+            rcrSelected.value = demande.value.rcr;
+            typeTraitementSelected.value = {
+              id: -1,
+              libelle: demande.value.traitement
+            };
+            break;
+        }
+      }).catch(() => {
+      router.replace("/modification");
+    })
+  }
+})
+
+function createDemande() {
+  if (demande.value && (rcrSelected.value === demande.value.rcr)) {
+    next();
+  } else if (demande.value) {
+    isLoading.value = true;
+    demandesService.modifierRcrDemande(demande.value.id, rcrSelected.value, 'MODIF')
+      .then(response => {
+        demande.value = response.data;
+        next();
+      }).catch(err => {
+      emits('backendError', err);
+    }).finally(() => {
+      isLoading.value = false;
+    });
+  } else {
+    isLoading.value = true;
+    demandesService.creerDemande(rcrSelected.value, 'MODIF')
+      .then(response => {
+        demande.value = response.data;
+        next();
+      }).catch(err => {
+      emits('backendError', err);
+    }).finally(() => {
+      isLoading.value = false;
+    });
+  }
+}
+
+function uploadFileInit() {
+  alertMessage.value = '';
+  alertType.value = 'success';
+  isLoading.value = true;
+  demandesService.uploadDemande(demande.value.id, fileInitSelected.value, 'MODIF')
+    .then(() => {
+      alertMessage.value = "Fichier envoyé";
+      isLoaded.value = true;
+      demandesService.getFilePreparer(demande.value.id, 'MODIF')
+        .then(response => {
+          let blob = new Blob([response.data], {type: 'application/csv'});
+          fileLink.value = window.URL.createObjectURL(blob);
+          fileName.value = `fichier_demande_${demande.value.id}.csv`;
+        })
+    })
+    .catch(err => {
+      alertMessage.value = err.response.data.message;
+      alertType.value = 'error';
+    })
+    .finally(() => {
+      isLoading.value = false;
+    });
+}
+
+function uploadFileFinal() {
+  alertMessage.value = '';
+  alertType.value = 'success';
+  isLoading.value = true;
+  demandesService.uploadDemande(demande.value.id, fileFinalSelected.value, 'MODIF')
+    .then(() => {
+      alertMessage.value = "Fichier envoyé";
+      isLoaded.value = true;
+      next();
+    })
+    .catch(err => {
+      alertMessage.value = err.response.data.message;
+      alertType.value = 'error';
+    })
+    .finally(() => {
+      isLoading.value = false;
+    });
+}
+
+function modifierTypeTraitementModifDemande() {
+  isLoading.value = true;
+  demandesService.modifierTypeTraitementModifDemande(demande.value.id, typeTraitementSelected.value.id)
+    .then(response => {
+      demande.value = response.data;
+      next()
+    }).catch(err => {
+    emits('backendError', err);
+  }).finally(() => {
+    isLoading.value = false;
+  });
+}
+
+function launchDemande(){
+  isLoading.value = true;
+  demandesService.lancerDemande(demande.value.id,'MODIF')
+    .then(response => {
+      demande.value = response.data;
+    }).finally(() => {
+    isLoading.value = false;
+  })
+}
+
+function downloaded() {
+  isDownloaded.value = true;
+}
+
+function deleteDemande() {
+  suppDialog.value = true;
+}
+
+function next() {
+  currentStep.value++;
+  raz();
+}
+
+function prev() {
+  currentStep.value--;
+  raz();
+  changeEtape();
+}
+
+function changeEtape() {
+  if ((currentStep.value + 1) <= 2) { //Changement d'etat pour le chargement du fichier car le back est perdu sinon
+    demandesService.choixEtape(demande.value.id, 2, 'MODIF')
+      .then(response => {
+        demande.value = response.data;
+      });
+  }
+  if ((currentStep.value + 1) === 4) {
+    demandesService.choixEtape(demande.value.id, 4, 'MODIF')
+      .then(response => {
+        demande.value = response.data;
+      });
+  }
+}
+
+function raz() {
+  isLoaded.value = false;
+  isLoading.value = false;
+  isDownloaded.value = false;
+  alertMessage.value = '';
+  alertType.value = 'success';
+}
+
 </script>

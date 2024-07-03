@@ -142,6 +142,10 @@ export class DemandesService {
     return this.client.patch(`demandes/EXEMP/${id}?typeExemp=${typeExemp}`);
   }
 
+  modifierTypeTraitementModifDemande(id, typeTraitement){
+    return this.client.patch(`demandes/MODIF/${id}?traitement=${typeTraitement}`);
+  }
+
   uploadDemande(id, file, typeDemande){
     const config = { headers: {
       'Content-Type': 'multipart/form-data',
@@ -179,6 +183,14 @@ export class DemandesService {
 
   deleteDemande(id, typeDemande) {
     return this.client.delete(`demandes/${typeDemande}/${id}`);
+  }
+
+  getFilePreparer(id, typeDemande){
+    return this.client.get(`/files/${typeDemande}/${id}/fichier_prepare_${id}.csv`);
+  }
+
+  getTypeTraitement(){
+    return this.client.get('traitements');
   }
 }
 
