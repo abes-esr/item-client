@@ -55,17 +55,19 @@
 
 <script setup>
 import DemandesService from '@/service/DemandesService'
+import {useAuthStore} from '@/store/authStore'
+import {computed} from 'vue'
 
 const emit = defineEmits(['logout-success', 'toggle-drawer'])
 
-defineProps({
-  authenticated: {
-    type: Boolean,
-    required: true,
-  },
+const authStore = useAuthStore()
+
+const authenticated = computed(() => {
+  return authStore.isAuthenticated
 })
 
-function logout () {
+function logout() {
+  authStore.logout()
   DemandesService.logout()
   emit('logout-success')
 }

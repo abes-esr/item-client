@@ -117,10 +117,11 @@ defineProps({
     type: Boolean,
     required: true,
   },
-  authenticated: {
-    type: Boolean,
-    required: true,
-  },
+})
+
+const authenticated = computed(() => {
+  const user = JSON.parse(sessionStorage.getItem('user'))
+  return !!user;
 })
 
 const theme = useTheme()

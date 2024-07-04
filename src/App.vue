@@ -1,7 +1,7 @@
 <template>
 	<v-app>
-    <Header :authenticated="authenticated" @logout-success="onLogout" @toggle-drawer="toggleDrawer"/>
-    <Navbar :authenticated="authenticated" :drawer="drawer" v-if="authenticated" @close="drawer = false"/>
+    <Header @logout-success="onLogout" @toggle-drawer="toggleDrawer"/>
+    <Navbar :drawer="drawer" @close="drawer = false"/>
 		<Footer />
     <v-main>
       <v-alert color="red" :title="backendErrorMessage" variant='outlined' density='compact' type='warning' :text='backendErrorDescription' closable v-if="backendError"></v-alert>
@@ -9,8 +9,7 @@
         <component
           :is="Component"
           @backendError="setBackendError"
-          @backendSuccess="liftErrors"
-          @login-success="onLoginSuccess"
+          @backendSuccess="liftBackendError"
         />
       </router-view>
     </v-main>
@@ -18,30 +17,20 @@
 </template>
 
 <script setup>
-import {onMounted, ref} from 'vue'
+import {ref} from 'vue'
 import Header from '@/components/Header.vue'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 import router from '@/router/index'
-import { HttpStatusCode } from 'axios';
-import DemandesService from '@/service/DemandesService'
+import {HttpStatusCode} from 'axios'
 import {useTheme} from 'vuetify'
 
 const backendError = ref(false)
 const backendErrorMessage = ref('')
 const backendErrorDescription = ref('')
-const authenticated = ref(false)
 const drawer = ref(false)
 
 const theme = useTheme()
-
-onMounted(() => {
-  checkAuthentication();
-  const savedTheme = localStorage.getItem('theme')
-  if (savedTheme) {
-    theme.global.name.value = savedTheme
-  }
-});
 
 function setBackendError(error) {
   backendError.value = true
@@ -80,34 +69,12 @@ function setBackendError(error) {
   }
 }
 
-function liftErrors() {
+function liftBackendError() {
   backendError.value = false
 }
-function onLoginSuccess(userData) {
-  authenticated.value = true;
-  if (!userData.email) {
-    router.push('premiere-connexion');
-  } else {
-    router.push('accueil');
-  }
-}
+
 function onLogout(){
-  authenticated.value = false
   router.push('identification')
-}
-function checkAuthentication() {
-  const user = sessionStorage.getItem('user');
-  authenticated.value = !!user;
-  if (authenticated.value) {
-    DemandesService.checkToken()
-      .then(() => {
-        console.log('Token valide');
-      })
-      .catch((error) => {
-        console.error('Erreur de vérification du token:', error);
-        onLogout();
-      });
-  }
 }
 function toggleDrawer() {
   drawer.value = !drawer.value;

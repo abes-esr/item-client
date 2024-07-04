@@ -126,11 +126,9 @@ const isLoading = ref(false);
 const dialog = ref(false);
 
 onMounted(()=>{
-  console.log(props.id);
   if(props.id){
     DemandesService.getDemande(props.id, "EXEMP")
       .then(response => {
-        console.log(response.data);
         demande.value = response.data;
         switch (demande.value.etatDemande) {
           case 'En préparation':

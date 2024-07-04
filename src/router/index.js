@@ -9,8 +9,7 @@ import ModificationEmail from '@/views/Utilisateur/ModificationEmail.vue';
 import DemandesService from '@/service/DemandesService'
 import RecouvSteps from '@/views/Recouvrement/RecouvSteps.vue';
 import ExempSteps from '@/views/Exemplarisation/ExempSteps.vue';
-
-const service = DemandesService;
+import {useAuthStore} from '@/store/authStore'
 
 const routes = [
   {
@@ -166,25 +165,23 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  const authStore = useAuthStore();
 
   if (requiresAuth) {
-    const user = JSON.parse(sessionStorage.getItem('user'))
-    const isAuthenticated = user && user.token
-
-    if (isAuthenticated) {
+    if (authStore.isAuthenticated) {
       try {
-        const valid = await service.checkToken();
+        const valid = await DemandesService.checkToken();
         if (valid.data) {
           next();
         } else {
-          console.error('Token invalide auprès du serveur')
-          service.logout()
-          next('/identification')
+          console.error('Token invalide auprès du serveur');
+          DemandesService.logout();
+          next('/identification');
         }
       } catch (error) {
-        console.error(error)
-        service.logout()
+        console.error(error);
+        DemandesService.logout();
         next('/identification');
       }
     } else {
@@ -193,6 +190,6 @@ router.beforeEach(async (to, from, next) => {
   } else {
     next();
   }
-})
+});
 
 export default router
