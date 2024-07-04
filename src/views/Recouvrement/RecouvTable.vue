@@ -80,8 +80,9 @@
     <template v-slot:item="{ item, expand }">
       <tr :class="{ 'highlighted-row': item.highlighted }" style="cursor: pointer;">
         <td>
-          <v-btn icon="mdi-chevron-up" @click="item.expanded = !item.expanded" variant="text">
-            <v-icon>{{ item.expanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+          <v-btn flat @click="item.expanded = !item.expanded" variant="text">
+            <v-icon size="x-large" :color="item.commentaire ? 'red' : ''">mdi-comment-text-outline</v-icon>
+            <dialog-commentaire :demande="item" @save="saveComment()"></dialog-commentaire>
           </v-btn>
         </td>
         <td @click="onRowClick(item)" class="text-center">{{ item.id }}</td>
@@ -115,21 +116,6 @@
           <v-btn v-else-if="canCancel(item)" variant="plain" icon="mdi-delete" @click="supprimerDemande(item)"></v-btn>
         </td>
       </tr>
-      <tr v-if="item.expanded">
-        <td>
-          <v-btn
-            variant="text"
-            class="pa-0"
-            @click="saveAction"
-          >
-            <v-icon size="22">mdi-content-save</v-icon>
-          </v-btn>
-        </td>
-        <td :colspan="headingsDemandes.length">
-          <v-textarea label="Commentaire" v-model="item.commentaire" hide-details variant="underlined" auto-grow
-                      rows="1"></v-textarea>
-        </td>
-      </tr>
     </template>
   </v-data-table>
   <dialog-suppression v-model="suppDialog" :demande="suppDemande"
@@ -138,13 +124,12 @@
 
 <script setup>
 import {onBeforeUnmount, onMounted, ref} from 'vue';
-import DemandesService from '@/service/DemandesService';
+import demandesService from '@/service/DemandesService';
 import router from '@/router';
-import DialogSuppression from '@/components/DialogSuppression.vue';
+import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
+import DialogCommentaire from "@/components/Dialog/DialogCommentaire.vue";
 import MenuDownloadFile from "@/components/MenuDownloadFile.vue";
 import moment from "moment/moment";
-
-const service = DemandesService;
 
 //Emit
 const emit = defineEmits(['backendError', 'backendSuccess']);
@@ -278,7 +263,7 @@ function switchArchiveActiveDisplay(value) {
 
 async function loadItems(type, archive) {
   try {
-    const response = await service.fetchDemandes(type, archive, extendedAllILN.value);
+    const response = await demandesService.fetchDemandes(type, archive, extendedAllILN.value);
     contentsDemandesFromServer.value = response.data;
     contentsDemandesFrontFiltered.value = response.data.map((item) => ({
       ...item,
@@ -331,7 +316,7 @@ function supprimerDemande(item) {
 //Archivage d'une demande
 async function archiverDemande(item) {
   try {
-    await service.archiverDemande('EXEMP', item.id);
+    await demandesService.archiverDemande('EXEMP', item.id);
     // Mettre à jour les données après l'archivage réussi
     await loadItems('EXEMP');
     emit('backendSuccess');
@@ -354,6 +339,11 @@ function onRowClick(item) {
 function saveAction() {
 }
 
+function saveComment(){
+  loadItems('RECOUV',archiveFalseActiveTrue.value).then(()=>{
+    filterItems();
+  })
+}
 </script>
 
 <style scoped>

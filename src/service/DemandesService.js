@@ -94,6 +94,10 @@ export class DemandesService {
     return this.client.patch(`demandes/MODIF/${id}?traitement=${typeTraitement}`);
   }
 
+  modifierCommentaireDemande(id, commentaire, typeDemande){
+    return this.client.patch(`demandes/${typeDemande}/${id}?commentaire=${commentaire}`);
+  }
+
   uploadDemande(id, file, typeDemande){
     const config = { headers: {
       'Content-Type': 'multipart/form-data',

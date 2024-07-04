@@ -81,8 +81,9 @@
     <template v-slot:item="{ item, expand }">
       <tr :class="{ 'highlighted-row': item.highlighted }" style="cursor: pointer;">
         <td>
-          <v-btn icon="mdi-chevron-up" @click="item.expanded = !item.expanded" variant="text">
-            <v-icon>{{ item.expanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+          <v-btn flat @click="item.expanded = !item.expanded" variant="text">
+            <v-icon size="x-large" :color="item.commentaire ? 'red' : ''">mdi-comment-text-outline</v-icon>
+            <dialog-commentaire :demande="item" @save="saveComment()"></dialog-commentaire>
           </v-btn>
         </td>
         <td @click="onRowClick(item)" class="text-center">{{ item.id }}</td>
@@ -120,12 +121,6 @@
           <v-btn v-else-if="canCancel(item)" variant="plain" icon="mdi-delete" @click="supprimerDemande(item)"></v-btn>
         </td>
       </tr>
-      <tr v-if="item.expanded">
-        <td :colspan="headingsDemandes.length">
-          <v-textarea label="Commentaire" v-model="item.commentaire" hide-details variant="underlined" auto-grow
-                      rows="1"></v-textarea>
-        </td>
-      </tr>
     </template>
   </v-data-table>
   <dialog-suppression v-model="suppDialog" :demande="suppDemande"
@@ -135,8 +130,9 @@
 <script setup>
 import {onBeforeUnmount, onMounted, ref} from 'vue';
 import router from '@/router';
-import DialogSuppression from '@/components/DialogSuppression.vue';
 import demandesService from '@/service/DemandesService';
+import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
+import DialogCommentaire from "@/components/Dialog/DialogCommentaire.vue";
 import MenuDownloadFile from "@/components/MenuDownloadFile.vue";
 import moment from "moment/moment";
 
@@ -145,7 +141,7 @@ const emit = defineEmits(['backendError', 'backendSuccess']);
 
 //Data
 const extendedAllILN = ref(false);
-const headingsDemandes = [
+const headingsDemandes = ref([
   {
     title: '',
     key: 'data-table-expand',
@@ -223,7 +219,7 @@ const headingsDemandes = [
     value: 'archiveOrCancel',
     align: 'center'
   }
-];
+]);
 const listStatut = [
   'En saisie',
   'En attente',
@@ -365,7 +361,12 @@ function onRowClick(item) {
   if (item.etatDemande === 'En préparation' || item.etatDemande === 'Préparée' || item.etatDemande === 'A compléter' || item.etatDemande === 'En simulation') {
     router.push('/modification/' + item.id);
   }
+}
 
+function saveComment(){
+  loadItems('MODIF',archiveFalseActiveTrue.value).then(()=>{
+    filterItems();
+  })
 }
 
 </script>
