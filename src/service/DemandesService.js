@@ -1,7 +1,7 @@
-import axios from 'axios';
+import axios from 'axios'
+import { useAuthStore } from '@/store/authStore'
 
 export class DemandesService {
-  //todo: renommer le service
   constructor() {
     this.client = axios.create({
       baseURL: import.meta.env.VITE_API_URL
@@ -10,9 +10,9 @@ export class DemandesService {
     // Ajout de l'intercepteur
     this.client.interceptors.request.use(
       (config) => {
-        const user = JSON.parse(sessionStorage.getItem('user'));
-        if (user && user.token) {
-          config.headers.Authorization = user.token;
+        const authStore = useAuthStore();
+        if (authStore.isAuthenticated && authStore.getToken) {
+          config.headers.Authorization = authStore.getToken;
         }
         return config;
       },
@@ -31,26 +31,26 @@ export class DemandesService {
         const userData = {
           login: login,
           shortname: response.data.shortname,
-          token: `Bearer ${response.data.accessToken}`,
           userNum: response.data.userNum,
           iln: response.data.iln,
           role: response.data.role,
           email: response.data.email
         };
-        sessionStorage.setItem('user', JSON.stringify(userData));
+        const token = `Bearer ${response.data.accessToken}`
         this.client.defaults.headers.common.Authorization = `Bearer ${response.data.accessToken}`;
+        const authStore = useAuthStore()
+        authStore.login(userData, token)
         return userData;
       })
       .catch(error => {
         console.error(error);
-        sessionStorage.clear();
-        throw error;
+        return Promise.reject(error);
       });
   }
 
   logout() {
-    sessionStorage.removeItem('user');
-    sessionStorage.clear()
+    const authStore = useAuthStore();
+    authStore.logout();
     delete this.client.defaults.headers.common.Authorization;
   }
 
@@ -70,10 +70,12 @@ export class DemandesService {
     return this.client.get(url)
   }
 
+  //TODO MAJ STORE
   modifierEmail(id, email){
     const config = { headers: {'Content-Type': 'text/plain'} };
     return this.client.patch(`utilisateurs/${id}`, email, config);
   }
+  //TODO MAJ STORE
   creerEmail(id, email){
     const config = { headers: {'Content-Type': 'text/plain'} };
     return this.client.post(`utilisateurs/${id}`, email, config);
