@@ -42,7 +42,6 @@
 
           <v-stepper-window>
             <v-stepper-window-item>
-              <v-btn class="position-absolute"> supprimer </v-btn>
               <rcr v-model="rcrSelected" :is-loading="isLoading"></rcr>
               <v-container class="d-flex justify-space-between">
                 <v-spacer></v-spacer>
@@ -63,7 +62,7 @@
               </v-container>
             </v-stepper-window-item>
             <v-stepper-window-item>
-              <upload-file v-model="fileSelected" :is-loading="isLoading" @deleted="deleteDemande()">Charger le fichier des exemplaires à traiter</upload-file>
+              <select-file v-model="fileSelected" :is-loading="isLoading" @deleted="deleteDemande()">Charger le fichier des exemplaires à traiter</select-file>
               <v-alert
                 v-if="alertMessage"
                 :type="alertType"
@@ -76,14 +75,14 @@
                 </v-btn>
                 <v-btn
                   :disabled="!fileSelected"
-                  @click="launchTraitement"
+                  @click="uploadFile"
                 >
                   Lancer le traitement en simulation
                 </v-btn>
               </v-container>
             </v-stepper-window-item>
             <v-stepper-window-item>
-              <simulation :demande="demande" @deleted="deleteDemande()"></simulation>
+              <simulation :demande="demande" label-before="Exemplaire(s) existant(s)" label-after="Exemplaire à créer" @deleted="deleteDemande()"></simulation>
               <v-container class="d-flex justify-space-between">
                 <v-btn @click="prev">
                   précédent
@@ -98,7 +97,8 @@
       </v-col>
     </v-row>
   </v-container>
-  <dialog-lancer-traitement v-model="dialog" :is-loading="isLoading" @launch="launchDemande()"></dialog-lancer-traitement>
+  <dialog-lancer-traitement v-model="dialog" :is-loading="isLoading" route="/exemplarisation-tableau" @launch="launchDemande()"></dialog-lancer-traitement>
+  <dialog-suppression  v-model="suppDialog" :demande="demande" return-to-accueil></dialog-suppression>
 </template>
 
 <script setup>
@@ -106,11 +106,12 @@
 import { onMounted, ref } from 'vue';
 import DemandesService from '@/service/DemandesService';
 import router from '@/router';
-import UploadFile from '@/components/UploadFile.vue';
+import SelectFile from '@/components/SelectFile.vue';
 import Rcr from '@/components/Rcr.vue';
-import TypeExemp from '@/components/TypeExemp.vue';
+import TypeExemp from '@/components/Exemp/TypeExemp.vue';
 import Simulation from "@/components/Simulation.vue";
 import DialogLancerTraitement from '@/components/DialogLancerTraitement.vue';
+import DialogSuppression from '@/components/DialogSuppression.vue';
 
 const emits = defineEmits(['backendError', 'backendSuccess', 'login-success'])
 const props = defineProps({id : {type: String}});
@@ -124,6 +125,7 @@ const alertMessage = ref();
 const alertType = ref();
 const isLoading = ref(false);
 const dialog = ref(false);
+const suppDialog = ref(false);
 
 onMounted(()=>{
   if(props.id){
@@ -180,8 +182,7 @@ function createDemande() {
         next();
       }).catch(err => {
         emits('backendError',err);
-      })
-      .finally(() => {
+      }).finally(() => {
         isLoading.value = false;
       });
   }
@@ -206,7 +207,7 @@ function modifiTypeExemp() {
   }
 }
 
-function launchTraitement() {
+function uploadFile() {
   alertMessage.value = '';
   alertType.value = 'success';
   isLoading.value = true;
@@ -235,12 +236,7 @@ function launchDemande(){
 }
 
 function deleteDemande(){
-  DemandesService.deleteDemande(demande.value.id, 'EXEMP')
-    .then(()=>{
-      router.push('/accueil');
-    }).catch(err => {
-      emits('backendError', err);
-  })
+  suppDialog.value = true;
 }
 
 function next() {

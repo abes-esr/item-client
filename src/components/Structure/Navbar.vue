@@ -43,7 +43,7 @@
         <v-list-item-title class="text-h6">Recouvrement</v-list-item-title>
       </v-list-item>
 
-      <v-list-item @click="navigateTo('recouvrement-etape-1-selection-rcr')">
+      <v-list-item @click="navigateTo('recouvrement')">
         <template v-slot:prepend>
           <v-icon>mdi-percent</v-icon>
         </template>
@@ -66,7 +66,7 @@
         <v-list-item-title class="text-h6">Creations</v-list-item-title>
       </v-list-item>
 
-      <v-list-item @click="navigateTo('rcrEx')">
+      <v-list-item @click="navigateTo('exemplarisation')">
         <template v-slot:prepend>
           <v-icon>mdi-file-plus</v-icon>
         </template>
@@ -89,7 +89,7 @@
         <v-list-item-title class="text-h6">Modifications</v-list-item-title>
       </v-list-item>
 
-      <v-list-item @click="navigateTo('rcr')">
+      <v-list-item @click="navigateTo('modification')">
         <template v-slot:prepend>
           <v-icon>mdi-file-document-edit</v-icon>
         </template>
