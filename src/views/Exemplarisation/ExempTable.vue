@@ -86,7 +86,7 @@
           </v-btn>
         </td>
         <td @click="onRowClick(item)" class="text-center">{{ item.id }}</td>
-        <td @click="onRowClick(item)" class="text-center-">{{ item.dateCreation }}</td>
+        <td @click="onRowClick(item)" class="text-center">{{ item.dateCreation }}</td>
         <td @click="onRowClick(item)" class="text-center">{{ item.dateModification }}</td>
         <td @click="onRowClick(item)" class="text-center">{{ item.iln }}</td>
         <td @click="onRowClick(item)" class="text-center">{{ item.rcr }}</td>
@@ -113,19 +113,7 @@
         </td>
         <td class="text-center">
           <!-- Colonne Téléchargement -->
-          <v-tooltip top>
-            <template v-slot:activator="{ props }" v-if="item.fichier_enrichi">
-              <span v-bind="props"><v-icon
-                @click='downloadFile(item.id, "fichier_enrichi")'>mdi-file-upload</v-icon></span></template>
-            <span>Fichier enrichi (fichier déposé)</span>
-          </v-tooltip>
-
-          <v-tooltip top>
-            <template v-slot:activator="{ props }" v-if="item.fichier_resultat">
-              <span v-bind="props"><v-icon @click='downloadFile(item.id, "fichier_resultat")'>mdi-file-download</v-icon></span>
-            </template>
-            <span>Fichier résultat</span>
-          </v-tooltip>
+          <menu-download-file :demande="item"></menu-download-file>
         </td>
         <td class="text-center">
           <!-- Colonne Action -->
@@ -151,7 +139,8 @@ import { onMounted, ref } from 'vue';
 import router from '@/router';
 import DialogSuppression from '@/components/DialogSuppression.vue';
 import demandesService from '@/service/DemandesService';
-
+import MenuDownloadFile from "@/components/MenuDownloadFile.vue";
+import moment from "moment";
 //Emit
 const emit = defineEmits(['backendError', 'backendSuccess']);
 
@@ -171,12 +160,26 @@ const headingsDemandes = [
   {
     title: 'Crée le',
     key: 'dateCreation',
-    align: 'center'
+    align: 'center',
+    sort:(d1,d2) => {
+      const date1 = moment(d1, "DD/MM/yyyy HH:mm").valueOf();
+      const date2 = moment(d2, "DD/MM/yyyy HH:mm").valueOf();
+      if (date1 > date2) return -1;
+      if (date1 < date2) return 1;
+      return 0;
+    }
   },
   {
     title: 'Mise à jour',
     key: 'dateModification',
-    align: 'center'
+    align: 'center',
+    sort:(d1,d2) => {
+      const date1 = moment(d1, "DD/MM/yyyy HH:mm").valueOf();
+      const date2 = moment(d2, "DD/MM/yyyy HH:mm").valueOf();
+      if (date1 > date2) return -1;
+      if (date1 < date2) return 1;
+      return 0;
+    }
   },
   {
     title: 'ILN',
@@ -277,9 +280,7 @@ async function loadItems(type, archive) {
     contentsDemandesFromServer.value = response.data;
     contentsDemandesFrontFiltered.value = response.data.map((item) => ({
       ...item,
-      expanded: false,
-      fichier_enrichi: false,
-      fichier_resultat: false,
+      expanded: false
     }));
 
     isDataLoaded.value = true;
@@ -310,23 +311,6 @@ function filterItems() {
   });
 }
 
-function downloadFile(demandeNumber, filePrefix) {
-  return demandesService.getFile(filePrefix, demandeNumber, 'csv', 'EXEMP')
-    .catch((error) => {
-      console.error(error);
-      emit('backendError', error);
-    });
-}
-
-function isAvailableFile(demandeNumber, filename) {
-  return demandesService.headFile(filename, demandeNumber, 'csv', 'EXEMP')
-    .then((response) => response.status !== 500)
-    .catch((error) => {
-      console.error(error);
-      emit('backendError', error);
-    });
-}
-
 //Action d'archivage ou suppression selon état de la demande dans le TDB
 function canArchive(item) {
   return item.etatDemande === 'Terminé';
@@ -353,24 +337,6 @@ async function archiverDemande(item) {
     console.error(error);
     emit('backendError', error);
   }
-}
-
-async function onMouseOverRow(item) {
-  //console.log('Souris sur la ligne :', item);
-  item.highlighted = true;
-  // Faites quelque chose avec l'élément 'item' lorsque la souris passe dessus
-  //TODO mettre en place une fonction qui maj une valeur item.progress toutes les x secondes pour savoir si le serveur est en train de traiter la demande
-  // Vérifier la disponibilité des fichiers pour chaque type de fichier
-  item.fichier_enrichi = await isAvailableFile(item.id, 'fichier_enrichi');
-  item.fichier_resultat = await isAvailableFile(item.id, 'fichier_resultat');
-}
-
-function onMouseLeaveRow(item) {
-  item.highlighted = false;
-  setTimeout(() => {
-    item.fichier_enrichi = false;
-    item.fichier_resultat = false;
-  }, 1000);
 }
 
 function onRowClick(item) {

@@ -106,13 +106,13 @@
           <v-chip color="red" variant="flat" v-else-if="item.etatDemande === 'En erreur'">En erreur</v-chip>
         </td>
         <td @click="onRowClick(item)" class="text-center">
-          <v-progress-linear v-model="item.pourcentageProgressionTraitement" :height="18" :striped="false"
+          <v-progress-linear v-model="item.pourcentageProgressionTraitement" height="18"
                              color="grey-lighten-1" style="border: 1px solid grey; font-weight: bolder">
             {{ item.pourcentageProgressionTraitement }} %
           </v-progress-linear>
         </td>
         <td class="text-center">
-
+          <menu-download-file :demande="item"></menu-download-file>
         </td>
         <td class="text-center">
           <!-- Colonne Action -->
@@ -137,6 +137,8 @@ import { onMounted, ref } from 'vue';
 import router from '@/router';
 import DialogSuppression from '@/components/DialogSuppression.vue';
 import demandesService from '@/service/DemandesService';
+import MenuDownloadFile from "@/components/MenuDownloadFile.vue";
+import moment from "moment/moment";
 
 //Emit
 const emit = defineEmits(['backendError', 'backendSuccess']);
@@ -157,12 +159,26 @@ const headingsDemandes = [
   {
     title: 'Crée le',
     key: 'dateCreation',
-    align: 'center'
+    align: 'center',
+    sort:(d1,d2) => {
+      const date1 = moment(d1, "DD/MM/yyyy HH:mm").valueOf();
+      const date2 = moment(d2, "DD/MM/yyyy HH:mm").valueOf();
+      if (date1 > date2) return -1;
+      if (date1 < date2) return 1;
+      return 0;
+    }
   },
   {
     title: 'Mise à jour',
     key: 'dateModification',
-    align: 'center'
+    align: 'center',
+    sort:(d1,d2) => {
+      const date1 = moment(d1, "DD/MM/yyyy HH:mm").valueOf();
+      const date2 = moment(d2, "DD/MM/yyyy HH:mm").valueOf();
+      if (date1 > date2) return -1;
+      if (date1 < date2) return 1;
+      return 0;
+    }
   },
   {
     title: 'ILN',

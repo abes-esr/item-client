@@ -107,20 +107,7 @@
           </v-progress-linear>
         </td>
         <td class="text-center">
-          <!-- Colonne Téléchargement -->
-          <v-tooltip top>
-            <template v-slot:activator="{ props }" v-if="item.fichier_enrichi">
-              <span v-bind="props"><v-icon
-                @click='downloadFile(item.id, "fichier_enrichi")'>mdi-file-upload</v-icon></span></template>
-            <span>Fichier enrichi (fichier déposé)</span>
-          </v-tooltip>
-
-          <v-tooltip top>
-            <template v-slot:activator="{ props }" v-if="item.fichier_resultat">
-              <span v-bind="props"><v-icon @click='downloadFile(item.id, "fichier_resultat")'>mdi-file-download</v-icon></span>
-            </template>
-            <span>Fichier résultat</span>
-          </v-tooltip>
+          <menu-download-file :demande="item"></menu-download-file>
         </td>
         <td class="text-center">
           <!-- Colonne Action -->
@@ -154,6 +141,8 @@ import { onMounted, ref } from 'vue';
 import DemandesService from '@/service/DemandesService';
 import router from '@/router';
 import DialogSuppression from '@/components/DialogSuppression.vue';
+import MenuDownloadFile from "@/components/MenuDownloadFile.vue";
+import moment from "moment/moment";
 
 const service = DemandesService;
 
@@ -176,12 +165,26 @@ const headingsDemandes = [
   {
     title: 'Crée le',
     key: 'dateCreation',
-    align: 'center'
+    align: 'center',
+    sort:(d1,d2) => {
+      const date1 = moment(d1, "DD/MM/yyyy HH:mm").valueOf();
+      const date2 = moment(d2, "DD/MM/yyyy HH:mm").valueOf();
+      if (date1 > date2) return -1;
+      if (date1 < date2) return 1;
+      return 0;
+    }
   },
   {
     title: 'Mise à jour',
     key: 'dateModification',
-    align: 'center'
+    align: 'center',
+    sort:(d1,d2) => {
+      const date1 = moment(d1, "DD/MM/yyyy HH:mm").valueOf();
+      const date2 = moment(d2, "DD/MM/yyyy HH:mm").valueOf();
+      if (date1 > date2) return -1;
+      if (date1 < date2) return 1;
+      return 0;
+    }
   },
   {
     title: 'ILN',
