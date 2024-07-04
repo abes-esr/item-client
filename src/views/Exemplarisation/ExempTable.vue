@@ -32,7 +32,7 @@
     </v-chip>
   </v-container>
   <v-data-table :headers="headingsDemandes" :items="contentsDemandesFrontFiltered" :items-length="totalItemsFound"
-                :loading="!isDataLoaded" show-expand :sort-by="[{ key: 'dateModification', order: 'desc' }]"
+                :loading="!isDataLoaded" show-expand :sort-by="sortBy"
                 item-key="id"
   >
     <template v-slot:body.prepend>
@@ -135,7 +135,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import {onBeforeUnmount, onMounted, ref} from 'vue';
 import router from '@/router';
 import DialogSuppression from '@/components/DialogSuppression.vue';
 import demandesService from '@/service/DemandesService';
@@ -238,6 +238,7 @@ const contentsDemandesFrontFiltered = ref([]);
 const totalItemsFound = ref(0);
 const suppDialog = ref(false);
 const suppDemande = ref({});
+const sortBy = ref([{ key: 'dateModification', order: 'desc' }]);
 
 //Progress bar displayed while fetching data
 const isDataLoaded = ref(false);
@@ -251,7 +252,7 @@ const rcrSearchField = ref('');
 const typeExempSearchField = ref();
 const indexRechercheSearchField = ref('');
 const statutSearchField = ref();
-
+let polling;
 //Actives or archives demands displayed
 const archiveFalseActiveTrue = ref(false);
 
@@ -267,8 +268,16 @@ onMounted(() => {
       listTypeExemp.value.sort();
       listTypeExemp.value.push('Non défini');
     });
+  polling = setInterval(() => {
+    loadItems('EXEMP', archiveFalseActiveTrue.value).then(()=>{
+      filterItems();
+    });
+  }, 10000);
 });
 
+onBeforeUnmount(() => {
+  clearInterval(polling);
+})
 function switchArchiveActiveDisplay(value) {
   archiveFalseActiveTrue.value = value;
   loadItems('EXEMP', archiveFalseActiveTrue.value);

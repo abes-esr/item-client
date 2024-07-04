@@ -261,7 +261,7 @@ function uploadFileInit() {
     .then(() => {
       alertMessage.value = "Fichier envoyé";
       isLoaded.value = true;
-      demandesService.getFile(demande.value.id, 'MODIF','prepare')
+      demandesService.getFile(demande.value.id, 'MODIF','fichier_prepare', '.csv')
         .then(response => {
           let blob = new Blob([response.data], {type: 'application/csv'});
           fileLink.value = window.URL.createObjectURL(blob);

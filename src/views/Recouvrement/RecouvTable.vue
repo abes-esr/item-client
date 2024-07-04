@@ -32,7 +32,7 @@
     </v-chip>
   </v-container>
   <v-data-table :headers="headingsDemandes" :items="contentsDemandesFrontFiltered" :items-length="totalItemsFound"
-                :loading="!isDataLoaded" show-expand :sort-by="[{ key: 'dateModification', order: 'desc' }]"
+                :loading="!isDataLoaded" show-expand :sort-by="sortBy"
                 item-key="id">
     <template v-slot:body.prepend>
       <tr>
@@ -137,7 +137,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import {onBeforeUnmount, onMounted, ref} from 'vue';
 import DemandesService from '@/service/DemandesService';
 import router from '@/router';
 import DialogSuppression from '@/components/DialogSuppression.vue';
@@ -151,7 +151,7 @@ const emit = defineEmits(['backendError', 'backendSuccess']);
 
 //Data
 const extendedAllILN = ref(false);
-const headingsDemandes = [
+const headingsDemandes = ref([
   {
     title: '',
     key: 'data-table-expand',
@@ -224,7 +224,7 @@ const headingsDemandes = [
     value: 'archiveOrCancel',
     align: 'center'
   }
-];
+]);
 const listStatut = [
   'En saisie',
   'En attente',
@@ -237,6 +237,7 @@ const contentsDemandesFrontFiltered = ref([]);
 const totalItemsFound = ref(0);
 const suppDialog = ref(false);
 const suppDemande = ref({});
+const sortBy = ref([{ key: 'dateModification', order: 'desc' }]);
 
 //Progress bar displayed while fetching data
 const isDataLoaded = ref(false);
@@ -250,6 +251,7 @@ const rcrSearchField = ref('');
 const typeExempSearchField = ref('');
 const indexRechercheSearchField = ref('');
 const statutSearchField = ref();
+let polling;
 
 //Actives or archives demands displayed
 const archiveFalseActiveTrue = ref(false);
@@ -258,7 +260,16 @@ const archiveFalseActiveTrue = ref(false);
 onMounted(() => {
   loadItems('RECOUV', archiveFalseActiveTrue.value);
   contentsDemandesFromServer.value = [...contentsDemandesFromServer.value];
+  polling = setInterval(() => {
+    loadItems('RECOUV', archiveFalseActiveTrue.value).then(()=>{
+      filterItems();
+    });
+  }, 10000);
 });
+
+onBeforeUnmount(() => {
+  clearInterval(polling);
+})
 
 function switchArchiveActiveDisplay(value) {
   archiveFalseActiveTrue.value = value;
@@ -272,8 +283,6 @@ async function loadItems(type, archive) {
     contentsDemandesFrontFiltered.value = response.data.map((item) => ({
       ...item,
       expanded: false,
-      fichier_enrichi: false,
-      fichier_resultat: false,
     }));
 
     isDataLoaded.value = true;
@@ -304,24 +313,6 @@ function filterItems() {
   });
 }
 
-function downloadFile(demandeNumber, filePrefix) {
-  return service.getFile(filePrefix, demandeNumber, 'csv', 'RECOUV')
-    .catch((error) => {
-      console.error(error);
-      emit('backendError', error);
-    });
-}
-
-function isAvailableFile(demandeNumber, filename) {
-  return service.headFile(filename, demandeNumber, 'csv', 'RECOUV')
-    .then((response) => response.status !== 500)
-    .catch((error) => {
-      console.log(JSON.stringify(error));
-      console.error(error);
-      return false;
-    });
-}
-
 //Action d'archivage ou suppression selon état de la demande dans le TDB
 function canArchive(item) {
   return item.etatDemande === 'Terminé';
@@ -348,22 +339,6 @@ async function archiverDemande(item) {
     console.error(error);
     emit('backendError', error);
   }
-}
-
-async function onMouseOverRow(item) {
-  //console.log('Souris sur la ligne :', item);
-  item.highlighted = true;
-  // Faites quelque chose avec l'élément 'item' lorsque la souris passe dessus
-  //TODO mettre en place une fonction qui maj une valeur item.progress toutes les x secondes pour savoir si le serveur est en train de traiter la demande
-  // Vérifier la disponibilité des fichiers pour chaque type de fichier
-  item.fichier_enrichi = await isAvailableFile(item.id, 'fichier_enrichi');
-  item.fichier_resultat = await isAvailableFile(item.id, 'fichier_resultat');
-}
-
-function onMouseLeaveRow(item) {
-  item.highlighted = false;
-  item.fichier_enrichi = false;
-  item.fichier_resultat = false;
 }
 
 function onRowClick(item) {
