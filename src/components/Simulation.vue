@@ -82,7 +82,6 @@ const isLoading = ref(true);
 onMounted(() => {
   demandesService.getNbLigneFichier(props.demande.id, props.demande.type)
     .then(response => {
-      console.log(response.data);
       nbNotice.value.nbTotalNotice = response.data;
     });
   demandesService.simulerLigne(props.demande.id, 0, props.demande.type)
