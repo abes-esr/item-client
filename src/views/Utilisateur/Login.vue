@@ -50,6 +50,7 @@
 							></v-text-field>
 
 							<v-btn class="mb-8" color="blue" size="large" variant="tonal" block @click="login()">Se connecter</v-btn>
+              <v-btn @click="redirect()">TEst</v-btn>
 						</v-card>
 					</div>
 				</v-col>
@@ -60,11 +61,14 @@
 <script setup>
 import {ref} from 'vue'
 import DemandesService from '@/service/DemandesService'
+import router from '@/router'
+import {useAuthStore} from '@/store/authStore'
 
-const service = DemandesService;
+const service = DemandesService
+const authStore = useAuthStore()
 
 //Emit
-const emit = defineEmits(['backendError', 'backendSuccess', 'login-success'])
+const emit = defineEmits(['backendError', 'backendSuccess'])
 
 const incident = ref(false)
 const userLogin = ref('')
@@ -72,12 +76,19 @@ const userPassword = ref('')
 const visible = ref(false)
 
 async function login() {
-  try{
-    await service.login(userLogin.value, userPassword.value)
+  try {
+    const utilisateur = await service.login(userLogin.value, userPassword.value)
+    authStore.login(utilisateur)
+    const user = authStore.user
     emit('backendSuccess')
-    emit('login-success');
-  }catch(error){
-    emit('backendError', error);
+    if (user && user.email) {
+      await router.push('/accueil')
+    } else {
+      await router.push('/premiere-connexion')
+    }
+  } catch (error) {
+    console.error('Login error:', error)
+    emit('backendError', error)
   }
 }
 </script>

@@ -1,38 +1,36 @@
 <template>
 	<v-app>
-		<Header :authenticated="authenticated" @logout-success="onLogout"/>
-		<v-main>
+    <Header @logout-success="onLogout" @toggle-drawer="toggleDrawer"/>
+    <Navbar :drawer="drawer" @close="drawer = false"/>
+		<Footer />
+    <v-main>
       <v-alert color="red" :title="backendErrorMessage" variant='outlined' density='compact' type='warning' :text='backendErrorDescription' closable v-if="backendError"></v-alert>
       <router-view v-slot="{ Component }">
         <component
           :is="Component"
           @backendError="setBackendError"
-          @backendSuccess="liftErrors"
-          @login-success="onLoginSuccess"
+          @backendSuccess="liftBackendError"
         />
       </router-view>
-     <!--<AppTable @backendError="setBackendError" @backendSuccess="liftErrors" />-->
     </v-main>
-		<Footer />
-    <p><strong>e</strong></p>
-	</v-app>
+  </v-app>
 </template>
 
 <script setup>
 import {onMounted, ref} from 'vue'
-import Header from '@/components/Header.vue'
-import Footer from '@/components/Footer.vue'
+import Header from '@/components/Structure/Header.vue'
+import Navbar from '@/components/Structure/Navbar.vue'
+import Footer from '@/components/Structure/Footer.vue'
 import router from '@/router/index'
-import { HttpStatusCode } from 'axios';
+import {HttpStatusCode} from 'axios'
+import {useTheme} from 'vuetify'
 
 const backendError = ref(false)
 const backendErrorMessage = ref('')
 const backendErrorDescription = ref('')
-const authenticated = ref(false);
+const drawer = ref(false)
 
-onMounted(() => {
-  checkAuthentication();
-});
+const theme = useTheme()
 
 function setBackendError(error) {
   backendError.value = true
@@ -71,24 +69,14 @@ function setBackendError(error) {
   }
 }
 
-function liftErrors() {
+function liftBackendError() {
   backendError.value = false
 }
-function onLoginSuccess(){
-  authenticated.value = true
-  const user = JSON.parse(sessionStorage.getItem('user'));
-  if( !user.email ){
-    router.push('premiere-connexion')
-  } else {
-    router.push('accueil')
-  }
-}
+
 function onLogout(){
-  authenticated.value = false
   router.push('identification')
 }
-function checkAuthentication() {
-  const user = sessionStorage.getItem('user');
-  authenticated.value = !!user;
+function toggleDrawer() {
+  drawer.value = !drawer.value;
 }
 </script>

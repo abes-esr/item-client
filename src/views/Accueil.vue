@@ -4,7 +4,7 @@
       <div class="py-5"/>
       <v-row>
         <v-col class="text-center" cols="12" md="6">
-          <BtnAccueil id="btn-recouvrement" icon="mdi-percent" route="recouvrement-etape-1-selection-rcr">
+          <BtnAccueil id="btn-recouvrement" icon="mdi-percent" route="recouvrement">
             Calculer mon taux de recouvrement
           </BtnAccueil>
         </v-col>
@@ -14,7 +14,7 @@
           </BtnAccueil>
         </v-col>
         <v-col class="text-center" cols="12" md="6">
-          <BtnAccueil id="btn-exemplarisation" icon="mdi-plus" route="exemplarisation-etape-1-selection-rcr">
+          <BtnAccueil id="btn-exemplarisation" icon="mdi-plus" route="exemplarisation">
             Créer des exemplaires
           </BtnAccueil>
         </v-col>
@@ -24,7 +24,7 @@
           </BtnAccueil>
         </v-col>
         <v-col class="text-center" cols="12" md="6">
-          <BtnAccueil id="btn-modification" icon="mdi-pencil" route="modification-etape-1-selection-rcr">
+          <BtnAccueil id="btn-modification" icon="mdi-pencil" route="modification">
             Modifier des exemplaires
           </BtnAccueil>
         </v-col>

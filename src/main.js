@@ -1,17 +1,18 @@
 // Plugins
-import {registerPlugins} from '@/plugins'
+import { registerPlugins } from '@/plugins'
 
 // Components
 import App from './App.vue'
 
 // Composables
-import {createApp} from 'vue'
+import { createApp } from 'vue'
 import { createVuetify } from 'vuetify'
 import router from '@/router'
-import {en, fr} from 'vuetify/locale'
+import { en, fr } from 'vuetify/locale'
+import { createPinia } from 'pinia'
 
 const app = createApp(App)
-app.config.productionTip = false;
+app.config.productionTip = false
 
 const vuetify = createVuetify({
   locale: {
@@ -19,19 +20,11 @@ const vuetify = createVuetify({
     fallback: 'en',
     messages: { fr, en },
   },
-  symbol: {
-    idefault: Symbol('idefault'),
-    idisplay: Symbol('idisplay'),
-    itheme: Symbol('itheme'),
-    iicons: Symbol('iicons'),
-    ilocale: Symbol('ilocale'),
-    idateOptions: Symbol('idateOptions'),
-    iadapter: Symbol('iadapter'),
-    igoto: Symbol('igoto')
-  }
 })
+
+const pinia = createPinia()
 
 registerPlugins(app)
 
-app.use(router)
+app.use(router).use(vuetify).use(pinia)
 app.mount('#app')
