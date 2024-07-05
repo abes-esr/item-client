@@ -1,4 +1,5 @@
 <template>
+
   <v-container fluid>
     <v-chip v-if="!archiveFalseActiveTrue" style="margin-right: 10px"
             @click="switchArchiveActiveDisplay(!archiveFalseActiveTrue)">Créations d'exemplaires
@@ -130,7 +131,7 @@
 </template>
 
 <script setup>
-import {onBeforeUnmount, onMounted, ref} from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import router from '@/router';
 import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
 import DialogCommentaire from "@/components/Dialog/DialogCommentaire.vue";
@@ -249,6 +250,9 @@ const typeExempSearchField = ref();
 const indexRechercheSearchField = ref('');
 const statutSearchField = ref();
 let polling;
+const isDialogOpen = computed(() => {
+  return !!contentsDemandesFrontFiltered.value.find(item => item.expanded === true)
+});
 //Actives or archives demands displayed
 const archiveFalseActiveTrue = ref(false);
 
@@ -265,9 +269,12 @@ onMounted(() => {
       listTypeExemp.value.push('Non défini');
     });
   polling = setInterval(() => {
-    loadItems('EXEMP', archiveFalseActiveTrue.value).then(()=>{
-      filterItems();
-    });
+    if(!isDialogOpen.value) {
+      loadItems('EXEMP', archiveFalseActiveTrue.value)
+        .then(() => {
+          filterItems();
+        });
+    }
   }, 10000);
 });
 

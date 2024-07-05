@@ -128,13 +128,13 @@
 </template>
 
 <script setup>
-import {onBeforeUnmount, onMounted, ref} from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import router from '@/router';
 import demandesService from '@/service/DemandesService';
 import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
-import DialogCommentaire from "@/components/Dialog/DialogCommentaire.vue";
-import MenuDownloadFile from "@/components/MenuDownloadFile.vue";
-import moment from "moment/moment";
+import DialogCommentaire from '@/components/Dialog/DialogCommentaire.vue';
+import MenuDownloadFile from '@/components/MenuDownloadFile.vue';
+import moment from 'moment/moment';
 
 //Emit
 const emit = defineEmits(['backendError', 'backendSuccess']);
@@ -156,9 +156,11 @@ const headingsDemandes = ref([
     title: 'Crée le',
     key: 'dateCreation',
     align: 'center',
-    sort:(d1,d2) => {
-      const date1 = moment(d1, "DD/MM/yyyy HH:mm").valueOf();
-      const date2 = moment(d2, "DD/MM/yyyy HH:mm").valueOf();
+    sort: (d1, d2) => {
+      const date1 = moment(d1, 'DD/MM/yyyy HH:mm')
+        .valueOf();
+      const date2 = moment(d2, 'DD/MM/yyyy HH:mm')
+        .valueOf();
       if (date1 > date2) return -1;
       if (date1 < date2) return 1;
       return 0;
@@ -168,9 +170,11 @@ const headingsDemandes = ref([
     title: 'Mise à jour',
     key: 'dateModification',
     align: 'center',
-    sort:(d1,d2) => {
-      const date1 = moment(d1, "DD/MM/yyyy HH:mm").valueOf();
-      const date2 = moment(d2, "DD/MM/yyyy HH:mm").valueOf();
+    sort: (d1, d2) => {
+      const date1 = moment(d1, 'DD/MM/yyyy HH:mm')
+        .valueOf();
+      const date2 = moment(d2, 'DD/MM/yyyy HH:mm')
+        .valueOf();
       if (date1 > date2) return -1;
       if (date1 < date2) return 1;
       return 0;
@@ -233,7 +237,10 @@ const contentsDemandesFrontFiltered = ref([]);
 const totalItemsFound = ref(0);
 const suppDialog = ref(false);
 const suppDemande = ref({});
-const sortBy = ref([{ key: 'dateModification', order: 'desc' }]);
+const sortBy = ref([{
+  key: 'dateModification',
+  order: 'desc'
+}]);
 
 //Progress bar displayed while fetching data
 const isDataLoaded = ref(false);
@@ -248,6 +255,10 @@ const zoneSearchField = ref('');
 const traitementSearchField = ref();
 const statutSearchField = ref();
 let polling;
+const isDialogOpen = computed(() => {
+  return !!contentsDemandesFrontFiltered.value.find(item => item.expanded === true);
+});
+
 //Actives or archives demands displayed
 const archiveFalseActiveTrue = ref(false);
 
@@ -264,15 +275,18 @@ onMounted(() => {
       listTypeTraitement.value.push('Non défini');
     });
   polling = setInterval(() => {
-    loadItems('MODIF', archiveFalseActiveTrue.value).then(()=>{
-      filterItems();
-    });
+    if (!isDialogOpen.value) {
+      loadItems('MODIF', archiveFalseActiveTrue.value)
+        .then(() => {
+          filterItems();
+        });
+    }
   }, 10000);
 });
 
 onBeforeUnmount(() => {
   clearInterval(polling);
-})
+});
 
 function switchArchiveActiveDisplay(value) {
   archiveFalseActiveTrue.value = value;
@@ -317,8 +331,6 @@ function filterItems() {
   });
 }
 
-
-
 function isAvailableFile(demandeNumber, filename) {
   return demandesService.headFile(filename, demandeNumber, 'csv', 'MODIF')
     .then((response) => response.status !== 500)
@@ -355,6 +367,7 @@ async function archiverDemande(item) {
     emit('backendError', error);
   }
 }
+
 function onRowClick(item) {
   console.log('Ligne cliquée avec la demande :', item);
   // Faites quelque chose lorsque la ligne est cliquée, par exemple naviguer vers une page de détails de la demande
@@ -363,10 +376,11 @@ function onRowClick(item) {
   }
 }
 
-function saveComment(){
-  loadItems('MODIF',archiveFalseActiveTrue.value).then(()=>{
-    filterItems();
-  })
+function saveComment() {
+  loadItems('MODIF', archiveFalseActiveTrue.value)
+    .then(() => {
+      filterItems();
+    });
 }
 
 </script>

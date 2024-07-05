@@ -29,8 +29,10 @@ const props = defineProps({
 const commentaire = ref(props.demande.commentaire);
 
 function save(){
+  if(!commentaire.value)
+    commentaire.value = '';
   demandesService.modifierCommentaireDemande(props.demande.id, commentaire.value, props.demande.type)
-    .then(()=> {
+    .then(() => {
       props.demande.expanded = false;
       emits('save');
     })

@@ -123,7 +123,7 @@
 </template>
 
 <script setup>
-import {onBeforeUnmount, onMounted, ref} from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import demandesService from '@/service/DemandesService';
 import router from '@/router';
 import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
@@ -237,6 +237,9 @@ const typeExempSearchField = ref('');
 const indexRechercheSearchField = ref('');
 const statutSearchField = ref();
 let polling;
+const isDialogOpen = computed(() => {
+  return !!contentsDemandesFrontFiltered.value.find(item => item.expanded === true)
+});
 
 //Actives or archives demands displayed
 const archiveFalseActiveTrue = ref(false);
@@ -246,9 +249,12 @@ onMounted(() => {
   loadItems('RECOUV', archiveFalseActiveTrue.value);
   contentsDemandesFromServer.value = [...contentsDemandesFromServer.value];
   polling = setInterval(() => {
-    loadItems('RECOUV', archiveFalseActiveTrue.value).then(()=>{
-      filterItems();
-    });
+    if(!isDialogOpen.value) {
+      loadItems('RECOUV', archiveFalseActiveTrue.value)
+        .then(() => {
+          filterItems();
+        });
+    }
   }, 10000);
 });
 
