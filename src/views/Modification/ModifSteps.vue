@@ -159,8 +159,8 @@ import SelectFile from '@/components/SelectFile.vue';
 import DownloadFile from '@/components/Modif/DownloadFile.vue';
 import TypeTraitement from '@/components/Modif/TypeTraitement.vue';
 import Simulation from "@/components/Simulation.vue";
-import DialogLancerTraitement from '@/components/DialogLancerTraitement.vue';
-import DialogSuppression from '@/components/DialogSuppression.vue';
+import DialogLancerTraitement from '@/components/Dialog/DialogLancerTraitement.vue';
+import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
 
 
 const currentStep = ref(0);

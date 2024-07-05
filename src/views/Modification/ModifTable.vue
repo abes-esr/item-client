@@ -81,8 +81,9 @@
     <template v-slot:item="{ item, expand }">
       <tr :class="{ 'highlighted-row': item.highlighted }" style="cursor: pointer;">
         <td>
-          <v-btn icon="mdi-chevron-up" @click="item.expanded = !item.expanded" variant="text">
-            <v-icon>{{ item.expanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+          <v-btn flat @click="item.expanded = !item.expanded" variant="text">
+            <v-icon size="x-large" :color="item.commentaire ? 'red' : ''">mdi-comment-text-outline</v-icon>
+            <dialog-commentaire :demande="item" @save="saveComment()"></dialog-commentaire>
           </v-btn>
         </td>
         <td @click="onRowClick(item)" class="text-center">{{ item.id }}</td>
@@ -120,12 +121,6 @@
           <v-btn v-else-if="canCancel(item)" variant="plain" icon="mdi-delete" @click="supprimerDemande(item)"></v-btn>
         </td>
       </tr>
-      <tr v-if="item.expanded">
-        <td :colspan="headingsDemandes.length">
-          <v-textarea label="Commentaire" v-model="item.commentaire" hide-details variant="underlined" auto-grow
-                      rows="1"></v-textarea>
-        </td>
-      </tr>
     </template>
   </v-data-table>
   <dialog-suppression v-model="suppDialog" :demande="suppDemande"
@@ -133,19 +128,20 @@
 </template>
 
 <script setup>
-import {onBeforeUnmount, onMounted, ref} from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import router from '@/router';
-import DialogSuppression from '@/components/DialogSuppression.vue';
 import demandesService from '@/service/DemandesService';
-import MenuDownloadFile from "@/components/MenuDownloadFile.vue";
-import moment from "moment/moment";
+import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
+import DialogCommentaire from '@/components/Dialog/DialogCommentaire.vue';
+import MenuDownloadFile from '@/components/MenuDownloadFile.vue';
+import moment from 'moment/moment';
 
 //Emit
 const emit = defineEmits(['backendError', 'backendSuccess']);
 
 //Data
 const extendedAllILN = ref(false);
-const headingsDemandes = [
+const headingsDemandes = ref([
   {
     title: '',
     key: 'data-table-expand',
@@ -160,9 +156,11 @@ const headingsDemandes = [
     title: 'Crée le',
     key: 'dateCreation',
     align: 'center',
-    sort:(d1,d2) => {
-      const date1 = moment(d1, "DD/MM/yyyy HH:mm").valueOf();
-      const date2 = moment(d2, "DD/MM/yyyy HH:mm").valueOf();
+    sort: (d1, d2) => {
+      const date1 = moment(d1, 'DD/MM/yyyy HH:mm')
+        .valueOf();
+      const date2 = moment(d2, 'DD/MM/yyyy HH:mm')
+        .valueOf();
       if (date1 > date2) return -1;
       if (date1 < date2) return 1;
       return 0;
@@ -172,9 +170,11 @@ const headingsDemandes = [
     title: 'Mise à jour',
     key: 'dateModification',
     align: 'center',
-    sort:(d1,d2) => {
-      const date1 = moment(d1, "DD/MM/yyyy HH:mm").valueOf();
-      const date2 = moment(d2, "DD/MM/yyyy HH:mm").valueOf();
+    sort: (d1, d2) => {
+      const date1 = moment(d1, 'DD/MM/yyyy HH:mm')
+        .valueOf();
+      const date2 = moment(d2, 'DD/MM/yyyy HH:mm')
+        .valueOf();
       if (date1 > date2) return -1;
       if (date1 < date2) return 1;
       return 0;
@@ -223,7 +223,7 @@ const headingsDemandes = [
     value: 'archiveOrCancel',
     align: 'center'
   }
-];
+]);
 const listStatut = [
   'En saisie',
   'En attente',
@@ -237,7 +237,10 @@ const contentsDemandesFrontFiltered = ref([]);
 const totalItemsFound = ref(0);
 const suppDialog = ref(false);
 const suppDemande = ref({});
-const sortBy = ref([{ key: 'dateModification', order: 'desc' }]);
+const sortBy = ref([{
+  key: 'dateModification',
+  order: 'desc'
+}]);
 
 //Progress bar displayed while fetching data
 const isDataLoaded = ref(false);
@@ -252,6 +255,10 @@ const zoneSearchField = ref('');
 const traitementSearchField = ref();
 const statutSearchField = ref();
 let polling;
+const isDialogOpen = computed(() => {
+  return !!contentsDemandesFrontFiltered.value.find(item => item.expanded === true);
+});
+
 //Actives or archives demands displayed
 const archiveFalseActiveTrue = ref(false);
 
@@ -268,15 +275,18 @@ onMounted(() => {
       listTypeTraitement.value.push('Non défini');
     });
   polling = setInterval(() => {
-    loadItems('MODIF', archiveFalseActiveTrue.value).then(()=>{
-      filterItems();
-    });
+    if (!isDialogOpen.value) {
+      loadItems('MODIF', archiveFalseActiveTrue.value)
+        .then(() => {
+          filterItems();
+        });
+    }
   }, 10000);
 });
 
 onBeforeUnmount(() => {
   clearInterval(polling);
-})
+});
 
 function switchArchiveActiveDisplay(value) {
   archiveFalseActiveTrue.value = value;
@@ -321,8 +331,6 @@ function filterItems() {
   });
 }
 
-
-
 function isAvailableFile(demandeNumber, filename) {
   return demandesService.headFile(filename, demandeNumber, 'csv', 'MODIF')
     .then((response) => response.status !== 500)
@@ -359,13 +367,20 @@ async function archiverDemande(item) {
     emit('backendError', error);
   }
 }
+
 function onRowClick(item) {
   console.log('Ligne cliquée avec la demande :', item);
   // Faites quelque chose lorsque la ligne est cliquée, par exemple naviguer vers une page de détails de la demande
   if (item.etatDemande === 'En préparation' || item.etatDemande === 'Préparée' || item.etatDemande === 'A compléter' || item.etatDemande === 'En simulation') {
     router.push('/modification/' + item.id);
   }
+}
 
+function saveComment() {
+  loadItems('MODIF', archiveFalseActiveTrue.value)
+    .then(() => {
+      filterItems();
+    });
 }
 
 </script>

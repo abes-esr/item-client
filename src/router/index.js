@@ -6,7 +6,7 @@ import RecouvTable from '@/views/Recouvrement/RecouvTable.vue'
 import ModifSteps from '@/views/Modification/ModifSteps.vue';
 import Accueil from '@/views/Accueil.vue';
 import ModificationEmail from '@/views/Utilisateur/ModificationEmail.vue';
-import DemandesService from '@/service/DemandesService'
+import demandesService from '@/service/DemandesService'
 import RecouvSteps from '@/views/Recouvrement/RecouvSteps.vue';
 import ExempSteps from '@/views/Exemplarisation/ExempSteps.vue';
 import {useAuthStore} from '@/store/authStore'
@@ -154,17 +154,17 @@ router.beforeEach(async (to, from, next) => {
   if (requiresAuth) {
     if (authStore.isAuthenticated) {
       try {
-        const valid = await DemandesService.checkToken();
+        const valid = await demandesService.checkToken();
         if (valid.data) {
           next();
         } else {
           console.error('Token invalide auprès du serveur');
-          DemandesService.logout();
+          demandesService.logout();
           next('/identification');
         }
       } catch (error) {
         console.error(error);
-        DemandesService.logout();
+        demandesService.logout();
         next('/identification');
       }
     } else {

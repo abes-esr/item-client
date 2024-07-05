@@ -110,8 +110,8 @@ import SelectFile from '@/components/SelectFile.vue';
 import Rcr from '@/components/Rcr.vue';
 import TypeExemp from '@/components/Exemp/TypeExemp.vue';
 import Simulation from "@/components/Simulation.vue";
-import DialogLancerTraitement from '@/components/DialogLancerTraitement.vue';
-import DialogSuppression from '@/components/DialogSuppression.vue';
+import DialogLancerTraitement from '@/components/Dialog/DialogLancerTraitement.vue';
+import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
 
 const emits = defineEmits(['backendError', 'backendSuccess', 'login-success'])
 const props = defineProps({id : {type: String}});

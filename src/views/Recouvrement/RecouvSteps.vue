@@ -91,7 +91,7 @@ import SelectFile from '@/components/SelectFile.vue';
 import { onMounted, ref } from 'vue';
 import DemandesService from '@/service/DemandesService';
 import router from '@/router';
-import DialogSuppression from '@/components/DialogSuppression.vue';
+import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
 
 const props = defineProps({id : {type: String}});
 const emits = defineEmits(['backendError']);
