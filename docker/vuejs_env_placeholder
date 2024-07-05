@@ -2,4 +2,4 @@
 # à la place de l'URL de l'API de item-api
 # pour injecter une URL de l'API au moment de la création du conteneur
 # et éviter ainsi d'avoir une URL de l'API en static dans l'image docker
-VITE_API_URL=ITEM_PLACEHOLDER_VUE_APP_ROOT_API
+VITE_API_URL=ITEM_PLACEHOLDER_VITE_API_URL
