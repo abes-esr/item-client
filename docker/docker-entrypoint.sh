@@ -13,7 +13,7 @@ rm -rf /usr/share/nginx/html/
 cp -rf /usr/share/nginx/html.orig/ /usr/share/nginx/html/
 sed -i \
   "s#ITEM_PLACEHOLDER_VITE_API_URL#${ITEM_FRONT_API_BASEURL}#g" \
-  /usr/share/nginx/html/js/*
+  /usr/share/nginx/html/assets/*
 
 
 # execute nginx (cf CMD dans Dockerfile)
