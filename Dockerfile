@@ -31,7 +31,7 @@ COPY ./src/plugins/                 /build/src/plugins/
 RUN echo 'Copy des fichier public'
 COPY ./*.html                       /build/
 COPY ./public/                      /build/public/
-RUN cd /build/ | npm run build
+RUN npm run build
 
 
 
