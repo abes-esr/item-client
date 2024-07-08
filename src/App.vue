@@ -33,6 +33,7 @@ const drawer = ref(false)
 const theme = useTheme()
 
 function setBackendError(error) {
+  console.log(JSON.stringify(error))
   backendError.value = true
   let titleMessage = ''
   if(!error.response){
@@ -63,6 +64,9 @@ function setBackendError(error) {
   }
   if(error.response.data.detail){
     backendErrorDescription.value = error.response.data.detail
+  }
+  if(error.response.data.message){
+    backendErrorDescription.value = error.response.data.message
   }
   if(error.request.url){
     backendErrorDescription.value = 'Problème de disponibilité du fichier demandé'
