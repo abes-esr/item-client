@@ -37,7 +37,8 @@ export class DemandesService {
           email: response.data.email
         };
         const token = `Bearer ${response.data.accessToken}`
-        this.client.defaults.headers.common.Authorization = `Bearer ${response.data.accessToken}`;
+        this.client.defaults.headers.common.Authorization = `Bearer ${response.data.accessToken}`
+        userData.token = token
         const authStore = useAuthStore()
         authStore.login(userData, token)
         return userData;

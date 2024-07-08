@@ -30,8 +30,6 @@ const backendErrorMessage = ref('')
 const backendErrorDescription = ref('')
 const drawer = ref(false)
 
-const theme = useTheme()
-
 function setBackendError(error) {
   backendError.value = true
   let titleMessage = ''

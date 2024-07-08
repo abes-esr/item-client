@@ -13,12 +13,14 @@
 import Email from '@/components/Email.vue';
 import { ref } from 'vue';
 import router from '@/router';
+import {useAuthStore} from '@/store/authStore'
 
-const user = ref(JSON.parse(sessionStorage.getItem('user')));
+const authStore = useAuthStore()
+const user = authStore.getUser
 
 function setEmailUser(email){
   user.value.email = email;
-  sessionStorage.setItem('user',JSON.stringify(user.value));
+  authStore.set
   router.push('Accueil');
 }
 </script>
