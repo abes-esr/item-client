@@ -38,8 +38,8 @@ export class DemandesService {
         };
         const token = `Bearer ${response.data.accessToken}`
         this.client.defaults.headers.common.Authorization = `Bearer ${response.data.accessToken}`;
-        const authStore = useAuthStore()
-        authStore.login(userData, token)
+        const authStore = useAuthStore();
+        authStore.login(userData, token);
         return userData;
       })
       .catch(error => {

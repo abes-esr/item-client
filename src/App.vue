@@ -2,7 +2,7 @@
 	<v-app>
     <Header @logout-success="onLogout" @toggle-drawer="toggleDrawer"/>
     <Navbar :drawer="drawer" @close="drawer = false"/>
-		<Footer />
+
     <v-main>
       <v-alert color="red" :title="backendErrorMessage" variant='outlined' density='compact' type='warning' :text='backendErrorDescription' closable v-if="backendError"></v-alert>
       <router-view v-slot="{ Component }">
@@ -13,24 +13,23 @@
         />
       </router-view>
     </v-main>
+    <Footer/>
   </v-app>
 </template>
 
 <script setup>
-import {onMounted, ref} from 'vue'
+import {ref} from 'vue'
 import Header from '@/components/Structure/Header.vue'
 import Navbar from '@/components/Structure/Navbar.vue'
 import Footer from '@/components/Structure/Footer.vue'
 import router from '@/router/index'
 import {HttpStatusCode} from 'axios'
-import {useTheme} from 'vuetify'
 
 const backendError = ref(false)
 const backendErrorMessage = ref('')
 const backendErrorDescription = ref('')
 const drawer = ref(false)
 
-const theme = useTheme()
 
 function setBackendError(error) {
   backendError.value = true

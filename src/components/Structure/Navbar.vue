@@ -108,7 +108,7 @@
 </template>
 
 <script setup>
-import {ref, computed, onMounted} from 'vue'
+import { computed, ref } from 'vue';
 import router from '@/router'
 import { useTheme } from 'vuetify'
 
@@ -133,6 +133,7 @@ function navigateTo(routeName) {
 }
 
 function toggleTheme() {
+  console.log(theme.global.current.value);
   theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
   localStorage.setItem('theme', theme.global.name.value)
 }

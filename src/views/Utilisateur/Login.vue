@@ -50,7 +50,6 @@
 							></v-text-field>
 
 							<v-btn class="mb-8" color="blue" size="large" variant="tonal" block @click="login()">Se connecter</v-btn>
-              <v-btn @click="redirect()">TEst</v-btn>
 						</v-card>
 					</div>
 				</v-col>
@@ -60,11 +59,10 @@
 </template>
 <script setup>
 import {ref} from 'vue'
-import DemandesService from '@/service/DemandesService'
+import demandesService from '@/service/DemandesService'
 import router from '@/router'
 import {useAuthStore} from '@/store/authStore'
 
-const service = DemandesService
 const authStore = useAuthStore()
 
 //Emit
@@ -77,9 +75,7 @@ const visible = ref(false)
 
 async function login() {
   try {
-    const utilisateur = await service.login(userLogin.value, userPassword.value)
-    authStore.login(utilisateur)
-    const user = authStore.user
+    const user = await demandesService.login(userLogin.value, userPassword.value)
     emit('backendSuccess')
     if (user && user.email) {
       await router.push('/accueil')
