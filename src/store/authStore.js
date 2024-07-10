@@ -2,9 +2,9 @@ import { defineStore } from 'pinia';
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    authenticated: false,
-    user: null,
-    token: null
+    user: JSON.parse(sessionStorage.getItem('user')),
+    token: sessionStorage.getItem('token'),
+    authenticated: !!this.token,
   }),
   getters: {
     getUser: (state) => state.user,
@@ -16,11 +16,15 @@ export const useAuthStore = defineStore('auth', {
       this.authenticated = true;
       this.user = user;
       this.token = token;
+      sessionStorage.setItem('user', JSON.stringify(this.user));
+      sessionStorage.setItem('token', this.token);
     },
     logout() {
       this.authenticated = false;
       this.user = null;
       this.token = null;
+      sessionStorage.setItem('user', JSON.stringify(this.user))
+      sessionStorage.setItem('token', this.token);
     },
     setToken(token) {
       this.token = token;
@@ -29,5 +33,4 @@ export const useAuthStore = defineStore('auth', {
       this.user = user;
     }
   },
-  persist: true // This will persist the store to localStorage
 });
