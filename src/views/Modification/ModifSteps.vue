@@ -187,7 +187,6 @@ onMounted(() => {
   if (props.id) {
     demandesService.getDemande(props.id, "MODIF")
       .then(response => {
-        console.log(response.data);
         demande.value = response.data;
         switch (demande.value.etatDemande) {
           case 'En préparation':

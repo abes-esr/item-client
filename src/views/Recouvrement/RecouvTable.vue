@@ -333,13 +333,9 @@ async function archiverDemande(item) {
 }
 
 function onRowClick(item) {
-  console.log('Ligne cliquée avec la demande :', item.id);
-
   if (item.etatDemande === 'En préparation') {
     router.push('/recouvrement/' + item.id);
   }
-
-  // Faites quelque chose lorsque la ligne est cliquée, par exemple naviguer vers une page de détails de la demande
 }
 
 function saveAction() {

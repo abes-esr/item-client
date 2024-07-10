@@ -1,12 +1,12 @@
 <template>
-  <v-navigation-drawer v-if="authenticated && drawer" width="18em" temporary>
+  <v-navigation-drawer v-if="authStore.isAuthenticated && drawer" width="18em" temporary>
     <v-list-item three-line>
       <v-list-item>
         <v-list-item-title class="text-h6 text-wrap">
           <p>{{ rights.title }}</p>
         </v-list-item-title>
         <v-list-item-subtitle class="text-wrap">
-            <p>{{ rights.message }}</p>
+          <p>{{ rights.message }}</p>
         </v-list-item-subtitle>
       </v-list-item>
     </v-list-item>
@@ -108,23 +108,22 @@
 </template>
 
 <script setup>
-import {ref, computed, onMounted} from 'vue'
-import router from '@/router'
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { useTheme } from 'vuetify'
+import { useAuthStore } from '@/store/authStore'
 
-defineProps({
+const props = defineProps({
   drawer: {
     type: Boolean,
     required: true,
   },
 })
 
-const authenticated = computed(() => {
-  const user = JSON.parse(sessionStorage.getItem('user'))
-  return !!user;
-})
-
+const router = useRouter()
 const theme = useTheme()
+const authStore = useAuthStore()
+
 const emit = defineEmits(['close'])
 
 function navigateTo(routeName) {
@@ -138,19 +137,25 @@ function toggleTheme() {
 }
 
 const rights = computed(() => {
-  const user = JSON.parse(sessionStorage.getItem('user'))
-  if(user.role === 'ADMIN'){
-    rights.title = `Manager ${user.login}`
-    rights.message = `ILN ${user.iln} : Vous disposez des
+  const user = authStore.getUser
+  if (!user) return { title: '', message: '' }
+
+  if (user.role === 'ADMIN') {
+    return {
+      title: `Manager ${user.login}`,
+      message: `ILN ${user.iln} : Vous disposez des
 permissions administrateur`
+    }
   }
-  if(user.role === 'USER'){
-    rights.title = `Utilisateur ${user.login}`
-    rights.message = `Vous êtes habilité à intervenir
+  if (user.role === 'USER') {
+    return {
+      title: `Utilisateur ${user.login}`,
+      message: `Vous êtes habilité à intervenir
 sur les exemplaires des RCR
 de l'ILN ${user.iln}`
+    }
   }
-  return rights
+  return { title: '', message: '' }
 })
 
 </script>

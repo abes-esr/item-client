@@ -20,12 +20,14 @@ A<template>
 </template>
 
 <script setup>
-import idrefService from '@/service/IdrefService';
-import { onMounted, ref } from 'vue';
+import idrefService from '@/service/IdrefService'
+import {onMounted, ref} from 'vue'
+import {useAuthStore} from '@/store/authStore'
 
-const listRcr = ref([]);
+const authStore = useAuthStore()
+const listRcr = ref([])
 const rcr = defineModel()
-const user = JSON.parse(sessionStorage.getItem('user'));
+const user = authStore.getUser
 const props = defineProps(  {isLoading: { type: Boolean}})
 
 onMounted(() => {
