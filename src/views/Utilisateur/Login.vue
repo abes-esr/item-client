@@ -50,7 +50,6 @@
 							></v-text-field>
 
 							<v-btn class="mb-8" color="blue" size="large" variant="tonal" block @click="login()">Se connecter</v-btn>
-              <v-btn @click="redirect()">TEst</v-btn>
 						</v-card>
 					</div>
 				</v-col>
@@ -78,7 +77,7 @@ const visible = ref(false)
 async function login() {
   try {
     const utilisateur = await service.login(userLogin.value, userPassword.value)
-    authStore.login(utilisateur)
+    authStore.login(utilisateur, utilisateur.token)
     const user = authStore.user
     emit('backendSuccess')
     if (user && user.email) {

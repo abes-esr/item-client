@@ -352,9 +352,6 @@ async function archiverDemande(item) {
 }
 
 function onRowClick(item) {
-  console.log('Ligne cliquée avec la demande :', item.id);
-  // Faites quelque chose lorsque la ligne est cliquée, par exemple naviguer vers une page de détails de la demande
-
   if (item.etatDemande === 'En préparation' || item.etatDemande === 'A compléter' || item.etatDemande === 'En simulation') {
     router.push('/exemplarisation/' + item.id);
   }
