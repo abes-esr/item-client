@@ -4,7 +4,7 @@ export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: JSON.parse(sessionStorage.getItem('user')),
     token: sessionStorage.getItem('token'),
-    authenticated: false,
+    authenticated: !!sessionStorage.getItem('token'),
   }),
   getters: {
     getUser: (state) => state.user,
