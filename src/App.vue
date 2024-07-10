@@ -73,11 +73,10 @@ function addError(error) {
     }
     newError.description = 'Erreur ' + error.response.status
   }
-  if(error.response.data.detail){
-    newError.description = error.response.data.detail
-  }
-  if(error.response.data.message){
-    newError.description = error.response.data.message
+  if (error?.response?.data?.detail) {
+    newError.description = error.response.data.detail;
+  } else if (error?.response?.data?.message) {
+    newError.description = error.response.data.message;
   }
   if(error.request.url){
     newError.description = 'Problème de disponibilité du fichier demandé'
