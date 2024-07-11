@@ -81,7 +81,7 @@ onMounted(() => {
 });
 
 function validate() {
-  if(props.email){
+  if(!props.email){
     demandesService.creerEmail(props.userId, emailModel.value)
       .then(result => {
         emits('validate', result.data.email);
