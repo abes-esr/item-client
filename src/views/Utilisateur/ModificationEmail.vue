@@ -20,7 +20,7 @@ const user = authStore.getUser
 
 function setEmailUser(email){
   user.value.email = email;
-  authStore.set
+  authStore.setUser(user);
   router.push('Accueil');
 }
 </script>
