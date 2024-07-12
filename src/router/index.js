@@ -104,41 +104,11 @@ const routes = [
     props: true,
     meta: {requiresAuth: true}
   },
+
+  // Gestion de la 404, redirection vers la page d'accueil
   {
-    path: '/donnees-personnelles',
-    name: 'donnees-personnelles',
-    component: Accueil,
-    meta: {requiresAuth: false}
-  },
-  {
-    path: '/sortie-application-vers-assistance',
-    name: 'sortie-application-vers-assistance',
-    component: Accueil,
-    meta: {requiresAuth: false}
-  },
-  {
-    path: '/sortie-application-vers-documentation',
-    name: 'sortie-application-vers-documentation',
-    component: Accueil,
-    meta: {requiresAuth: false}
-  },
-  {
-    path: '/sortie-application-vers-accessibilite',
-    name: 'sortie-application-vers-accessibilite',
-    component: Accueil,
-    meta: {requiresAuth: false}
-  },
-  {
-    path: '/sortie-application-vers-mentions-legales',
-    name: 'sortie-application-vers-mentions-legales',
-    component: Accueil,
-    meta: {requiresAuth: false}
-  },
-  {
-    path: '/sortie-application-vers-cgu',
-    name: 'sortie-application-vers-cgu',
-    component: Accueil,
-    meta: {requiresAuth: false}
+    path: '/:pathMatch(.*)*',
+    redirect: "/accueil",
   }
 ]
 
