@@ -4,11 +4,12 @@ import ExempTable from '@/views/Exemplarisation/ExempTable.vue'
 import ModifTable from '@/views/Modification/ModifTable.vue'
 import RecouvTable from '@/views/Recouvrement/RecouvTable.vue'
 import ModifSteps from '@/views/Modification/ModifSteps.vue';
+import RecouvSteps from '@/views/Recouvrement/RecouvSteps.vue';
+import ExempSteps from '@/views/Exemplarisation/ExempSteps.vue';
+import SuppSteps from '@/views/Suppression/SuppSteps.vue'
 import Accueil from '@/views/Accueil.vue';
 import ModificationEmail from '@/views/Utilisateur/ModificationEmail.vue';
 import demandesService from '@/service/DemandesService'
-import RecouvSteps from '@/views/Recouvrement/RecouvSteps.vue';
-import ExempSteps from '@/views/Exemplarisation/ExempSteps.vue';
 import {useAuthStore} from '@/store/authStore'
 
 const routes = [
@@ -101,6 +102,19 @@ const routes = [
     path: '/recouvrement/:id',
     name: 'recouvrementWithId',
     component: RecouvSteps,
+    props: true,
+    meta: {requiresAuth: true}
+  },
+  {
+    path: '/suppression',
+    name: 'suppression',
+    component: SuppSteps,
+    meta: {requiresAuth: true}
+  },
+  {
+    path: '/suppression/:id',
+    name: 'suppressionWithId',
+    component: SuppSteps,
     props: true,
     meta: {requiresAuth: true}
   },
