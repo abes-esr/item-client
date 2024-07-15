@@ -56,10 +56,22 @@
 <!--              </v-container>-->
             </v-stepper-window-item>
             <v-stepper-window-item>
-              <type-file v-model="typeFileSelected"></type-file>
+              <type-file v-if="!typeFileSelected" v-model="typeFileSelected"></type-file>
+              <select-file v-else v-model="fileSelected">Selection du fichier {{typeFileSelected}}</select-file>
+              <v-container class="d-flex justify-space-between">
+                <v-btn @click="prevSelectTypeFile">
+                  précédent
+                </v-btn>
+                <v-btn
+                  v-if="typeFileSelected"
+                  :disabled="!fileSelected"
+                  @click="uploadFile()"
+                >
+                  Envoyé
+                </v-btn>
+              </v-container>
             </v-stepper-window-item>
             <v-stepper-window-item>
-              <
             </v-stepper-window-item>
             <v-stepper-window-item>
 
@@ -72,8 +84,10 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import TypeFile from '@/components/Supp/TypeFile.vue';
+import SelectFile from '@/components/SelectFile.vue';
+import demandesService from '@/service/DemandesService';
 
 
 
@@ -85,7 +99,37 @@ const emits = defineEmits(['backendError']);
 const props = defineProps({id: {type: String}});
 
 const typeFileSelected = ref();
+const fileSelected = ref();
+const isLoading = ref(false);
+const alertMessage = ref('');
+const alertType = ref('success');
 
+onMounted(() => {
+  demandesService.creerDemande('341725201', 'SUPP')
+    .then(response => {
+      demande.value = response.data;
+      next();
+    })
+})
+function uploadFile() {
+  alertMessage.value = '';
+  alertType.value = 'success';
+  isLoading.value = true;
+  demandesService.uploadDemande(1, fileSelected.value, 'SUPP')
+    .then(() => {
+      alertMessage.value = "Fichier envoyé";
+    })
+    .catch(err => {
+      alertMessage.value = err.response.data.message;
+      alertType.value = 'error';
+    })
+    .finally(() => {
+      isLoading.value = false;
+    });
+}
+function prevSelectTypeFile(){
+  typeFileSelected.value = null;
+}
 function next() {
   currentStep.value++;
 }
