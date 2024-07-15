@@ -7,7 +7,7 @@
             <v-stepper-item
               :color="currentStep >= 0 ? '#295494' : ''"
               :complete="currentStep > 0"
-              :editable="currentStep > 0"
+              editable
               icon="mdi-numeric-1"
               title="Séléction du RCR"
               :subtitle="demande ? 'Demande n°'+demande.id : 'Demande'"
@@ -17,17 +17,17 @@
             <v-stepper-item
               :color="currentStep >= 1 ? '#295494' : ''"
               :complete="currentStep > 1"
-              :editable="currentStep > 1"
+              editable
               icon="mdi-numeric-2"
               title="PPN/RCR/EPN"
-              subtitle="fichier à récupérer"
+              :subtitle="typeFileSelected ? 'Fichier '+ typeFileSelected : 'fichier envoyé'"
             >
             </v-stepper-item>
             <v-divider></v-divider>
             <v-stepper-item
               :color="currentStep >= 3 ? '#295494' : ''"
               :complete="currentStep > 3"
-              :editable="currentStep > 3"
+              editable
               icon="mdi-numeric-4"
               title="Envoi"
               subtitle="du fichier"
@@ -56,7 +56,7 @@
 <!--              </v-container>-->
             </v-stepper-window-item>
             <v-stepper-window-item>
-
+              <type-file v-model="typeFileSelected"></type-file>
             </v-stepper-window-item>
             <v-stepper-window-item>
               <
@@ -73,6 +73,7 @@
 
 <script setup>
 import { ref } from 'vue';
+import TypeFile from '@/components/Supp/TypeFile.vue';
 
 
 
@@ -83,7 +84,7 @@ const demande = ref();
 const emits = defineEmits(['backendError']);
 const props = defineProps({id: {type: String}});
 
-
+const typeFileSelected = ref();
 
 function next() {
   currentStep.value++;
