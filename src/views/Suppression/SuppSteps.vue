@@ -44,16 +44,16 @@
 
           <v-stepper-window>
             <v-stepper-window-item>
-<!--              <rcr v-model="rcrSelected" :is-loading="isLoading"></rcr>-->
-<!--              <v-container class="d-flex justify-space-between">-->
-<!--                <v-spacer></v-spacer>-->
-<!--                <v-btn-->
-<!--                  :disabled="!rcrSelected"-->
-<!--                  @click="createDemande"-->
-<!--                >-->
-<!--                  Valider-->
-<!--                </v-btn>-->
-<!--              </v-container>-->
+              <rcr v-model="rcrSelected" :is-loading="isLoading"></rcr>
+              <v-container class="d-flex justify-space-between">
+                <v-spacer></v-spacer>
+                <v-btn
+                  :disabled="!rcrSelected"
+                  @click="createDemande"
+                >
+                  Valider
+                </v-btn>
+              </v-container>
             </v-stepper-window-item>
             <v-stepper-window-item>
               <type-file v-if="!typeFileSelected" v-model="typeFileSelected"></type-file>
@@ -107,19 +107,42 @@ const demande = ref();
 const emits = defineEmits(['backendError']);
 const props = defineProps({id: {type: String}});
 
+const rcrSelected = ref();
 const typeFileSelected = ref();
 const fileSelected = ref();
 const isLoading = ref(false);
 const alertMessage = ref('');
 const alertType = ref('success');
 
-onMounted(() => {
-  demandesService.creerDemande('341725201', 'SUPP')
-    .then(response => {
-      demande.value = response.data;
-      next();
-    })
-})
+
+function createDemande() {
+  if (demande.value && (rcrSelected.value === demande.value.rcr)) {
+    next();
+  } else if (demande.value) {
+    isLoading.value = true;
+    demandesService.modifierRcrDemande(demande.value.id, rcrSelected.value, 'SUPP')
+      .then(response => {
+        demande.value = response.data;
+        next();
+      }).catch(err => {
+      emits('backendError', err);
+    }).finally(() => {
+      isLoading.value = false;
+    });
+  } else {
+    isLoading.value = true;
+    demandesService.creerDemande(rcrSelected.value, 'SUPP')
+      .then(response => {
+        demande.value = response.data;
+        next();
+      }).catch(err => {
+      emits('backendError', err);
+    }).finally(() => {
+      isLoading.value = false;
+    });
+  }
+}
+
 function uploadFile() {
   alertMessage.value = '';
   alertType.value = 'success';
