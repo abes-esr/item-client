@@ -87,7 +87,7 @@
                   @click="uploadFileInit()"
                   v-if="!isLoaded"
                 >
-                  Envoyé
+                  Envoyer
                 </v-btn>
                 <v-btn
                   v-else

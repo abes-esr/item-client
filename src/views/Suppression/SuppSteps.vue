@@ -67,7 +67,7 @@
                   :disabled="!fileSelected"
                   @click="uploadFile()"
                 >
-                  Envoyé
+                  Envoyer
                 </v-btn>
               </v-container>
             </v-stepper-window-item>
