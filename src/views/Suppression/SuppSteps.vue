@@ -58,8 +58,17 @@
             <v-stepper-window-item>
               <type-file v-if="!typeFileSelected" v-model="typeFileSelected"></type-file>
               <select-file v-else v-model="fileSelected">Selection du fichier {{typeFileSelected}}</select-file>
+              <v-alert
+                v-if="alertMessage"
+                :type="alertType"
+              >
+                <span v-html="alertMessage"></span>
+              </v-alert>
               <v-container class="d-flex justify-space-between">
-                <v-btn @click="prevSelectTypeFile">
+                <v-btn v-if="typeFileSelected" @click="prevSelectTypeFile">
+                  précédent
+                </v-btn>
+                <v-btn v-else @click="prev">
                   précédent
                 </v-btn>
                 <v-btn
@@ -129,12 +138,21 @@ function uploadFile() {
 }
 function prevSelectTypeFile(){
   typeFileSelected.value = null;
+  raz();
 }
 function next() {
   currentStep.value++;
+  raz();
 }
 
 function prev() {
   currentStep.value--;
+  raz();
+}
+
+function raz(){
+  isLoading.value = false;
+  alertMessage.value = '';
+  alertType.value = 'success';
 }
 </script>
