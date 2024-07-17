@@ -58,7 +58,7 @@
             <v-stepper-window-item>
               <type-file v-if="!typeFileSelected" v-model="typeFileSelected"></type-file>
               <select-file v-else-if="!isLoaded" v-model="fileSelected">Selection du fichier {{typeFileSelected}}</select-file>
-              <download-file v-if="isLoaded" :file-link="fileLink" :file-name="fileName"></download-file>
+              <download-file v-if="isLoaded" :file-link="fileLink" :file-name="fileName" @clicked="isDownloaded = true">Téléchargement du fichier PPN/RCR/EPN</download-file>
               <v-alert
                 v-if="alertMessage"
                 :type="alertType"
@@ -66,7 +66,10 @@
                 <span v-html="alertMessage"></span>
               </v-alert>
               <v-container class="d-flex justify-space-between">
-                <v-btn v-if="typeFileSelected" @click="prevSelectTypeFile">
+                <v-btn v-if="typeFileSelected && !isLoaded" @click="prevSelectTypeFile">
+                  précédent
+                </v-btn>
+                <v-btn v-else-if="isLoaded" @click="prevSelectFile">
                   précédent
                 </v-btn>
                 <v-btn v-else @click="prev">
@@ -81,6 +84,8 @@
                 </v-btn>
                 <v-btn
                   v-if="isLoaded"
+                  :disabled="!isDownloaded"
+                  @click="next"
                 >
                   Suivant
                 </v-btn>
@@ -120,7 +125,8 @@ const typeFileSelected = ref();
 const fileSelected = ref();
 const fileLink = ref('');
 const fileName = ref('');
-const isLoaded = ref(false)
+const isLoaded = ref(false);
+const isDownloaded = ref(false);
 const isLoading = ref(false);
 const alertMessage = ref('');
 const alertType = ref('success');
@@ -181,6 +187,9 @@ function prevSelectTypeFile(){
   typeFileSelected.value = null;
   raz();
 }
+function prevSelectFile(){
+  raz();
+}
 function next() {
   currentStep.value++;
   raz();
@@ -196,5 +205,6 @@ function raz(){
   alertMessage.value = '';
   alertType.value = 'success';
   isLoaded.value = false;
+  isDownloaded.value = false;
 }
 </script>
