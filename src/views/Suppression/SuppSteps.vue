@@ -58,7 +58,7 @@
             <v-stepper-window-item>
               <type-file v-if="!typeFileSelected" v-model="typeFileSelected"></type-file>
               <select-file v-else-if="!isLoaded" v-model="fileSelected">Selection du fichier {{typeFileSelected}}</select-file>
-              <download-file v-if="isLoaded" file-link="" file-name=""></download-file>
+              <download-file v-if="isLoaded" :file-link="fileLink" :file-name="fileName"></download-file>
               <v-alert
                 v-if="alertMessage"
                 :type="alertType"
