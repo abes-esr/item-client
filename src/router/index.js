@@ -11,6 +11,7 @@ import Accueil from '@/views/Accueil.vue';
 import ModificationEmail from '@/views/Utilisateur/ModificationEmail.vue';
 import demandesService from '@/service/DemandesService'
 import {useAuthStore} from '@/store/authStore'
+import SuppTable from "@/views/Suppression/SuppTable.vue";
 
 const routes = [
   {
@@ -64,6 +65,12 @@ const routes = [
     path: '/recouvrement-tableau',
     name: 'recouvrement-tableau',
     component: RecouvTable,
+    meta: {requiresAuth: true}
+  },
+  {
+    path: '/suppression-tableau',
+    name: 'suppression-tableau',
+    component: SuppTable,
     meta: {requiresAuth: true}
   },
   {
