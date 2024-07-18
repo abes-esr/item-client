@@ -101,6 +101,10 @@ export class DemandesService {
     return this.client.patch(`demandes/${typeDemande}/${id}?commentaire=${commentaire}`);
   }
 
+  modifierTypeSuppression(id, typeSuppression){
+    return this.client.patch(`demandes/SUPP/${id}?typeSuppression=${typeSuppression}`);
+  }
+
   uploadDemande(id, file, typeDemande){
     const config = { headers: {
       'Content-Type': 'multipart/form-data',

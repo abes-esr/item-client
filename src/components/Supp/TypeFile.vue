@@ -20,6 +20,7 @@
 </template>
 <script setup>
 
+const emits = defineEmits( ['clicked'])
 const props = defineProps({
   isLoading: {
     type: Boolean,
@@ -31,6 +32,8 @@ const types = ['PPN','EPN']
 
 function onClick(type) {
   typeFile.value = type;
+  console.log('test1')
+  emits('clicked');
 }
 
 </script>

@@ -1,6 +1,7 @@
 <template>
   <v-btn :disabled="!(idEtatCurrentDemande >= 3)" aria-label="Télécharger les fichiers" color="info" flat size="small"
          title="Télécharger">
+    {{ idEtatCurrentDemande }}
     <v-icon size="x-large">mdi-cloud-download</v-icon>
     <v-menu bottom left activator="parent">
       <!-- FICHIERS MODIF -->

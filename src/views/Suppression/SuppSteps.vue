@@ -56,7 +56,7 @@
               </v-container>
             </v-stepper-window-item>
             <v-stepper-window-item>
-              <type-file v-if="!typeFileSelected" v-model="typeFileSelected"></type-file>
+              <type-file v-if="!typeFileSelected" v-model="typeFileSelected" @clicked="selectTypeSupp()"></type-file>
               <select-file v-else-if="!isLoaded" v-model="fileSelected">Selection du fichier {{typeFileSelected}}</select-file>
               <download-file v-if="isLoaded" :file-link="fileLink" :file-name="fileName" @clicked="isDownloaded = true">Téléchargement du fichier PPN/RCR/EPN</download-file>
               <v-alert
@@ -104,12 +104,12 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import TypeFile from '@/components/Supp/TypeFile.vue';
 import SelectFile from '@/components/SelectFile.vue';
 import demandesService from '@/service/DemandesService';
-import {tr} from "vuetify/locale";
 import DownloadFile from "@/components/Modif/DownloadFile.vue";
+import Rcr from "@/components/Rcr.vue";
 
 
 
@@ -120,8 +120,8 @@ const demande = ref();
 const emits = defineEmits(['backendError']);
 const props = defineProps({id: {type: String}});
 
-const rcrSelected = ref();
-const typeFileSelected = ref();
+const rcrSelected = ref('');
+const typeFileSelected = ref('');
 const fileSelected = ref();
 const fileLink = ref('');
 const fileName = ref('');
@@ -182,6 +182,11 @@ function uploadFile() {
     .finally(() => {
       isLoading.value = false;
     });
+}
+
+function selectTypeSupp(){
+  console.log('test');
+  demandesService.modifierTypeSuppression(demande.value.id, typeFileSelected.value);
 }
 function prevSelectTypeFile(){
   typeFileSelected.value = null;
