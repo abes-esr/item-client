@@ -32,7 +32,7 @@
 </template>
 
 <script setup>
-import {ref} from 'vue'
+import { onBeforeMount, ref } from 'vue';
 import Header from '@/components/Structure/Header.vue'
 import Navbar from '@/components/Structure/Navbar.vue'
 import Footer from '@/components/Structure/Footer.vue'
@@ -41,6 +41,10 @@ import {HttpStatusCode} from 'axios'
 
 const errorStack = ref([])
 const drawer = ref(false)
+
+onBeforeMount(() => {
+    document.title = 'Item';
+})
 
 function addError(error) {
   let newError = {
@@ -73,11 +77,10 @@ function addError(error) {
     }
     newError.description = 'Erreur ' + error.response.status
   }
-  if(error.response.data.detail){
-    newError.description = error.response.data.detail
-  }
-  if(error.response.data.message){
-    newError.description = error.response.data.message
+  if (error?.response?.data?.detail) {
+    newError.description = error.response.data.detail;
+  } else if (error?.response?.data?.message) {
+    newError.description = error.response.data.message;
   }
   if(error.request.url){
     newError.description = 'Problème de disponibilité du fichier demandé'

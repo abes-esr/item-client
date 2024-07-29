@@ -11,7 +11,6 @@
 
 <script setup>
 import Email from '@/components/Email.vue';
-import { ref } from 'vue';
 import router from '@/router';
 import {useAuthStore} from '@/store/authStore'
 
@@ -19,8 +18,8 @@ const authStore = useAuthStore()
 const user = authStore.getUser
 
 function setEmailUser(email){
-  user.value.email = email;
-  authStore.set
-  router.push('Accueil');
+  user.email = email;
+  authStore.setUser(user);
+  router.push('accueil');
 }
 </script>

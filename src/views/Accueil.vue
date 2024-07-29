@@ -1,37 +1,46 @@
 <template>
   <v-container class="fill-height">
-    <v-responsive class="align-centerfill-height mx-auto">
-      <div class="py-5"/>
-      <v-row>
-        <v-col class="text-center" cols="12" md="6">
-          <BtnAccueil id="btn-recouvrement" icon="mdi-percent" route="recouvrement">
+    <v-responsive class="align-centerfill-height">
+      <v-row class="pa-5">
+        <v-col class="text-center" cols="12" xl="6" lg="6" md="12" sm="12" xs="12">
+          <btn-accueil id="btn-recouvrement" icon="mdi-percent" route="recouvrement">
             Calculer mon taux de recouvrement
-          </BtnAccueil>
+          </btn-accueil>
         </v-col>
-        <v-col class="text-center" cols="12" md="6">
-          <BtnAccueil id="btn-recouvrement-tableau" icon="mdi-chart-bar" route="recouvrement-tableau">
+        <v-col class="text-center" cols="12" xl="6" lg="6" md="12" sm="12" xs="12">
+          <btn-accueil id="btn-recouvrement-tableau" icon="mdi-chart-bar" route="recouvrement-tableau">
             Gérer mes taux de recouvrement
-          </BtnAccueil>
+          </btn-accueil>
         </v-col>
-        <v-col class="text-center" cols="12" md="6">
-          <BtnAccueil id="btn-exemplarisation" icon="mdi-plus" route="exemplarisation">
+        <v-col class="text-center" cols="12" xl="6" lg="6" md="12" sm="12" xs="12">
+          <btn-accueil id="btn-exemplarisation" icon="mdi-plus-circle-outline" route="exemplarisation">
             Créer des exemplaires
-          </BtnAccueil>
+          </btn-accueil>
         </v-col>
-        <v-col class="text-center" cols="12" md="6">
-          <BtnAccueil id="btn-exemplarisation-tableau" icon="mdi-chart-bar" route="exemplarisation-tableau">
+        <v-col class="text-center" cols="12" xl="6" lg="6" md="12" sm="12" xs="12">
+          <btn-accueil id="btn-exemplarisation-tableau" icon="mdi-chart-bar" route="exemplarisation-tableau">
             Gérer mes créations
-          </BtnAccueil>
+          </btn-accueil>
         </v-col>
-        <v-col class="text-center" cols="12" md="6">
-          <BtnAccueil id="btn-modification" icon="mdi-pencil" route="modification">
+        <v-col class="text-center" cols="12" xl="6" lg="6" md="12" sm="12" xs="12">
+          <btn-accueil id="btn-modification" icon="mdi-pencil" route="modification">
             Modifier des exemplaires
-          </BtnAccueil>
+          </btn-accueil>
         </v-col>
-        <v-col class="text-center" cols="12" md="6">
-          <BtnAccueil id="btn-modification-tableau" icon="mdi-chart-bar" route="modification-tableau">
+        <v-col class="text-center" cols="12" xl="6" lg="6" md="12" sm="12" xs="12">
+          <btn-accueil id="btn-modification-tableau" icon="mdi-chart-bar" route="modification-tableau">
             Gérer mes modifications
-          </BtnAccueil>
+          </btn-accueil>
+        </v-col>
+        <v-col class="text-center" cols="12" xl="6" lg="6" md="12" sm="12" xs="12">
+          <btn-accueil id="btn-suppression" icon="mdi-close-circle-outline" route="suppression">
+            Supprimer des exemplaires
+          </btn-accueil>
+        </v-col>
+        <v-col class="text-center" cols="12" xl="6" lg="6" md="12" sm="12" xs="12">
+          <btn-accueil id="btn-suppression-tableau" icon="mdi-chart-bar" route="suppression-tableau">
+            Gérer mes suppressions
+          </btn-accueil>
         </v-col>
       </v-row>
     </v-responsive>

@@ -4,12 +4,14 @@ import ExempTable from '@/views/Exemplarisation/ExempTable.vue'
 import ModifTable from '@/views/Modification/ModifTable.vue'
 import RecouvTable from '@/views/Recouvrement/RecouvTable.vue'
 import ModifSteps from '@/views/Modification/ModifSteps.vue';
+import RecouvSteps from '@/views/Recouvrement/RecouvSteps.vue';
+import ExempSteps from '@/views/Exemplarisation/ExempSteps.vue';
+import SuppSteps from '@/views/Suppression/SuppSteps.vue'
 import Accueil from '@/views/Accueil.vue';
 import ModificationEmail from '@/views/Utilisateur/ModificationEmail.vue';
 import demandesService from '@/service/DemandesService'
-import RecouvSteps from '@/views/Recouvrement/RecouvSteps.vue';
-import ExempSteps from '@/views/Exemplarisation/ExempSteps.vue';
 import {useAuthStore} from '@/store/authStore'
+import SuppTable from "@/views/Suppression/SuppTable.vue";
 
 const routes = [
   {
@@ -66,6 +68,12 @@ const routes = [
     meta: {requiresAuth: true}
   },
   {
+    path: '/suppression-tableau',
+    name: 'suppression-tableau',
+    component: SuppTable,
+    meta: {requiresAuth: true}
+  },
+  {
     path: '/modification',
     name: 'modification',
     component: ModifSteps,
@@ -105,40 +113,23 @@ const routes = [
     meta: {requiresAuth: true}
   },
   {
-    path: '/donnees-personnelles',
-    name: 'donnees-personnelles',
-    component: Accueil,
-    meta: {requiresAuth: false}
+    path: '/suppression',
+    name: 'suppression',
+    component: SuppSteps,
+    meta: {requiresAuth: true}
   },
   {
-    path: '/sortie-application-vers-assistance',
-    name: 'sortie-application-vers-assistance',
-    component: Accueil,
-    meta: {requiresAuth: false}
+    path: '/suppression/:id',
+    name: 'suppressionWithId',
+    component: SuppSteps,
+    props: true,
+    meta: {requiresAuth: true}
   },
+
+  // Gestion de la 404, redirection vers la page d'accueil
   {
-    path: '/sortie-application-vers-documentation',
-    name: 'sortie-application-vers-documentation',
-    component: Accueil,
-    meta: {requiresAuth: false}
-  },
-  {
-    path: '/sortie-application-vers-accessibilite',
-    name: 'sortie-application-vers-accessibilite',
-    component: Accueil,
-    meta: {requiresAuth: false}
-  },
-  {
-    path: '/sortie-application-vers-mentions-legales',
-    name: 'sortie-application-vers-mentions-legales',
-    component: Accueil,
-    meta: {requiresAuth: false}
-  },
-  {
-    path: '/sortie-application-vers-cgu',
-    name: 'sortie-application-vers-cgu',
-    component: Accueil,
-    meta: {requiresAuth: false}
+    path: '/:pathMatch(.*)*',
+    redirect: "/accueil",
   }
 ]
 
