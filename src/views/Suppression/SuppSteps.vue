@@ -57,7 +57,8 @@
             </v-stepper-window-item>
             <v-stepper-window-item>
               <type-file v-if="!typeFileSelected" v-model="typeFileSelected"></type-file>
-              <select-file v-else v-model="fileSelected">Selection du fichier {{typeFileSelected}}</select-file>
+              <select-file v-else-if="!isLoaded" v-model="fileSelected">Selection du fichier {{typeFileSelected}}</select-file>
+              <download-file v-if="isLoaded" :file-link="fileLink" :file-name="fileName" @clicked="isDownloaded = true">Téléchargement du fichier PPN/RCR/EPN</download-file>
               <v-alert
                 v-if="alertMessage"
                 :type="alertType"
@@ -65,18 +66,28 @@
                 <span v-html="alertMessage"></span>
               </v-alert>
               <v-container class="d-flex justify-space-between">
-                <v-btn v-if="typeFileSelected" @click="prevSelectTypeFile">
+                <v-btn v-if="typeFileSelected && !isLoaded" @click="prevSelectTypeFile">
+                  précédent
+                </v-btn>
+                <v-btn v-else-if="isLoaded" @click="prevSelectFile">
                   précédent
                 </v-btn>
                 <v-btn v-else @click="prev">
                   précédent
                 </v-btn>
                 <v-btn
-                  v-if="typeFileSelected"
+                  v-if="typeFileSelected && !isLoaded"
                   :disabled="!fileSelected"
                   @click="uploadFile()"
                 >
                   Envoyer
+                </v-btn>
+                <v-btn
+                  v-if="isLoaded"
+                  :disabled="!isDownloaded"
+                  @click="next"
+                >
+                  Suivant
                 </v-btn>
               </v-container>
             </v-stepper-window-item>
@@ -97,6 +108,8 @@ import { onMounted, ref } from 'vue';
 import TypeFile from '@/components/Supp/TypeFile.vue';
 import SelectFile from '@/components/SelectFile.vue';
 import demandesService from '@/service/DemandesService';
+import {tr} from "vuetify/locale";
+import DownloadFile from "@/components/Modif/DownloadFile.vue";
 
 
 
@@ -110,6 +123,10 @@ const props = defineProps({id: {type: String}});
 const rcrSelected = ref();
 const typeFileSelected = ref();
 const fileSelected = ref();
+const fileLink = ref('');
+const fileName = ref('');
+const isLoaded = ref(false);
+const isDownloaded = ref(false);
 const isLoading = ref(false);
 const alertMessage = ref('');
 const alertType = ref('success');
@@ -147,9 +164,16 @@ function uploadFile() {
   alertMessage.value = '';
   alertType.value = 'success';
   isLoading.value = true;
-  demandesService.uploadDemande(1, fileSelected.value, 'SUPP')
+  demandesService.uploadDemande(demande.value.id, fileSelected.value, 'SUPP')
     .then(() => {
       alertMessage.value = "Fichier envoyé";
+      isLoaded.value = true;
+      demandesService.getFile(demande.value.id, 'SUPP','fichier_prepare', '.csv')
+        .then(response => {
+          let blob = new Blob([response.data], {type: 'application/csv'});
+          fileLink.value = window.URL.createObjectURL(blob);
+          fileName.value = `fichier_demande_${demande.value.id}.csv`;
+        })
     })
     .catch(err => {
       alertMessage.value = err.response.data.message;
@@ -161,6 +185,9 @@ function uploadFile() {
 }
 function prevSelectTypeFile(){
   typeFileSelected.value = null;
+  raz();
+}
+function prevSelectFile(){
   raz();
 }
 function next() {
@@ -177,5 +204,7 @@ function raz(){
   isLoading.value = false;
   alertMessage.value = '';
   alertType.value = 'success';
+  isLoaded.value = false;
+  isDownloaded.value = false;
 }
 </script>
