@@ -32,7 +32,7 @@
 </template>
 
 <script setup>
-import {ref} from 'vue'
+import { onBeforeMount, ref } from 'vue';
 import Header from '@/components/Structure/Header.vue'
 import Navbar from '@/components/Structure/Navbar.vue'
 import Footer from '@/components/Structure/Footer.vue'
@@ -41,6 +41,10 @@ import {HttpStatusCode} from 'axios'
 
 const errorStack = ref([])
 const drawer = ref(false)
+
+onBeforeMount(() => {
+    document.title = 'Item';
+})
 
 function addError(error) {
   let newError = {
