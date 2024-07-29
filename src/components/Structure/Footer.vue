@@ -1,5 +1,5 @@
 <template>
-  <v-footer app>
+  <v-footer app style="background-color: #295494" height="40">
     <div class="d-flex flex-wrap align-center">
       <div class="d-flex flex-wrap align-center">
         <v-chip class="ma-2" :color="chipColorCbsBaseStatus" variant="text"><v-icon icon="mdi-server" start></v-icon>CBS</v-chip>
