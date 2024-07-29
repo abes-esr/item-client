@@ -21,7 +21,7 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
-import DemandesService from '@/service/DemandesService';
+import itemService from '@/service/ItemService';
 
 const typeExemp = defineModel();
 const emits = defineEmits(['click', 'deleted']);
@@ -29,7 +29,7 @@ const props = defineProps({ isLoading: { type: Boolean } });
 const listExemp = ref([]);
 
 onMounted(() => {
-  DemandesService.getTypeExemp()
+  itemService.getTypeExemp()
     .then(response => {
       listExemp.value = response.data;
     });

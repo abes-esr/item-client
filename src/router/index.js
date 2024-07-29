@@ -9,7 +9,7 @@ import ExempSteps from '@/views/Exemplarisation/ExempSteps.vue';
 import SuppSteps from '@/views/Suppression/SuppSteps.vue'
 import Accueil from '@/views/Accueil.vue';
 import ModificationEmail from '@/views/Utilisateur/ModificationEmail.vue';
-import demandesService from '@/service/DemandesService'
+import itemService from '@/service/ItemService'
 import {useAuthStore} from '@/store/authStore'
 import SuppTable from "@/views/Suppression/SuppTable.vue";
 
@@ -145,17 +145,17 @@ router.beforeEach(async (to, from, next) => {
   if (requiresAuth) {
     if (authStore.isAuthenticated) {
       try {
-        const valid = await demandesService.checkToken();
+        const valid = await itemService.checkToken();
         if (valid.data) {
           next();
         } else {
           console.error('Token invalide auprès du serveur');
-          demandesService.logout();
+          itemService.logout();
           next('/identification');
         }
       } catch (error) {
         console.error(error);
-        demandesService.logout();
+        itemService.logout();
         next('/identification');
       }
     } else {

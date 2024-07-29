@@ -104,14 +104,11 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
-import TypeFile from '@/components/Supp/TypeFile.vue';
-import SelectFile from '@/components/SelectFile.vue';
-import demandesService from '@/service/DemandesService';
-import {tr} from "vuetify/locale";
-import DownloadFile from "@/components/Modif/DownloadFile.vue";
-
-
+import {ref} from 'vue'
+import TypeFile from '@/components/Supp/TypeFile.vue'
+import SelectFile from '@/components/SelectFile.vue'
+import itemService from '@/service/ItemService'
+import DownloadFile from '@/components/Modif/DownloadFile.vue'
 
 
 const currentStep = ref(0);
@@ -137,7 +134,7 @@ function createDemande() {
     next();
   } else if (demande.value) {
     isLoading.value = true;
-    demandesService.modifierRcrDemande(demande.value.id, rcrSelected.value, 'SUPP')
+    itemService.modifierRcrDemande(demande.value.id, rcrSelected.value, 'SUPP')
       .then(response => {
         demande.value = response.data;
         next();
@@ -148,7 +145,7 @@ function createDemande() {
     });
   } else {
     isLoading.value = true;
-    demandesService.creerDemande(rcrSelected.value, 'SUPP')
+    itemService.creerDemande(rcrSelected.value, 'SUPP')
       .then(response => {
         demande.value = response.data;
         next();
@@ -164,11 +161,11 @@ function uploadFile() {
   alertMessage.value = '';
   alertType.value = 'success';
   isLoading.value = true;
-  demandesService.uploadDemande(demande.value.id, fileSelected.value, 'SUPP')
+  itemService.uploadDemande(demande.value.id, fileSelected.value, 'SUPP')
     .then(() => {
       alertMessage.value = "Fichier envoyé";
       isLoaded.value = true;
-      demandesService.getFile(demande.value.id, 'SUPP','fichier_prepare', '.csv')
+      itemService.getFile(demande.value.id, 'SUPP','fichier_prepare', '.csv')
         .then(response => {
           let blob = new Blob([response.data], {type: 'application/csv'});
           fileLink.value = window.URL.createObjectURL(blob);

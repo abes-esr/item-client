@@ -39,7 +39,7 @@
 </template>
 <script setup>
 import {onMounted, ref, watch} from 'vue';
-import demandesService from '@/service/DemandesService';
+import itemService from '@/service/ItemService';
 
 const emits = defineEmits(['validate']);
 const props = defineProps({
@@ -82,7 +82,7 @@ onMounted(() => {
 
 function validate() {
   if(!props.email){
-    demandesService.creerEmail(props.userId, emailModel.value)
+    itemService.creerEmail(props.userId, emailModel.value)
       .then(result => {
         emits('validate', result.data.email);
       })
@@ -91,7 +91,7 @@ function validate() {
         throw err;
       });
   } else {
-    demandesService.modifierEmail(props.userId, emailModel.value)
+    itemService.modifierEmail(props.userId, emailModel.value)
       .then(result => {
         emits('validate', result.data.email);
       })

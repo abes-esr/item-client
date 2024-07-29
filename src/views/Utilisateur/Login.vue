@@ -59,11 +59,10 @@
 </template>
 <script setup>
 import {ref} from 'vue'
-import DemandesService from '@/service/DemandesService'
+import itemService from '@/service/ItemService'
 import router from '@/router'
 import {useAuthStore} from '@/store/authStore'
 
-const service = DemandesService
 const authStore = useAuthStore()
 
 //Emit
@@ -76,7 +75,7 @@ const visible = ref(false)
 
 async function login() {
   try {
-    const utilisateur = await service.login(userLogin.value, userPassword.value)
+    const utilisateur = await itemService.login(userLogin.value, userPassword.value)
     authStore.login(utilisateur, utilisateur.token)
     const user = authStore.user
     emit('backendSuccess')
