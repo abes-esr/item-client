@@ -7,16 +7,28 @@ on:
         description: 'Version de la release (semver)'
         required: true
         default: 'x.x.x'
-      snapshotVersion:
-        description: 'Version de snapshot (semver)'
-        required: true
-        default: 'x.x.x-SNAPSHOT'
 
 jobs:
   create-release:
     runs-on: ubuntu-latest
 
     steps:
+      - name: "Calculate versions"
+        id: calculate-version
+        run: |
+          releaseVersion=${{ inputs.releaseVersion }}
+          # Séparer les parties de la version
+          major=$(echo "${releaseVersion}" | cut -d. -f1)
+          minor=$(echo "${releaseVersion}" | cut -d. -f2)
+          patch=$(echo "${releaseVersion}" | cut -d. -f3)
+          # Incrémenter la partie patch
+          patch=$((patch + 1))
+          # Reconstituer la version snapshot
+          snapshotVersion="${major}.${minor}.${patch}-SNAPSHOT"
+          echo "${snapshotVersion}"
+          echo "snapshotVersion=${snapshotVersion}" >> $GITHUB_OUTPUT
+          echo "content :"
+          cat "$GITHUB_OUTPUT"
       - name: 'Checkout source code'
         uses: 'actions/checkout@v3'
         with:
@@ -33,10 +45,10 @@ jobs:
       - name: 'Verify version is semver formatted (X.X.X)'
         env:
           NEW_TAG:  ${{ github.event.inputs.releaseVersion }}
-          SNAPSHOT:  ${{ github.event.inputs.snapshotVersion }}
+          NEW_SNAPSHOT_TAG:  ${{ steps.calculate-version.outputs.snapshotVersion }}
         run: |
           echo $NEW_TAG | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$'
-          echo $SNAPSHOT | grep -E '^[0-9]+\.[0-9]+\.[0-9]+-SNAPSHOT$'
+          echo $NEW_SNAPSHOT_TAG | grep -E '^[0-9]+\.[0-9]+\.[0-9]+-SNAPSHOT$'
       - name: 'Verify version is not already used as a git tag'
         env:
           NEW_TAG:  ${{ github.event.inputs.releaseVersion }}
@@ -45,7 +57,7 @@ jobs:
       - name: 'Generate the new version (patch few files + git tag)'
         env:
           NEW_TAG: ${{ github.event.inputs.releaseVersion }}
-          SNAPSHOT:  ${{ github.event.inputs.snapshotVersion }}
+          NEW_SNAPSHOT_TAG:  ${{ steps.calculate-version.outputs.snapshotVersion }}
         run: |
           # préparation de la release qui va :
           # - modifier le numéro de version dans le package.json du projet (et éventuellement dans le README.md ou d'autres fichiers, cf le sed)
@@ -67,10 +79,10 @@ jobs:
           # (version X.X.X-SNAPSHOT)
           git switch develop
           git merge main -m "Merge main to develop [skip ci]"
-          npm version $SNAPSHOT         
-          sed -i "s#Version: [0-9]+\.[0-9]+\.[0-9]+#Version: $SNAPSHOT#g" README.md
+          npm version $NEW_SNAPSHOT_TAG
+          sed -i "s#Version: [0-9]+\.[0-9]+\.[0-9]+#Version: $NEW_SNAPSHOT_TAG#g" README.md
           git add .
-          git commit -m "Version $SNAPSHOT [skip ci]"
+          git commit -m "Version $NEW_SNAPSHOT_TAG [skip ci]"
           git push
       - name: 'Create the github release'
         uses: softprops/action-gh-release@v1
