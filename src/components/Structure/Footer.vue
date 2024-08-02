@@ -66,6 +66,11 @@ const getHealthOfServices = async () => {
 
     console.log('Health Services:', healthServices.value)
   } catch (error) {
+    healthServices.value = [{
+      'STATUT CBS':false,
+      'STATUT BASE_XML':false,
+      'STATUT BASE_ITEM':false
+    }]
     console.error('Erreur lors de la récupération des statuts des services :', error)
   }
 }
