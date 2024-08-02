@@ -22,7 +22,7 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
-import DemandesService from '@/service/DemandesService';
+import itemService from '@/service/ItemService';
 
 const typeTraitement = defineModel();
 const emits = defineEmits(['clicked', 'deleted']);
@@ -30,7 +30,7 @@ const props = defineProps({ isLoading: { type: Boolean } });
 const listTraitement = ref([]);
 
 onMounted(() => {
-  DemandesService.getTypeTraitement()
+  itemService.getTypeTraitement()
     .then(response => {
       listTraitement.value = response.data;
     });

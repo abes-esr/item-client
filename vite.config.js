@@ -7,6 +7,7 @@ import ViteFonts from 'unplugin-fonts/vite'
 // Utilities
 import {defineConfig} from 'vite'
 import {fileURLToPath, URL} from 'node:url'
+import packageJson from './package.json'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -28,7 +29,12 @@ export default defineConfig({
 			}
 		})
 	],
-	define: {'process.env': {}},
+	define: {
+    'process.env': {
+      PACKAGE_VERSION: JSON.stringify(packageJson.version)
+      // Ajoutez d'autres valeurs du package.json que vous souhaitez exposer
+    }
+  },
 	resolve: {
 		alias: {
 			'@': fileURLToPath(new URL('./src', import.meta.url))

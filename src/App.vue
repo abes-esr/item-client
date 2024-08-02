@@ -1,8 +1,8 @@
 <template>
-  <v-app>
+  <v-app class="h-100 overflow-hidden">
     <Header @logout-success="onLogout" @toggle-drawer="toggleDrawer"/>
     <Navbar :drawer="drawer" @close="drawer = false"/>
-    <v-main>
+    <v-main class="d-flex flex-column overflow-auto">
       <div class="error-stack">
         <v-alert
           v-for="(error, index) in errorStack"
@@ -19,15 +19,17 @@
           {{ error.description }}
         </v-alert>
       </div>
-      <router-view v-slot="{ Component }">
-        <component
-          :is="Component"
-          @backendError="addError"
-          @backendSuccess="clearErrors"
-        />
-      </router-view>
+      <div style="flex-grow: 10;">
+        <router-view v-slot="{ Component }">
+          <component
+            :is="Component"
+            @backendError="addError"
+            @backendSuccess="clearErrors"
+          />
+        </router-view>
+      </div>
+      <Footer style="flex-basis: 0;" />
     </v-main>
-    <Footer />
   </v-app>
 </template>
 

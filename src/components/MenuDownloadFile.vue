@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import demandesService from '@/service/DemandesService';
+import itemService from '@/service/ItemService';
 import {computed, onMounted, ref} from 'vue';
 
 const props = defineProps({
@@ -49,14 +49,14 @@ const idEtatCurrentDemande = computed(() => {
 
 
 onMounted(() => {
-  demandesService.getEtatsDemande()
+  itemService.getEtatsDemande()
     .then(response => {
       etatsDemande.value = response.data;
     })
 })
 
 function downloadFile(filePrefix, extention) {
-  demandesService.getFile(props.demande.id, props.demande.type, filePrefix, extention)
+  itemService.getFile(props.demande.id, props.demande.type, filePrefix, extention)
     .then(response => {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');

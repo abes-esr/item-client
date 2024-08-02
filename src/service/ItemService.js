@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useAuthStore } from '@/store/authStore'
 
-export class DemandesService {
+export class ItemService {
   constructor() {
     this.client = axios.create({
       baseURL: import.meta.env.VITE_API_URL
@@ -151,6 +151,14 @@ export class DemandesService {
   getEtatsDemande(){
     return this.client.get('etatsDemande');
   }
+
+  getApplicationVersion(){
+    return this.client.get('applicationDetails');
+  }
+
+  getHealthOfServices(){
+    return this.client.get('applicationStatutServices')
+  }
 }
 
-export default new DemandesService()
+export default new ItemService()

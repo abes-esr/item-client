@@ -23,7 +23,7 @@
   </v-dialog>
 </template>
 <script setup>
-import demandesService from '@/service/DemandesService';
+import itemService from '@/service/ItemService';
 import router from '@/router';
 import { ref } from 'vue';
 
@@ -43,7 +43,7 @@ const isLoading = ref(false);
 
 function confirm() {
   isLoading.value = true;
-  demandesService.deleteDemande(props.demande.id, props.demande.type)
+  itemService.deleteDemande(props.demande.id, props.demande.type)
     .then(()=>{
       if(props.returnToAccueil){
         router.push('/accueil');
