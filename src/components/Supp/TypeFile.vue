@@ -11,7 +11,9 @@
             <v-col cols="12" sm="3" class="d-flex justify-center">
               <v-icon size="x-large" dark color="primary"> mdi-file-document-outline  </v-icon>
             </v-col>
-            <v-col cols="12" sm="9" class="d-flex justify-start"><span class="group">Fichier {{ type }}</span></v-col>
+            <v-col cols="12" sm="9" class="d-flex justify-start">
+              <span class="group large-text">Fichier {{ type }}</span>
+            </v-col>
           </v-row>
         </div>
       </v-hover>
@@ -34,3 +36,10 @@ function onClick(type) {
 }
 
 </script>
+
+<style scoped>
+.large-text {
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+</style>
