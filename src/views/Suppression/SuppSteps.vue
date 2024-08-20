@@ -56,8 +56,8 @@
               </v-container>
             </v-stepper-window-item>
             <v-stepper-window-item>
-              <type-file v-if="!typeFileSelected" v-model="typeFileSelected"></type-file>
-              <select-file v-else-if="!isLoaded" v-model="fileSelected">Selection du fichier {{typeFileSelected}}</select-file>
+              <type-file v-if="!typeFileSelected" v-model="typeFileSelected" @clicked="setTypeSelected()"></type-file>
+              <select-file v-else-if="!isLoaded" v-model="fileSelected" :typeFile="typeFileSelected">Selection du fichier {{typeFileSelected}}</select-file>
               <download-file v-if="isLoaded" :file-link="fileLink" :file-name="fileName" @clicked="isDownloaded = true">Téléchargement du fichier PPN/RCR/EPN</download-file>
               <v-alert
                 v-if="alertMessage"
@@ -183,6 +183,10 @@ function uploadFile() {
       isLoading.value = false;
     });
 }
+function setTypeSelected(){
+  demandesService.modifierTypeFileDemande(demande.value.id, typeFileSelected.value)
+}
+
 function prevSelectTypeFile(){
   typeFileSelected.value = null;
   raz();

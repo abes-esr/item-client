@@ -22,17 +22,19 @@
 </template>
 <script setup>
 
+const emits = defineEmits(['clicked'])
 const props = defineProps({
   isLoading: {
     type: Boolean,
     default: false
   }
 })
-const typeFile = defineModel();
-const types = ['PPN','EPN']
+const model = defineModel();
+const types = ['PPN','EPN'];
 
 function onClick(type) {
-  typeFile.value = type;
+  model.value = type;
+  emits('clicked')
 }
 
 </script>
