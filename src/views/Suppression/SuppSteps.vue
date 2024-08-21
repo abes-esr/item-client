@@ -152,8 +152,8 @@ const demande = ref();
 const emits = defineEmits(['backendError']);
 const props = defineProps({id: {type: String}});
 
-const rcrSelected = ref();
-const typeFileSelected = ref();
+const rcrSelected = ref('');
+const typeFileSelected = ref('');
 const fileFinalSelected = ref();
 const fileSelected = ref();
 const fileLink = ref('');

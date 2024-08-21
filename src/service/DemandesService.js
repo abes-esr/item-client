@@ -104,6 +104,10 @@ export class DemandesService {
     return this.client.patch(`demandes/SUPP/${id}?typeSupp=${typeFileDemande}`);
   }
 
+  modifierTypeSuppression(id, typeSuppression){
+    return this.client.patch(`demandes/SUPP/${id}?typeSuppression=${typeSuppression}`);
+  }
+
   uploadDemande(id, file, typeDemande){
     const config = { headers: {
       'Content-Type': 'multipart/form-data',
