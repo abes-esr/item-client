@@ -25,19 +25,12 @@
             </v-stepper-item>
             <v-divider></v-divider>
             <v-stepper-item
-              :color="currentStep >= 3 ? '#295494' : ''"
-              :complete="currentStep > 3"
+              :color="currentStep >= 2 ? '#295494' : ''"
+              :complete="currentStep > 2"
               editable
-              icon="mdi-numeric-4"
+              icon="mdi-numeric-3"
               title="Envoi"
               subtitle="du fichier"
-            >
-            </v-stepper-item>
-            <v-divider></v-divider>
-            <v-stepper-item
-              :color="currentStep >= 4 ? '#295494' : ''"
-              icon="mdi-numeric-5"
-              title="Simulation"
             >
             </v-stepper-item>
           </v-stepper-header>
@@ -49,6 +42,7 @@
                 <v-spacer></v-spacer>
                 <v-btn
                   :disabled="!rcrSelected"
+                  :loading="isLoading"
                   @click="createDemande"
                 >
                   Valider
@@ -57,7 +51,7 @@
             </v-stepper-window-item>
             <v-stepper-window-item>
               <type-file v-if="!typeFileSelected" v-model="typeFileSelected" @clicked="setTypeSelected()"></type-file>
-              <select-file v-else-if="!isLoaded" v-model="fileSelected" :typeFile="typeFileSelected">Selection du fichier {{typeFileSelected}}</select-file>
+              <select-file v-else-if="!isLoaded" :is-loading="isLoading" v-model="fileSelected" :typeFile="typeFileSelected">Selection du fichier {{typeFileSelected}}</select-file>
               <download-file v-if="isLoaded" :file-link="fileLink" :file-name="fileName" @clicked="isDownloaded = true">Téléchargement du fichier PPN/RCR/EPN</download-file>
               <v-alert
                 v-if="alertMessage"
@@ -78,6 +72,7 @@
                 <v-btn
                   v-if="typeFileSelected && !isLoaded"
                   :disabled="!fileSelected"
+                  :loading="isLoading"
                   @click="uploadFile()"
                 >
                   Envoyer
@@ -92,24 +87,61 @@
               </v-container>
             </v-stepper-window-item>
             <v-stepper-window-item>
-            </v-stepper-window-item>
-            <v-stepper-window-item>
-
+              <select-file v-model="fileFinalSelected" :is-loading="isLoading" @deleted="deleteDemande()">Charger le
+                fichier des exemplaires à supprimer
+              </select-file>
+              <v-alert
+                v-if="alertMessage"
+                :type="alertType"
+              >
+                <span v-html="alertMessage"></span>
+              </v-alert>
+              <v-container class="d-flex justify-space-between">
+                <v-btn @click="prev">
+                  précédent
+                </v-btn>
+                <v-btn
+                  :disabled="!fileFinalSelected"
+                  @click="uploadFileFinal()"
+                  :loading="isLoading"
+                >
+                  Lancer le traitement en production
+                </v-btn>
+              </v-container>
             </v-stepper-window-item>
           </v-stepper-window>
         </v-stepper>
+        <v-dialog
+          v-model="dialog"
+          width="500"
+        >
+          <v-card>
+            <v-card-title class="headline" primary-title>Traitement validé</v-card-title>
+            <v-card-text>Votre demande est en cours de traitement.<br/>Un mail vous sera envoyé quand celui-ci sera
+              terminé.
+              <br>Vous pouvez retrouver l'ensemble de vos demandes sur votre tableau de bord ITEM. Rubrique "Gérer mes
+              suppressions".
+            </v-card-text>
+            <v-divider></v-divider>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="primary" @click="router.push('suppression-tableau')" aria-label="OK">OK</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import TypeFile from '@/components/Supp/TypeFile.vue';
 import SelectFile from '@/components/SelectFile.vue';
 import demandesService from '@/service/DemandesService';
-import {tr} from "vuetify/locale";
 import DownloadFile from "@/components/Modif/DownloadFile.vue";
+import router from '@/router'
+import Rcr from '@/components/Rcr.vue';
 
 
 
@@ -122,6 +154,7 @@ const props = defineProps({id: {type: String}});
 
 const rcrSelected = ref();
 const typeFileSelected = ref();
+const fileFinalSelected = ref();
 const fileSelected = ref();
 const fileLink = ref('');
 const fileName = ref('');
@@ -130,6 +163,7 @@ const isDownloaded = ref(false);
 const isLoading = ref(false);
 const alertMessage = ref('');
 const alertType = ref('success');
+const dialog = ref(false);
 
 
 function createDemande() {
@@ -201,6 +235,24 @@ function changeEtape() {
           demande.value = response.data;
         });
   }
+}
+
+function uploadFileFinal() {
+  alertMessage.value = '';
+  alertType.value = 'success';
+  isLoading.value = true;
+  demandesService.uploadDemande(demande.value.id, fileFinalSelected.value, 'SUPP')
+    .then(() => {
+      alertMessage.value = "Fichier envoyé";
+      dialog.value = true;
+    })
+    .catch(err => {
+      alertMessage.value = err.response.data.message;
+      alertType.value = 'error';
+    })
+    .finally(() => {
+      isLoading.value = false;
+    });
 }
 
 function prevSelectTypeFile(){
