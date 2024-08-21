@@ -56,8 +56,8 @@
               </v-container>
             </v-stepper-window-item>
             <v-stepper-window-item>
-              <type-file v-if="!typeFileSelected" v-model="typeFileSelected"></type-file>
-              <select-file v-else-if="!isLoaded" v-model="fileSelected">Selection du fichier {{typeFileSelected}}</select-file>
+              <type-file v-if="!typeFileSelected" v-model="typeFileSelected" @clicked="setTypeSelected()"></type-file>
+              <select-file v-else-if="!isLoaded" v-model="fileSelected" :typeFile="typeFileSelected">Selection du fichier {{typeFileSelected}}</select-file>
               <download-file v-if="isLoaded" :file-link="fileLink" :file-name="fileName" @clicked="isDownloaded = true">Téléchargement du fichier PPN/RCR/EPN</download-file>
               <v-alert
                 v-if="alertMessage"
@@ -183,11 +183,33 @@ function uploadFile() {
       isLoading.value = false;
     });
 }
+function setTypeSelected(){
+  demandesService.modifierTypeFileDemande(demande.value.id, typeFileSelected.value)
+}
+
+function changeEtape() {
+  if (((currentStep.value + 1) === 1) || ((currentStep.value + 1) === 2 && !typeFileSelected.value)) {
+    demandesService.choixEtape(demande.value.id, 1, 'SUPP')
+      .then(response => {
+        demande.value = response.data;
+      });
+    typeFileSelected.value = null;
+  }
+  if ((currentStep.value + 1) === 2 && typeFileSelected.value) { //Changement d'etat pour le chargement du fichier car le back est perdu sinon
+    demandesService.choixEtape(demande.value.id, 2, 'SUPP')
+        .then(response => {
+          demande.value = response.data;
+        });
+  }
+}
+
 function prevSelectTypeFile(){
   typeFileSelected.value = null;
+  changeEtape()
   raz();
 }
 function prevSelectFile(){
+  changeEtape()
   raz();
 }
 function next() {
@@ -197,6 +219,7 @@ function next() {
 
 function prev() {
   currentStep.value--;
+  changeEtape()
   raz();
 }
 

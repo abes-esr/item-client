@@ -100,6 +100,9 @@ export class DemandesService {
   modifierCommentaireDemande(id, commentaire, typeDemande){
     return this.client.patch(`demandes/${typeDemande}/${id}?commentaire=${commentaire}`);
   }
+  modifierTypeFileDemande(id, typeFileDemande){
+    return this.client.patch(`demandes/SUPP/${id}?typeSupp=${typeFileDemande}`);
+  }
 
   uploadDemande(id, file, typeDemande){
     const config = { headers: {
