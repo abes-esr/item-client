@@ -92,12 +92,50 @@
               </v-container>
             </v-stepper-window-item>
             <v-stepper-window-item>
+              <select-file v-model="fileFinalSelected" :is-loading="isLoading" @deleted="deleteDemande()">Charger le
+                fichier des exemplaires à supprimer
+              </select-file>
+              <v-alert
+                v-if="alertMessage"
+                :type="alertType"
+              >
+                <span v-html="alertMessage"></span>
+              </v-alert>
+              <v-container class="d-flex justify-space-between">
+                <v-btn @click="prev">
+                  précédent
+                </v-btn>
+                <v-btn
+                  :disabled="!fileFinalSelected"
+                  @click="uploadFileFinal()"
+                >
+                  Lancer le traitement en production
+                </v-btn>
+              </v-container>
             </v-stepper-window-item>
             <v-stepper-window-item>
 
             </v-stepper-window-item>
           </v-stepper-window>
         </v-stepper>
+        <v-dialog
+          v-model="dialog"
+          width="500"
+        >
+          <v-card>
+            <v-card-title class="headline" primary-title>Traitement validé</v-card-title>
+            <v-card-text>Votre demande est en cours de traitement.<br/>Un mail vous sera envoyé quand celui-ci sera
+              terminé.
+              <br>Vous pouvez retrouver l'ensemble de vos demandes sur votre tableau de bord ITEM. Rubrique "Gérer mes
+              suppressions".
+            </v-card-text>
+            <v-divider></v-divider>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="primary" @click="router.push('suppression-tableau')" aria-label="OK">OK</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-col>
     </v-row>
   </v-container>
@@ -110,6 +148,8 @@ import SelectFile from '@/components/SelectFile.vue';
 import demandesService from '@/service/DemandesService';
 import {tr} from "vuetify/locale";
 import DownloadFile from "@/components/Modif/DownloadFile.vue";
+import router from '@/router'
+import DialogLancerTraitement from '@/components/Dialog/DialogLancerTraitement.vue'
 
 
 
@@ -122,6 +162,7 @@ const props = defineProps({id: {type: String}});
 
 const rcrSelected = ref();
 const typeFileSelected = ref();
+const fileFinalSelected = ref();
 const fileSelected = ref();
 const fileLink = ref('');
 const fileName = ref('');
@@ -130,6 +171,7 @@ const isDownloaded = ref(false);
 const isLoading = ref(false);
 const alertMessage = ref('');
 const alertType = ref('success');
+const dialog = ref(false);
 
 
 function createDemande() {
@@ -201,6 +243,24 @@ function changeEtape() {
           demande.value = response.data;
         });
   }
+}
+
+function uploadFileFinal() {
+  alertMessage.value = '';
+  alertType.value = 'success';
+  isLoading.value = true;
+  demandesService.uploadDemande(demande.value.id, fileFinalSelected.value, 'SUPP')
+    .then(() => {
+      alertMessage.value = "Fichier envoyé";
+      dialog.value = true;
+    })
+    .catch(err => {
+      alertMessage.value = err.response.data.message;
+      alertType.value = 'error';
+    })
+    .finally(() => {
+      isLoading.value = false;
+    });
 }
 
 function prevSelectTypeFile(){

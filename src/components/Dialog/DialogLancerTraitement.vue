@@ -15,7 +15,7 @@
         <v-card-actions class="justify-space-between">
           <v-btn v-if="!isFinished" color="primary" @click="dialog = false" aria-label="Annuler">Annuler</v-btn>
           <v-spacer v-else></v-spacer>
-          <v-btn v-if="!isFinished" color="primary" @click="confirm()" aria-label="Valider">Valider</v-btn>
+          <v-btn v-if="!isFinished && !isSuppDemande" color="primary" @click="confirm()" aria-label="Valider">Valider</v-btn>
           <v-btn v-else color="primary" @click="router.push(route)" aria-label="OK">OK</v-btn>
         </v-card-actions>
       </v-card>
@@ -36,6 +36,10 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  rubrique: {
+    required: true,
+    type: String,
+  },
   route: {
     required: true,
     type: String,
@@ -47,7 +51,7 @@ const isFinished = ref(false);
 function confirm() {
   emits('launch');
   title.value = "Traitement validé";
-  body.value = "Votre demande est en cours de traitement.<br/>Un mail vous sera envoyé quand celui-ci sera terminé.<br/>Vous pouvez retrouver l'ensemble de vos demandes sur votre tableau de bord ITEM. Rubrique \"Gérer mes créations\".";
+  body.value = `Votre demande est en cours de traitement.<br/>Un mail vous sera envoyé quand celui-ci sera terminé.<br/>Vous pouvez retrouver l'ensemble de vos demandes sur votre tableau de bord ITEM. Rubrique ${props.rubrique}.`;
   isFinished.value = true;
 }
 </script>
