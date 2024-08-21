@@ -27,7 +27,7 @@
 					<div>
 						<v-img class="mx-auto my-6" max-width="228" src=""></v-img>
 
-						<v-card class="mx-auto pa-12 pb-8" max-width="448" variant="flat">
+						<v-card class="mx-auto pa-12 pb-8" max-width="448" variant="flat" :loading="isLoading">
 							<div class="text-subtitle-1 text-medium-emphasis" v-if="false">Nom utilisateur</div>
 
 							<v-text-field density="compact" placeholder="Utilisateur" prepend-inner-icon="mdi-account-outline" variant="outlined" v-model="userLogin"></v-text-field>
@@ -45,11 +45,12 @@
 								placeholder="Mot de passe"
 								prepend-inner-icon="mdi-key-outline"
 								variant="outlined"
+                @keydown.enter="login()"
 								@click:append-inner="visible = !visible"
                 v-model="userPassword"
 							></v-text-field>
 
-							<v-btn class="mb-8" color="blue" size="large" variant="tonal" block @click="login()">Se connecter</v-btn>
+							<v-btn class="mb-8" color="blue" size="large" variant="tonal" :loading="isLoading" block @click="login()">Se connecter</v-btn>
 						</v-card>
 					</div>
 				</v-col>
@@ -73,8 +74,10 @@ const incident = ref(false)
 const userLogin = ref('')
 const userPassword = ref('')
 const visible = ref(false)
+const isLoading = ref(false)
 
 async function login() {
+  isLoading.value = true;
   try {
     const utilisateur = await service.login(userLogin.value, userPassword.value)
     authStore.login(utilisateur, utilisateur.token)
@@ -88,6 +91,8 @@ async function login() {
   } catch (error) {
     console.error('Login error:', error)
     emit('backendError', error)
+  } finally {
+    isLoading.value = false;
   }
 }
 </script>
