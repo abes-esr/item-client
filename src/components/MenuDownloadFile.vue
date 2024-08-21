@@ -1,7 +1,6 @@
 <template>
   <v-btn :disabled="!(idEtatCurrentDemande >= 3)" aria-label="Télécharger les fichiers" color="info" flat size="small"
          title="Télécharger">
-    {{ idEtatCurrentDemande }}
     <v-icon size="x-large">mdi-cloud-download</v-icon>
     <v-menu bottom left activator="parent">
       <!-- FICHIERS MODIF -->
@@ -17,7 +16,7 @@
         </v-list-item>
 
         <v-list-item @click="downloadFile('fichier_enrichi', '.csv')"
-                     v-if="(demande.type === 'RECOUV' && idEtatCurrentDemande >= 3) || (demande.type === 'EXEMP' && idEtatCurrentDemande >= 3) ||(demande.type === 'SUPP' && idEtatCurrentDemande >= 3)">
+                     v-if="(demande.type === 'RECOUV' && idEtatCurrentDemande >= 3) || (demande.type === 'EXEMP' && idEtatCurrentDemande >= 3) ||(demande.type === 'SUPP' && idEtatCurrentDemande >= 5)">
           <v-list-item-title>Télécharger le fichier déposé</v-list-item-title>
         </v-list-item>
 
