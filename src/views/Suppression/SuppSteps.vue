@@ -25,19 +25,12 @@
             </v-stepper-item>
             <v-divider></v-divider>
             <v-stepper-item
-              :color="currentStep >= 3 ? '#295494' : ''"
-              :complete="currentStep > 3"
+              :color="currentStep >= 2 ? '#295494' : ''"
+              :complete="currentStep > 2"
               editable
-              icon="mdi-numeric-4"
+              icon="mdi-numeric-3"
               title="Envoi"
               subtitle="du fichier"
-            >
-            </v-stepper-item>
-            <v-divider></v-divider>
-            <v-stepper-item
-              :color="currentStep >= 4 ? '#295494' : ''"
-              icon="mdi-numeric-5"
-              title="Simulation"
             >
             </v-stepper-item>
           </v-stepper-header>
@@ -49,6 +42,7 @@
                 <v-spacer></v-spacer>
                 <v-btn
                   :disabled="!rcrSelected"
+                  :loading="isLoading"
                   @click="createDemande"
                 >
                   Valider
@@ -57,7 +51,7 @@
             </v-stepper-window-item>
             <v-stepper-window-item>
               <type-file v-if="!typeFileSelected" v-model="typeFileSelected" @clicked="setTypeSelected()"></type-file>
-              <select-file v-else-if="!isLoaded" v-model="fileSelected" :typeFile="typeFileSelected">Selection du fichier {{typeFileSelected}}</select-file>
+              <select-file v-else-if="!isLoaded" :is-loading="isLoading" v-model="fileSelected" :typeFile="typeFileSelected">Selection du fichier {{typeFileSelected}}</select-file>
               <download-file v-if="isLoaded" :file-link="fileLink" :file-name="fileName" @clicked="isDownloaded = true">Téléchargement du fichier PPN/RCR/EPN</download-file>
               <v-alert
                 v-if="alertMessage"
@@ -78,6 +72,7 @@
                 <v-btn
                   v-if="typeFileSelected && !isLoaded"
                   :disabled="!fileSelected"
+                  :loading="isLoading"
                   @click="uploadFile()"
                 >
                   Envoyer
@@ -108,13 +103,11 @@
                 <v-btn
                   :disabled="!fileFinalSelected"
                   @click="uploadFileFinal()"
+                  :loading="isLoading"
                 >
                   Lancer le traitement en production
                 </v-btn>
               </v-container>
-            </v-stepper-window-item>
-            <v-stepper-window-item>
-
             </v-stepper-window-item>
           </v-stepper-window>
         </v-stepper>
@@ -142,14 +135,13 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import TypeFile from '@/components/Supp/TypeFile.vue';
 import SelectFile from '@/components/SelectFile.vue';
 import demandesService from '@/service/DemandesService';
-import {tr} from "vuetify/locale";
 import DownloadFile from "@/components/Modif/DownloadFile.vue";
 import router from '@/router'
-import DialogLancerTraitement from '@/components/Dialog/DialogLancerTraitement.vue'
+import Rcr from '@/components/Rcr.vue';
 
 
 
