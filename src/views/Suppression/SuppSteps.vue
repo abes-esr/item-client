@@ -7,7 +7,7 @@
             <v-stepper-item
               :color="currentStep >= 0 ? '#295494' : ''"
               :complete="currentStep > 0"
-              editable
+              :editable="currentStep > 0"
               icon="mdi-numeric-1"
               title="Séléction du RCR"
               :subtitle="demande ? 'Demande n°'+demande.id : 'Demande'"
@@ -17,7 +17,7 @@
             <v-stepper-item
               :color="currentStep >= 1 ? '#295494' : ''"
               :complete="currentStep > 1"
-              editable
+              :editable="currentStep > 1"
               icon="mdi-numeric-2"
               title="PPN/RCR/EPN"
               :subtitle="typeFileSelected ? 'Fichier '+ typeFileSelected : 'fichier envoyé'"
@@ -27,7 +27,7 @@
             <v-stepper-item
               :color="currentStep >= 2 ? '#295494' : ''"
               :complete="currentStep > 2"
-              editable
+              :editable="currentStep > 2"
               icon="mdi-numeric-3"
               title="Envoi"
               subtitle="du fichier"
@@ -135,16 +135,13 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import TypeFile from '@/components/Supp/TypeFile.vue';
 import SelectFile from '@/components/SelectFile.vue';
 import demandesService from '@/service/DemandesService';
 import DownloadFile from "@/components/Modif/DownloadFile.vue";
 import router from '@/router'
 import Rcr from '@/components/Rcr.vue';
-
-
-
 
 const currentStep = ref(0);
 const demande = ref();
@@ -164,6 +161,36 @@ const isLoading = ref(false);
 const alertMessage = ref('');
 const alertType = ref('success');
 const dialog = ref(false);
+
+onMounted(()=>{
+  if (props.id) {
+    demandesService.getDemande(props.id, "SUPP")
+      .then(response => {
+        demande.value = response.data;
+        switch (demande.value.etatDemande) {
+          case 'En préparation':
+            currentStep.value = 1;
+            rcrSelected.value = demande.value.rcr;
+            if (demande.value.typeSuppression){
+              typeFileSelected.value = demande.value.typeSuppression;
+            }
+            break;
+          case 'Préparée':
+            rcrSelected.value = demande.value.rcr;
+            typeFileSelected.value = demande.value.typeSuppression;
+            currentStep.value = 1;
+            break;
+          case 'A compléter':
+            rcrSelected.value = demande.value.rcr;
+            typeFileSelected.value = demande.value.typeSuppression;
+            currentStep.value = 2;
+            break;
+        }
+      }).catch(() => {
+      router.replace("/suppression");
+    })
+  }
+})
 
 
 function createDemande() {
