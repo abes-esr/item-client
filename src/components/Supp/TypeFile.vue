@@ -11,7 +11,9 @@
             <v-col cols="12" sm="3" class="d-flex justify-center">
               <v-icon size="x-large" dark color="primary"> mdi-file-document-outline  </v-icon>
             </v-col>
-            <v-col cols="12" sm="9" class="d-flex justify-start"><span class="group">Fichier {{ type }}</span></v-col>
+            <v-col cols="12" sm="9" class="d-flex justify-start">
+              <span class="group large-text">Fichier {{ type }}</span>
+            </v-col>
           </v-row>
         </div>
       </v-hover>
@@ -20,17 +22,26 @@
 </template>
 <script setup>
 
+const emits = defineEmits(['clicked'])
 const props = defineProps({
   isLoading: {
     type: Boolean,
     default: false
   }
 })
-const typeFile = defineModel();
-const types = ['PPN','EPN']
+const model = defineModel();
+const types = ['PPN','EPN'];
 
 function onClick(type) {
-  typeFile.value = type;
+  model.value = type;
+  emits('clicked')
 }
 
 </script>
+
+<style scoped>
+.large-text {
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+</style>
