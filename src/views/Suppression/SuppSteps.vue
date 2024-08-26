@@ -50,9 +50,9 @@
               </v-container>
             </v-stepper-window-item>
             <v-stepper-window-item>
-              <type-file v-if="!typeFileSelected" v-model="typeFileSelected" @clicked="setTypeSelected()"></type-file>
-              <select-file v-else-if="!isLoaded" :is-loading="isLoading" v-model="fileSelected" :typeFile="typeFileSelected">Selection du fichier {{typeFileSelected}}</select-file>
-              <download-file v-if="isLoaded" :file-link="fileLink" :file-name="fileName" @clicked="isDownloaded = true">Téléchargement du fichier PPN/RCR/EPN</download-file>
+              <type-file v-if="!typeFileSelected" v-model="typeFileSelected" @clicked="setTypeSelected()" @deleted="deleteDemande()"></type-file>
+              <select-file v-else-if="!isLoaded" :is-loading="isLoading" v-model="fileSelected" :typeFile="typeFileSelected" @deleted="deleteDemande()">Selection du fichier {{typeFileSelected}}</select-file>
+              <download-file v-if="isLoaded" :file-link="fileLink" :file-name="fileName" @clicked="isDownloaded = true" @deleted="deleteDemande()">Téléchargement du fichier PPN/RCR/EPN</download-file>
               <v-alert
                 v-if="alertMessage"
                 :type="alertType"
@@ -132,6 +132,7 @@
       </v-col>
     </v-row>
   </v-container>
+  <dialog-suppression v-model="suppDialog" :demande="demande" return-to-accueil></dialog-suppression>
 </template>
 
 <script setup>
@@ -142,6 +143,7 @@ import demandesService from '@/service/DemandesService';
 import DownloadFile from "@/components/Modif/DownloadFile.vue";
 import router from '@/router'
 import Rcr from '@/components/Rcr.vue';
+import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
 
 const currentStep = ref(0);
 const demande = ref();
@@ -161,6 +163,7 @@ const isLoading = ref(false);
 const alertMessage = ref('');
 const alertType = ref('success');
 const dialog = ref(false);
+const suppDialog = ref(false);
 
 onMounted(()=>{
   if (props.id) {
@@ -308,5 +311,9 @@ function raz(){
   alertType.value = 'success';
   isLoaded.value = false;
   isDownloaded.value = false;
+}
+
+function deleteDemande() {
+  suppDialog.value = true;
 }
 </script>

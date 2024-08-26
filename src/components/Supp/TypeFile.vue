@@ -22,7 +22,7 @@
 </template>
 <script setup>
 
-const emits = defineEmits(['clicked'])
+const emits = defineEmits(['clicked','deleted'])
 const props = defineProps({
   isLoading: {
     type: Boolean,
@@ -35,6 +35,10 @@ const types = ['PPN','EPN'];
 function onClick(type) {
   model.value = type;
   emits('clicked')
+}
+
+function deleted() {
+  emits('deleted');
 }
 
 </script>
