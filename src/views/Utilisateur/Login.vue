@@ -27,7 +27,7 @@
 					<div>
 						<v-img class="mx-auto my-6" max-width="228" src=""></v-img>
 
-						<v-card class="mx-auto pa-12 pb-8" max-width="448" variant="flat" :loading="isLoading">
+						<v-card class="mx-auto pa-12 pb-8" max-width="448" variant="flat">
 							<div class="text-subtitle-1 text-medium-emphasis" v-if="false">Nom utilisateur</div>
 
 							<v-text-field density="compact" placeholder="Utilisateur" prepend-inner-icon="mdi-account-outline" variant="outlined" v-model="userLogin"></v-text-field>
@@ -50,7 +50,7 @@
                 v-model="userPassword"
 							></v-text-field>
 
-							<v-btn class="mb-8" color="blue" size="large" variant="tonal" :loading="isLoading" block @click="login()">Se connecter</v-btn>
+							<v-btn class="mb-8" color="blue" size="large" variant="tonal" :loading="isLoading" :disabled="userLogin.length === 0 || userPassword.length === 0" block @click="login()">Se connecter</v-btn>
 						</v-card>
 					</div>
 				</v-col>
