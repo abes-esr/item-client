@@ -104,4 +104,13 @@ export default createVuetify({
       itemDarkTheme
     },
   },
+  defaults: {
+    VCardTitle: {
+      class: 'd-flex justify-space-between',
+      style: ({ $vuetify }) => ({
+        backgroundColor: $vuetify.theme.current.colors.primary,
+        color: 'white',
+      }),
+    },
+  },
 })

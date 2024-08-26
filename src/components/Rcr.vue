@@ -1,6 +1,6 @@
 A<template>
   <v-card elevation="0">
-    <v-card-title style="background-color: #295494; color: white">
+    <v-card-title>
       <span>Sélection du RCR</span>
     </v-card-title>
     <v-card-text class="pt-5">

@@ -9,7 +9,7 @@
               :complete="currentStep > 0"
               :editable="currentStep > 0"
               icon="mdi-numeric-1"
-              title="Séléction du RCR"
+              title="Sélection du RCR"
               :subtitle="demande ? 'Demande n°'+demande.id : 'Demande'"
             >
             </v-stepper-item>
