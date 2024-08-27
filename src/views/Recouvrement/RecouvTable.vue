@@ -1,23 +1,17 @@
 <template>
   <v-container fluid>
-    <v-chip v-if="!archiveFalseActiveTrue" style="margin-right: 10px"
-            @click="switchArchiveActiveDisplay(!archiveFalseActiveTrue)">Calculs de taux de recouvrement
+    <v-chip :variant="isActiveDemandesDisplayed ? 'plain' : 'tonal'" style="margin-right: 10px"
+            @click="switchArchiveActiveDisplay(!isActiveDemandesDisplayed)">Calculs de taux de recouvrement
     </v-chip>
-    <v-chip v-if="archiveFalseActiveTrue" variant="plain" style="margin-right: 10px"
-            @click="switchArchiveActiveDisplay(!archiveFalseActiveTrue)">Calculs de taux de recouvrement
-    </v-chip>
-    <v-chip v-if="archiveFalseActiveTrue" @click="switchArchiveActiveDisplay(!archiveFalseActiveTrue)">Calculs de taux
+    <v-chip :variant="!isActiveDemandesDisplayed ? 'plain' : 'tonal'" @click="switchArchiveActiveDisplay(!isActiveDemandesDisplayed)">Calculs de taux
       de recouvrement archivés
-    </v-chip>
-    <v-chip v-if="!archiveFalseActiveTrue" variant="plain" @click="switchArchiveActiveDisplay(!archiveFalseActiveTrue)">
-      Calculs de taux de recouvrement archivés
     </v-chip>
     <v-chip variant="text">
       <v-tooltip activator="parent" location="bottom">
         <template v-slot:activator="{ props }">
           <label>
             <input type="checkbox" v-model="extendedAllILN" style="margin-right: 5px"
-                   @change="loadItems('RECOUV', archiveFalseActiveTrue)">
+                   @change="loadItems('RECOUV', isActiveDemandesDisplayed)">
             <span v-bind="props">Affichage étendu sur tous les ILN</span>
           </label>
         </template>
@@ -119,7 +113,7 @@
     </template>
   </v-data-table>
   <dialog-suppression v-model="suppDialog" :demande="suppDemande"
-                      @supp="loadItems('RECOUV', archiveFalseActiveTrue)"></dialog-suppression>
+                      @supp="loadItems('RECOUV', isActiveDemandesDisplayed)"></dialog-suppression>
 </template>
 
 <script setup>
@@ -242,15 +236,15 @@ const isDialogOpen = computed(() => {
 });
 
 //Actives or archives demands displayed
-const archiveFalseActiveTrue = ref(false);
+const isActiveDemandesDisplayed = ref(false);
 
 //Data initialisation
 onMounted(() => {
-  loadItems('RECOUV', archiveFalseActiveTrue.value);
+  loadItems('RECOUV', isActiveDemandesDisplayed.value);
   contentsDemandesFromServer.value = [...contentsDemandesFromServer.value];
   polling = setInterval(() => {
     if(!isDialogOpen.value) {
-      loadItems('RECOUV', archiveFalseActiveTrue.value)
+      loadItems('RECOUV', isActiveDemandesDisplayed.value)
         .then(() => {
           filterItems();
         });
@@ -263,8 +257,8 @@ onBeforeUnmount(() => {
 })
 
 function switchArchiveActiveDisplay(value) {
-  archiveFalseActiveTrue.value = value;
-  loadItems('RECOUV', archiveFalseActiveTrue.value);
+  isActiveDemandesDisplayed.value = value;
+  loadItems('RECOUV', isActiveDemandesDisplayed.value);
 }
 
 async function loadItems(type, archive) {
@@ -342,7 +336,7 @@ function saveAction() {
 }
 
 function saveComment(){
-  loadItems('RECOUV',archiveFalseActiveTrue.value).then(()=>{
+  loadItems('RECOUV',isActiveDemandesDisplayed.value).then(()=>{
     filterItems();
   })
 }

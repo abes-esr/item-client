@@ -18,20 +18,29 @@
         aria-label="Dépôt du fichier"
         v-model="fileCharged"
         ref="fileInput"
-        label="Cliquez pour charger votre fichier complété (format .txt ou .csv obligatoire)"
+        :label="label"
       >
       </v-file-input>
     </v-card-text>
   </v-card>
 </template>
 <script setup>
-import { ref } from 'vue';
+import {computed, ref} from 'vue'
 
 const fileCharged = defineModel();
-const props = defineProps(  {isLoading: { type: Boolean}})
+const props = defineProps(  {isLoading: { type: Boolean}, typeFile: { type: String}})
 const emits = defineEmits(['deleted']);
 
 const isValidFile = ref(false)
+const label = computed(() => {
+  if (props.typeFile === 'PPN'){
+    return 'Cliquez pour charger votre liste de PPN (Fichier PPN sur une colonne, format .txt ou .csv obligatoire)';
+  } else if (props.typeFile === 'EPN'){
+    return 'Cliquez pour charger votre liste d’EPN (Fichier EPN sur une colonne, format .txt ou .csv obligatoire)';
+  } else {
+    return 'Cliquez pour charger votre fichier complété (format .txt ou .csv obligatoire)';
+  }
+})
 const rules = ref([
   value => {
     if(!value[0]) {

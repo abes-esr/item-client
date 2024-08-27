@@ -1,24 +1,18 @@
 <template>
 
   <v-container fluid>
-    <v-chip v-if="!archiveFalseActiveTrue" style="margin-right: 10px"
-            @click="switchArchiveActiveDisplay(!archiveFalseActiveTrue)">Créations d'exemplaires
+    <v-chip :variant="isActiveDemandesDisplayed ? 'plain' : 'tonal'" style="margin-right: 10px"
+            @click="switchArchiveActiveDisplay(!isActiveDemandesDisplayed)">Créations d'exemplaires
     </v-chip>
-    <v-chip v-if="archiveFalseActiveTrue" variant="plain" style="margin-right: 10px"
-            @click="switchArchiveActiveDisplay(!archiveFalseActiveTrue)">Créations d'exemplaires
-    </v-chip>
-    <v-chip v-if="archiveFalseActiveTrue" @click="switchArchiveActiveDisplay(!archiveFalseActiveTrue)">Créations
+    <v-chip :variant="!isActiveDemandesDisplayed ? 'plain' : 'tonal'" @click="switchArchiveActiveDisplay(!isActiveDemandesDisplayed)">Créations
       d'exemplaires archivées
-    </v-chip>
-    <v-chip v-if="!archiveFalseActiveTrue" variant="plain" @click="switchArchiveActiveDisplay(!archiveFalseActiveTrue)">
-      Créations d'exemplaires archivées
     </v-chip>
     <v-chip variant="text">
       <v-tooltip activator="parent" location="bottom">
         <template v-slot:activator="{ props }">
           <label>
             <input type="checkbox" v-model="extendedAllILN" style="margin-right: 5px"
-                   @change="loadItems('EXEMP', archiveFalseActiveTrue)">
+                   @change="loadItems('EXEMP', isActiveDemandesDisplayed)">
             <span v-bind="props">Affichage étendu sur tous les ILN</span>
           </label>
         </template>
@@ -127,7 +121,7 @@
     </template>
   </v-data-table>
   <dialog-suppression v-model="suppDialog" :demande="suppDemande"
-                      @supp="loadItems('EXEMP', archiveFalseActiveTrue)"></dialog-suppression>
+                      @supp="loadItems('EXEMP', isActiveDemandesDisplayed)"></dialog-suppression>
 </template>
 
 <script setup>
@@ -254,11 +248,11 @@ const isDialogOpen = computed(() => {
   return !!contentsDemandesFrontFiltered.value.find(item => item.expanded === true)
 });
 //Actives or archives demands displayed
-const archiveFalseActiveTrue = ref(false);
+const isActiveDemandesDisplayed = ref(false);
 
 //Data initialisation
 onMounted(() => {
-  loadItems('EXEMP', archiveFalseActiveTrue.value);
+  loadItems('EXEMP', isActiveDemandesDisplayed.value);
   contentsDemandesFromServer.value = [...contentsDemandesFromServer.value];
   itemService.getTypeExemp()
     .then(response => {
@@ -270,7 +264,7 @@ onMounted(() => {
     });
   polling = setInterval(() => {
     if(!isDialogOpen.value) {
-      loadItems('EXEMP', archiveFalseActiveTrue.value)
+      loadItems('EXEMP', isActiveDemandesDisplayed.value)
         .then(() => {
           filterItems();
         });
@@ -282,8 +276,8 @@ onBeforeUnmount(() => {
   clearInterval(polling);
 })
 function switchArchiveActiveDisplay(value) {
-  archiveFalseActiveTrue.value = value;
-  loadItems('EXEMP', archiveFalseActiveTrue.value);
+  isActiveDemandesDisplayed.value = value;
+  loadItems('EXEMP', isActiveDemandesDisplayed.value);
 }
 
 async function loadItems(type, archive) {
@@ -358,7 +352,7 @@ function onRowClick(item) {
 }
 
 function saveComment(){
-  loadItems('EXEMP',archiveFalseActiveTrue.value).then(()=>{
+  loadItems('EXEMP',isActiveDemandesDisplayed.value).then(()=>{
     filterItems();
   })
 }

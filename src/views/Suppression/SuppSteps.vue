@@ -7,7 +7,7 @@
             <v-stepper-item
               :color="currentStep >= 0 ? '#295494' : ''"
               :complete="currentStep > 0"
-              editable
+              :editable="currentStep > 0"
               icon="mdi-numeric-1"
               title="Séléction du RCR"
               :subtitle="demande ? 'Demande n°'+demande.id : 'Demande'"
@@ -17,7 +17,7 @@
             <v-stepper-item
               :color="currentStep >= 1 ? '#295494' : ''"
               :complete="currentStep > 1"
-              editable
+              :editable="currentStep > 1"
               icon="mdi-numeric-2"
               title="PPN/RCR/EPN"
               :subtitle="typeFileSelected ? 'Fichier '+ typeFileSelected : 'fichier envoyé'"
@@ -25,19 +25,12 @@
             </v-stepper-item>
             <v-divider></v-divider>
             <v-stepper-item
-              :color="currentStep >= 3 ? '#295494' : ''"
-              :complete="currentStep > 3"
-              editable
-              icon="mdi-numeric-4"
+              :color="currentStep >= 2 ? '#295494' : ''"
+              :complete="currentStep > 2"
+              :editable="currentStep > 2"
+              icon="mdi-numeric-3"
               title="Envoi"
               subtitle="du fichier"
-            >
-            </v-stepper-item>
-            <v-divider></v-divider>
-            <v-stepper-item
-              :color="currentStep >= 4 ? '#295494' : ''"
-              icon="mdi-numeric-5"
-              title="Simulation"
             >
             </v-stepper-item>
           </v-stepper-header>
@@ -49,6 +42,7 @@
                 <v-spacer></v-spacer>
                 <v-btn
                   :disabled="!rcrSelected"
+                  :loading="isLoading"
                   @click="createDemande"
                 >
                   Valider
@@ -56,9 +50,9 @@
               </v-container>
             </v-stepper-window-item>
             <v-stepper-window-item>
-              <type-file v-if="!typeFileSelected" v-model="typeFileSelected"></type-file>
-              <select-file v-else-if="!isLoaded" v-model="fileSelected">Selection du fichier {{typeFileSelected}}</select-file>
-              <download-file v-if="isLoaded" :file-link="fileLink" :file-name="fileName" @clicked="isDownloaded = true">Téléchargement du fichier PPN/RCR/EPN</download-file>
+              <type-file v-if="!typeFileSelected" v-model="typeFileSelected" @clicked="setTypeSelected()" @deleted="deleteDemande()"></type-file>
+              <select-file v-else-if="!isLoaded" :is-loading="isLoading" v-model="fileSelected" :typeFile="typeFileSelected" @deleted="deleteDemande()">Selection du fichier {{typeFileSelected}}</select-file>
+              <download-file v-if="isLoaded" :file-link="fileLink" :file-name="fileName" @clicked="isDownloaded = true" @deleted="deleteDemande()">Téléchargement du fichier PPN/RCR/EPN</download-file>
               <v-alert
                 v-if="alertMessage"
                 :type="alertType"
@@ -78,6 +72,7 @@
                 <v-btn
                   v-if="typeFileSelected && !isLoaded"
                   :disabled="!fileSelected"
+                  :loading="isLoading"
                   @click="uploadFile()"
                 >
                   Envoyer
@@ -92,24 +87,63 @@
               </v-container>
             </v-stepper-window-item>
             <v-stepper-window-item>
-            </v-stepper-window-item>
-            <v-stepper-window-item>
-
+              <select-file v-model="fileFinalSelected" :is-loading="isLoading" @deleted="deleteDemande()">Charger le
+                fichier des exemplaires à supprimer
+              </select-file>
+              <v-alert
+                v-if="alertMessage"
+                :type="alertType"
+              >
+                <span v-html="alertMessage"></span>
+              </v-alert>
+              <v-container class="d-flex justify-space-between">
+                <v-btn @click="prev">
+                  précédent
+                </v-btn>
+                <v-btn
+                  :disabled="!fileFinalSelected"
+                  @click="uploadFileFinal()"
+                  :loading="isLoading"
+                >
+                  Lancer le traitement en production
+                </v-btn>
+              </v-container>
             </v-stepper-window-item>
           </v-stepper-window>
         </v-stepper>
+        <v-dialog
+          v-model="dialog"
+          width="500"
+        >
+          <v-card>
+            <v-card-title class="headline" primary-title>Traitement validé</v-card-title>
+            <v-card-text>Votre demande est en cours de traitement.<br/>Un mail vous sera envoyé quand celui-ci sera
+              terminé.
+              <br>Vous pouvez retrouver l'ensemble de vos demandes sur votre tableau de bord ITEM. Rubrique "Gérer mes
+              suppressions".
+            </v-card-text>
+            <v-divider></v-divider>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="primary" @click="router.push('suppression-tableau')" aria-label="OK">OK</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-col>
     </v-row>
   </v-container>
+  <dialog-suppression v-model="suppDialog" :demande="demande" return-to-accueil></dialog-suppression>
 </template>
 
 <script setup>
-import {ref} from 'vue'
-import TypeFile from '@/components/Supp/TypeFile.vue'
-import SelectFile from '@/components/SelectFile.vue'
-import itemService from '@/service/ItemService'
-import DownloadFile from '@/components/Modif/DownloadFile.vue'
-
+import { onMounted, ref } from 'vue';
+import TypeFile from '@/components/Supp/TypeFile.vue';
+import SelectFile from '@/components/SelectFile.vue';
+import demandesService from '@/service/DemandesService';
+import DownloadFile from "@/components/Modif/DownloadFile.vue";
+import router from '@/router'
+import Rcr from '@/components/Rcr.vue';
+import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
 
 const currentStep = ref(0);
 const demande = ref();
@@ -117,8 +151,9 @@ const demande = ref();
 const emits = defineEmits(['backendError']);
 const props = defineProps({id: {type: String}});
 
-const rcrSelected = ref();
-const typeFileSelected = ref();
+const rcrSelected = ref('');
+const typeFileSelected = ref('');
+const fileFinalSelected = ref();
 const fileSelected = ref();
 const fileLink = ref('');
 const fileName = ref('');
@@ -127,6 +162,38 @@ const isDownloaded = ref(false);
 const isLoading = ref(false);
 const alertMessage = ref('');
 const alertType = ref('success');
+const dialog = ref(false);
+const suppDialog = ref(false);
+
+onMounted(()=>{
+  if (props.id) {
+    demandesService.getDemande(props.id, "SUPP")
+      .then(response => {
+        demande.value = response.data;
+        switch (demande.value.etatDemande) {
+          case 'En préparation':
+            currentStep.value = 1;
+            rcrSelected.value = demande.value.rcr;
+            if (demande.value.typeSuppression){
+              typeFileSelected.value = demande.value.typeSuppression;
+            }
+            break;
+          case 'Préparée':
+            rcrSelected.value = demande.value.rcr;
+            typeFileSelected.value = demande.value.typeSuppression;
+            currentStep.value = 1;
+            break;
+          case 'A compléter':
+            rcrSelected.value = demande.value.rcr;
+            typeFileSelected.value = demande.value.typeSuppression;
+            currentStep.value = 2;
+            break;
+        }
+      }).catch(() => {
+      router.replace("/suppression");
+    })
+  }
+})
 
 
 function createDemande() {
@@ -134,7 +201,7 @@ function createDemande() {
     next();
   } else if (demande.value) {
     isLoading.value = true;
-    itemService.modifierRcrDemande(demande.value.id, rcrSelected.value, 'SUPP')
+    demandesService.modifierRcrDemande(demande.value.id, rcrSelected.value, 'SUPP')
       .then(response => {
         demande.value = response.data;
         next();
@@ -145,7 +212,7 @@ function createDemande() {
     });
   } else {
     isLoading.value = true;
-    itemService.creerDemande(rcrSelected.value, 'SUPP')
+    demandesService.creerDemande(rcrSelected.value, 'SUPP')
       .then(response => {
         demande.value = response.data;
         next();
@@ -161,11 +228,11 @@ function uploadFile() {
   alertMessage.value = '';
   alertType.value = 'success';
   isLoading.value = true;
-  itemService.uploadDemande(demande.value.id, fileSelected.value, 'SUPP')
+  demandesService.uploadDemande(demande.value.id, fileSelected.value, 'SUPP')
     .then(() => {
       alertMessage.value = "Fichier envoyé";
       isLoaded.value = true;
-      itemService.getFile(demande.value.id, 'SUPP','fichier_prepare', '.csv')
+      demandesService.getFile(demande.value.id, 'SUPP','fichier_prepare', '.csv')
         .then(response => {
           let blob = new Blob([response.data], {type: 'application/csv'});
           fileLink.value = window.URL.createObjectURL(blob);
@@ -180,11 +247,51 @@ function uploadFile() {
       isLoading.value = false;
     });
 }
+function setTypeSelected(){
+  demandesService.modifierTypeFileDemande(demande.value.id, typeFileSelected.value)
+}
+
+function changeEtape() {
+  if (((currentStep.value + 1) === 1) || ((currentStep.value + 1) === 2 && !typeFileSelected.value)) {
+    demandesService.choixEtape(demande.value.id, 1, 'SUPP')
+      .then(response => {
+        demande.value = response.data;
+      });
+    typeFileSelected.value = null;
+  }
+  if ((currentStep.value + 1) === 2 && typeFileSelected.value) { //Changement d'etat pour le chargement du fichier car le back est perdu sinon
+    demandesService.choixEtape(demande.value.id, 2, 'SUPP')
+        .then(response => {
+          demande.value = response.data;
+        });
+  }
+}
+
+function uploadFileFinal() {
+  alertMessage.value = '';
+  alertType.value = 'success';
+  isLoading.value = true;
+  demandesService.uploadDemande(demande.value.id, fileFinalSelected.value, 'SUPP')
+    .then(() => {
+      alertMessage.value = "Fichier envoyé";
+      dialog.value = true;
+    })
+    .catch(err => {
+      alertMessage.value = err.response.data.message;
+      alertType.value = 'error';
+    })
+    .finally(() => {
+      isLoading.value = false;
+    });
+}
+
 function prevSelectTypeFile(){
   typeFileSelected.value = null;
+  changeEtape()
   raz();
 }
 function prevSelectFile(){
+  changeEtape()
   raz();
 }
 function next() {
@@ -194,6 +301,7 @@ function next() {
 
 function prev() {
   currentStep.value--;
+  changeEtape()
   raz();
 }
 
@@ -203,5 +311,9 @@ function raz(){
   alertType.value = 'success';
   isLoaded.value = false;
   isDownloaded.value = false;
+}
+
+function deleteDemande() {
+  suppDialog.value = true;
 }
 </script>

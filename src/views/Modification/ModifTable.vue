@@ -1,23 +1,18 @@
 <template>
   <v-container fluid>
-    <v-chip v-if="!archiveFalseActiveTrue" style="margin-right: 10px"
-            @click="switchArchiveActiveDisplay(!archiveFalseActiveTrue)">Modification d'exemplaires
+    <!--:variant="isActiveDemandesDisplayed ? 'plain' : 'tonal'" -->
+    <v-chip :variant="isActiveDemandesDisplayed ? 'plain' : 'tonal'" style="margin-right: 10px"
+            @click="switchArchiveActiveDisplay(!isActiveDemandesDisplayed)">Modification d'exemplaires
     </v-chip>
-    <v-chip v-if="archiveFalseActiveTrue" variant="plain" style="margin-right: 10px"
-            @click="switchArchiveActiveDisplay(!archiveFalseActiveTrue)">Modification d'exemplaires
-    </v-chip>
-    <v-chip v-if="archiveFalseActiveTrue" @click="switchArchiveActiveDisplay(!archiveFalseActiveTrue)">Modification
+    <v-chip :variant="!isActiveDemandesDisplayed ? 'plain' : 'tonal'" @click="switchArchiveActiveDisplay(!isActiveDemandesDisplayed)">Modification
       d'exemplaires archivées
-    </v-chip>
-    <v-chip v-if="!archiveFalseActiveTrue" variant="plain" @click="switchArchiveActiveDisplay(!archiveFalseActiveTrue)">
-      Modification d'exemplaires archivées
     </v-chip>
     <v-chip variant="text">
       <v-tooltip activator="parent" location="bottom">
         <template v-slot:activator="{ props }">
           <label>
             <input type="checkbox" v-model="extendedAllILN" style="margin-right: 5px"
-                   @change="loadItems('MODIF', archiveFalseActiveTrue)">
+                   @change="loadItems('MODIF', isActiveDemandesDisplayed)">
             <span v-bind="props">Affichage étendu sur tous les ILN</span>
           </label>
         </template>
@@ -124,7 +119,7 @@
     </template>
   </v-data-table>
   <dialog-suppression v-model="suppDialog" :demande="suppDemande"
-                      @supp="loadItems('MODIF', archiveFalseActiveTrue)"></dialog-suppression>
+                      @supp="loadItems('MODIF', isActiveDemandesDisplayed)"></dialog-suppression>
 </template>
 
 <script setup>
@@ -260,11 +255,11 @@ const isDialogOpen = computed(() => {
 });
 
 //Actives or archives demands displayed
-const archiveFalseActiveTrue = ref(false);
+const isActiveDemandesDisplayed = ref(false);
 
 //Data initialisation
 onMounted(() => {
-  loadItems('MODIF', archiveFalseActiveTrue.value);
+  loadItems('MODIF', isActiveDemandesDisplayed.value);
   contentsDemandesFromServer.value = [...contentsDemandesFromServer.value];
   itemService.getTypeTraitement()
     .then(response => {
@@ -276,7 +271,7 @@ onMounted(() => {
     });
   polling = setInterval(() => {
     if (!isDialogOpen.value) {
-      loadItems('MODIF', archiveFalseActiveTrue.value)
+      loadItems('MODIF', isActiveDemandesDisplayed.value)
         .then(() => {
           filterItems();
         });
@@ -289,8 +284,8 @@ onBeforeUnmount(() => {
 });
 
 function switchArchiveActiveDisplay(value) {
-  archiveFalseActiveTrue.value = value;
-  loadItems('MODIF', archiveFalseActiveTrue.value);
+  isActiveDemandesDisplayed.value = value;
+  loadItems('MODIF', isActiveDemandesDisplayed.value);
 }
 
 async function loadItems(type, archive) {
@@ -375,7 +370,7 @@ function onRowClick(item) {
 }
 
 function saveComment() {
-  loadItems('MODIF', archiveFalseActiveTrue.value)
+  loadItems('MODIF', isActiveDemandesDisplayed.value)
     .then(() => {
       filterItems();
     });
