@@ -21,7 +21,7 @@
           </v-col>
         </v-row>
         <v-card class="elevation-5">
-          <v-card-title class="py-4" style="background-color: #295494; color: white" >
+          <v-card-title class="py-4 custom-card-title">
             <span>Connexion</span>
           </v-card-title>
           <v-card-text>

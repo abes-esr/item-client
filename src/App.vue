@@ -125,3 +125,10 @@ function toggleDrawer() {
   color: #B71C1C !important; /* Assure que le bouton de fermeture est de la même couleur que le texte */
 }
 </style>
+
+<style>
+.custom-card-title {
+  background-color: v-bind('$vuetify.theme.current.colors.primary');
+  color: white;
+}
+</style>
