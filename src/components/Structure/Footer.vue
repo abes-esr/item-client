@@ -2,7 +2,7 @@
   <v-footer style="background-color: #252c61; color: white; bottom: 0px; left: 0px; width: 100%; height: auto" class="mt-auto py-0">
     <div class="d-flex flex-wrap justify-space-between align-center mt-0 mb-0" style="width: 100%">
       <div class="d-flex flex-wrap justify-start align-center text-body-2">
-        <span class="ma-2 text-white">{{ currentYear }} - ABES</span>
+        <a class="ma-2 text-white text-decoration-none" href="https://abes.fr">{{ currentYear }} - ABES</a>
       </div>
       <div class="d-flex flex-wrap justify-end align-center text-body-2">
         <v-tooltip location="top">
@@ -24,9 +24,9 @@
             <v-chip class="ma-1 text-white" variant="text">Serveur : {{ backVersion }}</v-chip>
           </div>
         </v-tooltip>
-        <a class="ma-2 text-white text-decoration-none" href="" @click="$router.push({ name: 'donnees' })">Données personnelles</a>
+        <a class="ma-2 text-white text-decoration-none" href="/donnees">Données personnelles</a>
         <a class="ma-2 text-white text-decoration-none" href="https://abes.fr/pages-cgu/conditions-generales-utilisation-sites-abes.html">Conditions générales d'utilisation (CGU)</a>
-        <a class="ma-2 text-white text-decoration-none" href="" @click="$router.push({ name: 'mentions' })">Mentions légales</a>
+        <a class="ma-2 text-white text-decoration-none" href="/mentions">Mentions légales</a>
         <a class="ma-2 text-white text-decoration-none" href="https://abes.fr/pages-accessibilite/item.sudoc.html">Accessibilité Numérique</a>
       </div>
     </div>
