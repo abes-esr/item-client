@@ -1,17 +1,19 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router'
 import Login from '@/views/Utilisateur/Login.vue'
 import ExempTable from '@/views/Exemplarisation/ExempTable.vue'
 import ModifTable from '@/views/Modification/ModifTable.vue'
 import RecouvTable from '@/views/Recouvrement/RecouvTable.vue'
-import ModifSteps from '@/views/Modification/ModifSteps.vue';
-import RecouvSteps from '@/views/Recouvrement/RecouvSteps.vue';
-import ExempSteps from '@/views/Exemplarisation/ExempSteps.vue';
+import ModifSteps from '@/views/Modification/ModifSteps.vue'
+import RecouvSteps from '@/views/Recouvrement/RecouvSteps.vue'
+import ExempSteps from '@/views/Exemplarisation/ExempSteps.vue'
 import SuppSteps from '@/views/Suppression/SuppSteps.vue'
-import Accueil from '@/views/Accueil.vue';
-import ModificationEmail from '@/views/Utilisateur/ModificationEmail.vue';
+import Accueil from '@/views/Accueil.vue'
+import ModificationEmail from '@/views/Utilisateur/ModificationEmail.vue'
 import itemService from '@/service/ItemService'
 import {useAuthStore} from '@/store/authStore'
-import SuppTable from "@/views/Suppression/SuppTable.vue";
+import SuppTable from "@/views/Suppression/SuppTable.vue"
+import Donnees from "@/views/Informations/DonneesPersonnelles.vue"
+import Mentions from "@/views/Informations/MentionsLegales.vue"
 
 const routes = [
   {
@@ -36,6 +38,18 @@ const routes = [
     name: 'accueil',
     component: Accueil,
     meta: { requiresAuth: true }
+  },
+  {
+    path: '/donnees',
+    name: 'donnees',
+    component: Donnees,
+    meta: { requiresAuth: false }
+  },
+  {
+    path: '/mentions',
+    name: 'mentions',
+    component: Mentions,
+    meta: { requiresAuth: false }
   },
   {
     path: '/premiere-connexion',

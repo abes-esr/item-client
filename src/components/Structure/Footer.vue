@@ -1,29 +1,33 @@
 <template>
   <v-footer style="background-color: #252c61; color: white; bottom: 0px; left: 0px; width: 100%; height: auto" class="mt-auto py-0">
-    <div class="d-flex flex-wrap justify-center align-center mt-0 mb-0" style="width: 100%">
-      <div class="d-flex flex-wrap justify-center align-center text-body-2">
+    <div class="d-flex flex-wrap justify-space-between align-center mt-0 mb-0" style="width: 100%">
+      <div class="d-flex flex-wrap justify-start align-center text-body-2">
+        <span class="ma-2 text-white">{{ currentYear }} - ABES</span>
+      </div>
+      <div class="d-flex flex-wrap justify-end align-center text-body-2">
         <v-tooltip location="top">
           <template v-slot:activator="{ props }">
             <a class="ma-2 text-white" v-bind="props" @mouseenter="getHealthOfServices" style="cursor: pointer;">Etat des serveurs</a>
           </template>
+          <div style="display: flex; flex-direction: column;">
           <v-chip class="ma-1" :color="healthServices['STATUT CBS'] ? 'green' : 'red'" variant="text"><v-icon icon="mdi-server" start></v-icon>CBS</v-chip>
           <v-chip class="ma-1" :color="healthServices['STATUT BASE_XML'] ? 'green' : 'red'" variant="text"><v-icon icon="mdi-server" start></v-icon>XML</v-chip>
           <v-chip class="ma-1" :color="healthServices['STATUT BASE_ITEM'] ? 'green' : 'red'" variant="text"><v-icon icon="mdi-server" start></v-icon>ITEM</v-chip>
+          </div>
         </v-tooltip>
         <v-tooltip location="top">
           <template v-slot:activator="{ props }">
-            <a class="ma-2 text-white" v-bind="props" style="cursor: pointer;">Détail de l'application</a>
+            <a class="ma-2 text-white" v-bind="props" style="cursor: pointer;">Version de l'application</a>
           </template>
-          <v-chip class="ma-1 text-white" variant="text">Interface Version : {{ packageVersion }}</v-chip>
-          <v-chip class="ma-1 text-white" variant="text">Serveur Version : {{ backVersion }}</v-chip>
+          <div style="display: flex; flex-direction: column;">
+            <v-chip class="ma-1 text-white" variant="text">Interface : {{ packageVersion }}</v-chip>
+            <v-chip class="ma-1 text-white" variant="text">Serveur : {{ backVersion }}</v-chip>
+          </div>
         </v-tooltip>
-        <a class="ma-2 text-white" href="http://item-dev.sudoc.fr">Données personnelles</a>
-        <a class="ma-2 text-white" href="https://abes.fr/pages-cgu/conditions-generales-utilisation-sites-abes.html">Conditions générales d'utilisation (CGU)</a>
-        <a class="ma-2 text-white" href="http://item-dev.sudoc.fr">Mentions légales</a>
-        <a class="ma-2 text-white" href="https://abes.fr/pages-accessibilite/item.sudoc.html">Accessibilité Numérique</a>
-        <div style="flex-grow: 5">
-          <span class="ma-2 d-none d-sm-inline-block text-white">{{ currentYear }} - ABES</span>
-        </div>
+        <a class="ma-2 text-white text-decoration-none" href="" @click="$router.push({ name: 'donnees' })">Données personnelles</a>
+        <a class="ma-2 text-white text-decoration-none" href="https://abes.fr/pages-cgu/conditions-generales-utilisation-sites-abes.html">Conditions générales d'utilisation (CGU)</a>
+        <a class="ma-2 text-white text-decoration-none" href="" @click="$router.push({ name: 'mentions' })">Mentions légales</a>
+        <a class="ma-2 text-white text-decoration-none" href="https://abes.fr/pages-accessibilite/item.sudoc.html">Accessibilité Numérique</a>
       </div>
     </div>
   </v-footer>
@@ -46,7 +50,7 @@ const healthServices = ref([{
 onMounted(async () => {
   try {
     const version = await itemService.getApplicationVersion()
-    backVersion.value = version.data
+    backVersion.value = version.data.BACKVERSION
   } catch (error) {
     console.error('Erreur lors de la récupération de la version de l\'application :', error)
   }
