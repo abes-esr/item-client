@@ -22,7 +22,7 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
-import itemService from '@/service/ItemService';
+import itemService from '@/service/DemandesService';
 
 const typeTraitement = defineModel();
 const emits = defineEmits(['clicked', 'deleted']);

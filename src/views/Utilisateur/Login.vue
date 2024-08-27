@@ -57,7 +57,7 @@
 </template>
 <script setup>
 import {ref} from 'vue'
-import itemService from '@/service/ItemService'
+import itemService from '@/service/DemandesService'
 import router from '@/router'
 import {useAuthStore} from '@/store/authStore'
 

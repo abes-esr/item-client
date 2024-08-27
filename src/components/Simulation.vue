@@ -52,7 +52,7 @@
 import RecapDemande from '@/components/RecapDemande.vue';
 import NavigateNotice from '@/components/NavigateNotice.vue';
 import { onMounted, ref } from 'vue';
-import itemService from '@/service/ItemService';
+import itemService from '@/service/DemandesService';
 
 const props = defineProps({
   demande: {

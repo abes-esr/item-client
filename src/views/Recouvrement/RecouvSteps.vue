@@ -89,7 +89,7 @@
 import Rcr from '@/components/Rcr.vue';
 import SelectFile from '@/components/SelectFile.vue';
 import { onMounted, ref } from 'vue';
-import itemService from '@/service/ItemService';
+import itemService from '@/service/DemandesService';
 import router from '@/router';
 import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
 

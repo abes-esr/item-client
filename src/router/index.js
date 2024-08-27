@@ -9,7 +9,7 @@ import ExempSteps from '@/views/Exemplarisation/ExempSteps.vue'
 import SuppSteps from '@/views/Suppression/SuppSteps.vue'
 import Accueil from '@/views/Accueil.vue'
 import ModificationEmail from '@/views/Utilisateur/ModificationEmail.vue'
-import itemService from '@/service/ItemService'
+import itemService from '@/service/DemandesService'
 import {useAuthStore} from '@/store/authStore'
 import SuppTable from "@/views/Suppression/SuppTable.vue"
 import Donnees from "@/views/Informations/DonneesPersonnelles.vue"

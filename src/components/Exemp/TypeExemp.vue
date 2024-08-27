@@ -21,7 +21,7 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
-import itemService from '@/service/ItemService';
+import itemService from '@/service/DemandesService';
 
 const typeExemp = defineModel();
 const emits = defineEmits(['click', 'deleted']);

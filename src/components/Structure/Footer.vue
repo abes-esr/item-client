@@ -35,7 +35,7 @@
 
 <script setup>
 import {ref, computed, onMounted} from 'vue'
-import itemService from '@/service/ItemService'
+import itemService from '@/service/DemandesService'
 
 const currentYear = computed(() => new Date().getFullYear())
 
