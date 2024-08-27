@@ -12,6 +12,16 @@ import 'vuetify/styles'
 import {createVuetify} from 'vuetify'
 import {en, fr} from 'vuetify/locale'
 
+function generateRandomHexColor() {
+  const letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+
+  }
+  return color;
+}
+
 //CUstom
 const itemLightTheme = {
   dark: false,
@@ -91,6 +101,27 @@ const itemDarkTheme = {
     'theme-on-code': '#000000',
   }
 }
+const itemRngTheme = {
+  "dark": false,
+  "colors": {
+    "background": generateRandomHexColor(),
+    "surface": generateRandomHexColor(),
+    "surface-bright": generateRandomHexColor(),
+    "surface-light": generateRandomHexColor(),
+    "surface-variant": generateRandomHexColor(),
+    "on-surface-variant":generateRandomHexColor(),
+    "primary": generateRandomHexColor(),
+    "primary-darken-1": generateRandomHexColor(),
+    "secondary": generateRandomHexColor(),
+    "secondary-darken-1": generateRandomHexColor(),
+    textColor: generateRandomHexColor(),
+    error: generateRandomHexColor(),
+    info: generateRandomHexColor(),
+    success: generateRandomHexColor(),
+    warning: generateRandomHexColor(),
+    disabled: generateRandomHexColor()
+  }
+}
 
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
@@ -103,7 +134,8 @@ export default createVuetify({
     defaultTheme: 'itemLightTheme',
     themes: {
       itemLightTheme,
-      itemDarkTheme
+      itemDarkTheme,
+      itemRngTheme
     },
   }
 })
