@@ -20,8 +20,9 @@
             </v-card>
           </v-col>
         </v-row>
-        <v-card class="elevation-5">
+        <v-card class="elevation-5 ">
           <v-card-title class="py-4 custom-card-title">
+<!--          <v-card-title class="py-4" :style="{backgroundColor: $vuetify.theme.current.colors.primary, color: 'white'}">-->
             <span>Connexion</span>
           </v-card-title>
           <v-card-text>

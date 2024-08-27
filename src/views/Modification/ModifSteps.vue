@@ -5,7 +5,7 @@
         <v-stepper v-model="currentStep" @update:model-value="changeEtape()" alt-labels>
           <v-stepper-header>
             <v-stepper-item
-              :color="currentStep >= 0 ? '#295494' : ''"
+              :color="currentStep >= 0 ? 'primary' : ''"
               :complete="currentStep > 0"
               :editable="currentStep > 0"
               icon="mdi-numeric-1"
@@ -15,7 +15,7 @@
             </v-stepper-item>
             <v-divider></v-divider>
             <v-stepper-item
-              :color="currentStep >= 1 ? '#295494' : ''"
+              :color="currentStep >= 1 ? 'primary' : ''"
               :complete="currentStep > 1"
               :editable="currentStep > 1"
               icon="mdi-numeric-2"
@@ -25,7 +25,7 @@
             </v-stepper-item>
             <v-divider></v-divider>
             <v-stepper-item
-              :color="currentStep >= 2 ? '#295494' : ''"
+              :color="currentStep >= 2 ? 'primary' : ''"
               :complete="currentStep > 2"
               :editable="currentStep > 2"
               icon="mdi-numeric-3"
@@ -35,7 +35,7 @@
             </v-stepper-item>
             <v-divider></v-divider>
             <v-stepper-item
-              :color="currentStep >= 3 ? '#295494' : ''"
+              :color="currentStep >= 3 ? 'primary' : ''"
               :complete="currentStep > 3"
               :editable="currentStep > 3"
               icon="mdi-numeric-4"
@@ -45,7 +45,7 @@
             </v-stepper-item>
             <v-divider></v-divider>
             <v-stepper-item
-              :color="currentStep >= 4 ? '#295494' : ''"
+              :color="currentStep >= 4 ? 'primary' : ''"
               icon="mdi-numeric-5"
               title="Simulation"
             >

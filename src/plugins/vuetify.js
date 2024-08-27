@@ -26,6 +26,7 @@ const itemLightTheme = {
     'primary-darken-1': '#1F5592',
     secondary: '#252C61',
     'secondary-darken-1': '#018786',
+    textColor: '#FFFFFF',
     error: '#a32525',
     info: '#326bb1',
     success: '#4da432',
@@ -64,6 +65,7 @@ const itemDarkTheme = {
     'primary-darken-1': '#1F5592',
     secondary: '#383c4a',
     'secondary-darken-1': '#018786',
+    textColor: '#FFFFFF',
     error: '#a32525',
     info: '#5294e2',
     success: '#4da432',
@@ -103,5 +105,5 @@ export default createVuetify({
       itemLightTheme,
       itemDarkTheme
     },
-  },
+  }
 })

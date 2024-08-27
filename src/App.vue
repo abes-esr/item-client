@@ -105,7 +105,15 @@ function toggleDrawer() {
 }
 </script>
 
-<style scoped>
+<style>
+/*Declaré en global*/
+
+
+.custom-card-title {
+  background-color: v-bind('$vuetify.theme.current.colors.primary');
+  color: v-bind('$vuetify.theme.current.colors.textColor');
+}
+
 .error-stack {
   position: fixed;
   top: 64px; /* Ajustez cette valeur en fonction de la hauteur de votre barre de navigation */
@@ -124,11 +132,5 @@ function toggleDrawer() {
 .custom-alert :deep(.v-alert__close) {
   color: #B71C1C !important; /* Assure que le bouton de fermeture est de la même couleur que le texte */
 }
-</style>
 
-<style>
-.custom-card-title {
-  background-color: v-bind('$vuetify.theme.current.colors.primary');
-  color: white;
-}
 </style>

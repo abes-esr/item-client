@@ -5,7 +5,7 @@
         <v-stepper v-model="currentStep" alt-labels>
           <v-stepper-header>
             <v-stepper-item
-              :color="currentStep >= 0 ? '#295494' : ''"
+              :color="currentStep >= 0 ? 'primary' : ''"
               :complete="currentStep > 0"
               :editable="demande"
               icon="mdi-numeric-1"
@@ -15,7 +15,7 @@
             </v-stepper-item>
             <v-divider></v-divider>
             <v-stepper-item
-              :color="currentStep >= 1 ? '#295494' : ''"
+              :color="currentStep >= 1 ? 'primary' : ''"
               :editable="fileSelected"
               icon="mdi-numeric-2"
               title="Chargement"

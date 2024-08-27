@@ -1,6 +1,6 @@
 <template>
   <v-card class="elevation-5">
-    <v-card-title style="background-color: #295494; color: white" >
+    <v-card-title class="custom-card-title">
       <span v-if="!email">Première connexion</span>
       <span v-else>Modifier les informations de votre compte</span>
     </v-card-title>
@@ -30,7 +30,7 @@
     <v-card-actions>
       <v-spacer></v-spacer>
       <v-btn
-        color="#295494"
+        color="primary"
         variant="flat"
         :disabled="isDisabled"
         @click="validate()">Valider</v-btn>
