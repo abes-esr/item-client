@@ -5,6 +5,12 @@
       <v-btn depressed variant="text" @click="deleted()" prepend-icon="mdi-delete">Supprimer</v-btn>
     </v-card-title>
     <v-card-text class="pa-0 ma-0">
+      <v-overlay v-if="isLoading" v-model="overlay" class="justify-center align-center" contained>
+        <v-progress-circular
+          color="info"
+          indeterminate
+        ></v-progress-circular>
+      </v-overlay>
       <v-hover v-slot="{ isHovering, props }" v-for="type in types" :key="type">
         <div v-bind="props" :class="`btn-perso elevation-${isHovering ? 6 : 2} pa-5 ma-1 d-flex justify-space-between`" @click="onClick(type)">
           <v-row class="align-center">
@@ -22,6 +28,8 @@
 </template>
 <script setup>
 
+import { ref } from 'vue';
+
 const emits = defineEmits(['clicked','deleted'])
 const props = defineProps({
   isLoading: {
@@ -31,6 +39,7 @@ const props = defineProps({
 })
 const model = defineModel();
 const types = ['PPN','EPN'];
+const overlay = ref(true);
 
 function onClick(type) {
   model.value = type;
