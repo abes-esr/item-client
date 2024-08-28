@@ -3,6 +3,7 @@
   <!--Conteneur bouton 1-->
   <v-row class="d-flex justify-center">
     <v-btn
+      class="mt-3"
       :disabled="nbNotice.nbNoticeEnCours === 0"
       large
       dark
@@ -17,6 +18,7 @@
   <!--Conteneur bouton 2-->
   <v-row class="d-flex justify-center">
     <v-btn
+      class="mt-3"
       :disabled="nbNotice.nbNoticeEnCours === 0"
       large
       dark
@@ -31,6 +33,7 @@
   <!--Conteneur bouton 3-->
   <v-row class="d-flex justify-center">
     <v-btn
+      class="mt-3"
       :disabled="nbNotice.nbNoticeEnCours === nbNotice.nbTotalNotice - 1"
       large
       dark
@@ -45,6 +48,7 @@
   <!--Conteneur bouton 4-->
   <v-row class="d-flex justify-center">
     <v-btn
+      class="mt-3"
       :disabled="nbNotice.nbNoticeEnCours === nbNotice.nbTotalNotice - 1"
       large
       dark
