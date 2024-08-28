@@ -3,7 +3,7 @@
 
   <v-overlay v-model="isLoading" class="justify-center align-center">
     <v-progress-circular
-      color="blue-lighten-3"
+      color="info"
       indeterminate
       :size="128"
       :width="12"

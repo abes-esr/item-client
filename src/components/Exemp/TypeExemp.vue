@@ -5,6 +5,12 @@
       <v-btn depressed variant="text" @click="deleted()" prepend-icon="mdi-delete">Supprimer</v-btn>
     </v-card-title>
     <v-card-text class="pa-0 ma-0">
+      <v-overlay v-if="isLoading" v-model="overlay" class="justify-center align-center" contained>
+        <v-progress-circular
+          color="info"
+          indeterminate
+        ></v-progress-circular>
+      </v-overlay>
       <v-hover v-slot="{ isHovering, props }" v-for="exemp in listExemp" :key="exemp.numTypeExemp">
         <div v-bind="props" :class="`btn-perso elevation-${isHovering ? 6 : 2} pa-5 ma-1 d-flex justify-space-between`" @click="onClick(exemp)">
           <v-row class="align-center">
@@ -27,6 +33,7 @@ const typeExemp = defineModel();
 const emits = defineEmits(['click', 'deleted']);
 const props = defineProps({ isLoading: { type: Boolean } });
 const listExemp = ref([]);
+const overlay = ref(true);
 
 onMounted(() => {
   DemandesService.getTypeExemp()
