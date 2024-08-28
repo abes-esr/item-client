@@ -1,6 +1,4 @@
 <template>
-  <recap-demande :demande="demande"></recap-demande>
-
   <v-overlay v-model="isLoading" class="justify-center align-center">
     <v-progress-circular
       color="info"
@@ -9,14 +7,17 @@
       :width="12"
     ></v-progress-circular>
   </v-overlay>
+
+  <recap-demande :demande="demande"></recap-demande>
   <!-- CONTENU SIMULATION -->
+  <v-alert icon="mdi-alert" type="error" v-if="alertMessageError" class="my-3" border="left">Simulation impossible : {{ alertMessageError }}</v-alert>
   <v-card flat class="pb-2">
     <v-card-title style="background-color: #295494; color: white" class="d-flex justify-space-between">
       <span>Ecran de simulation</span>
       <v-btn depressed variant="text" @click="deleted()" prepend-icon="mdi-delete">Supprimer</v-btn>
     </v-card-title>
     <!--TEMPLATE DE SIMULATION-->
-    <v-alert type="warning" align="center" class="my-3 pa-2" dense prominent border="left">
+    <v-alert type="warning"  class="my-3 pa-2" dense prominent border="left">
       Cet écran est une <strong>prévisualisation</strong> du traitement.<br>
       Il s'agit de la <strong>dernière étape</strong> avant de lancer le traitement en <strong>base de
       production</strong>. Merci de <strong>vérifier vos données</strong>.
@@ -78,6 +79,7 @@ const numeroPPNNotice = ref();
 const noticeAvant = ref("");
 const noticeApres = ref("");
 const isLoading = ref(true);
+const alertMessageError = ref();
 
 onMounted(() => {
   demandesService.getNbLigneFichier(props.demande.id, props.demande.type)
@@ -90,6 +92,9 @@ onMounted(() => {
       noticeAvant.value = response.data[1];
       noticeApres.value = response.data[2];
     })
+    .catch(err => {
+      alertMessageError.value = err.response.data.message
+    })
     .finally(() => {
       isLoading.value = false;
     });
@@ -97,11 +102,15 @@ onMounted(() => {
 
 function refresh() {
   isLoading.value = true;
+  alertMessageError.value = null;
   demandesService.simulerLigne(props.demande.id, nbNotice.value.nbNoticeEnCours, props.demande.type)
     .then(response => {
       numeroPPNNotice.value = response.data[0];
       noticeAvant.value = response.data[1];
       noticeApres.value = response.data[2];
+    })
+    .catch(err => {
+      alertMessageError.value = err.response.data.message
     })
     .finally(() => {
       isLoading.value = false;
