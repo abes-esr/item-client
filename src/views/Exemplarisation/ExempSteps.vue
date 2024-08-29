@@ -5,17 +5,17 @@
         <v-stepper  v-model="currentStep" @update:model-value="changeEtat()" alt-labels>
           <v-stepper-header>
             <v-stepper-item
-              :color="currentStep >= 0 ? '#295494' : ''"
+              :color="currentStep >= 0 ? 'primary' : ''"
               :complete="currentStep > 0"
               :editable="currentStep > 0"
               icon="mdi-numeric-1"
-              title="Séléction du RCR"
+              title="Sélection du RCR"
               :subtitle="demande ? 'Demande n°'+demande.id : 'Demande'"
             >
             </v-stepper-item>
             <v-divider></v-divider>
             <v-stepper-item
-              :color="currentStep >= 1 ? '#295494' : ''"
+              :color="currentStep >= 1 ? 'primary' : ''"
               :complete="currentStep > 1"
               :editable="currentStep > 1"
               icon="mdi-numeric-2"
@@ -25,7 +25,7 @@
             </v-stepper-item>
             <v-divider></v-divider>
             <v-stepper-item
-              :color="currentStep >= 2 ? '#295494' : ''"
+              :color="currentStep >= 2 ? 'primary' : ''"
               :complete="currentStep > 2"
               :editable="currentStep > 2"
               icon="mdi-numeric-3"
