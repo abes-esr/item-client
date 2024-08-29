@@ -28,21 +28,30 @@
           />
         </router-view>
       </div>
+      <InfoAppBanner v-if="!authenticated" />
       <Footer style="flex-basis: 0;" />
     </v-main>
   </v-app>
 </template>
 
 <script setup>
-import { onBeforeMount, ref } from 'vue';
+import {computed, onBeforeMount, ref} from 'vue'
 import Header from '@/components/Structure/Header.vue'
 import Navbar from '@/components/Structure/Navbar.vue'
 import Footer from '@/components/Structure/Footer.vue'
 import router from '@/router/index'
 import {HttpStatusCode} from 'axios'
+import InfoAppBanner from '@/components/Structure/InfoAppBanner.vue'
+import {useAuthStore} from '@/store/authStore'
 
 const errorStack = ref([])
 const drawer = ref(false)
+
+const authStore = useAuthStore()
+
+const authenticated = computed(() => {
+  return authStore.isAuthenticated
+})
 
 onBeforeMount(() => {
     document.title = 'Item';
