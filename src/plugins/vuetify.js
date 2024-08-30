@@ -41,7 +41,10 @@ const itemLightTheme = {
     info: '#326bb1',
     success: '#4da432',
     warning: '#ec6839',
-    disabled: '#808080'
+    disabled: '#808080',
+    archived: '#795548',
+    saisised: '#333333',
+    waited: '#EC6839'
   },
   variables: {
     'border-color': '#000000',
@@ -77,10 +80,13 @@ const itemDarkTheme = {
     'secondary-darken-1': '#018786',
     textColor: '#FFFFFF',
     error: '#a32525',
-    info: '#5294e2',
+    info: '#326bb1',
     success: '#4da432',
     warning: '#ec6839',
-    disabled: '#4b5162'
+    disabled: '#808080',
+    archived: '#795548',
+    saisised: '#333333',
+    waited: '#EC6839'
   },
   variables: {
     'border-color': '#FFFFFF',
@@ -119,7 +125,10 @@ const itemRngTheme = {
     info: generateRandomHexColor(),
     success: generateRandomHexColor(),
     warning: generateRandomHexColor(),
-    disabled: generateRandomHexColor()
+    disabled: generateRandomHexColor(),
+    archived: generateRandomHexColor(),
+    saisised: generateRandomHexColor(),
+    waited: generateRandomHexColor(),
   }
 }
 
