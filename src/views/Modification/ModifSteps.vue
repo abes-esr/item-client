@@ -153,7 +153,7 @@
 <script setup>
 import {onMounted, ref} from 'vue';
 import router from '@/router';
-import demandesService from '@/service/DemandesService';
+import itemService from '@/service/DemandesService';
 import Rcr from '@/components/Rcr.vue';
 import SelectFile from '@/components/SelectFile.vue';
 import DownloadFile from '@/components/Modif/DownloadFile.vue';
@@ -185,7 +185,7 @@ const props = defineProps({id: {type: String}});
 
 onMounted(() => {
   if (props.id) {
-    demandesService.getDemande(props.id, "MODIF")
+    itemService.getDemande(props.id, "MODIF")
       .then(response => {
         demande.value = response.data;
         switch (demande.value.etatDemande) {
@@ -229,7 +229,7 @@ function createDemande() {
     next();
   } else if (demande.value) {
     isLoading.value = true;
-    demandesService.modifierRcrDemande(demande.value.id, rcrSelected.value, 'MODIF')
+    itemService.modifierRcrDemande(demande.value.id, rcrSelected.value, 'MODIF')
       .then(response => {
         demande.value = response.data;
         next();
@@ -240,7 +240,7 @@ function createDemande() {
     });
   } else {
     isLoading.value = true;
-    demandesService.creerDemande(rcrSelected.value, 'MODIF')
+    itemService.creerDemande(rcrSelected.value, 'MODIF')
       .then(response => {
         demande.value = response.data;
         next();
@@ -256,11 +256,11 @@ function uploadFileInit() {
   alertMessage.value = '';
   alertType.value = 'success';
   isLoading.value = true;
-  demandesService.uploadDemande(demande.value.id, fileInitSelected.value, 'MODIF')
+  itemService.uploadDemande(demande.value.id, fileInitSelected.value, 'MODIF')
     .then(() => {
       alertMessage.value = "Fichier envoyé";
       isLoaded.value = true;
-      demandesService.getFile(demande.value.id, 'MODIF','fichier_prepare', '.csv')
+      itemService.getFile(demande.value.id, 'MODIF','fichier_prepare', '.csv')
         .then(response => {
           let blob = new Blob([response.data], {type: 'application/csv'});
           fileLink.value = window.URL.createObjectURL(blob);
@@ -280,7 +280,7 @@ function uploadFileFinal() {
   alertMessage.value = '';
   alertType.value = 'success';
   isLoading.value = true;
-  demandesService.uploadDemande(demande.value.id, fileFinalSelected.value, 'MODIF')
+  itemService.uploadDemande(demande.value.id, fileFinalSelected.value, 'MODIF')
     .then(() => {
       alertMessage.value = "Fichier envoyé";
       isLoaded.value = true;
@@ -297,7 +297,7 @@ function uploadFileFinal() {
 
 function modifierTypeTraitementModifDemande() {
   isLoading.value = true;
-  demandesService.modifierTypeTraitementModifDemande(demande.value.id, typeTraitementSelected.value.id)
+  itemService.modifierTypeTraitementModifDemande(demande.value.id, typeTraitementSelected.value.id)
     .then(response => {
       demande.value = response.data;
       next()
@@ -310,7 +310,7 @@ function modifierTypeTraitementModifDemande() {
 
 function launchDemande(){
   isLoading.value = true;
-  demandesService.lancerDemande(demande.value.id,'MODIF')
+  itemService.lancerDemande(demande.value.id,'MODIF')
     .then(response => {
       demande.value = response.data;
     }).finally(() => {
@@ -339,13 +339,13 @@ function prev() {
 
 function changeEtape() {
   if ((currentStep.value + 1) <= 2) { //Changement d'etat pour le chargement du fichier car le back est perdu sinon
-    demandesService.choixEtape(demande.value.id, 2, 'MODIF')
+    itemService.choixEtape(demande.value.id, 2, 'MODIF')
       .then(response => {
         demande.value = response.data;
       });
   }
   if ((currentStep.value + 1) === 4) {
-    demandesService.choixEtape(demande.value.id, 4, 'MODIF')
+    itemService.choixEtape(demande.value.id, 4, 'MODIF')
       .then(response => {
         demande.value = response.data;
       });

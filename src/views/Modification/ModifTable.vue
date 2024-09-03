@@ -125,7 +125,7 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import router from '@/router';
-import demandesService from '@/service/DemandesService';
+import itemService from '@/service/DemandesService';
 import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
 import DialogCommentaire from '@/components/Dialog/DialogCommentaire.vue';
 import MenuDownloadFile from '@/components/MenuDownloadFile.vue';
@@ -261,7 +261,7 @@ const isActiveDemandesDisplayed = ref(false);
 onMounted(() => {
   loadItems('MODIF', isActiveDemandesDisplayed.value);
   contentsDemandesFromServer.value = [...contentsDemandesFromServer.value];
-  demandesService.getTypeTraitement()
+  itemService.getTypeTraitement()
     .then(response => {
       response.data.forEach(type => {
         listTypeTraitement.value.push(type.libelle);
@@ -290,7 +290,7 @@ function switchArchiveActiveDisplay(value) {
 
 async function loadItems(type, archive) {
   try {
-    const response = await demandesService.fetchDemandes(type, archive, extendedAllILN.value);
+    const response = await itemService.fetchDemandes(type, archive, extendedAllILN.value);
     contentsDemandesFromServer.value = response.data;
     contentsDemandesFrontFiltered.value = response.data.map((item) => ({
       ...item,
@@ -327,7 +327,7 @@ function filterItems() {
 }
 
 function isAvailableFile(demandeNumber, filename) {
-  return demandesService.headFile(filename, demandeNumber, 'csv', 'MODIF')
+  return itemService.headFile(filename, demandeNumber, 'csv', 'MODIF')
     .then((response) => response.status !== 500)
     .catch((error) => {
       console.error(error);
@@ -353,7 +353,7 @@ function supprimerDemande(item) {
 //Archivage d'une demande
 async function archiverDemande(item) {
   try {
-    await demandesService.archiverDemande('MODIF', item.id);
+    await itemService.archiverDemande('MODIF', item.id);
     // Mettre à jour les données après l'archivage réussi
     await loadItems('MODIF');
     emit('backendSuccess');

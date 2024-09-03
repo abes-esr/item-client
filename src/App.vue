@@ -1,8 +1,8 @@
 <template>
-  <v-app>
+  <v-app class="h-100 overflow-hidden">
     <Header @logout-success="onLogout" @toggle-drawer="toggleDrawer"/>
     <Navbar :drawer="drawer" @close="drawer = false"/>
-    <v-main>
+    <v-main class="d-flex flex-column overflow-auto">
       <div class="error-stack">
         <v-alert
           v-for="(error, index) in errorStack"
@@ -19,35 +19,38 @@
           {{ error.description }}
         </v-alert>
       </div>
-      <router-view v-slot="{ Component }">
-        <component
-          :is="Component"
-          @backendError="addError"
-          @backendSuccess="clearErrors"
-        />
-      </router-view>
+      <div style="flex-grow: 10;">
+        <router-view v-slot="{ Component }">
+          <component
+            :is="Component"
+            @backendError="addError"
+            @backendSuccess="clearErrors"
+          />
+        </router-view>
+      </div>
+      <InfoAppBanner v-if="!authenticated" />
+      <Footer style="flex-basis: 0;" />
     </v-main>
-    <Footer />
   </v-app>
 </template>
 
 <script setup>
-import {onBeforeMount, onMounted, ref} from 'vue';
+import {computed, ref} from 'vue'
 import Header from '@/components/Structure/Header.vue'
 import Navbar from '@/components/Structure/Navbar.vue'
 import Footer from '@/components/Structure/Footer.vue'
 import router from '@/router/index'
 import {HttpStatusCode} from 'axios'
-import {useTheme} from "vuetify";
+import InfoAppBanner from '@/components/Structure/InfoAppBanner.vue'
+import {useAuthStore} from '@/store/authStore'
 
 const errorStack = ref([])
 const drawer = ref(false)
 
+const authStore = useAuthStore()
 
-const theme = useTheme()
-
-onMounted(() => {
-  theme.global.name.value = localStorage.getItem('theme')
+const authenticated = computed(() => {
+  return authStore.isAuthenticated
 })
 
 function addError(error) {
@@ -136,5 +139,4 @@ function toggleDrawer() {
 .custom-alert :deep(.v-alert__close) {
   color: #B71C1C !important; /* Assure que le bouton de fermeture est de la même couleur que le texte */
 }
-
 </style>

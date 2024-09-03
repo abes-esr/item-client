@@ -17,7 +17,7 @@
 
 <script setup>
 import {ref} from "vue";
-import demandesService from "@/service/DemandesService";
+import itemService from "@/service/DemandesService";
 
 const emits = defineEmits(['save'])
 const props = defineProps({
@@ -31,7 +31,7 @@ const commentaire = ref(props.demande.commentaire);
 function save(){
   if(!commentaire.value)
     commentaire.value = '';
-  demandesService.modifierCommentaireDemande(props.demande.id, commentaire.value, props.demande.type)
+  itemService.modifierCommentaireDemande(props.demande.id, commentaire.value, props.demande.type)
     .then(() => {
       props.demande.expanded = false;
       emits('save');

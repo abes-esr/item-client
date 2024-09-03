@@ -1,82 +1,81 @@
 <template>
-	<v-footer height="40" app>
-		<a @click="toggleDrawer"><v-icon color="grey">mdi-cog</v-icon></a>
-
-		<div class="text-caption text-disabled" style="position: absolute; right: 16px">{{ currentYear }} <span class="d-none d-sm-inline-block">- ABES</span></div>
-	</v-footer>
-	<v-navigation-drawer v-model="drawer" class="mt-6 border-none">
-		<v-list-item title="Détails application"
-			><v-chip variant="text">Interface :</v-chip><br /><v-chip variant="text">API Item :</v-chip><br /><v-chip variant="text">Batch ITEM :</v-chip><br /><v-chip variant="text"
-				>Accès CBS :</v-chip
-			></v-list-item
-		>
-		<v-divider></v-divider>
-		<v-list-item title="Etat des serveurs">
-			<v-chip :color="chipColorCbsBaseStatus" variant="text"><v-icon icon="mdi-server" start></v-icon>Serveur CBS</v-chip>
-			<v-chip :color="chipColorItemBaseStatus" variant="text"><v-icon icon="mdi-server" start></v-icon>Base XML</v-chip>
-			<v-chip :color="chipColorXmlBaseStatus" variant="text"><v-icon icon="mdi-server" start></v-icon>Base ITEM</v-chip>
-		</v-list-item>
-		<v-divider></v-divider>
-		<v-list-item title="Données personnelles"></v-list-item>
-		<v-list-item title="Conditions générales (CGU)" @click="redirection('https://abes.fr/pages-cgu/conditions-generales-utilisation-sites-abes.html')"></v-list-item>
-		<v-list-item title="Mentions légales"></v-list-item>
-		<v-list-item title="Accesibilité numérique" @click="redirection('https://abes.fr/pages-accessibilite/item.sudoc.html')"></v-list-item>
-		<v-divider></v-divider>
-	</v-navigation-drawer>
+  <v-footer style="bottom: 0px; left: 0px; width: 100%; height: auto" class="mt-auto py-0" color="secondary">
+    <div class="d-flex flex-wrap justify-space-between align-center mt-0 mb-0" style="width: 100%">
+      <div class="d-flex flex-wrap justify-start align-center text-body-2">
+        <a class="ma-2 text-white text-decoration-none" href="https://abes.fr">{{ currentYear }} - ABES</a>
+      </div>
+      <div class="d-flex flex-wrap justify-end align-center text-body-2">
+        <v-tooltip location="top">
+          <template v-slot:activator="{ props }">
+            <a class="ma-2 text-white" v-bind="props" @mouseenter="getHealthOfServices" style="cursor: pointer;">Etat des serveurs</a>
+          </template>
+          <div style="display: flex; flex-direction: column;">
+          <v-chip class="ma-1" :color="healthServices['STATUT CBS'] ? 'green' : 'red'" variant="text"><v-icon icon="mdi-server" start></v-icon>CBS</v-chip>
+          <v-chip class="ma-1" :color="healthServices['STATUT BASE_XML'] ? 'green' : 'red'" variant="text"><v-icon icon="mdi-server" start></v-icon>XML</v-chip>
+          <v-chip class="ma-1" :color="healthServices['STATUT BASE_ITEM'] ? 'green' : 'red'" variant="text"><v-icon icon="mdi-server" start></v-icon>ITEM</v-chip>
+          </div>
+        </v-tooltip>
+        <v-tooltip location="top">
+          <template v-slot:activator="{ props }">
+            <a class="ma-2 text-white" v-bind="props" style="cursor: pointer;">Version de l'application</a>
+          </template>
+          <div style="display: flex; flex-direction: column;">
+            <v-chip class="ma-1 text-white" variant="text">Interface : {{ packageVersion }}</v-chip>
+            <v-chip class="ma-1 text-white" variant="text">Serveur : {{ backVersion }}</v-chip>
+          </div>
+        </v-tooltip>
+        <a class="ma-2 text-white text-decoration-none" href="/donnees">Données personnelles</a>
+        <a class="ma-2 text-white text-decoration-none" href="https://abes.fr/pages-cgu/conditions-generales-utilisation-sites-abes.html">Conditions générales d'utilisation (CGU)</a>
+        <a class="ma-2 text-white text-decoration-none" href="/mentions">Mentions légales</a>
+        <a class="ma-2 text-white text-decoration-none" href="https://abes.fr/pages-accessibilite/item.sudoc.html">Accessibilité Numérique</a>
+      </div>
+    </div>
+  </v-footer>
 </template>
 
 <script setup>
-import {ref, computed} from 'vue'
-const items = [
-	{
-		title: 'Détails application',
-		href: 'https://vuetifyjs.com/'
-	},
-	{
-		title: 'Etat des serveurs',
-		href: 'https://support.vuetifyjs.com/'
-	},
-	{
-		title: 'Données personnelles',
-		href: 'https://github.com/vuetifyjs/vuetify'
-	},
-	{
-		title: "Conditions générales d'utilisation",
-		href: 'https://github.com/vuetifyjs/vuetify'
-	},
-	{
-		title: 'Mentions légales',
-		href: 'https://community.vuetifyjs.com/'
-	},
-	{
-		title: 'Accessibilité numérique',
-		href: 'https://reddit.com/r/vuetifyjs'
-	}
-]
-const drawer = ref(false)
-const chipColorCbsBaseStatus = ref('green')
-const chipColorItemBaseStatus = ref('green')
-const chipColorXmlBaseStatus = ref('red')
+import {ref, computed, onMounted} from 'vue'
+import itemService from '@/service/DemandesService'
+
 const currentYear = computed(() => new Date().getFullYear())
-const toggleDrawer = () => {
-	drawer.value = !drawer.value
-}
-const checkServiceAvailable = () => {
-	//TODO integrer appel au service de controle de dispo des Bases
-	//alimenter chipColorCbsBaseStatus chipColorItemBaseStatus chipColorXmlBaseStatus
-	//rafraichir toutes les 20 secondes
-}
-const redirection = externalUrl => {
-	window.open(externalUrl, '_blank')
+
+const packageVersion = process.env.PACKAGE_VERSION.replaceAll('\"', '');
+const backVersion = ref()
+const healthServices = ref([{
+  'STATUT CBS':false,
+  'STATUT BASE_XML':false,
+  'STATUT BASE_ITEM':false
+}])
+
+onMounted(async () => {
+  try {
+    const version = await itemService.getApplicationVersion()
+    backVersion.value = version.data.BACKVERSION
+  } catch (error) {
+    console.error('Erreur lors de la récupération de la version de l\'application :', error)
+  }
+})
+
+const getHealthOfServices = async () => {
+  try {
+    const response = await itemService.getHealthOfServices()
+    console.log('Response:', response)
+
+    if (response.data) {
+      console.log('Response Data:', response.data)
+      healthServices.value = response.data
+    } else {
+      console.warn('La réponse ne contient pas de propriété "data".')
+    }
+
+    console.log('Health Services:', healthServices.value)
+  } catch (error) {
+    healthServices.value = [{
+      'STATUT CBS':false,
+      'STATUT BASE_XML':false,
+      'STATUT BASE_ITEM':false
+    }]
+    console.error('Erreur lors de la récupération des statuts des services :', error)
+  }
 }
 </script>
-
-<style scoped lang="sass">
-.social-link :deep(.v-icon)
-  color: rgba(var(--v-theme-on-background), var(--v-disabled-opacity))
-  text-decoration: none
-  transition: .2s ease-in-out
-
-  &:hover
-    color: rgba(25, 118, 210, 1)
-</style>

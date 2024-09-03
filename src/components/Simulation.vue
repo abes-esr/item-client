@@ -82,11 +82,11 @@ const isLoading = ref(true);
 const alertMessageError = ref();
 
 onMounted(() => {
-  demandesService.getNbLigneFichier(props.demande.id, props.demande.type)
+  itemService.getNbLigneFichier(props.demande.id, props.demande.type)
     .then(response => {
       nbNotice.value.nbTotalNotice = response.data;
     });
-  demandesService.simulerLigne(props.demande.id, 0, props.demande.type)
+  itemService.simulerLigne(props.demande.id, 0, props.demande.type)
     .then(response => {
       numeroPPNNotice.value = response.data[0];
       noticeAvant.value = response.data[1];

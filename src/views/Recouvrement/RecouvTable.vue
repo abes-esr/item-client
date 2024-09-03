@@ -118,7 +118,7 @@
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
-import demandesService from '@/service/DemandesService';
+import itemService from '@/service/DemandesService';
 import router from '@/router';
 import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
 import DialogCommentaire from "@/components/Dialog/DialogCommentaire.vue";
@@ -263,7 +263,7 @@ function switchArchiveActiveDisplay(value) {
 
 async function loadItems(type, archive) {
   try {
-    const response = await demandesService.fetchDemandes(type, archive, extendedAllILN.value);
+    const response = await itemService.fetchDemandes(type, archive, extendedAllILN.value);
     contentsDemandesFromServer.value = response.data;
     contentsDemandesFrontFiltered.value = response.data.map((item) => ({
       ...item,
@@ -316,7 +316,7 @@ function supprimerDemande(item) {
 //Archivage d'une demande
 async function archiverDemande(item) {
   try {
-    await demandesService.archiverDemande('EXEMP', item.id);
+    await itemService.archiverDemande('EXEMP', item.id);
     // Mettre à jour les données après l'archivage réussi
     await loadItems('EXEMP');
     emit('backendSuccess');

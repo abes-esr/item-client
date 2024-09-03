@@ -27,7 +27,7 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
-import DemandesService from '@/service/DemandesService';
+import itemService from '@/service/DemandesService';
 
 const typeExemp = defineModel();
 const emits = defineEmits(['click', 'deleted']);
@@ -36,7 +36,7 @@ const listExemp = ref([]);
 const overlay = ref(true);
 
 onMounted(() => {
-  DemandesService.getTypeExemp()
+  itemService.getTypeExemp()
     .then(response => {
       listExemp.value = response.data;
     });

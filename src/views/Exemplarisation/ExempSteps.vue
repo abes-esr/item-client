@@ -104,7 +104,7 @@
 <script setup>
 
 import { onMounted, ref } from 'vue';
-import DemandesService from '@/service/DemandesService';
+import itemService from '@/service/DemandesService';
 import router from '@/router';
 import SelectFile from '@/components/SelectFile.vue';
 import Rcr from '@/components/Rcr.vue';
@@ -129,7 +129,7 @@ const suppDialog = ref(false);
 
 onMounted(()=>{
   if(props.id){
-    DemandesService.getDemande(props.id, "EXEMP")
+    itemService.getDemande(props.id, "EXEMP")
       .then(response => {
         demande.value = response.data;
         switch (demande.value.etatDemande) {
@@ -165,7 +165,7 @@ function createDemande() {
     next();
   } else if (demande.value) {
     isLoading.value = true;
-    DemandesService.modifierRcrDemande(demande.value.id, rcrSelected.value, 'EXEMP')
+    itemService.modifierRcrDemande(demande.value.id, rcrSelected.value, 'EXEMP')
       .then(response => {
         demande.value = response.data;
         next();
@@ -176,7 +176,7 @@ function createDemande() {
       });
   } else {
     isLoading.value = true;
-    DemandesService.creerDemande(rcrSelected.value, 'EXEMP')
+    itemService.creerDemande(rcrSelected.value, 'EXEMP')
       .then(response => {
         demande.value = response.data;
         next();
@@ -193,7 +193,7 @@ function modifiTypeExemp() {
     next();
   } else {
     isLoading.value = true;
-    DemandesService.modifierTypeExempDemande(demande.value.id, typeDocumentSelected.value.id)
+    itemService.modifierTypeExempDemande(demande.value.id, typeDocumentSelected.value.id)
       .then(response => {
         demande.value = response.data
         next()
@@ -211,7 +211,7 @@ function uploadFile() {
   alertMessage.value = '';
   alertType.value = 'success';
   isLoading.value = true;
-  DemandesService.uploadDemande(demande.value.id, fileSelected.value, 'EXEMP')
+  itemService.uploadDemande(demande.value.id, fileSelected.value, 'EXEMP')
     .then(() => {
       alertMessage.value = "Fichier envoyé";
       next();
@@ -227,7 +227,7 @@ function uploadFile() {
 
 function launchDemande(){
   isLoading.value = true;
-  DemandesService.lancerDemande(demande.value.id,'EXEMP')
+  itemService.lancerDemande(demande.value.id,'EXEMP')
     .then(response => {
       demande.value = response.data;
     }).finally(() => {
@@ -249,7 +249,7 @@ function prev() {
 
 function changeEtat() {
   if((currentStep.value + 1) === 3) { //Changement d'etat pour le chargement du fichier car le back est perdu sinon
-    DemandesService.choixEtape(demande.value.id, currentStep.value + 1, 'EXEMP')
+    itemService.choixEtape(demande.value.id, currentStep.value + 1, 'EXEMP')
       .then(response => {
         demande.value = response.data;
       });

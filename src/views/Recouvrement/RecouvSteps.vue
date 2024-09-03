@@ -89,7 +89,7 @@
 import Rcr from '@/components/Rcr.vue';
 import SelectFile from '@/components/SelectFile.vue';
 import { onMounted, ref } from 'vue';
-import DemandesService from '@/service/DemandesService';
+import itemService from '@/service/DemandesService';
 import router from '@/router';
 import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
 
@@ -109,7 +109,7 @@ const suppDialog = ref(false);
 
 onMounted(() => {
   if(props.id){
-    DemandesService.getDemande(props.id, "RECOUV")
+    itemService.getDemande(props.id, "RECOUV")
       .then(response => {
         demande.value = response.data;
         if(demande.value.etatDemande === 'En préparation'){
@@ -126,7 +126,7 @@ function createDemande() {
   if (demande.value && (rcrSelected.value === demande.value.rcr)) {
     next();
   } else if (demande.value) {
-    DemandesService.modifierRcrDemande(demande.value.id, rcrSelected.value, 'RECOUV')
+    itemService.modifierRcrDemande(demande.value.id, rcrSelected.value, 'RECOUV')
       .then(response => {
         demande.value = response.data;
         next();
@@ -134,7 +134,7 @@ function createDemande() {
         emits('backendError',err);
     });
   } else {
-    DemandesService.creerDemande(rcrSelected.value, 'RECOUV')
+    itemService.creerDemande(rcrSelected.value, 'RECOUV')
       .then(response => {
         demande.value = response.data;
         next();
@@ -148,7 +148,7 @@ function launchTraitement() {
   alertMessage.value = '';
   alertType.value = 'success';
   isLoading.value = true;
-  DemandesService.uploadDemande(demande.value.id, fileSelected.value, 'RECOUV')
+  itemService.uploadDemande(demande.value.id, fileSelected.value, 'RECOUV')
     .then(() => {
       alertMessage.value = 'Fichier envoyé';
       dialog.value = true;

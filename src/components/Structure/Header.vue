@@ -54,7 +54,7 @@
 </template>
 
 <script setup>
-import DemandesService from '@/service/DemandesService'
+import itemService from '@/service/DemandesService'
 import {useAuthStore} from '@/store/authStore'
 import {computed} from 'vue'
 
@@ -68,7 +68,7 @@ const authenticated = computed(() => {
 
 function logout() {
   authStore.logout()
-  DemandesService.logout()
+  itemService.logout()
   emit('logout-success')
 }
 
