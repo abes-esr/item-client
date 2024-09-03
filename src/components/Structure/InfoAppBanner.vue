@@ -23,12 +23,12 @@
         </v-col>
         <v-col v-if="$vuetify.display.mdAndUp" cols="12" sm="12" md="2" lg="2">
           <v-card-text class="justify-center">
-            <v-img src="../../assets/MESR-logo.png" alt="Logo Enseignement Supérieur" min-width="120" max-width="120"></v-img>
+            <v-img src="../../assets/logo-mesri.jpg" alt="Logo Enseignement Supérieur" min-width="50" max-width="50"></v-img>
           </v-card-text>
         </v-col>
         <v-col v-if="$vuetify.display.mdAndUp" cols="12" sm="12" md="2" lg="2">
           <v-card-text class="justify-center">
-            <v-img src="../../assets/abes.png" alt="Logo ABES" min-width="100" max-width="100"></v-img>
+            <v-img src="../../assets/abes.png" alt="Logo ABES" min-width="80" max-width="80"></v-img>
           </v-card-text>
         </v-col>
       </v-row>
