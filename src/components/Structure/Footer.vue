@@ -1,5 +1,5 @@
 <template>
-  <v-footer style="background-color: #252c61; color: white; bottom: 0px; left: 0px; width: 100%; height: auto" class="mt-auto py-0">
+  <v-footer style="bottom: 0px; left: 0px; width: 100%; height: auto" class="mt-auto py-0" color="primary">
     <div class="d-flex flex-wrap justify-space-between align-center mt-0 mb-0" style="width: 100%">
       <div class="d-flex flex-wrap justify-start align-center text-body-2">
         <a class="ma-2 text-white text-decoration-none" href="https://abes.fr">{{ currentYear }} - ABES</a>
