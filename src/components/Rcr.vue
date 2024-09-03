@@ -1,6 +1,6 @@
 A<template>
   <v-card elevation="0">
-    <v-card-title style="background-color: #295494; color: white">
+    <v-card-title class="custom-card-title">
       <span>Sélection du RCR</span>
     </v-card-title>
     <v-card-text class="pt-5">
@@ -21,8 +21,9 @@ A<template>
 
 <script setup>
 import idrefService from '@/service/IdrefService'
-import {onMounted, ref} from 'vue'
+import {computed, onMounted, ref} from 'vue'
 import {useAuthStore} from '@/store/authStore'
+
 
 const authStore = useAuthStore()
 const listRcr = ref([])
@@ -64,3 +65,4 @@ onMounted(() => {
     });
 });
 </script>
+

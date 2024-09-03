@@ -73,18 +73,18 @@
         <td @click="onRowClick(item)" class="text-center">{{ item.iln }}</td>
         <td @click="onRowClick(item)" class="text-center">{{ item.rcr }}</td>
         <td @click="onRowClick(item)" class="text-center">
-          <v-chip color="grey" variant="flat"
+          <v-chip color="saisised" variant="flat"
                   v-if="item.etatDemande === 'En simulation' || item.etatDemande === 'En préparation' || item.etatDemande === 'Préparée' || item.etatDemande === 'A compléter'">
             En saisie
           </v-chip>
-          <v-chip color="orange" variant="flat" v-else-if="item.etatDemande === 'En attente'">En attente</v-chip>
-          <v-chip color="grey" variant="flat" v-else-if="item.etatDemande === 'En cours de traitement'">En cours de
+          <v-chip color="waited" variant="flat" v-else-if="item.etatDemande === 'En attente'">En attente</v-chip>
+          <v-chip color="saisised" variant="flat" v-else-if="item.etatDemande === 'En cours de traitement'">En cours de
             traitement
           </v-chip>
-          <v-chip color="green" variant="flat" v-else-if="item.etatDemande === 'Terminé'">Terminé</v-chip>
-          <v-chip color="brown" variant="flat" v-else-if="item.etatDemande === 'Archivé'">Archivé</v-chip>
-          <v-chip color="red" variant="flat" v-else-if="item.etatDemande === 'En erreur'">En erreur</v-chip>
-          <v-chip color="blue" variant="flat" v-else>{{item.etatDemande}}</v-chip> <!-- Cas : ne correspont à aucun cas -->
+          <v-chip color="success" variant="flat" v-else-if="item.etatDemande === 'Terminé'">Terminé</v-chip>
+          <v-chip color="archived" variant="flat" v-else-if="item.etatDemande === 'Archivé'">Archivé</v-chip>
+          <v-chip color="error" variant="flat" v-else-if="item.etatDemande === 'En erreur'">En erreur</v-chip>
+          <v-chip color="info" variant="flat" v-else>{{item.etatDemande}}</v-chip> <!-- Cas : ne correspont à aucun cas -->
         </td>
         <td @click="onRowClick(item)" class="text-center">
           <v-progress-linear v-model="item.pourcentageProgressionTraitement" height="18"

@@ -12,7 +12,7 @@
   <!-- CONTENU SIMULATION -->
   <v-alert icon="mdi-alert" type="error" v-if="alertMessageError" class="my-3" border="left">Simulation impossible : {{ alertMessageError }}</v-alert>
   <v-card flat class="pb-2">
-    <v-card-title style="background-color: #295494; color: white" class="d-flex justify-space-between">
+    <v-card-title class="d-flex justify-space-between custom-card-title">
       <span>Ecran de simulation</span>
       <v-btn depressed variant="text" @click="deleted()" prepend-icon="mdi-delete">Supprimer</v-btn>
     </v-card-title>
