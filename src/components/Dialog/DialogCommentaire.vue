@@ -17,7 +17,7 @@
 
 <script setup>
 import {ref} from "vue";
-import itemService from "@/service/DemandesService";
+import itemService from "@/service/ItemService";
 
 const emits = defineEmits(['save'])
 const props = defineProps({

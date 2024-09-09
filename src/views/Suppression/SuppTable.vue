@@ -110,7 +110,7 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import router from '@/router';
-import demandesService from '@/service/DemandesService';
+import demandesService from '@/service/ItemService';
 import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
 import DialogCommentaire from '@/components/Dialog/DialogCommentaire.vue';
 import MenuDownloadFile from '@/components/MenuDownloadFile.vue';

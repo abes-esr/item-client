@@ -39,7 +39,7 @@
 </template>
 <script setup>
 import {onMounted, ref, watch} from 'vue';
-import itemService from '@/service/DemandesService';
+import itemService from '@/service/ItemService';
 
 const emits = defineEmits(['validate']);
 const props = defineProps({

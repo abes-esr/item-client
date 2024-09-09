@@ -153,7 +153,7 @@
 <script setup>
 import {onMounted, ref} from 'vue';
 import router from '@/router';
-import itemService from '@/service/DemandesService';
+import itemService from '@/service/ItemService';
 import Rcr from '@/components/Rcr.vue';
 import SelectFile from '@/components/SelectFile.vue';
 import DownloadFile from '@/components/Modif/DownloadFile.vue';

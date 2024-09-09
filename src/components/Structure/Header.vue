@@ -54,7 +54,7 @@
 </template>
 
 <script setup>
-import itemService from '@/service/DemandesService'
+import itemService from '@/service/ItemService'
 import {useAuthStore} from '@/store/authStore'
 import {computed} from 'vue'
 

@@ -139,7 +139,7 @@
 import { onMounted, ref } from 'vue';
 import TypeFile from '@/components/Supp/TypeFile.vue';
 import SelectFile from '@/components/SelectFile.vue';
-import demandesService from '@/service/DemandesService';
+import demandesService from '@/service/ItemService';
 import DownloadFile from "@/components/Modif/DownloadFile.vue";
 import router from '@/router'
 import Rcr from '@/components/Rcr.vue';

@@ -118,7 +118,7 @@
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
-import itemService from '@/service/DemandesService';
+import itemService from '@/service/ItemService';
 import router from '@/router';
 import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
 import DialogCommentaire from "@/components/Dialog/DialogCommentaire.vue";

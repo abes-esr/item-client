@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import itemService from '@/service/DemandesService';
+import itemService from '@/service/ItemService';
 import {computed, onMounted, ref} from 'vue';
 
 const props = defineProps({
