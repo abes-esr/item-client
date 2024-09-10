@@ -1,6 +1,6 @@
 <template>
   <v-card elevation="0">
-    <v-card-title style="background-color: #295494; color: white" class="d-flex justify-space-between">
+    <v-card-title class="d-flex justify-space-between custom-card-title">
       <span><slot></slot></span>
       <v-btn depressed variant="text" @click="deleted()" prepend-icon="mdi-delete">Supprimer</v-btn>
     </v-card-title>
@@ -10,7 +10,7 @@
         rounded
         x-large
         variant="flat"
-        color="#295494"
+        color="primary"
         ref="fileLinkBtn"
         :href="fileLink"
         :disabled="isDisabled"

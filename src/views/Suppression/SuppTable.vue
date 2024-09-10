@@ -1,9 +1,9 @@
 <template>
   <v-container fluid>
-    <v-chip :variant="isActiveDemandesDisplayed ? 'plain' : 'tonal'"  style="margin-right: 10px" @click="switchArchiveActiveDisplay(!isActiveDemandesDisplayed)">
+    <v-chip :variant="isArchiveDemandesDisplayed ? 'plain' : 'tonal'" style="margin-right: 10px" @click="switchArchiveActiveDisplay(!isArchiveDemandesDisplayed)">
       Suppression d'exemplaires
     </v-chip>
-    <v-chip :variant="!isActiveDemandesDisplayed ? 'plain' : 'tonal'" @click="switchArchiveActiveDisplay(!isActiveDemandesDisplayed)">
+    <v-chip :variant="!isArchiveDemandesDisplayed ? 'plain' : 'tonal'" @click="switchArchiveActiveDisplay(!isArchiveDemandesDisplayed)">
       Suppression d'exemplaires archivées
     </v-chip>
     <v-chip variant="text">
@@ -11,7 +11,7 @@
         <template v-slot:activator="{ props }">
           <label>
             <input type="checkbox" v-model="extendedAllILN" style="margin-right: 5px"
-                   @change="loadItems('SUPP', isActiveDemandesDisplayed)">
+                   @change="loadItems('SUPP', isArchiveDemandesDisplayed)">
             <span v-bind="props">Affichage étendu sur tous les ILN</span>
           </label>
         </template>
@@ -73,18 +73,18 @@
         <td @click="onRowClick(item)" class="text-center">{{ item.iln }}</td>
         <td @click="onRowClick(item)" class="text-center">{{ item.rcr }}</td>
         <td @click="onRowClick(item)" class="text-center">
-          <v-chip color="grey" variant="flat"
+          <v-chip color="saisised" variant="flat"
                   v-if="item.etatDemande === 'En simulation' || item.etatDemande === 'En préparation' || item.etatDemande === 'Préparée' || item.etatDemande === 'A compléter'">
             En saisie
           </v-chip>
-          <v-chip color="orange" variant="flat" v-else-if="item.etatDemande === 'En attente'">En attente</v-chip>
-          <v-chip color="grey" variant="flat" v-else-if="item.etatDemande === 'En cours de traitement'">En cours de
+          <v-chip color="waited" variant="flat" v-else-if="item.etatDemande === 'En attente'">En attente</v-chip>
+          <v-chip color="saisised" variant="flat" v-else-if="item.etatDemande === 'En cours de traitement'">En cours de
             traitement
           </v-chip>
-          <v-chip color="green" variant="flat" v-else-if="item.etatDemande === 'Terminé'">Terminé</v-chip>
-          <v-chip color="brown" variant="flat" v-else-if="item.etatDemande === 'Archivé'">Archivé</v-chip>
-          <v-chip color="red" variant="flat" v-else-if="item.etatDemande === 'En erreur'">En erreur</v-chip>
-          <v-chip color="blue" variant="flat" v-else>{{item.etatDemande}}</v-chip> <!-- Cas : ne correspont à aucun cas -->
+          <v-chip color="success" variant="flat" v-else-if="item.etatDemande === 'Terminé'">Terminé</v-chip>
+          <v-chip color="archived" variant="flat" v-else-if="item.etatDemande === 'Archivé'">Archivé</v-chip>
+          <v-chip color="error" variant="flat" v-else-if="item.etatDemande === 'En erreur'">En erreur</v-chip>
+          <v-chip color="info" variant="flat" v-else>{{item.etatDemande}}</v-chip> <!-- Cas : ne correspont à aucun cas -->
         </td>
         <td @click="onRowClick(item)" class="text-center">
           <v-progress-linear v-model="item.pourcentageProgressionTraitement" height="18"
@@ -104,13 +104,13 @@
     </template>
   </v-data-table>
   <dialog-suppression v-model="suppDialog" :demande="suppDemande"
-                      @supp="loadItems('SUPP', isActiveDemandesDisplayed)"></dialog-suppression>
+                      @supp="loadItems('SUPP', isArchiveDemandesDisplayed)"></dialog-suppression>
 </template>
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import router from '@/router';
-import demandesService from '@/service/DemandesService';
+import demandesService from '@/service/ItemService';
 import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
 import DialogCommentaire from '@/components/Dialog/DialogCommentaire.vue';
 import MenuDownloadFile from '@/components/MenuDownloadFile.vue';
@@ -230,11 +230,11 @@ const isDialogOpen = computed(() => {
 });
 
 //Actives or archives demands displayed
-const isActiveDemandesDisplayed = ref(false);
+const isArchiveDemandesDisplayed = ref(false);
 
 //Data initialisation
 onMounted(() => {
-  loadItems('SUPP', isActiveDemandesDisplayed.value);
+  loadItems('SUPP', isArchiveDemandesDisplayed.value);
   contentsDemandesFromServer.value = [...contentsDemandesFromServer.value];
   demandesService.getTypeTraitement()
     .then(response => {
@@ -246,7 +246,7 @@ onMounted(() => {
     });
   polling = setInterval(() => {
     if (!isDialogOpen.value) {
-      loadItems('SUPP', isActiveDemandesDisplayed.value)
+      loadItems('SUPP', isArchiveDemandesDisplayed.value)
         .then(() => {
           filterItems();
         });
@@ -259,8 +259,8 @@ onBeforeUnmount(() => {
 });
 
 function switchArchiveActiveDisplay(value) {
-  isActiveDemandesDisplayed.value = value;
-  loadItems('SUPP', isActiveDemandesDisplayed.value);
+  isArchiveDemandesDisplayed.value = value;
+  loadItems('SUPP', isArchiveDemandesDisplayed.value);
 }
 
 async function loadItems(type, archive) {
@@ -330,7 +330,7 @@ async function archiverDemande(item) {
   try {
     await demandesService.archiverDemande('SUPP', item.id);
     // Mettre à jour les données après l'archivage réussi
-    await loadItems('SUPP');
+    await loadItems('SUPP',isArchiveDemandesDisplayed.value);
     emit('backendSuccess');
   } catch (error) {
     console.error(error);
@@ -345,7 +345,7 @@ function onRowClick(item) {
 }
 
 function saveComment() {
-  loadItems('SUPP', isActiveDemandesDisplayed.value)
+  loadItems('SUPP', isArchiveDemandesDisplayed.value)
     .then(() => {
       filterItems();
     });

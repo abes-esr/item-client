@@ -5,7 +5,7 @@
         <v-stepper v-model="currentStep" @update:model-value="changeEtape()" alt-labels>
           <v-stepper-header>
             <v-stepper-item
-              :color="currentStep >= 0 ? '#295494' : ''"
+              :color="currentStep >= 0 ? 'primary' : ''"
               :complete="currentStep > 0"
               :editable="currentStep > 0"
               icon="mdi-numeric-1"
@@ -15,7 +15,7 @@
             </v-stepper-item>
             <v-divider></v-divider>
             <v-stepper-item
-              :color="currentStep >= 1 ? '#295494' : ''"
+              :color="currentStep >= 1 ? 'primary' : ''"
               :complete="currentStep > 1"
               :editable="currentStep > 1"
               icon="mdi-numeric-2"
@@ -25,7 +25,7 @@
             </v-stepper-item>
             <v-divider></v-divider>
             <v-stepper-item
-              :color="currentStep >= 2 ? '#295494' : ''"
+              :color="currentStep >= 2 ? 'primary' : ''"
               :complete="currentStep > 2"
               :editable="currentStep > 2"
               icon="mdi-numeric-3"
@@ -50,9 +50,9 @@
               </v-container>
             </v-stepper-window-item>
             <v-stepper-window-item>
-              <type-file v-if="!typeFileSelected" v-model="typeFileSelected" @clicked="setTypeSelected()"></type-file>
-              <select-file v-else-if="!isLoaded" :is-loading="isLoading" v-model="fileSelected" :typeFile="typeFileSelected">Selection du fichier {{typeFileSelected}}</select-file>
-              <download-file v-if="isLoaded" :file-link="fileLink" :file-name="fileName" @clicked="isDownloaded = true">Téléchargement du fichier PPN/RCR/EPN</download-file>
+              <type-file v-if="!typeFileSelected" v-model="typeFileSelected" @clicked="setTypeSelected()" @deleted="deleteDemande()"></type-file>
+              <select-file v-else-if="!isLoaded" :is-loading="isLoading" v-model="fileSelected" :typeFile="typeFileSelected" @deleted="deleteDemande()">Selection du fichier {{typeFileSelected}}</select-file>
+              <download-file v-if="isLoaded" :file-link="fileLink" :file-name="fileName" @clicked="isDownloaded = true" @deleted="deleteDemande()">Téléchargement du fichier PPN/RCR/EPN</download-file>
               <v-alert
                 v-if="alertMessage"
                 :type="alertType"
@@ -132,16 +132,18 @@
       </v-col>
     </v-row>
   </v-container>
+  <dialog-suppression v-model="suppDialog" :demande="demande" return-to-accueil></dialog-suppression>
 </template>
 
 <script setup>
 import { onMounted, ref } from 'vue';
 import TypeFile from '@/components/Supp/TypeFile.vue';
 import SelectFile from '@/components/SelectFile.vue';
-import demandesService from '@/service/DemandesService';
+import demandesService from '@/service/ItemService';
 import DownloadFile from "@/components/Modif/DownloadFile.vue";
 import router from '@/router'
 import Rcr from '@/components/Rcr.vue';
+import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
 
 const currentStep = ref(0);
 const demande = ref();
@@ -161,6 +163,7 @@ const isLoading = ref(false);
 const alertMessage = ref('');
 const alertType = ref('success');
 const dialog = ref(false);
+const suppDialog = ref(false);
 
 onMounted(()=>{
   if (props.id) {
@@ -308,5 +311,9 @@ function raz(){
   alertType.value = 'success';
   isLoaded.value = false;
   isDownloaded.value = false;
+}
+
+function deleteDemande() {
+  suppDialog.value = true;
 }
 </script>

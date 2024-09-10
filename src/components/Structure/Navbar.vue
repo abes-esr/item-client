@@ -28,11 +28,11 @@
         <v-list-item-title>Modifier mon adresse mail</v-list-item-title>
       </v-list-item>
 
-      <v-list-item @click="toggleTheme">
+      <v-list-item @click="toggleTheme" @cut="setTheme">
         <template v-slot:prepend>
           <v-icon>{{ theme.global.current.value.dark ? 'mdi-weather-night' : 'mdi-weather-sunny' }}</v-icon>
         </template>
-        <v-list-item-title>{{ theme.global.current.value.dark ? 'Thème clair' : 'Thème sombre' }}</v-list-item-title>
+        <v-list-item-title>{{ theme.global.current.value.dark ? 'Thème sombre' : 'Thème clair' }}</v-list-item-title>
       </v-list-item>
     </v-list>
 
@@ -132,9 +132,13 @@ function navigateTo(routeName) {
 }
 
 function toggleTheme() {
-  theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
+  theme.global.name.value = theme.global.current.value.dark ? 'itemLightTheme' : 'itemDarkTheme'
   localStorage.setItem('theme', theme.global.name.value)
 }
+function setTheme() {
+  theme.global.name.value = 'itemRngTheme'
+}
+
 
 const rights = computed(() => {
   const user = authStore.getUser

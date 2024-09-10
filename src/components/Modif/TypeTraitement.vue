@@ -1,11 +1,17 @@
 <template>
   <v-card flat :loading="isLoading">
-    <v-card-title style="background-color: #295494; color: white" class="d-flex justify-space-between">
+    <v-card-title class="d-flex justify-space-between custom-card-title">
       <span>Choix du type de traitement</span>
       <v-btn depressed variant="text" @click="deleted()" prepend-icon="mdi-delete">Supprimer</v-btn>
     </v-card-title>
 
     <v-card-text  class="pa-0 ma-0">
+      <v-overlay v-if="isLoading" v-model="overlay" class="justify-center align-center" contained>
+        <v-progress-circular
+          color="info"
+          indeterminate
+        ></v-progress-circular>
+      </v-overlay>
       <v-hover v-slot="{ isHovering, props }" v-for="traitement in listTraitement" :key="traitement.id">
         <div v-bind="props" :class="`btn-perso elevation-${isHovering ? 6 : 2} pa-5 ma-1 d-flex justify-space-between`" @click="onClick(traitement)">
           <v-row class="align-center">
@@ -22,15 +28,15 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
-import DemandesService from '@/service/DemandesService';
+import itemService from '@/service/ItemService';
 
 const typeTraitement = defineModel();
 const emits = defineEmits(['clicked', 'deleted']);
 const props = defineProps({ isLoading: { type: Boolean } });
 const listTraitement = ref([]);
-
+const overlay = ref(true);
 onMounted(() => {
-  DemandesService.getTypeTraitement()
+  itemService.getTypeTraitement()
     .then(response => {
       listTraitement.value = response.data;
     });

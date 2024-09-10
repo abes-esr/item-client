@@ -1,6 +1,6 @@
 {
 	"name": "Item",
-	"version": "2.4.10-SNAPSHOT",
+	"version": "3.0.0-SNAPSHOT",
 	"scripts": {
 		"dev": "vite",
 		"build": "vite build",
@@ -13,6 +13,7 @@
 		"pinia": "^2.1.7",
 		"roboto-fontface": "*",
 		"vue": "^3.4.26",
+		"vue-breakpoints": "^1.1.0",
 		"vue-i18n": "^9.13.1",
 		"vue-router": "^4.3.2",
 		"vuetify": "^3.6.8"
@@ -20,7 +21,7 @@
 	"devDependencies": {
 		"@vitejs/plugin-vue": "^5.0.4",
 		"autoprefixer": "^10.4.19",
-		"axios": "1.6.4",
+		"axios": "1.7.4",
 		"prettier": "^3.2.5",
 		"sass": "^1.71.1",
 		"unplugin-fonts": "^1.1.1",

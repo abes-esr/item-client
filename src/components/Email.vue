@@ -1,6 +1,6 @@
 <template>
   <v-card class="elevation-5">
-    <v-card-title style="background-color: #295494; color: white" >
+    <v-card-title class="custom-card-title">
       <span v-if="!email">Première connexion</span>
       <span v-else>Modifier les informations de votre compte</span>
     </v-card-title>
@@ -30,7 +30,7 @@
     <v-card-actions>
       <v-spacer></v-spacer>
       <v-btn
-        color="#295494"
+        color="primary"
         variant="flat"
         :disabled="isDisabled"
         @click="validate()">Valider</v-btn>
@@ -39,7 +39,7 @@
 </template>
 <script setup>
 import {onMounted, ref, watch} from 'vue';
-import demandesService from '@/service/DemandesService';
+import itemService from '@/service/ItemService';
 
 const emits = defineEmits(['validate']);
 const props = defineProps({
@@ -82,7 +82,7 @@ onMounted(() => {
 
 function validate() {
   if(!props.email){
-    demandesService.creerEmail(props.userId, emailModel.value)
+    itemService.creerEmail(props.userId, emailModel.value)
       .then(result => {
         emits('validate', result.data.email);
       })
@@ -91,7 +91,7 @@ function validate() {
         throw err;
       });
   } else {
-    demandesService.modifierEmail(props.userId, emailModel.value)
+    itemService.modifierEmail(props.userId, emailModel.value)
       .then(result => {
         emits('validate', result.data.email);
       })

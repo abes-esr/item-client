@@ -89,17 +89,17 @@
         <td @click="onRowClick(item)" class="text-center">{{ item.typeExemp ? item.typeExemp : 'Non défini' }}</td>
         <td @click="onRowClick(item)" class="text-center">{{ item.indexRecherche }}</td>
         <td @click="onRowClick(item)" class="text-center">
-          <v-chip color="grey" variant="flat"
+          <v-chip color="saisised" variant="flat"
                   v-if="item.etatDemande === 'En simulation' || item.etatDemande === 'En préparation' || item.etatDemande === 'A compléter'">
             En saisie
           </v-chip>
-          <v-chip color="orange" variant="flat" v-else-if="item.etatDemande === 'En attente'">En attente</v-chip>
-          <v-chip color="grey" variant="flat" v-else-if="item.etatDemande === 'En cours de traitement'">En cours de
+          <v-chip color="waited" variant="flat" v-else-if="item.etatDemande === 'En attente'">En attente</v-chip>
+          <v-chip color="saisised" variant="flat" v-else-if="item.etatDemande === 'En cours de traitement'">En cours de
             traitement
           </v-chip>
-          <v-chip color="green" variant="flat" v-else-if="item.etatDemande === 'Terminé'">Terminé</v-chip>
-          <v-chip color="brown" variant="flat" v-else-if="item.etatDemande === 'Archivé'">Archivé</v-chip>
-          <v-chip color="red" variant="flat" v-else-if="item.etatDemande === 'En erreur'">En erreur</v-chip>
+          <v-chip color="success" variant="flat" v-else-if="item.etatDemande === 'Terminé'">Terminé</v-chip>
+          <v-chip color="archived" variant="flat" v-else-if="item.etatDemande === 'Archivé'">Archivé</v-chip>
+          <v-chip color="error" variant="flat" v-else-if="item.etatDemande === 'En erreur'">En erreur</v-chip>
         </td>
         <td @click="onRowClick(item)" class="text-center">
           <v-progress-linear v-model="item.pourcentageProgressionTraitement" :height="18" :striped="false"
@@ -129,7 +129,7 @@ import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import router from '@/router';
 import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
 import DialogCommentaire from "@/components/Dialog/DialogCommentaire.vue";
-import demandesService from '@/service/DemandesService';
+import itemService from '@/service/ItemService';
 import MenuDownloadFile from "@/components/MenuDownloadFile.vue";
 import moment from "moment";
 //Emit
@@ -254,7 +254,7 @@ const isActiveDemandesDisplayed = ref(false);
 onMounted(() => {
   loadItems('EXEMP', isActiveDemandesDisplayed.value);
   contentsDemandesFromServer.value = [...contentsDemandesFromServer.value];
-  demandesService.getTypeExemp()
+  itemService.getTypeExemp()
     .then(response => {
       response.data.forEach(type => {
         listTypeExemp.value.push(type.libelle);
@@ -282,7 +282,7 @@ function switchArchiveActiveDisplay(value) {
 
 async function loadItems(type, archive) {
   try {
-    const response = await demandesService.fetchDemandes(type, archive, extendedAllILN.value);
+    const response = await itemService.fetchDemandes(type, archive, extendedAllILN.value);
     contentsDemandesFromServer.value = response.data;
     contentsDemandesFrontFiltered.value = response.data.map((item) => ({
       ...item,
@@ -335,7 +335,7 @@ function supprimerDemande(item) {
 //Archivage d'une demande
 async function archiverDemande(item) {
   try {
-    await demandesService.archiverDemande('EXEMP', item.id);
+    await itemService.archiverDemande('EXEMP', item.id);
     // Mettre à jour les données après l'archivage réussi
     await loadItems('EXEMP');
     emit('backendSuccess');
