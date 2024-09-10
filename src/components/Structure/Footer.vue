@@ -50,7 +50,7 @@ const healthServices = ref([{
 onMounted(async () => {
   try {
     const version = await itemService.getApplicationVersion()
-    backVersion.value = version.data.BACKVERSION
+    backVersion.value = version.data
   } catch (error) {
     console.error('Erreur lors de la récupération de la version de l\'application :', error)
   }
