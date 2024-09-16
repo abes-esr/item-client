@@ -6,7 +6,7 @@
       <!-- FICHIERS MODIF -->
       <v-list>
         <v-list-item @click="downloadFile('fichier_initial', '.txt')" v-if="(demande.type === 'MODIF' && idEtatCurrentDemande >= 3) || (demande.type === 'SUPP' && idEtatCurrentDemande >= 3)">
-          <v-list-item-title>Télécharger le fichier initial des PPN</v-list-item-title>
+          <v-list-item-title>{{ demande.typeSuppression === 'PPN' ? "Télécharger le fichier initial des PPN" : "Télécharger le fichier initial des EPN" }}</v-list-item-title>
         </v-list-item>
         <v-list-item @click="downloadFile('fichier_prepare', '.csv')" v-if="(demande.type === 'MODIF' && idEtatCurrentDemande >= 3) || (demande.type === 'SUPP' && idEtatCurrentDemande >= 3)">
           <v-list-item-title>Télécharger le fichier de correspondance PPN/EPN</v-list-item-title>
