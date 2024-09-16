@@ -128,27 +128,10 @@
             </v-stepper-window-item>
           </v-stepper-window>
         </v-stepper>
-        <v-dialog
-          v-model="dialog"
-          width="500"
-        >
-          <v-card>
-            <v-card-title class="headline" primary-title>Traitement validé</v-card-title>
-            <v-card-text>Votre demande est en cours de traitement.<br/>Un mail vous sera envoyé quand celui-ci sera
-              terminé.
-              <br>Vous pouvez retrouver l'ensemble de vos demandes sur votre tableau de bord ITEM. Rubrique "Gérer mes
-              suppressions".
-            </v-card-text>
-            <v-divider></v-divider>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="primary" @click="router.push('suppression-tableau')" aria-label="OK">OK</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
       </v-col>
     </v-row>
   </v-container>
+  <dialog-lancer-traitement v-model="dialog" :is-loading="isLoading" rubrique="Gérer mes suppressions" route="/suppression-tableau" @launch="launchDemande()"></dialog-lancer-traitement>
   <dialog-suppression v-model="suppDialog" :demande="demande" return-to-accueil></dialog-suppression>
 </template>
 
@@ -161,6 +144,7 @@ import DownloadFile from "@/components/Modif/DownloadFile.vue";
 import router from '@/router'
 import Rcr from '@/components/Rcr.vue';
 import Simulation from "@/components/Simulation.vue";
+import DialogLancerTraitement from '@/components/Dialog/DialogLancerTraitement.vue';
 import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
 
 const currentStep = ref(0);
@@ -207,12 +191,9 @@ onMounted(()=>{
             currentStep.value = 2;
             break;
           case 'En simulation':
-            currentStep.value = 3;
             rcrSelected.value = demande.value.rcr;
-            typeDocumentSelected.value = {
-              id: -1,
-              libelle: demande.value.typeExemp
-            };
+            typeFileSelected.value = demande.value.typeSuppression;
+            currentStep.value = 3;
             break;
         }
       }).catch(() => {
@@ -337,6 +318,16 @@ function raz(){
   alertType.value = 'success';
   isLoaded.value = false;
   isDownloaded.value = false;
+}
+
+function launchDemande(){
+  isLoading.value = true;
+  itemService.lancerDemande(demande.value.id,'SUPP')
+    .then(response => {
+      demande.value = response.data;
+    }).finally(() => {
+    isLoading.value = false;
+  })
 }
 
 function deleteDemande() {
