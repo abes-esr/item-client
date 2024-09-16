@@ -81,24 +81,26 @@ onMounted(() => {
 });
 
 function validate() {
-  if(!props.email){
-    itemService.creerEmail(props.userId, emailModel.value)
-      .then(result => {
-        emits('validate', result.data.email);
-      })
-      .catch(err => {
-        messageError.value = err.response.data.message;
-        throw err;
-      });
-  } else {
-    itemService.modifierEmail(props.userId, emailModel.value)
-      .then(result => {
-        emits('validate', result.data.email);
-      })
-      .catch(err => {
-        messageError.value = err.response.data.message;
-        throw err;
-      });
+  if(!isDisabled) {
+    if (!props.email) {
+      itemService.creerEmail(props.userId, emailModel.value)
+        .then(result => {
+          emits('validate', result.data.email);
+        })
+        .catch(err => {
+          messageError.value = err.response.data.message;
+          throw err;
+        });
+    } else {
+      itemService.modifierEmail(props.userId, emailModel.value)
+        .then(result => {
+          emits('validate', result.data.email);
+        })
+        .catch(err => {
+          messageError.value = err.response.data.message;
+          throw err;
+        });
+    }
   }
 }
 </script>
