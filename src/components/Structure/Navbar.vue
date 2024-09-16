@@ -104,6 +104,30 @@
       </v-list-item>
 
     </v-list>
+
+    <v-divider></v-divider>
+
+    <v-list density="compact" nav>
+      <v-list-item>
+        <v-list-item-title class="text-h6 custom-list-item">Suppressions</v-list-item-title>
+      </v-list-item>
+
+      <v-list-item @click="navigateTo('suppression')">
+        <template v-slot:prepend>
+          <v-icon>mdi-file-document-remove</v-icon>
+        </template>
+        <v-list-item-title>Supprimer des exemplaires</v-list-item-title>
+      </v-list-item>
+
+      <v-list-item @click="navigateTo('suppression-tableau')">
+        <template v-slot:prepend>
+          <v-icon>mdi-format-list-bulleted</v-icon>
+        </template>
+        <v-list-item-title>Tableau des <br>suppressions d'exemplaires</v-list-item-title>
+      </v-list-item>
+
+    </v-list>
+
   </v-navigation-drawer>
 </template>
 
@@ -167,5 +191,10 @@ de l'ILN ${user.iln}`
 <style scoped>
 p {
   white-space: pre-line;
+}
+.custom-list-item {
+  min-height: 24px;
+  display: flex;
+  align-items: center;
 }
 </style>
