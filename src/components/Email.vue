@@ -5,7 +5,10 @@
       <span v-else>Modifier les informations de votre compte</span>
     </v-card-title>
     <v-card-text>
-      <v-form ref="form" class="pt-5">
+      <v-form
+        ref="form"
+        class="pt-5"
+        @submit.prevent="validate()">
         <span>
           Votre adresse mail est obligatoire pour utiliser l'application. Pour ajouter plusieurs adresses mail, séparez-les par des points virgules ;
         </span>
@@ -17,7 +20,7 @@
           id="email"
           v-model="emailModel"
           :rules="rules"
-          @keyup.enter="validate()">
+          >
         </v-text-field>
       </v-form>
       <v-alert
@@ -80,9 +83,13 @@ onMounted(() => {
   emailModel.value = props.email;
 });
 
-function validate() {
-  if(!isDisabled) {
+async function validate() {
+  console.log("validate");
+  if(!isDisabled.value) {
+
+    console.log("isDisable : " + isDisabled.value);
     if (!props.email) {
+      console.log("create mail");
       itemService.creerEmail(props.userId, emailModel.value)
         .then(result => {
           emits('validate', result.data.email);
@@ -92,6 +99,7 @@ function validate() {
           throw err;
         });
     } else {
+      console.log("midifact mail");
       itemService.modifierEmail(props.userId, emailModel.value)
         .then(result => {
           emits('validate', result.data.email);
