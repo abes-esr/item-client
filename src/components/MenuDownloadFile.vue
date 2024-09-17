@@ -8,14 +8,14 @@
         <v-list-item @click="downloadFile('fichier_initial', '.txt')" v-if="(demande.type === 'MODIF' && idEtatCurrentDemande >= 3) || (demande.type === 'SUPP' && idEtatCurrentDemande >= 3)">
           <v-list-item-title>{{ demande.typeSuppression === 'PPN' ? "Télécharger le fichier initial des PPN" : "Télécharger le fichier initial des EPN" }}</v-list-item-title>
         </v-list-item>
-        <v-list-item @click="downloadFile('fichier_prepare', '.csv')" v-if="(demande.type === 'MODIF' && idEtatCurrentDemande >= 3) || (demande.type === 'SUPP' && idEtatCurrentDemande >= 3)">
+        <v-list-item @click="downloadFile('fichier_correspondance', '.csv')" v-if="(demande.type === 'MODIF' && idEtatCurrentDemande >= 3) || (demande.type === 'SUPP' && idEtatCurrentDemande >= 3)">
           <v-list-item-title>Télécharger le fichier de correspondance PPN/EPN</v-list-item-title>
         </v-list-item>
-        <v-list-item @click="downloadFile('fichier_enrichi', '.csv')" v-if="demande.type === 'MODIF' && idEtatCurrentDemande >= 4">
+        <v-list-item @click="downloadFile('fichier_correspondance', '.csv')" v-if="demande.type === 'MODIF' && idEtatCurrentDemande >= 4">
           <v-list-item-title>Télécharger le fichier enrichi</v-list-item-title>
         </v-list-item>
 
-        <v-list-item @click="downloadFile('fichier_enrichi', '.csv')"
+        <v-list-item @click="downloadFile('fichier_valide', '.csv')"
                      v-if="(demande.type === 'RECOUV' && idEtatCurrentDemande >= 3) || (demande.type === 'EXEMP' && idEtatCurrentDemande >= 3) ||(demande.type === 'SUPP' && idEtatCurrentDemande >= 5)">
           <v-list-item-title>Télécharger le fichier déposé</v-list-item-title>
         </v-list-item>
