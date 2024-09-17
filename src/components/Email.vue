@@ -84,12 +84,8 @@ onMounted(() => {
 });
 
 async function validate() {
-  console.log("validate");
   if(!isDisabled.value) {
-
-    console.log("isDisable : " + isDisabled.value);
     if (!props.email) {
-      console.log("create mail");
       itemService.creerEmail(props.userId, emailModel.value)
         .then(result => {
           emits('validate', result.data.email);
@@ -99,7 +95,6 @@ async function validate() {
           throw err;
         });
     } else {
-      console.log("midifact mail");
       itemService.modifierEmail(props.userId, emailModel.value)
         .then(result => {
           emits('validate', result.data.email);
