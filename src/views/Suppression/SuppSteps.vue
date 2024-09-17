@@ -1,7 +1,7 @@
 <template>
-  <v-container :class="(currentStep === 4) ? '' : 'fill-height'" fluid>
+  <v-container :class="(currentStep === 3) ? '' : 'fill-height'" fluid>
     <v-row align="center" justify="center">
-      <v-col :md="(currentStep === 4) ? '' : '7'">
+      <v-col :md="(currentStep === 3) ? '' : '7'">
         <v-stepper v-model="currentStep" @update:model-value="changeEtape()" alt-labels>
           <v-stepper-header>
             <v-stepper-item
@@ -31,6 +31,12 @@
               icon="mdi-numeric-3"
               title="Envoi"
               subtitle="du fichier"
+            >
+            </v-stepper-item>
+            <v-divider></v-divider>
+            <v-stepper-item
+              icon="mdi-numeric-4"
+              title="Simulation"
             >
             </v-stepper-item>
           </v-stepper-header>
@@ -105,33 +111,27 @@
                   @click="uploadFileFinal()"
                   :loading="isLoading"
                 >
-                  Lancer le traitement en production
+                  Lancer le traitement en simulation
+                </v-btn>
+              </v-container>
+            </v-stepper-window-item>
+            <v-stepper-window-item>
+              <simulation :demande="demande" label-before="Exemplaire(s) existant(s)" label-after="Exemplaire(s) restant(s)" @deleted="deleteDemande()"></simulation>
+              <v-container class="d-flex justify-space-between">
+                <v-btn @click="prev">
+                  précédent
+                </v-btn>
+                <v-btn large @click="dialog = true"
+                       aria-label="Lancer le traitement en production">Lancer le traitement en production
                 </v-btn>
               </v-container>
             </v-stepper-window-item>
           </v-stepper-window>
         </v-stepper>
-        <v-dialog
-          v-model="dialog"
-          width="500"
-        >
-          <v-card>
-            <v-card-title class="headline" primary-title>Traitement validé</v-card-title>
-            <v-card-text>Votre demande est en cours de traitement.<br/>Un mail vous sera envoyé quand celui-ci sera
-              terminé.
-              <br>Vous pouvez retrouver l'ensemble de vos demandes sur votre tableau de bord ITEM. Rubrique "Gérer mes
-              suppressions".
-            </v-card-text>
-            <v-divider></v-divider>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="primary" @click="router.push('suppression-tableau')" aria-label="OK">OK</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
       </v-col>
     </v-row>
   </v-container>
+  <dialog-lancer-traitement v-model="dialog" :is-loading="isLoading" rubrique="Gérer mes suppressions" route="/suppression-tableau" @launch="launchDemande()"></dialog-lancer-traitement>
   <dialog-suppression v-model="suppDialog" :demande="demande" return-to-accueil></dialog-suppression>
 </template>
 
@@ -139,10 +139,12 @@
 import { onMounted, ref } from 'vue';
 import TypeFile from '@/components/Supp/TypeFile.vue';
 import SelectFile from '@/components/SelectFile.vue';
-import demandesService from '@/service/ItemService';
+import itemService from '@/service/ItemService';
 import DownloadFile from "@/components/Modif/DownloadFile.vue";
 import router from '@/router'
 import Rcr from '@/components/Rcr.vue';
+import Simulation from "@/components/Simulation.vue";
+import DialogLancerTraitement from '@/components/Dialog/DialogLancerTraitement.vue';
 import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
 
 const currentStep = ref(0);
@@ -167,7 +169,7 @@ const suppDialog = ref(false);
 
 onMounted(()=>{
   if (props.id) {
-    demandesService.getDemande(props.id, "SUPP")
+    itemService.getDemande(props.id, "SUPP")
       .then(response => {
         demande.value = response.data;
         switch (demande.value.etatDemande) {
@@ -188,6 +190,11 @@ onMounted(()=>{
             typeFileSelected.value = demande.value.typeSuppression;
             currentStep.value = 2;
             break;
+          case 'En simulation':
+            rcrSelected.value = demande.value.rcr;
+            typeFileSelected.value = demande.value.typeSuppression;
+            currentStep.value = 3;
+            break;
         }
       }).catch(() => {
       router.replace("/suppression");
@@ -201,7 +208,7 @@ function createDemande() {
     next();
   } else if (demande.value) {
     isLoading.value = true;
-    demandesService.modifierRcrDemande(demande.value.id, rcrSelected.value, 'SUPP')
+    itemService.modifierRcrDemande(demande.value.id, rcrSelected.value, 'SUPP')
       .then(response => {
         demande.value = response.data;
         next();
@@ -212,7 +219,7 @@ function createDemande() {
     });
   } else {
     isLoading.value = true;
-    demandesService.creerDemande(rcrSelected.value, 'SUPP')
+    itemService.creerDemande(rcrSelected.value, 'SUPP')
       .then(response => {
         demande.value = response.data;
         next();
@@ -228,11 +235,11 @@ function uploadFile() {
   alertMessage.value = '';
   alertType.value = 'success';
   isLoading.value = true;
-  demandesService.uploadDemande(demande.value.id, fileSelected.value, 'SUPP')
+  itemService.uploadDemande(demande.value.id, fileSelected.value, 'SUPP')
     .then(() => {
       alertMessage.value = "Fichier envoyé";
       isLoaded.value = true;
-      demandesService.getFile(demande.value.id, 'SUPP','fichier_prepare', '.csv')
+      itemService.getFile(demande.value.id, 'SUPP','fichier_prepare', '.csv')
         .then(response => {
           let blob = new Blob([response.data], {type: 'application/csv'});
           fileLink.value = window.URL.createObjectURL(blob);
@@ -248,19 +255,19 @@ function uploadFile() {
     });
 }
 function setTypeSelected(){
-  demandesService.modifierTypeFileDemande(demande.value.id, typeFileSelected.value)
+  itemService.modifierTypeFileDemande(demande.value.id, typeFileSelected.value)
 }
 
 function changeEtape() {
   if (((currentStep.value + 1) === 1) || ((currentStep.value + 1) === 2 && !typeFileSelected.value)) {
-    demandesService.choixEtape(demande.value.id, 1, 'SUPP')
+    itemService.choixEtape(demande.value.id, 1, 'SUPP')
       .then(response => {
         demande.value = response.data;
       });
     typeFileSelected.value = null;
   }
   if ((currentStep.value + 1) === 2 && typeFileSelected.value) { //Changement d'etat pour le chargement du fichier car le back est perdu sinon
-    demandesService.choixEtape(demande.value.id, 2, 'SUPP')
+    itemService.choixEtape(demande.value.id, 2, 'SUPP')
         .then(response => {
           demande.value = response.data;
         });
@@ -271,10 +278,10 @@ function uploadFileFinal() {
   alertMessage.value = '';
   alertType.value = 'success';
   isLoading.value = true;
-  demandesService.uploadDemande(demande.value.id, fileFinalSelected.value, 'SUPP')
+  itemService.uploadDemande(demande.value.id, fileFinalSelected.value, 'SUPP')
     .then(() => {
       alertMessage.value = "Fichier envoyé";
-      dialog.value = true;
+      next();
     })
     .catch(err => {
       alertMessage.value = err.response.data.message;
@@ -311,6 +318,16 @@ function raz(){
   alertType.value = 'success';
   isLoaded.value = false;
   isDownloaded.value = false;
+}
+
+function launchDemande(){
+  isLoading.value = true;
+  itemService.lancerDemande(demande.value.id,'SUPP')
+    .then(response => {
+      demande.value = response.data;
+    }).finally(() => {
+    isLoading.value = false;
+  })
 }
 
 function deleteDemande() {
