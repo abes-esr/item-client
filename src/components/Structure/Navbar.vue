@@ -40,7 +40,7 @@
 
     <v-list density="compact" nav>
       <v-list-item>
-        <v-list-item-title class="text-h6">Recouvrement</v-list-item-title>
+        <v-list-item-title class="text-h6 pb-1">Recouvrement</v-list-item-title>
       </v-list-item>
 
       <v-list-item @click="navigateTo('recouvrement')">
@@ -63,7 +63,7 @@
 
     <v-list density="compact" nav>
       <v-list-item>
-        <v-list-item-title class="text-h6">Creations</v-list-item-title>
+        <v-list-item-title class="text-h6 pb-1">Creations</v-list-item-title>
       </v-list-item>
 
       <v-list-item @click="navigateTo('exemplarisation')">
@@ -86,7 +86,7 @@
 
     <v-list density="compact" nav>
       <v-list-item>
-        <v-list-item-title class="text-h6">Modifications</v-list-item-title>
+        <v-list-item-title class="text-h6 pb-1">Modifications</v-list-item-title>
       </v-list-item>
 
       <v-list-item @click="navigateTo('modification')">
@@ -109,7 +109,7 @@
 
     <v-list density="compact" nav>
       <v-list-item>
-        <v-list-item-title class="text-h6 custom-list-item">Suppressions</v-list-item-title>
+        <v-list-item-title class="text-h6 pb-1">Suppressions</v-list-item-title>
       </v-list-item>
 
       <v-list-item @click="navigateTo('suppression')">
@@ -191,10 +191,5 @@ de l'ILN ${user.iln}`
 <style scoped>
 p {
   white-space: pre-line;
-}
-.custom-list-item {
-  min-height: 24px;
-  display: flex;
-  align-items: center;
 }
 </style>
