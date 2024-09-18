@@ -131,7 +131,7 @@
       </v-col>
     </v-row>
   </v-container>
-  <dialog-lancer-traitement v-model="dialog" :is-loading="isLoading" rubrique="Gérer mes suppressions" route="/suppression-tableau" @launch="launchDemande()"></dialog-lancer-traitement>
+  <dialog-lancer-traitement v-model="dialog" :is-loading="isLoading" rubrique="Gérer mes suppressions" route="/suppression-tableau" body="Le traitement de suppression  des exemplaires en base de production est irréversible." @launch="launchDemande()"></dialog-lancer-traitement>
   <dialog-suppression v-model="suppDialog" :demande="demande" return-to-accueil></dialog-suppression>
 </template>
 
@@ -271,6 +271,12 @@ function changeEtape() {
         .then(response => {
           demande.value = response.data;
         });
+  }
+  if ((currentStep.value + 1) === 3 ) {
+    itemService.choixEtape(demande.value.id, 3, 'SUPP')
+      .then(response => {
+        demande.value = response.data;
+      });
   }
 }
 
