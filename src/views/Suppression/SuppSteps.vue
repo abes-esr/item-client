@@ -272,6 +272,12 @@ function changeEtape() {
           demande.value = response.data;
         });
   }
+  if ((currentStep.value + 1) === 3 ) {
+    itemService.choixEtape(demande.value.id, 3, 'SUPP')
+      .then(response => {
+        demande.value = response.data;
+      });
+  }
 }
 
 function uploadFileFinal() {
