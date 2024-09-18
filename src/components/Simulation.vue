@@ -28,8 +28,8 @@
     <v-row class="pt-5">
       <v-col cols="12" sm="12" md="5"> <!--Exemplaires existants-->
         <!--Carte activée si présence exemplaires pour cette notice-->
-        <v-card class="pa-1" outlined tile>
-          <h5 class="d-flex justify-center">{{ labelBefore }}</h5>
+        <v-card class="pa-1 ml-1" outlined tile>
+          <h5 class="d-flex justify-center border-b-md">{{ labelBefore }}</h5>
           <v-container id="scroll-target" style="max-height: 400px" class="overflow-auto">
             <pre style="text-align: left" class="py-4">{{ noticeAvant }}</pre>
           </v-container>
@@ -39,9 +39,11 @@
         <navigate-notice v-model="nbNotice" @clicked="refresh()"></navigate-notice>
       </v-col>
       <v-col cols="12" sm="12" md="5"> <!--Exemplaire à créer-->
-        <v-card class="pa-1" outlined tile>
-          <h5 class="d-flex justify-center">{{ labelAfter }}</h5>
-          <pre style="text-align: left" class="py-4 overflow-auto">{{ noticeApres }}</pre>
+        <v-card class="pa-1 mr-1" outlined tile>
+          <h5 class="d-flex justify-center border-b-md">{{ labelAfter }}</h5>
+          <v-container id="scroll-target" style="max-height: 400px" class="overflow-auto">
+            <pre style="text-align: left" class="py-4">{{ noticeApres }}</pre>
+          </v-container>
         </v-card>
       </v-col>
     </v-row>
