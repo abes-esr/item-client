@@ -43,11 +43,22 @@ const props = defineProps({
   route: {
     required: true,
     type: String,
+  },
+  title: {
+    required: false,
+    type: String,
+    default: 'Lancement du traitement en production'
+  },
+  body: {
+    required: false,
+    type: String,
+    default: 'Êtes-vous sûr de vouloir lancer le traitement en production ?<br/> Aucune annulation n\'est possible.'
   }
 })
-const title = ref('Lancement du traitement en production');
-const body = ref('Êtes-vous sûr de vouloir lancer le traitement en production ?<br/> Aucune annulation n\'est possible.');
+const title = ref(props.title);
+const body = ref(props.body);
 const isFinished = ref(false);
+
 function confirm() {
   emits('launch');
   title.value = "Traitement validé";

@@ -40,7 +40,7 @@
 
     <v-list density="compact" nav>
       <v-list-item>
-        <v-list-item-title class="text-h6">Recouvrement</v-list-item-title>
+        <v-list-item-title class="text-h6 pb-1">Recouvrement</v-list-item-title>
       </v-list-item>
 
       <v-list-item @click="navigateTo('recouvrement')">
@@ -63,7 +63,7 @@
 
     <v-list density="compact" nav>
       <v-list-item>
-        <v-list-item-title class="text-h6">Creations</v-list-item-title>
+        <v-list-item-title class="text-h6 pb-1">Creations</v-list-item-title>
       </v-list-item>
 
       <v-list-item @click="navigateTo('exemplarisation')">
@@ -86,7 +86,7 @@
 
     <v-list density="compact" nav>
       <v-list-item>
-        <v-list-item-title class="text-h6">Modifications</v-list-item-title>
+        <v-list-item-title class="text-h6 pb-1">Modifications</v-list-item-title>
       </v-list-item>
 
       <v-list-item @click="navigateTo('modification')">
@@ -104,6 +104,30 @@
       </v-list-item>
 
     </v-list>
+
+    <v-divider></v-divider>
+
+    <v-list density="compact" nav>
+      <v-list-item>
+        <v-list-item-title class="text-h6 pb-1">Suppressions</v-list-item-title>
+      </v-list-item>
+
+      <v-list-item @click="navigateTo('suppression')">
+        <template v-slot:prepend>
+          <v-icon>mdi-file-document-remove</v-icon>
+        </template>
+        <v-list-item-title>Supprimer des exemplaires</v-list-item-title>
+      </v-list-item>
+
+      <v-list-item @click="navigateTo('suppression-tableau')">
+        <template v-slot:prepend>
+          <v-icon>mdi-format-list-bulleted</v-icon>
+        </template>
+        <v-list-item-title>Tableau des <br>suppressions d'exemplaires</v-list-item-title>
+      </v-list-item>
+
+    </v-list>
+
   </v-navigation-drawer>
 </template>
 

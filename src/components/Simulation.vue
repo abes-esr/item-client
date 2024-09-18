@@ -53,7 +53,7 @@
 import RecapDemande from '@/components/RecapDemande.vue';
 import NavigateNotice from '@/components/NavigateNotice.vue';
 import { onMounted, ref } from 'vue';
-import demandesService from '@/service/ItemService';
+import itemService from '@/service/ItemService';
 
 const props = defineProps({
   demande: {
@@ -103,7 +103,7 @@ onMounted(() => {
 function refresh() {
   isLoading.value = true;
   alertMessageError.value = null;
-  demandesService.simulerLigne(props.demande.id, nbNotice.value.nbNoticeEnCours, props.demande.type)
+  itemService.simulerLigne(props.demande.id, nbNotice.value.nbNoticeEnCours, props.demande.type)
     .then(response => {
       numeroPPNNotice.value = response.data[0];
       noticeAvant.value = response.data[1];
