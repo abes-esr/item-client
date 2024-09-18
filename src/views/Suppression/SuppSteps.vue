@@ -131,7 +131,7 @@
       </v-col>
     </v-row>
   </v-container>
-  <dialog-lancer-traitement v-model="dialog" :is-loading="isLoading" rubrique="Gérer mes suppressions" route="/suppression-tableau" body="Le traitement de suppression  des exemplaires en base de production est irréversible." @launch="launchDemande()"></dialog-lancer-traitement>
+  <dialog-lancer-traitement v-model="dialog" :is-loading="isLoading" rubrique="Gérer mes suppressions" route="suppression-tableau" body="Le traitement de suppression  des exemplaires en base de production est irréversible." @launch="launchDemande()"></dialog-lancer-traitement>
   <dialog-suppression v-model="suppDialog" :demande="demande" return-to-accueil></dialog-suppression>
 </template>
 
@@ -140,7 +140,7 @@ import { onMounted, ref } from 'vue';
 import TypeFile from '@/components/Supp/TypeFile.vue';
 import SelectFile from '@/components/SelectFile.vue';
 import itemService from '@/service/ItemService';
-import DownloadFile from "@/components/Modif/DownloadFile.vue";
+import DownloadFile from "@/components/DownloadFile.vue";
 import router from '@/router'
 import Rcr from '@/components/Rcr.vue';
 import Simulation from "@/components/Simulation.vue";
@@ -239,7 +239,7 @@ function uploadFile() {
     .then(() => {
       alertMessage.value = "Fichier envoyé";
       isLoaded.value = true;
-      itemService.getFile(demande.value.id, 'SUPP','fichier_prepare', '.csv')
+      itemService.getFile(demande.value.id, 'SUPP','fichier_correspondance', '.csv')
         .then(response => {
           let blob = new Blob([response.data], {type: 'application/csv'});
           fileLink.value = window.URL.createObjectURL(blob);

@@ -16,7 +16,7 @@
           <v-btn v-if="!isFinished" color="primary" @click="dialog = false" aria-label="Annuler">Annuler</v-btn>
           <v-spacer v-else></v-spacer>
           <v-btn v-if="!isFinished && !isSuppDemande" color="primary" @click="confirm()" aria-label="Valider">Valider</v-btn>
-          <v-btn v-else color="primary" @click="router.push(route)" aria-label="OK">OK</v-btn>
+          <v-btn v-else color="primary" @click="router.push({name: route})" aria-label="OK">OK</v-btn>
         </v-card-actions>
       </v-card>
     </v-skeleton-loader>

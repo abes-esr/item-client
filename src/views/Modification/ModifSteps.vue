@@ -146,7 +146,7 @@
       </v-col>
     </v-row>
   </v-container>
-  <dialog-lancer-traitement v-model="dialog" :is-loading="isLoading" rubrique="Gérer mes modifications" route="/modification-tableau" @launch="launchDemande()"></dialog-lancer-traitement>
+  <dialog-lancer-traitement v-model="dialog" :is-loading="isLoading" rubrique="Gérer mes modifications" route="modification-tableau" @launch="launchDemande()"></dialog-lancer-traitement>
   <dialog-suppression v-model="suppDialog" :demande="demande" return-to-accueil></dialog-suppression>
 </template>
 
@@ -156,7 +156,7 @@ import router from '@/router';
 import itemService from '@/service/ItemService';
 import Rcr from '@/components/Rcr.vue';
 import SelectFile from '@/components/SelectFile.vue';
-import DownloadFile from '@/components/Modif/DownloadFile.vue';
+import DownloadFile from '@/components/DownloadFile.vue';
 import TypeTraitement from '@/components/Modif/TypeTraitement.vue';
 import Simulation from "@/components/Simulation.vue";
 import DialogLancerTraitement from '@/components/Dialog/DialogLancerTraitement.vue';
@@ -260,7 +260,7 @@ function uploadFileInit() {
     .then(() => {
       alertMessage.value = "Fichier envoyé";
       isLoaded.value = true;
-      itemService.getFile(demande.value.id, 'MODIF','fichier_prepare', '.csv')
+      itemService.getFile(demande.value.id, 'MODIF','fichier_correspondance', '.csv')
         .then(response => {
           let blob = new Blob([response.data], {type: 'application/csv'});
           fileLink.value = window.URL.createObjectURL(blob);
