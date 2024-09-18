@@ -4,7 +4,7 @@
     <v-icon size="x-large">mdi-cloud-download</v-icon>
     <v-menu bottom left activator="parent">
       <v-list v-if="demande.type === 'RECOUV'">
-        <v-list-item @click="downloadFile('fichier_valide', '.csv')">
+        <v-list-item @click="downloadFile('fichier_enrichi', '.csv')">
           <!--          FICHIER ENRICHI RECOUV         -->
           <v-list-item-title>Télécharger le fichier déposé</v-list-item-title>
         </v-list-item>
@@ -15,7 +15,7 @@
       </v-list>
 
       <v-list v-else-if="demande.type === 'EXEMP'">
-        <v-list-item @click="downloadFile('fichier_valide', '.csv')">
+        <v-list-item @click="downloadFile('fichier_enrichi', '.csv')">
           <!--          FICHIER ENRICHI EXEMP         -->
           <v-list-item-title>Télécharger le fichier déposé</v-list-item-title>
         </v-list-item>
@@ -30,11 +30,11 @@
           <!--          FICHIER INITIAL MODIF         -->
           <v-list-item-title>Télécharger le fichier initial des PPN</v-list-item-title>
         </v-list-item>
-        <v-list-item @click="downloadFile('fichier_correspondance', '.csv')">
+        <v-list-item @click="downloadFile('fichier_prepare', '.csv')">
           <!--          FICHIER PREPARE MODIF         -->
           <v-list-item-title>Télécharger le fichier de correspondance PPN/RCR/EPN</v-list-item-title>
         </v-list-item>
-        <v-list-item v-if="isEnrichiAvailable" @click="downloadFile('fichier_valide', '.csv')">
+        <v-list-item v-if="isEnrichiAvailable" @click="downloadFile('fichier_enrichi', '.csv')">
           <!--          FICHIER ENRICHI MODIF         -->
           <v-list-item-title>Télécharger le fichier enrichi</v-list-item-title>
         </v-list-item>
