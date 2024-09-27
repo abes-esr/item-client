@@ -8,7 +8,7 @@
           <!--          FICHIER ENRICHI RECOUV         -->
           <v-list-item-title>Télécharger le fichier déposé</v-list-item-title>
         </v-list-item>
-        <v-list-item v-if="isResultatAvailable" @click="downloadFile('fichier_resultat', '.csv')">
+        <v-list-item v-if="isResultatAndSauvegardeAvailable" @click="downloadFile('fichier_resultat', '.csv')">
           <!--          FICHIER RESULTAT RECOUV         -->
           <v-list-item-title>Télécharger le fichier résultat</v-list-item-title>
         </v-list-item>
@@ -19,7 +19,7 @@
           <!--          FICHIER ENRICHI EXEMP         -->
           <v-list-item-title>Télécharger le fichier déposé</v-list-item-title>
         </v-list-item>
-        <v-list-item v-if="isResultatAvailable" @click="downloadFile('fichier_resultat', '.csv')">
+        <v-list-item v-if="isResultatAndSauvegardeAvailable" @click="downloadFile('fichier_resultat', '.csv')">
           <!--          FICHIER RESULTAT EXEMP         -->
           <v-list-item-title>Télécharger le fichier résultat</v-list-item-title>
         </v-list-item>
@@ -38,7 +38,7 @@
           <!--          FICHIER ENRICHI MODIF         -->
           <v-list-item-title>Télécharger le fichier enrichi</v-list-item-title>
         </v-list-item>
-        <v-list-item v-if="isResultatAvailable" @click="downloadFile('fichier_resultat', '.csv')">
+        <v-list-item v-if="isResultatAndSauvegardeAvailable" @click="downloadFile('fichier_resultat', '.csv')">
           <!--          FICHIER RESULTAT MODIF         -->
           <v-list-item-title>Télécharger le fichier résultat</v-list-item-title>
         </v-list-item>
@@ -59,9 +59,12 @@
           <!--          FICHIER ENRICHI SUPP         -->
           <v-list-item-title>Télécharger le fichier déposé</v-list-item-title>
         </v-list-item>
-        <v-list-item v-if="isResultatAvailable" @click="downloadFile('fichier_resultat', '.csv')">
+        <v-list-item v-if="isResultatAndSauvegardeAvailable" @click="downloadFile('fichier_resultat', '.csv')">
           <!--          FICHIER RESULTAT SUPP         -->
           <v-list-item-title>Télécharger le fichier résultat</v-list-item-title>
+        </v-list-item>
+        <v-list-item v-if="isResultatAndSauvegardeAvailable" @click="downloadFile('fichier_sauvegarde', '.txt')">
+          <v-list-item-title>Télécharger le fichier de sauvegarde .txt</v-list-item-title>
         </v-list-item>
       </v-list>
     </v-menu>
@@ -94,7 +97,7 @@ const isEnrichiAvailable = computed(() =>
   (idEtatCurrentDemande.value >= 4 && props.demande.type === 'MODIF') ||
   (idEtatCurrentDemande.value >= 5 && props.demande.type === 'SUPP')
 )
-const isResultatAvailable = computed(() => idEtatCurrentDemande.value >= 7 && idEtatCurrentDemande.value !== 8)
+const isResultatAndSauvegardeAvailable = computed(() => idEtatCurrentDemande.value >= 7 && idEtatCurrentDemande.value !== 8)
 
 onMounted(() => {
   itemService.getEtatsDemande()
