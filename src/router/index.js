@@ -12,8 +12,8 @@ import ModificationEmail from '@/views/Utilisateur/ModificationEmail.vue'
 import itemService from '@/service/ItemService'
 import {useAuthStore} from '@/store/authStore'
 import SuppTable from "@/views/Suppression/SuppTable.vue"
-import Donnees from "@/views/Informations/DonneesPersonnelles.vue"
-import Mentions from "@/views/Informations/MentionsLegales.vue"
+import Donnees from "@/views/Utilisateur/Informations/DonneesPersonnelles.vue"
+import Mentions from "@/views/Utilisateur/Informations/MentionsLegales.vue"
 
 const routes = [
   {
