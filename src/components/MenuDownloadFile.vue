@@ -63,6 +63,9 @@
           <!--          FICHIER RESULTAT SUPP         -->
           <v-list-item-title>Télécharger le fichier résultat</v-list-item-title>
         </v-list-item>
+        <v-list-item v-if="isSauvegardeAvailable" @click="downloadFile('fichier_sauvegarde', '.txt')">
+          <v-list-item-title>Télécharger le fichier de sauvegarde .txt</v-list-item-title>
+        </v-list-item>
       </v-list>
     </v-menu>
   </v-btn>
@@ -95,6 +98,7 @@ const isEnrichiAvailable = computed(() =>
   (idEtatCurrentDemande.value >= 5 && props.demande.type === 'SUPP')
 )
 const isResultatAvailable = computed(() => idEtatCurrentDemande.value >= 7 && idEtatCurrentDemande.value !== 8)
+const isSauvegardeAvailable = computed(() => idEtatCurrentDemande.value >= 7)
 
 onMounted(() => {
   itemService.getEtatsDemande()
