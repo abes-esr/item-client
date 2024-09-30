@@ -10,13 +10,14 @@ export ITEM_FRONT_IDREF_API_URL=${ITEM_FRONT_IDREF_API_URL:='http://localhost:80
 # On va remplacer les placeholders depuis les JS originales
 echo "-> Remplacement des placeholders venant du .env de vuejs dans la destination /usr/share/nginx/html/"
 echo "-> ITEM_FRONT_API_BASEURL=${ITEM_FRONT_API_BASEURL}"
+echo "-> ITEM_PLACEHOLDER_VITE_IDREF_API_URL=${ITEM_FRONT_IDREF_API_URL}"
 rm -rf /usr/share/nginx/html/
 cp -rf /usr/share/nginx/html.orig/ /usr/share/nginx/html/
 sed -i \
   "s#ITEM_PLACEHOLDER_VITE_API_URL#${ITEM_FRONT_API_BASEURL}#g" \
   /usr/share/nginx/html/assets/*
 sed -i \
-  "s#ITEM_PLACEHOLDER_VITE_API_URL_IDREF#${ITEM_FRONT_IDREF_API_URL}#g" \
+  "s#ITEM_PLACEHOLDER_VITE_IDREF_API_URL#${ITEM_FRONT_IDREF_API_URL}#g" \
   /usr/share/nginx/html/assets/*
 
 # execute nginx (cf CMD dans Dockerfile)
