@@ -108,7 +108,7 @@
           </v-progress-linear>
         </td>
         <td class="text-center">
-          <menu-download-file :demande="item"></menu-download-file>
+          <menu-download-file :demande="item" @on-error="throwError"></menu-download-file>
         </td>
         <td class="text-center">
           <!-- Colonne Action -->
@@ -376,6 +376,9 @@ function saveComment() {
     });
 }
 
+function throwError(error) {
+  emit('backendError',error);
+}
 </script>
 
 <style scoped>

@@ -81,6 +81,7 @@ const props = defineProps({
     type: Object
   }
 })
+const emits = defineEmits(['onError']);
 
 const etatsDemande = ref([]);
 
@@ -105,6 +106,9 @@ onMounted(() => {
     .then(response => {
       etatsDemande.value = response.data;
     })
+    .catch( err => {
+      emits('onError', err);
+  })
 })
 
 function downloadFile(filePrefix, extension) {
@@ -118,5 +122,8 @@ function downloadFile(filePrefix, extension) {
       link.click();
       link.remove();
     })
+    .catch( err => {
+      emits('onError', err);
+  })
 }
 </script>
