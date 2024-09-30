@@ -2,6 +2,7 @@
 
 # Paramètres par défaut du conteneur
 export ITEM_FRONT_API_BASEURL=${ITEM_FRONT_API_BASEURL:='http://localhost:8081/'}
+export ITEM_FRONT_IDREF_API_URL=${ITEM_FRONT_IDREF_API_URL:='http://localhost:8081/'}
 
 
 # Remplace les placeholders dans le code généré en prod
@@ -14,7 +15,9 @@ cp -rf /usr/share/nginx/html.orig/ /usr/share/nginx/html/
 sed -i \
   "s#ITEM_PLACEHOLDER_VITE_API_URL#${ITEM_FRONT_API_BASEURL}#g" \
   /usr/share/nginx/html/assets/*
-
+sed -i \
+  "s#ITEM_PLACEHOLDER_VITE_API_URL_IDREF#${ITEM_FRONT_IDREF_API_URL}#g" \
+  /usr/share/nginx/html/assets/*
 
 # execute nginx (cf CMD dans Dockerfile)
 exec "$@"
