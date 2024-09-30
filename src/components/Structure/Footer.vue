@@ -59,16 +59,9 @@ onMounted(async () => {
 const getHealthOfServices = async () => {
   try {
     const response = await itemService.getHealthOfServices()
-    console.log('Response:', response)
-
     if (response.data) {
-      console.log('Response Data:', response.data)
       healthServices.value = response.data
-    } else {
-      console.warn('La réponse ne contient pas de propriété "data".')
     }
-
-    console.log('Health Services:', healthServices.value)
   } catch (error) {
     healthServices.value = [{
       'STATUT CBS':false,
