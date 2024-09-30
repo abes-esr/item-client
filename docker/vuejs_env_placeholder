@@ -3,4 +3,4 @@
 # pour injecter une URL de l'API au moment de la création du conteneur
 # et éviter ainsi d'avoir une URL de l'API en static dans l'image docker
 VITE_API_URL=ITEM_PLACEHOLDER_VITE_API_URL
-VITE_API_URL_IDREF=ITEM_PLACEHOLDER_VITE_API_URL_IDREF
+VITE_API_URL_IDREF=ITEM_PLACEHOLDER_VITE_IDREF_API_URL
