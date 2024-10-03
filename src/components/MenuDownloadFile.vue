@@ -66,6 +66,9 @@
         <v-list-item v-if="isSauvegardeAvailable" @click="downloadFile('fichier_sauvegarde', '.txt')">
           <v-list-item-title>Télécharger le fichier de sauvegarde .txt</v-list-item-title>
         </v-list-item>
+        <v-list-item v-if="isSauvegardeAvailable" @click="downloadFile('fichier_sauvegarde', '.csv')">
+          <v-list-item-title>Télécharger le fichier de sauvegarde .csv</v-list-item-title>
+        </v-list-item>
       </v-list>
     </v-menu>
   </v-btn>
