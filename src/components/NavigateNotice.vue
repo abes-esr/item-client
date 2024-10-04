@@ -23,12 +23,12 @@
       large
       dark
       @click="prev"
-      aria-label="ligne précédente">
+      aria-label="Ligne précédente">
       <v-icon>mdi-chevron-left</v-icon>
     </v-btn>
   </v-row>
   <v-row class="d-flex justify-center">
-    <div style="width: 5em; text-align: center;">ligne précédente</div>
+    <div style="width: 5em; text-align: center;">Ligne précédente</div>
   </v-row>
   <!--Conteneur bouton 3-->
   <v-row class="d-flex justify-center">
@@ -38,12 +38,12 @@
       large
       dark
       @click="next"
-      aria-label="ligne suivante">
+      aria-label="Ligne suivante">
       <v-icon>mdi-chevron-right</v-icon>
     </v-btn>
   </v-row>
   <v-row class="d-flex justify-center">
-    <div style="width: 4em; text-align: center;">ligne suivante</div>
+    <div style="width: 4em; text-align: center;">Ligne suivante</div>
   </v-row>
   <!--Conteneur bouton 4-->
   <v-row class="d-flex justify-center">
