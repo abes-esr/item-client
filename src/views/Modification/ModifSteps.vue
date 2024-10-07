@@ -259,12 +259,12 @@ function uploadFileInit() {
   itemService.uploadDemande(demande.value.id, fileInitSelected.value, 'MODIF')
     .then(() => {
       alertMessage.value = "Fichier envoyé";
-      isLoaded.value = true;
       itemService.getFile(demande.value.id, 'MODIF','fichier_prepare', '.csv')
         .then(response => {
           let blob = new Blob([response.data], {type: 'application/csv'});
           fileLink.value = window.URL.createObjectURL(blob);
           fileName.value = `fichier_demande_${demande.value.id}.csv`;
+          isLoaded.value = true;
         })
     })
     .catch(err => {

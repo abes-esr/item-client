@@ -238,12 +238,12 @@ function uploadFile() {
   itemService.uploadDemande(demande.value.id, fileSelected.value, 'SUPP')
     .then(() => {
       alertMessage.value = "Fichier envoyé";
-      isLoaded.value = true;
       itemService.getFile(demande.value.id, 'SUPP','fichier_correspondance', '.csv')
         .then(response => {
           let blob = new Blob([response.data], {type: 'application/csv'});
           fileLink.value = window.URL.createObjectURL(blob);
           fileName.value = `fichier_demande_${demande.value.id}.csv`;
+          isLoaded.value = true;
         })
     })
     .catch(err => {
