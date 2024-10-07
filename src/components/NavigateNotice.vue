@@ -13,7 +13,7 @@
     </v-btn>
   </v-row>
   <v-row class="d-flex justify-center">
-    <div style="width: 4em; text-align: center;">Première ligne</div>
+    <span aria-label="Navigation à la première ligne">Première ligne</span>
   </v-row>
   <!--Conteneur bouton 2-->
   <v-row class="d-flex justify-center">
@@ -28,7 +28,7 @@
     </v-btn>
   </v-row>
   <v-row class="d-flex justify-center">
-    <div style="width: 5em; text-align: center;">Ligne précédente</div>
+    <span aria-label="Navigation à la ligne précédente">Ligne précédente</span>
   </v-row>
   <!--Conteneur bouton 3-->
   <v-row class="d-flex justify-center">
@@ -43,7 +43,7 @@
     </v-btn>
   </v-row>
   <v-row class="d-flex justify-center">
-    <div style="width: 4em; text-align: center;">Ligne suivante</div>
+    <span aria-label="Navigation à la ligne suivante">Ligne suivante</span>
   </v-row>
   <!--Conteneur bouton 4-->
   <v-row class="d-flex justify-center">
@@ -58,7 +58,7 @@
     </v-btn>
   </v-row>
   <v-row class="d-flex justify-center">
-    <div style="width: 4em; text-align: center;">Dernière ligne</div>
+    <span aria-label="Navigation à la dernière ligne">Dernière ligne</span>
   </v-row>
 </template>
 <script setup>
