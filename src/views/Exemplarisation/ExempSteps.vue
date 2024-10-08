@@ -179,6 +179,7 @@ function createDemande() {
     itemService.creerDemande(rcrSelected.value, 'EXEMP')
       .then(response => {
         demande.value = response.data;
+        router.replace(`/exemplarisation/${demande.value.id}`)
         next();
       }).catch(err => {
         emits('backendError',err);
