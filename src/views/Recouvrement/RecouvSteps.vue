@@ -137,6 +137,7 @@ function createDemande() {
     itemService.creerDemande(rcrSelected.value, 'RECOUV')
       .then(response => {
         demande.value = response.data;
+        router.replace(`/recouvrement/${demande.value.id}`)
         next();
       }).catch(err => {
         emits('backendError',err);

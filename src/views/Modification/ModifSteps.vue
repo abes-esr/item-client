@@ -243,6 +243,7 @@ function createDemande() {
     itemService.creerDemande(rcrSelected.value, 'MODIF')
       .then(response => {
         demande.value = response.data;
+        router.replace(`/modification/${demande.value.id}`)
         next();
       }).catch(err => {
       emits('backendError', err);

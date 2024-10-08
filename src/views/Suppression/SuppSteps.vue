@@ -222,6 +222,7 @@ function createDemande() {
     itemService.creerDemande(rcrSelected.value, 'SUPP')
       .then(response => {
         demande.value = response.data;
+        router.replace(`/suppression/${demande.value.id}`)
         next();
       }).catch(err => {
       emits('backendError', err);
