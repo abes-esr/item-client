@@ -222,6 +222,7 @@ function createDemande() {
     itemService.creerDemande(rcrSelected.value, 'SUPP')
       .then(response => {
         demande.value = response.data;
+        router.replace(`/suppression/${demande.value.id}`)
         next();
       }).catch(err => {
       emits('backendError', err);
@@ -238,12 +239,12 @@ function uploadFile() {
   itemService.uploadDemande(demande.value.id, fileSelected.value, 'SUPP')
     .then(() => {
       alertMessage.value = "Fichier envoyé";
-      isLoaded.value = true;
       itemService.getFile(demande.value.id, 'SUPP','fichier_correspondance', '.csv')
         .then(response => {
           let blob = new Blob([response.data], {type: 'application/csv'});
           fileLink.value = window.URL.createObjectURL(blob);
           fileName.value = `fichier_demande_${demande.value.id}.csv`;
+          isLoaded.value = true;
         })
     })
     .catch(err => {

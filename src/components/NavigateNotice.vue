@@ -8,12 +8,12 @@
       large
       dark
       @click="first"
-      aria-label="Première notice">
+      aria-label="Première ligne">
       <v-icon>mdi-page-first</v-icon>
     </v-btn>
   </v-row>
   <v-row class="d-flex justify-center">
-    <div style="width: 4em; text-align: center;">Première notice</div>
+    <span aria-label="Navigation à la première ligne">Première ligne</span>
   </v-row>
   <!--Conteneur bouton 2-->
   <v-row class="d-flex justify-center">
@@ -23,12 +23,12 @@
       large
       dark
       @click="prev"
-      aria-label="Notice précédente">
+      aria-label="Ligne précédente">
       <v-icon>mdi-chevron-left</v-icon>
     </v-btn>
   </v-row>
   <v-row class="d-flex justify-center">
-    <div style="width: 5em; text-align: center;">Notice précédente</div>
+    <span aria-label="Navigation à la ligne précédente">Ligne précédente</span>
   </v-row>
   <!--Conteneur bouton 3-->
   <v-row class="d-flex justify-center">
@@ -38,12 +38,12 @@
       large
       dark
       @click="next"
-      aria-label="Notice suivante">
+      aria-label="Ligne suivante">
       <v-icon>mdi-chevron-right</v-icon>
     </v-btn>
   </v-row>
   <v-row class="d-flex justify-center">
-    <div style="width: 4em; text-align: center;">Notice suivante</div>
+    <span aria-label="Navigation à la ligne suivante">Ligne suivante</span>
   </v-row>
   <!--Conteneur bouton 4-->
   <v-row class="d-flex justify-center">
@@ -53,12 +53,12 @@
       large
       dark
       @click="last"
-      aria-label="Dernière notice">
+      aria-label="Dernière ligne">
       <v-icon>mdi-page-last</v-icon>
     </v-btn>
   </v-row>
   <v-row class="d-flex justify-center">
-    <div style="width: 4em; text-align: center;">Dernière notice</div>
+    <span aria-label="Navigation à la dernière ligne">Dernière ligne</span>
   </v-row>
 </template>
 <script setup>
