@@ -49,7 +49,7 @@
           <!--          FICHIER INITIAL SUPP         -->
           <v-list-item-title>Télécharger le fichier initial des {{ demande.typeSuppression }}</v-list-item-title>
         </v-list-item>
-        <v-list-item @click="downloadFile('fichier_correspondance', '.csv')">
+        <v-list-item v-if="demande.typeSuppression === 'PPN'" @click="downloadFile('fichier_correspondance', '.csv')">
           <!--          FICHIER PREPARE SUPP         -->
           <v-list-item-title>
             Télécharger le fichier de correspondance PPN/RCR/EPN
