@@ -106,7 +106,7 @@
                   <span v-html="alertMessage"></span>
                 </v-alert>
                 <v-container class="d-flex justify-space-between">
-                  <v-btn @click="prevSelectFileFinal()">
+                  <v-btn @click="prev()">
                     précédent
                   </v-btn>
                   <v-btn
@@ -286,8 +286,7 @@ function uploadFileFinal() {
   } else if (typeFileSelected.value==='EPN') {
     itemService.uploadDemande(demande.value.id, fileSelected.value, 'SUPP')
       .then(() => {
-
-        alertMessage.value = "Fichier envoyé";
+        alertMessage.value = "Fichier envoyé, veuillez patienter quelques instants.";
         itemService.getFile(demande.value.id, 'SUPP','fichier_correspondance', '.csv')
           .then(response => {
             let blob = new Blob([response.data], {type: 'application/csv'});
@@ -316,7 +315,14 @@ function changeEtape() {
     typeFileSelected.value = null;
   }
   if ((currentStep.value + 1) === 2 && typeFileSelected.value) { //Changement d'etat pour le chargement du fichier car le back est perdu sinon
-    if(typeFileSelected.value === 'PPN') {
+    if(typeFileSelected.value==='EPN') {typeFileSelected.value=null;}
+    itemService.choixEtape(demande.value.id, 2, 'SUPP')
+      .then(response => {
+        demande.value = response.data;
+      });
+  }
+  if ((currentStep.value + 1) === 3 ) {
+    if(typeFileSelected.value==='EPN'){
       itemService.choixEtape(demande.value.id, 2, 'SUPP')
         .then(response => {
           demande.value = response.data;
@@ -328,12 +334,6 @@ function changeEtape() {
         });
     }
   }
-  if ((currentStep.value + 1) === 3 ) {
-    itemService.choixEtape(demande.value.id, 3, 'SUPP')
-      .then(response => {
-        demande.value = response.data;
-      });
-  }
 }
 
 function prevSelectTypeFile(){
@@ -344,12 +344,6 @@ function prevSelectTypeFile(){
 function prevSelectFile(){
   changeEtape()
   raz();
-}
-function prevSelectFileFinal(){
-  if(typeFileSelected.value==='EPN'){
-    typeFileSelected.value = null;
-  }
-  prev();
 }
 function next() {
   currentStep.value++;
