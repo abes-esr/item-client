@@ -24,7 +24,7 @@
             >
             </v-stepper-item>
             <v-divider></v-divider>
-            <v-stepper-item
+            <v-stepper-item v-if="typeFileSelected==='PPN'"
               :color="currentStep >= 2 ? 'primary' : ''"
               :complete="currentStep > 2"
               :editable="currentStep > 2"
