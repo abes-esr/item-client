@@ -114,7 +114,7 @@ export class ItemService {
         'charset': 'utf-8'
     }};
     const data = new FormData();
-    data.append('file',file);
+    data.append('file',file, 'fichier_valide.csv');
     return this.client.post(`uploadDemande/${typeDemande}/${id}`,data,config);
   }
 
