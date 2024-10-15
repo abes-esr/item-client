@@ -35,6 +35,7 @@
             </v-stepper-item>
             <v-divider></v-divider>
             <v-stepper-item
+              :color="currentStep >= 3 ? 'primary' : ''"
               icon="mdi-numeric-4"
               title="Simulation"
             >
@@ -57,7 +58,7 @@
             </v-stepper-window-item>
             <v-stepper-window-item>
               <type-file v-if="!typeFileSelected" v-model="typeFileSelected" @clicked="setTypeSelected()" @deleted="deleteDemande()"></type-file>
-              <select-file v-else-if="!isLoaded" :is-loading="isLoading" v-model="fileSelected" :typeFile="typeFileSelected" @deleted="deleteDemande()">Selection du fichier {{typeFileSelected}}</select-file>
+              <select-file v-else-if="!isLoaded" :is-loading="isLoading" v-model="fileSelected" typeFile="PPN" @deleted="deleteDemande()">Selection du fichier PPN</select-file>
               <download-file v-if="isLoaded" :file-link="fileLink" :file-name="fileName" @clicked="isDownloaded = true" @deleted="deleteDemande()">Téléchargement du fichier PPN/RCR/EPN</download-file>
               <v-alert
                 v-if="alertMessage"
@@ -93,26 +94,29 @@
               </v-container>
             </v-stepper-window-item>
             <v-stepper-window-item>
-              <select-file v-model="fileFinalSelected" :is-loading="isLoading" @deleted="deleteDemande()">Charger le
-                fichier des exemplaires à supprimer
-              </select-file>
-              <v-alert
-                v-if="alertMessage"
-                :type="alertType"
-              >
-                <span v-html="alertMessage"></span>
-              </v-alert>
-              <v-container class="d-flex justify-space-between">
-                <v-btn @click="prev">
-                  précédent
-                </v-btn>
-                <v-btn
-                  :disabled="!fileFinalSelected"
-                  @click="uploadFileFinal()"
-                  :loading="isLoading"
+              <v-container>
+                <select-file v-if="typeFileSelected==='PPN'" v-model="fileFinalSelected" :is-loading="isLoading" @deleted="deleteDemande()">Charger le
+                  fichier des exemplaires à supprimer
+                </select-file>
+                <select-file v-else-if="typeFileSelected==='EPN'" v-model="fileSelected"  :is-loading="isLoading" typeFile="EPN" @deleted="deleteDemande()">Selection du fichier EPN</select-file>
+                <v-alert
+                  v-if="alertMessage"
+                  :type="alertType"
                 >
-                  Lancer le traitement en simulation
-                </v-btn>
+                  <span v-html="alertMessage"></span>
+                </v-alert>
+                <v-container class="d-flex justify-space-between">
+                  <v-btn @click="prev()">
+                    précédent
+                  </v-btn>
+                  <v-btn
+                    :disabled="!(fileFinalSelected || (fileSelected && typeFileSelected==='EPN'))"
+                    @click="uploadFileFinal()"
+                    :loading="isLoading"
+                  >
+                    Lancer le traitement en simulation
+                  </v-btn>
+                </v-container>
               </v-container>
             </v-stepper-window-item>
             <v-stepper-window-item>
@@ -256,7 +260,50 @@ function uploadFile() {
     });
 }
 function setTypeSelected(){
-  itemService.modifierTypeFileDemande(demande.value.id, typeFileSelected.value)
+  itemService.modifierTypeFileDemande(demande.value.id, typeFileSelected.value);
+  if (typeFileSelected.value==='EPN'){
+    next();
+  }
+}
+
+function uploadFileFinal() {
+  alertMessage.value = '';
+  alertType.value = 'success';
+  isLoading.value = true;
+  if (typeFileSelected.value==='PPN'){
+    itemService.uploadDemande(demande.value.id, fileFinalSelected.value, 'SUPP')
+      .then(() => {
+        alertMessage.value = "Fichier envoyé";
+        next();
+      })
+      .catch(err => {
+        alertMessage.value = err.response.data.message;
+        alertType.value = 'error';
+      })
+      .finally(() => {
+        isLoading.value = false;
+      });
+  } else if (typeFileSelected.value==='EPN') {
+    itemService.uploadDemande(demande.value.id, fileSelected.value, 'SUPP')
+      .then(() => {
+        alertMessage.value = "Fichier envoyé, veuillez patienter quelques instants.";
+        itemService.getFile(demande.value.id, 'SUPP','fichier_correspondance', '.csv')
+          .then(response => {
+            let blob = new Blob([response.data], {type: 'application/csv'});
+            itemService.uploadDemande(demande.value.id, blob, 'SUPP')
+              .then(() => {
+                goSimulation();
+              })
+              .finally(() => {
+                isLoading.value = false;
+              });
+          })
+      })
+      .catch(err => {
+        alertMessage.value = err.response.data.message;
+        alertType.value = 'error';
+      })
+  }
 }
 
 function changeEtape() {
@@ -268,35 +315,25 @@ function changeEtape() {
     typeFileSelected.value = null;
   }
   if ((currentStep.value + 1) === 2 && typeFileSelected.value) { //Changement d'etat pour le chargement du fichier car le back est perdu sinon
+    if(typeFileSelected.value==='EPN') {typeFileSelected.value=null;}
     itemService.choixEtape(demande.value.id, 2, 'SUPP')
-        .then(response => {
-          demande.value = response.data;
-        });
-  }
-  if ((currentStep.value + 1) === 3 ) {
-    itemService.choixEtape(demande.value.id, 3, 'SUPP')
       .then(response => {
         demande.value = response.data;
       });
   }
-}
-
-function uploadFileFinal() {
-  alertMessage.value = '';
-  alertType.value = 'success';
-  isLoading.value = true;
-  itemService.uploadDemande(demande.value.id, fileFinalSelected.value, 'SUPP')
-    .then(() => {
-      alertMessage.value = "Fichier envoyé";
-      next();
-    })
-    .catch(err => {
-      alertMessage.value = err.response.data.message;
-      alertType.value = 'error';
-    })
-    .finally(() => {
-      isLoading.value = false;
-    });
+  if ((currentStep.value + 1) === 3 ) {
+    if(typeFileSelected.value==='EPN'){
+      itemService.choixEtape(demande.value.id, 2, 'SUPP')
+        .then(response => {
+          demande.value = response.data;
+        });
+    } else {
+      itemService.choixEtape(demande.value.id, 3, 'SUPP')
+        .then(response => {
+          demande.value = response.data;
+        });
+    }
+  }
 }
 
 function prevSelectTypeFile(){
@@ -310,6 +347,11 @@ function prevSelectFile(){
 }
 function next() {
   currentStep.value++;
+  raz();
+}
+
+function goSimulation(){
+  currentStep.value = 3;
   raz();
 }
 
