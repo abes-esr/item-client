@@ -9,8 +9,8 @@
               :complete="currentStep > 0"
               :editable="demande"
               icon="mdi-numeric-1"
-              title="Séléction du RCR"
-              :subtitle="demande ? 'Demande n°'+demande.id : 'Demande'"
+              title="Sélection du RCR"
+              :subtitle="demande ? rcrSelected : 'Demande'"
             >
             </v-stepper-item>
             <v-divider></v-divider>
