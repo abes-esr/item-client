@@ -1,86 +1,89 @@
 <template>
   <v-container class="fill-height" fluid>
-    <v-row align="center" justify="center">
-      <v-col md="7">
-        <v-stepper v-model="currentStep" alt-labels>
-          <v-stepper-header>
-            <v-stepper-item
-              :color="currentStep >= 0 ? 'primary' : ''"
-              :complete="currentStep > 0"
-              :editable="demande"
-              icon="mdi-numeric-1"
-              title="Sélection du RCR"
-              :subtitle="demande ? rcrSelected : 'Demande'"
-            >
-            </v-stepper-item>
-            <v-divider></v-divider>
-            <v-stepper-item
-              :color="currentStep >= 1 ? 'primary' : ''"
-              :editable="fileSelected"
-              icon="mdi-numeric-2"
-              title="Chargement"
-              subtitle="du fichier"
-            >
-            </v-stepper-item>
-          </v-stepper-header>
-
-          <v-stepper-window>
-            <v-stepper-window-item>
-              <rcr v-model="rcrSelected"></rcr>
-              <v-container class="d-flex justify-space-between">
-                <v-spacer></v-spacer>
-                <v-btn
-                  :disabled="!rcrSelected"
-                  @click="createDemande"
-                >
-                  Valider
-                </v-btn>
-              </v-container>
-            </v-stepper-window-item>
-            <v-stepper-window-item>
-              <select-file v-model="fileSelected" :is-loading="isLoading" @deleted="deleteDemande()">Charger le fichier du taux de recouvrement</select-file>
-              <v-alert
-                v-if="alertMessage"
-                :type="alertType"
+    <v-col :class="(currentStep === 3) ? '' : 'fill-height'">
+      <recap-demande :demande="demande" title="Ma demande de Recouvrement"></recap-demande>
+      <v-row align="center" justify="center">
+        <v-col md="7">
+          <v-stepper v-model="currentStep" alt-labels>
+            <v-stepper-header>
+              <v-stepper-item
+                :color="currentStep >= 0 ? 'primary' : ''"
+                :complete="currentStep > 0"
+                :editable="demande"
+                icon="mdi-numeric-1"
+                title="Sélection du RCR"
+                :subtitle="demande ? rcrSelected : 'Demande'"
               >
-                <span v-html="alertMessage"></span>
-              </v-alert>
-              <v-container class="d-flex justify-space-between">
-                <v-btn
-                  @click="prev"
+              </v-stepper-item>
+              <v-divider></v-divider>
+              <v-stepper-item
+                :color="currentStep >= 1 ? 'primary' : ''"
+                :editable="fileSelected"
+                icon="mdi-numeric-2"
+                title="Chargement"
+                subtitle="du fichier"
+              >
+              </v-stepper-item>
+            </v-stepper-header>
+
+            <v-stepper-window>
+              <v-stepper-window-item>
+                <rcr v-model="rcrSelected"></rcr>
+                <v-container class="d-flex justify-space-between">
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    :disabled="!rcrSelected"
+                    @click="createDemande"
+                  >
+                    Valider
+                  </v-btn>
+                </v-container>
+              </v-stepper-window-item>
+              <v-stepper-window-item>
+                <select-file v-model="fileSelected" :is-loading="isLoading" @deleted="deleteDemande()">Charger le fichier du taux de recouvrement</select-file>
+                <v-alert
+                  v-if="alertMessage"
+                  :type="alertType"
                 >
-                  Retour
-                </v-btn>
-                <v-btn
-                  :disabled="!fileSelected"
-                  @click="launchTraitement"
-                >
-                  Lancer le traitement
-                </v-btn>
-              </v-container>
-            </v-stepper-window-item>
-          </v-stepper-window>
-        </v-stepper>
-        <v-dialog
-          v-model="dialog"
-          width="500"
-        >
-          <v-card>
-            <v-card-title class="headline" primary-title>Traitement validé</v-card-title>
-            <v-card-text>Votre demande est en cours de traitement.<br/>Un mail vous sera envoyé quand celui-ci sera
-              terminé.
-              <br>Vous pouvez retrouver l'ensemble de vos demandes sur votre tableau de bord ITEM. Rubrique "Gérer mes
-              taux de recouvrement".
-            </v-card-text>
-            <v-divider></v-divider>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="primary" @click="router.push('recouvrement-tableau')" aria-label="OK">OK</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </v-col>
-    </v-row>
+                  <span v-html="alertMessage"></span>
+                </v-alert>
+                <v-container class="d-flex justify-space-between">
+                  <v-btn
+                    @click="prev"
+                  >
+                    Retour
+                  </v-btn>
+                  <v-btn
+                    :disabled="!fileSelected"
+                    @click="launchTraitement"
+                  >
+                    Lancer le traitement
+                  </v-btn>
+                </v-container>
+              </v-stepper-window-item>
+            </v-stepper-window>
+          </v-stepper>
+          <v-dialog
+            v-model="dialog"
+            width="500"
+          >
+            <v-card>
+              <v-card-title class="headline" primary-title>Traitement validé</v-card-title>
+              <v-card-text>Votre demande est en cours de traitement.<br/>Un mail vous sera envoyé quand celui-ci sera
+                terminé.
+                <br>Vous pouvez retrouver l'ensemble de vos demandes sur votre tableau de bord ITEM. Rubrique "Gérer mes
+                taux de recouvrement".
+              </v-card-text>
+              <v-divider></v-divider>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="primary" @click="router.push('recouvrement-tableau')" aria-label="OK">OK</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-col>
+      </v-row>
+    </v-col>
   </v-container>
   <dialog-suppression v-model="suppDialog" :demande="demande" return-to-accueil></dialog-suppression>
 </template>
@@ -92,6 +95,7 @@ import { onMounted, ref } from 'vue';
 import itemService from '@/service/ItemService';
 import router from '@/router';
 import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
+import RecapDemande from '@/components/RecapDemande.vue';
 
 const props = defineProps({id : {type: String}});
 const emits = defineEmits(['backendError']);

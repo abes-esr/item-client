@@ -1,104 +1,67 @@
 <template>
   <v-container :class="(currentStep === 3) ? '' : 'fill-height'" fluid>
-    <v-row align="center" justify="center">
-      <v-col :md="(currentStep === 3) ? '' : '7'">
-        <v-stepper v-model="currentStep" @update:model-value="changeEtape()" alt-labels>
-          <v-stepper-header>
-            <v-stepper-item
-              :color="currentStep >= 0 ? 'primary' : ''"
-              :complete="currentStep > 0"
-              :editable="currentStep > 0"
-              icon="mdi-numeric-1"
-              title="Sélection du RCR"
-              :subtitle="demande ? rcrSelected : 'Demande'"
-            >
-            </v-stepper-item>
-            <v-divider></v-divider>
-            <v-stepper-item
-              :color="currentStep >= 1 ? 'primary' : ''"
-              :complete="currentStep > 1"
-              :editable="currentStep > 1"
-              icon="mdi-numeric-2"
-              title="PPN/RCR/EPN"
-              :subtitle="typeFileSelected ? 'Fichier '+ typeFileSelected : 'fichier envoyé'"
-            >
-            </v-stepper-item>
-            <v-divider></v-divider>
-            <v-stepper-item
-              :color="currentStep >= 2 ? 'primary' : ''"
-              :complete="currentStep > 2"
-              :editable="currentStep > 2"
-              icon="mdi-numeric-3"
-              title="Envoi"
-              subtitle="du fichier"
-            >
-            </v-stepper-item>
-            <v-divider></v-divider>
-            <v-stepper-item
-              :color="currentStep >= 3 ? 'primary' : ''"
-              icon="mdi-numeric-4"
-              title="Simulation"
-            >
-            </v-stepper-item>
-          </v-stepper-header>
-
-          <v-stepper-window>
-            <v-stepper-window-item>
-              <rcr v-model="rcrSelected" :is-loading="isLoading"></rcr>
-              <v-container class="d-flex justify-space-between">
-                <v-spacer></v-spacer>
-                <v-btn
-                  :disabled="!rcrSelected"
-                  :loading="isLoading"
-                  @click="createDemande"
-                >
-                  Valider
-                </v-btn>
-              </v-container>
-            </v-stepper-window-item>
-            <v-stepper-window-item>
-              <type-file v-if="!typeFileSelected" v-model="typeFileSelected" @clicked="setTypeSelected()" @deleted="deleteDemande()"></type-file>
-              <select-file v-else-if="!isLoaded" :is-loading="isLoading" v-model="fileSelected" typeFile="PPN" @deleted="deleteDemande()">Selection du fichier PPN</select-file>
-              <download-file v-if="isLoaded" :file-link="fileLink" :file-name="fileName" @clicked="isDownloaded = true" @deleted="deleteDemande()">Téléchargement du fichier PPN/RCR/EPN</download-file>
-              <v-alert
-                v-if="alertMessage"
-                :type="alertType"
+    <v-col :class="(currentStep === 3) ? '' : 'fill-height'">
+      <recap-demande v-if="currentStep < 3" :demande="demande" title="Ma demande de Suppression"></recap-demande>
+      <v-row align="center" justify="center">
+        <v-col :md="(currentStep === 3) ? '' : '7'">
+          <v-stepper v-model="currentStep" @update:model-value="changeEtape()" alt-labels>
+            <v-stepper-header>
+              <v-stepper-item
+                :color="currentStep >= 0 ? 'primary' : ''"
+                :complete="currentStep > 0"
+                :editable="currentStep > 0"
+                icon="mdi-numeric-1"
+                title="Sélection du RCR"
+                :subtitle="demande ? rcrSelected : 'Demande'"
               >
-                <span v-html="alertMessage"></span>
-              </v-alert>
-              <v-container class="d-flex justify-space-between">
-                <v-btn v-if="typeFileSelected && !isLoaded" @click="prevSelectTypeFile">
-                  précédent
-                </v-btn>
-                <v-btn v-else-if="isLoaded" @click="prevSelectFile">
-                  précédent
-                </v-btn>
-                <v-btn v-else @click="prev">
-                  précédent
-                </v-btn>
-                <v-btn
-                  v-if="typeFileSelected && !isLoaded"
-                  :disabled="!fileSelected"
-                  :loading="isLoading"
-                  @click="uploadFile()"
-                >
-                  Envoyer
-                </v-btn>
-                <v-btn
-                  v-if="isLoaded"
-                  :disabled="!isDownloaded"
-                  @click="next"
-                >
-                  Suivant
-                </v-btn>
-              </v-container>
-            </v-stepper-window-item>
-            <v-stepper-window-item>
-              <v-container>
-                <select-file v-if="typeFileSelected==='PPN'" v-model="fileFinalSelected" :is-loading="isLoading" @deleted="deleteDemande()">Charger le
-                  fichier des exemplaires à supprimer
-                </select-file>
-                <select-file v-else-if="typeFileSelected==='EPN'" v-model="fileSelected"  :is-loading="isLoading" typeFile="EPN" @deleted="deleteDemande()">Selection du fichier EPN</select-file>
+              </v-stepper-item>
+              <v-divider></v-divider>
+              <v-stepper-item
+                :color="currentStep >= 1 ? 'primary' : ''"
+                :complete="currentStep > 1"
+                :editable="currentStep > 1"
+                icon="mdi-numeric-2"
+                title="PPN/RCR/EPN"
+                :subtitle="typeFileSelected ? 'Fichier '+ typeFileSelected : 'fichier envoyé'"
+              >
+              </v-stepper-item>
+              <v-divider></v-divider>
+              <v-stepper-item
+                :color="currentStep >= 2 ? 'primary' : ''"
+                :complete="currentStep > 2"
+                :editable="currentStep > 2"
+                icon="mdi-numeric-3"
+                title="Envoi"
+                subtitle="du fichier"
+              >
+              </v-stepper-item>
+              <v-divider></v-divider>
+              <v-stepper-item
+                :color="currentStep >= 3 ? 'primary' : ''"
+                icon="mdi-numeric-4"
+                title="Simulation"
+              >
+              </v-stepper-item>
+            </v-stepper-header>
+
+            <v-stepper-window>
+              <v-stepper-window-item>
+                <rcr v-model="rcrSelected" :is-loading="isLoading"></rcr>
+                <v-container class="d-flex justify-space-between">
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    :disabled="!rcrSelected"
+                    :loading="isLoading"
+                    @click="createDemande"
+                  >
+                    Valider
+                  </v-btn>
+                </v-container>
+              </v-stepper-window-item>
+              <v-stepper-window-item>
+                <type-file v-if="!typeFileSelected" v-model="typeFileSelected" @clicked="setTypeSelected()" @deleted="deleteDemande()"></type-file>
+                <select-file v-else-if="!isLoaded" :is-loading="isLoading" v-model="fileSelected" typeFile="PPN" @deleted="deleteDemande()">Selection du fichier PPN</select-file>
+                <download-file v-if="isLoaded" :file-link="fileLink" :file-name="fileName" @clicked="isDownloaded = true" @deleted="deleteDemande()">Téléchargement du fichier PPN/RCR/EPN</download-file>
                 <v-alert
                   v-if="alertMessage"
                   :type="alertType"
@@ -106,34 +69,74 @@
                   <span v-html="alertMessage"></span>
                 </v-alert>
                 <v-container class="d-flex justify-space-between">
-                  <v-btn @click="prev()">
+                  <v-btn v-if="typeFileSelected && !isLoaded" @click="prevSelectTypeFile">
+                    précédent
+                  </v-btn>
+                  <v-btn v-else-if="isLoaded" @click="prevSelectFile">
+                    précédent
+                  </v-btn>
+                  <v-btn v-else @click="prev">
                     précédent
                   </v-btn>
                   <v-btn
-                    :disabled="!(fileFinalSelected || (fileSelected && typeFileSelected==='EPN'))"
-                    @click="uploadFileFinal()"
+                    v-if="typeFileSelected && !isLoaded"
+                    :disabled="!fileSelected"
                     :loading="isLoading"
+                    @click="uploadFile()"
                   >
-                    Lancer le traitement en simulation
+                    Envoyer
+                  </v-btn>
+                  <v-btn
+                    v-if="isLoaded"
+                    :disabled="!isDownloaded"
+                    @click="next"
+                  >
+                    Suivant
                   </v-btn>
                 </v-container>
-              </v-container>
-            </v-stepper-window-item>
-            <v-stepper-window-item>
-              <simulation :demande="demande" label-before="Exemplaire(s) existant(s)" label-after="Exemplaire(s) restant(s)" @deleted="deleteDemande()"></simulation>
-              <v-container class="d-flex justify-space-between">
-                <v-btn @click="prev">
-                  précédent
-                </v-btn>
-                <v-btn large @click="dialog = true"
-                       aria-label="Lancer le traitement en production">Lancer le traitement en production
-                </v-btn>
-              </v-container>
-            </v-stepper-window-item>
-          </v-stepper-window>
-        </v-stepper>
-      </v-col>
-    </v-row>
+              </v-stepper-window-item>
+              <v-stepper-window-item>
+                <v-container>
+                  <select-file v-if="typeFileSelected==='PPN'" v-model="fileFinalSelected" :is-loading="isLoading" @deleted="deleteDemande()">Charger le
+                    fichier des exemplaires à supprimer
+                  </select-file>
+                  <select-file v-else-if="typeFileSelected==='EPN'" v-model="fileSelected"  :is-loading="isLoading" typeFile="EPN" @deleted="deleteDemande()">Selection du fichier EPN</select-file>
+                  <v-alert
+                    v-if="alertMessage"
+                    :type="alertType"
+                  >
+                    <span v-html="alertMessage"></span>
+                  </v-alert>
+                  <v-container class="d-flex justify-space-between">
+                    <v-btn @click="prev()">
+                      précédent
+                    </v-btn>
+                    <v-btn
+                      :disabled="!(fileFinalSelected || (fileSelected && typeFileSelected==='EPN'))"
+                      @click="uploadFileFinal()"
+                      :loading="isLoading"
+                    >
+                      Lancer le traitement en simulation
+                    </v-btn>
+                  </v-container>
+                </v-container>
+              </v-stepper-window-item>
+              <v-stepper-window-item>
+                <simulation :demande="demande" label-before="Exemplaire(s) existant(s)" label-after="Exemplaire(s) restant(s)" @deleted="deleteDemande()"></simulation>
+                <v-container class="d-flex justify-space-between">
+                  <v-btn @click="prev">
+                    précédent
+                  </v-btn>
+                  <v-btn large @click="dialog = true"
+                         aria-label="Lancer le traitement en production">Lancer le traitement en production
+                  </v-btn>
+                </v-container>
+              </v-stepper-window-item>
+            </v-stepper-window>
+          </v-stepper>
+        </v-col>
+      </v-row>
+    </v-col>
   </v-container>
   <dialog-lancer-traitement v-model="dialog" :is-loading="isLoading" rubrique="Gérer mes suppressions" route="suppression-tableau" body="Le traitement de suppression  des exemplaires en base de production est irréversible." @launch="launchDemande()"></dialog-lancer-traitement>
   <dialog-suppression v-model="suppDialog" :demande="demande" return-to-accueil></dialog-suppression>
@@ -150,6 +153,7 @@ import Rcr from '@/components/Rcr.vue';
 import Simulation from "@/components/Simulation.vue";
 import DialogLancerTraitement from '@/components/Dialog/DialogLancerTraitement.vue';
 import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
+import RecapDemande from '@/components/RecapDemande.vue';
 
 const currentStep = ref(0);
 const demande = ref();
