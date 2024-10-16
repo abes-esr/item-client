@@ -1,7 +1,7 @@
 <template>
   <v-container class="fill-height" fluid>
     <v-col :class="(currentStep === 3) ? '' : 'fill-height'">
-      <recap-demande :demande="demande"></recap-demande>
+      <recap-demande :demande="demande" title="Ma demande de Recouvrement"></recap-demande>
       <v-row align="center" justify="center">
         <v-col md="7">
           <v-stepper v-model="currentStep" alt-labels>

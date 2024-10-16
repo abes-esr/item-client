@@ -1,7 +1,7 @@
 <template>
   <!-- INFOS GENERALES DE LA DEMANDE -->
   <div v-if="demande" id="demInfos" class="elevation-2 mb-4 mt-2">
-    <h3 class="d-flex justify-center">Ma demande</h3>
+    <h3 class="d-flex justify-center" >{{title}}</h3>
     <v-container >
       <v-row>
         <v-col>
@@ -32,7 +32,8 @@
 <script setup>
 
 const props = defineProps({
-  demande: {type: Object, required: true}
+  demande: {type: Object, required: true},
+  title: {type: String, required: false, default: "Ma demande"}
 });
 
 </script>
