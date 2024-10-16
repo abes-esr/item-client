@@ -1,5 +1,6 @@
 <template>
   <v-container :class="(currentStep === 3) ? '' : 'fill-height'" fluid>
+    <recap-demande v-if="currentStep < 3" :demande="demande"></recap-demande>
     <v-row align="center" justify="center">
       <v-col :md="(currentStep === 3) ? '' : '7'">
         <v-stepper  v-model="currentStep" @update:model-value="changeEtat()" alt-labels>
@@ -112,6 +113,7 @@ import TypeExemp from '@/components/Exemp/TypeExemp.vue';
 import Simulation from "@/components/Simulation.vue";
 import DialogLancerTraitement from '@/components/Dialog/DialogLancerTraitement.vue';
 import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
+import RecapDemande from '@/components/RecapDemande.vue';
 
 const emits = defineEmits(['backendError', 'backendSuccess', 'login-success'])
 const props = defineProps({id : {type: String}});

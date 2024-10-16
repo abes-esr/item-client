@@ -1,5 +1,6 @@
 <template>
   <v-container :class="(currentStep === 4) ? '' : 'fill-height'" fluid>
+    <recap-demande v-if="currentStep < 4" :demande="demande"></recap-demande>
     <v-row align="center" justify="center">
       <v-col :md="(currentStep === 4) ? '' : '7'">
         <v-stepper v-model="currentStep" @update:model-value="changeEtape()" alt-labels>
@@ -161,6 +162,7 @@ import TypeTraitement from '@/components/Modif/TypeTraitement.vue';
 import Simulation from "@/components/Simulation.vue";
 import DialogLancerTraitement from '@/components/Dialog/DialogLancerTraitement.vue';
 import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
+import RecapDemande from '@/components/RecapDemande.vue';
 
 
 const currentStep = ref(0);
