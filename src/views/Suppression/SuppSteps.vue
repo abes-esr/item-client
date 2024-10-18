@@ -1,7 +1,7 @@
 <template>
   <v-container :class="(currentStep === 3) ? '' : 'fill-height'" fluid>
     <v-col :class="(currentStep === 3) ? '' : 'fill-height'">
-      <recap-demande v-if="currentStep < 3" :demande="demande" title="Ma demande de Suppression"></recap-demande>
+      <recap-demande v-if="currentStep < 3" :demande="demande"></recap-demande>
       <v-row align="center" justify="center">
         <v-col :md="(currentStep === 3) ? '' : '7'">
           <v-stepper v-model="currentStep" @update:model-value="changeEtape()" alt-labels>

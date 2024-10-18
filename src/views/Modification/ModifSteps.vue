@@ -2,7 +2,7 @@
   <v-container :class="(currentStep === 4) ? '' : 'fill-height'" fluid>
     <v-col class="fill-height">
       <v-row align="center" justify="center">
-        <recap-demande v-if="currentStep < 4" :demande="demande" title="Ma demande de Modification"></recap-demande>
+        <recap-demande v-if="currentStep < 4" :demande="demande"></recap-demande>
       </v-row>
       <v-row align="center" justify="center">
         <v-col :md="(currentStep === 4) ? '' : '7'">
