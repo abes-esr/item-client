@@ -298,9 +298,17 @@ function uploadFileFinal() {
               .then(() => {
                 goSimulation();
               })
+              .catch(err => {
+                alertMessage.value = err.response.data.message;
+                alertType.value = 'error';
+              })
               .finally(() => {
                 isLoading.value = false;
               });
+          })
+          .catch(err => {
+            alertMessage.value = err.response.data.message;
+            alertType.value = 'error';
           })
       })
       .catch(err => {
