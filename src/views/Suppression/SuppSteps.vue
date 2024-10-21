@@ -186,6 +186,9 @@ onMounted(()=>{
             rcrSelected.value = demande.value.rcr;
             if (demande.value.typeSuppression){
               typeFileSelected.value = demande.value.typeSuppression;
+              if(demande.value.typeSuppression === "EPN"){
+                currentStep.value = 2;
+              }
             }
             break;
           case 'Préparée':
@@ -310,6 +313,9 @@ function uploadFileFinal() {
             alertMessage.value = err.response.data.message;
             alertType.value = 'error';
           })
+          .finally(() => {
+            isLoading.value = false;
+          });
       })
       .catch(err => {
         isLoading.value = false;
@@ -317,6 +323,9 @@ function uploadFileFinal() {
         alertMessage.value = err.response.data.message;
         alertType.value = 'error';
       })
+      .finally(() => {
+        isLoading.value = false;
+      });
   }
 }
 
