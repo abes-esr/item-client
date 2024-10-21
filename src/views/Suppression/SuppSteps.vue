@@ -65,6 +65,7 @@
                 <v-alert
                   v-if="alertMessage"
                   :type="alertType"
+                  closable
                 >
                   <span v-html="alertMessage"></span>
                 </v-alert>
@@ -104,6 +105,7 @@
                   <v-alert
                     v-if="alertMessage"
                     :type="alertType"
+                    closable
                   >
                     <span v-html="alertMessage"></span>
                   </v-alert>
@@ -318,7 +320,6 @@ function uploadFileFinal() {
           });
       })
       .catch(err => {
-        isLoading.value = false;
         fileSelected.value = null;
         alertMessage.value = err.response.data.message;
         alertType.value = 'error';
