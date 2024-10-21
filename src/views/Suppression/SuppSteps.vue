@@ -320,7 +320,6 @@ function uploadFileFinal() {
           });
       })
       .catch(err => {
-        fileSelected.value = null;
         alertMessage.value = err.response.data.message;
         alertType.value = 'error';
       })
