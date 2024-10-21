@@ -1,101 +1,106 @@
 <template>
   <v-container :class="(currentStep === 3) ? '' : 'fill-height'" fluid>
-    <v-row align="center" justify="center">
-      <v-col :md="(currentStep === 3) ? '' : '7'">
-        <v-stepper  v-model="currentStep" @update:model-value="changeEtat()" alt-labels>
-          <v-stepper-header>
-            <v-stepper-item
-              :color="currentStep >= 0 ? 'primary' : ''"
-              :complete="currentStep > 0"
-              :editable="currentStep > 0"
-              icon="mdi-numeric-1"
-              title="Sélection du RCR"
-              :subtitle="demande ? rcrSelected : 'Demande'"
-            >
-            </v-stepper-item>
-            <v-divider></v-divider>
-            <v-stepper-item
-              :color="currentStep >= 1 ? 'primary' : ''"
-              :complete="currentStep > 1"
-              :editable="currentStep > 1"
-              icon="mdi-numeric-2"
-              title="Type Document"
-              :subtitle="typeDocumentSelected ? typeDocumentSelected.libelle : ''"
-            >
-            </v-stepper-item>
-            <v-divider></v-divider>
-            <v-stepper-item
-              :color="currentStep >= 2 ? 'primary' : ''"
-              :complete="currentStep > 2"
-              :editable="currentStep > 2"
-              icon="mdi-numeric-3"
-              title="Chargement"
-            >
-            </v-stepper-item>
-            <v-divider></v-divider>
-            <v-stepper-item
-              icon="mdi-numeric-4"
-              title="Simulation"
-            >
-            </v-stepper-item>
-          </v-stepper-header>
-
-          <v-stepper-window>
-            <v-stepper-window-item>
-              <rcr v-model="rcrSelected" :is-loading="isLoading"></rcr>
-              <v-container class="d-flex justify-space-between">
-                <v-spacer></v-spacer>
-                <v-btn
-                  :disabled="!rcrSelected"
-                  @click="createDemande"
-                >
-                  Valider
-                </v-btn>
-              </v-container>
-            </v-stepper-window-item>
-            <v-stepper-window-item>
-              <type-exemp v-model="typeDocumentSelected" :is-loading="isLoading" @deleted="deleteDemande()" @click="modifiTypeExemp"></type-exemp>
-              <v-container class="d-flex justify-space-between">
-                <v-btn @click="prev">
-                  précédent
-                </v-btn>
-              </v-container>
-            </v-stepper-window-item>
-            <v-stepper-window-item>
-              <select-file v-model="fileSelected" :is-loading="isLoading" @deleted="deleteDemande()">Charger le fichier des exemplaires à traiter</select-file>
-              <v-alert
-                v-if="alertMessage"
-                :type="alertType"
+    <v-col :class="(currentStep === 3) ? '' : 'fill-height'">
+      <v-row>
+        <recap-demande v-if="currentStep !== 3" :demande="demande"></recap-demande>
+      </v-row>
+      <v-row align="center" justify="center">
+        <v-col :md="(currentStep === 3) ? '' : '7'">
+          <v-stepper  v-model="currentStep" @update:model-value="changeEtat()" alt-labels>
+            <v-stepper-header>
+              <v-stepper-item
+                :color="currentStep >= 0 ? 'primary' : ''"
+                :complete="currentStep > 0"
+                :editable="currentStep > 0"
+                icon="mdi-numeric-1"
+                title="Sélection du RCR"
+                :subtitle="demande ? rcrSelected : 'Demande'"
               >
-                <span v-html="alertMessage"></span>
-              </v-alert>
-              <v-container class="d-flex justify-space-between">
-                <v-btn @click="prev">
-                  précédent
-                </v-btn>
-                <v-btn
-                  :disabled="!fileSelected"
-                  @click="uploadFile"
+              </v-stepper-item>
+              <v-divider></v-divider>
+              <v-stepper-item
+                :color="currentStep >= 1 ? 'primary' : ''"
+                :complete="currentStep > 1"
+                :editable="currentStep > 1"
+                icon="mdi-numeric-2"
+                title="Type Document"
+                :subtitle="typeDocumentSelected ? typeDocumentSelected.libelle : ''"
+              >
+              </v-stepper-item>
+              <v-divider></v-divider>
+              <v-stepper-item
+                :color="currentStep >= 2 ? 'primary' : ''"
+                :complete="currentStep > 2"
+                :editable="currentStep > 2"
+                icon="mdi-numeric-3"
+                title="Chargement"
+              >
+              </v-stepper-item>
+              <v-divider></v-divider>
+              <v-stepper-item
+                icon="mdi-numeric-4"
+                title="Simulation"
+              >
+              </v-stepper-item>
+            </v-stepper-header>
+
+            <v-stepper-window>
+              <v-stepper-window-item>
+                <rcr v-model="rcrSelected" :is-loading="isLoading"></rcr>
+                <v-container class="d-flex justify-space-between">
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    :disabled="!rcrSelected"
+                    @click="createDemande"
+                  >
+                    Valider
+                  </v-btn>
+                </v-container>
+              </v-stepper-window-item>
+              <v-stepper-window-item>
+                <type-exemp v-model="typeDocumentSelected" :is-loading="isLoading" @deleted="deleteDemande()" @click="modifiTypeExemp"></type-exemp>
+                <v-container class="d-flex justify-space-between">
+                  <v-btn @click="prev">
+                    précédent
+                  </v-btn>
+                </v-container>
+              </v-stepper-window-item>
+              <v-stepper-window-item>
+                <select-file v-model="fileSelected" :is-loading="isLoading" @deleted="deleteDemande()">Charger le fichier des exemplaires à traiter</select-file>
+                <v-alert
+                  v-if="alertMessage"
+                  :type="alertType"
                 >
-                  Lancer le traitement en simulation
-                </v-btn>
-              </v-container>
-            </v-stepper-window-item>
-            <v-stepper-window-item>
-              <simulation :demande="demande" label-before="Exemplaire(s) existant(s)" label-after="Exemplaire à créer" @deleted="deleteDemande()"></simulation>
-              <v-container class="d-flex justify-space-between">
-                <v-btn @click="prev">
-                  précédent
-                </v-btn>
-                <v-btn large @click="dialog = true"
-                       aria-label="Lancer le traitement en production">Lancer le traitement en production
-                </v-btn>
-              </v-container>
-            </v-stepper-window-item>
-          </v-stepper-window>
-        </v-stepper>
-      </v-col>
-    </v-row>
+                  <span v-html="alertMessage"></span>
+                </v-alert>
+                <v-container class="d-flex justify-space-between">
+                  <v-btn @click="prev">
+                    précédent
+                  </v-btn>
+                  <v-btn
+                    :disabled="!fileSelected"
+                    @click="uploadFile"
+                  >
+                    Lancer le traitement en simulation
+                  </v-btn>
+                </v-container>
+              </v-stepper-window-item>
+              <v-stepper-window-item>
+                <simulation :demande="demande" label-before="Exemplaire(s) existant(s)" label-after="Exemplaire à créer" @deleted="deleteDemande()"></simulation>
+                <v-container class="d-flex justify-space-between">
+                  <v-btn @click="prev">
+                    précédent
+                  </v-btn>
+                  <v-btn large @click="dialog = true"
+                         aria-label="Lancer le traitement en production">Lancer le traitement en production
+                  </v-btn>
+                </v-container>
+              </v-stepper-window-item>
+            </v-stepper-window>
+          </v-stepper>
+        </v-col>
+      </v-row>
+    </v-col>
   </v-container>
   <dialog-lancer-traitement v-model="dialog" :is-loading="isLoading" rubrique="Gérer mes créations" route="exemplarisation-tableau" @launch="launchDemande()"></dialog-lancer-traitement>
   <dialog-suppression  v-model="suppDialog" :demande="demande" return-to-accueil></dialog-suppression>
@@ -112,6 +117,7 @@ import TypeExemp from '@/components/Exemp/TypeExemp.vue';
 import Simulation from "@/components/Simulation.vue";
 import DialogLancerTraitement from '@/components/Dialog/DialogLancerTraitement.vue';
 import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
+import RecapDemande from '@/components/RecapDemande.vue';
 
 const emits = defineEmits(['backendError', 'backendSuccess', 'login-success'])
 const props = defineProps({id : {type: String}});
