@@ -65,6 +65,7 @@
                 <v-alert
                   v-if="alertMessage"
                   :type="alertType"
+                  closable
                 >
                   <span v-html="alertMessage"></span>
                 </v-alert>
@@ -104,6 +105,7 @@
                   <v-alert
                     v-if="alertMessage"
                     :type="alertType"
+                    closable
                   >
                     <span v-html="alertMessage"></span>
                   </v-alert>
@@ -186,6 +188,9 @@ onMounted(()=>{
             rcrSelected.value = demande.value.rcr;
             if (demande.value.typeSuppression){
               typeFileSelected.value = demande.value.typeSuppression;
+              if(demande.value.typeSuppression === "EPN"){
+                currentStep.value = 2;
+              }
             }
             break;
           case 'Préparée':
@@ -298,15 +303,29 @@ function uploadFileFinal() {
               .then(() => {
                 goSimulation();
               })
+              .catch(err => {
+                alertMessage.value = err.response.data.message;
+                alertType.value = 'error';
+              })
               .finally(() => {
                 isLoading.value = false;
               });
           })
+          .catch(err => {
+            alertMessage.value = err.response.data.message;
+            alertType.value = 'error';
+          })
+          .finally(() => {
+            isLoading.value = false;
+          });
       })
       .catch(err => {
         alertMessage.value = err.response.data.message;
         alertType.value = 'error';
       })
+      .finally(() => {
+        isLoading.value = false;
+      });
   }
 }
 
