@@ -9,7 +9,7 @@
           <v-row class="d-flex justify-center pa-1">{{ demande.id }}</v-row>
         </v-col>
         <v-col>
-          <v-row class="d-flex justify-center pa-1">Date de modification</v-row>
+          <v-row class="d-flex justify-center pa-1">Date du traitement</v-row>
           <v-row class="d-flex justify-center pa-1">{{ demande.dateModification }}</v-row>
         </v-col>
         <v-col>
@@ -31,7 +31,7 @@
 
 <script setup>
 
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 
 const props = defineProps({
   demande: {type: Object, required: true},
