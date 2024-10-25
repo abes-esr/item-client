@@ -148,8 +148,8 @@ const headingsDemandes = ref([
     sort:(d1,d2) => {
       const date1 = moment(d1, "DD/MM/yyyy HH:mm").valueOf();
       const date2 = moment(d2, "DD/MM/yyyy HH:mm").valueOf();
-      if (date1 > date2) return -1;
-      if (date1 < date2) return 1;
+      if (date1 > date2) return 1;
+      if (date1 < date2) return -1;
       return 0;
     }
   },
@@ -160,8 +160,8 @@ const headingsDemandes = ref([
     sort:(d1,d2) => {
       const date1 = moment(d1, "DD/MM/yyyy HH:mm").valueOf();
       const date2 = moment(d2, "DD/MM/yyyy HH:mm").valueOf();
-      if (date1 > date2) return -1;
-      if (date1 < date2) return 1;
+      if (date1 > date2) return 1;
+      if (date1 < date2) return -1;
       return 0;
     }
   },
