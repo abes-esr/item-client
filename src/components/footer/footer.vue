@@ -29,7 +29,7 @@
           </div>
           </span>
         </v-tooltip>
-          <v-chip color="secondary" @click="$router.push({ name: 'donnees' })">
+          <v-chip color="secondary" href="https://abes.fr/pages-donnees-personnelles/item.sudoc.html">
             Données Personnelles
           </v-chip>
           <v-chip color="secondary" href="https://abes.fr/pages-cgu/conditions-generales-utilisation-sites-abes.html" target="_blank">
