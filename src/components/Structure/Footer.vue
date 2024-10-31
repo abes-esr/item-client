@@ -60,8 +60,11 @@ onMounted(async () => {
 })
 
 const getHealthOfServices = async () => {
-  statusService.getStatusBaseXML().then(isBaseXmlOk => {
-      healthServices.value.STATUT_BASE_XML = isBaseXmlOk;
+  statusService.getStatusBaseXML().then(isOk => {
+      healthServices.value.STATUT_BASE_XML = isOk;
+    })
+  statusService.getStatusCBS().then(isOk => {
+      healthServices.value.STATUT_CBS = isOk;
     })
 
   // try {
