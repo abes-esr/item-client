@@ -10,9 +10,9 @@
             <a class="ma-2 text-white" v-bind="props" @mouseenter="getHealthOfServices" style="cursor: pointer;">Etat des serveurs</a>
           </template>
           <div style="display: flex; flex-direction: column;">
-          <v-chip class="ma-1" :color="healthServices['STATUT CBS'] ? 'green' : 'red'" variant="text"><v-icon icon="mdi-server" start></v-icon>CBS</v-chip>
-          <v-chip class="ma-1" :color="healthServices['STATUT BASE_XML'] ? 'green' : 'red'" variant="text"><v-icon icon="mdi-server" start></v-icon>XML</v-chip>
-          <v-chip class="ma-1" :color="healthServices['STATUT BASE_ITEM'] ? 'green' : 'red'" variant="text"><v-icon icon="mdi-server" start></v-icon>ITEM</v-chip>
+          <v-chip class="ma-1" :color="healthServices.STATUT_CBS ? 'green' : 'red'" variant="text"><v-icon icon="mdi-server" start></v-icon>CBS</v-chip>
+          <v-chip class="ma-1" :color="healthServices.STATUT_BASE_XML ? 'green' : 'red'" variant="text"><v-icon icon="mdi-server" start></v-icon>XML</v-chip>
+          <v-chip class="ma-1" :color="healthServices.STATUT_BASE_ITEM ? 'green' : 'red'" variant="text"><v-icon icon="mdi-server" start></v-icon>ITEM</v-chip>
           </div>
         </v-tooltip>
         <v-tooltip location="top">
@@ -36,20 +36,23 @@
 <script setup>
 import {ref, computed, onMounted} from 'vue'
 import itemService from '@/service/ItemService'
+import statusService from "@/service/StatusService";
 
 const currentYear = computed(() => new Date().getFullYear())
 
+const  test = ref(false)
+
 const packageVersion = process.env.PACKAGE_VERSION.replaceAll('\"', '');
 const backVersion = ref()
-const healthServices = ref([{
-  'STATUT CBS':false,
-  'STATUT BASE_XML':false,
-  'STATUT BASE_ITEM':false
-}])
+const healthServices = ref({
+  STATUT_CBS:false,
+  STATUT_BASE_XML:false,
+  STATUT_BASE_ITEM:false
+})
 
 onMounted(async () => {
   try {
-    const version = await itemService.getApplicationVersion()
+    let version = await itemService.getApplicationVersion()
     backVersion.value = version.data
   } catch (error) {
     console.error('Erreur lors de la récupération de la version de l\'application :', error)
@@ -57,18 +60,14 @@ onMounted(async () => {
 })
 
 const getHealthOfServices = async () => {
-  try {
-    const response = await itemService.getHealthOfServices()
-    if (response.data) {
-      healthServices.value = response.data
-    }
-  } catch (error) {
-    healthServices.value = [{
-      'STATUT CBS':false,
-      'STATUT BASE_XML':false,
-      'STATUT BASE_ITEM':false
-    }]
-    console.error('Erreur lors de la récupération des statuts des services :', error)
-  }
+  statusService.getStatusBaseXML().then(isOk => {
+      healthServices.value.STATUT_BASE_XML = isOk;
+    })
+  statusService.getStatusCBS().then(isOk => {
+      healthServices.value.STATUT_CBS = isOk;
+    })
+  itemService.getHealthOfServices().then(isOk => {
+    healthServices.value.STATUT_BASE_ITEM = isOk;
+  })
 }
 </script>
