@@ -255,6 +255,12 @@ function prev() {
 }
 
 function changeEtat() {
+  if ((currentStep.value + 1) === 1) {
+    itemService.choixEtape(demande.value.id, 2, 'EXEMP')
+      .then(response => {
+        demande.value = response.data;
+      })
+  }
   if((currentStep.value + 1) === 3) { //Changement d'etat pour le chargement du fichier car le back est perdu sinon
     itemService.choixEtape(demande.value.id, currentStep.value + 1, 'EXEMP')
       .then(response => {
