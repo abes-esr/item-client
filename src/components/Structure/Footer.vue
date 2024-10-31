@@ -66,19 +66,8 @@ const getHealthOfServices = async () => {
   statusService.getStatusCBS().then(isOk => {
       healthServices.value.STATUT_CBS = isOk;
     })
-
-  // try {
-  //   const response = await itemService.getHealthOfServices()
-  //   if (response.data) {
-  //     healthServices.value = response.data
-  //   }
-  // } catch (error) {
-  //   healthServices.value = [{
-  //     'STATUT CBS':false,
-  //     'STATUT BASE_XML':false,
-  //     'STATUT BASE_ITEM':false
-  //   }]
-  //   console.error('Erreur lors de la récupération des statuts des services :', error)
-  // }
+  itemService.getHealthOfServices().then(isOk => {
+    healthServices.value.STATUT_BASE_ITEM = isOk;
+  })
 }
 </script>
