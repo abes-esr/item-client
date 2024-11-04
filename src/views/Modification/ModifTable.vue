@@ -4,7 +4,8 @@
     <v-chip :variant="isActiveDemandesDisplayed ? 'plain' : 'tonal'" style="margin-right: 10px"
             @click="switchArchiveActiveDisplay(!isActiveDemandesDisplayed)">Modification d'exemplaires
     </v-chip>
-    <v-chip :variant="!isActiveDemandesDisplayed ? 'plain' : 'tonal'" @click="switchArchiveActiveDisplay(!isActiveDemandesDisplayed)">Modification
+    <v-chip :variant="!isActiveDemandesDisplayed ? 'plain' : 'tonal'"
+            @click="switchArchiveActiveDisplay(!isActiveDemandesDisplayed)">Modification
       d'exemplaires archivées
     </v-chip>
     <v-chip variant="text">
@@ -103,7 +104,8 @@
         </td>
         <td @click="onRowClick(item)" class="text-center">
           <v-progress-linear v-model="item.pourcentageProgressionTraitement" height="18"
-                             color="grey-lighten-1" style="border: 1px solid grey; font-weight: bolder">
+                             :color="colorProgressBar(item)"
+                             style="border: 1px solid grey; font-weight: bolder">
             {{ item.pourcentageProgressionTraitement }} %
           </v-progress-linear>
         </td>
@@ -143,7 +145,7 @@ const headingsDemandes = ref([
     align: 'center'
   },
   {
-    title: 'Demande',
+    title: 'N° de Demande',
     key: 'id',
     align: 'center'
   },
@@ -377,7 +379,18 @@ function saveComment() {
 }
 
 function throwError(error) {
-  emit('backendError',error);
+  emit('backendError', error);
+}
+
+function colorProgressBar(item) {
+  if (item.pourcentageProgressionTraitement === 100) {
+    if (item.etatDemande === 'Terminé') {
+      return 'success';
+    } else if (item.etatDemande === 'En erreur') {
+      return 'error';
+    }
+  }
+  return 'grey-lighten-1';
 }
 </script>
 
