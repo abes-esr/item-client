@@ -47,7 +47,6 @@
                         variant="underlined" append-inner-icon="mdi-magnify"></v-text-field>
         </td>
         <td>
-          <!--TODO v-if dans les items-->
           <v-text-field v-model="ilnSearchField" hide-details @input="filterItems" variant="underlined"
                         append-inner-icon="mdi-magnify"></v-text-field>
         </td>
