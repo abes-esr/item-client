@@ -35,7 +35,7 @@
 </template>
 
 <script setup>
-import {computed, ref} from 'vue'
+import {computed, ref, watch} from 'vue'
 import Header from '@/components/Structure/Header.vue'
 import Navbar from '@/components/Structure/Navbar.vue'
 import Footer from '@/components/Structure/Footer.vue'
@@ -43,6 +43,8 @@ import router from '@/router/index'
 import {HttpStatusCode} from 'axios'
 import InfoAppBanner from '@/components/Structure/InfoAppBanner.vue'
 import {useAuthStore} from '@/store/authStore'
+import {useRoute} from "vue-router";
+
 
 const errorStack = ref([])
 const drawer = ref(false)
@@ -53,6 +55,23 @@ const authenticated = computed(() => {
   return authStore.isAuthenticated
 })
 
+const route = useRoute();
+
+watch(
+  () => route.query.error,
+  (error) => {
+    if (error) {
+      let newError = {
+        message: 'Erreur réseau',
+        description: 'Service indisponible : merci de réessayer ultérieurement.'
+      }
+      errorStack.value.push(newError);
+    }
+  },
+  { immediate: true } // Option pour exécuter le watcher dès le montage du composant
+);
+
+
 function addError(error) {
   let newError = {
     message: 'Erreur',
@@ -60,22 +79,22 @@ function addError(error) {
   }
   if(!error.response){
     newError.message = 'Erreur réseau : ' + error.code
-    newError.description = 'Le serveur ne répond pas. Vérifiez sa disponibilité.'
+    newError.description = 'Service indisponible : merci de réessayer ultérieurement.'
   }else{
     if (error.response.status === HttpStatusCode.NotFound){
       newError.message = 'Impossible de récupérer les données'
       newError.description = 'Vérifiez que vos urls d\'appel au serveur sont correctes ainsi que vos clés d\'autorisation ' + '(' + error.config.url + ')'
     }
     if(error.response.status === HttpStatusCode.Forbidden){
-      newError.message = 'Accès rejeté par le serveur'
+      newError.message = 'Accès rejeté'
       newError.description = 'Vérifiez que vos urls d\'appel au serveur sont correctes ainsi que vos clés d\'autorisation ' + '(' + error.config.url + ')'
     }
     if(error.response.status === HttpStatusCode.Unauthorized){
-      newError.message = 'Accès refusé par le serveur'
+      newError.message = 'Accès refusé'
       newError.description = error.response.data.message + '(' + error.config.url + ')'
     }
     if(error.response.status === HttpStatusCode.BadRequest){
-      newError.message = 'Accès rejeté par le serveur'
+      newError.message = 'Accès rejeté'
       newError.description = 'Mauvaise requête : contrôlez les paramètres de votre requête et observez les logs du serveur pour plus d\'informations ' + '(' + error.config.url + ')'
     }
     if(error.response.status.toString().startsWith('5')){
