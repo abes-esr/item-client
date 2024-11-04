@@ -104,7 +104,7 @@
         </td>
         <td @click="onRowClick(item)" class="text-center">
           <v-progress-linear v-model="item.pourcentageProgressionTraitement" height="18"
-                             :color="item.pourcentageProgressionTraitement === 100 ? 'success' : 'grey-lighten-1'"
+                             :color="colorProgressBar(item)"
                              style="border: 1px solid grey; font-weight: bolder">
             {{ item.pourcentageProgressionTraitement }} %
           </v-progress-linear>
