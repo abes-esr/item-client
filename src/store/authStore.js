@@ -31,7 +31,6 @@ export const useAuthStore = defineStore('auth', {
       this.user = user;
     },
     isAdmin() {
-      console.log(JSON.stringify(this.user))
       return this.user.role === 'ADMIN';
     }
   },
