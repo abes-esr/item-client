@@ -163,8 +163,11 @@ export class ItemService {
     return this.client.get('applicationDetails');
   }
 
-  getHealthOfServices(){
-    return this.client.get('applicationStatutServices')
+  async getHealthOfServices(){
+    return this.client.get('applicationStatutServices').then(response => {
+      console.log(response.data)
+      return response.data
+    })
   }
 }
 
