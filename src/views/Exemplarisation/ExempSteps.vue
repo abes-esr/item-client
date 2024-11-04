@@ -108,7 +108,7 @@
 
 <script setup>
 
-import { onMounted, ref } from 'vue';
+import {onMounted, ref} from 'vue'
 import itemService from '@/service/ItemService';
 import router from '@/router';
 import SelectFile from '@/components/SelectFile.vue';
@@ -118,6 +118,7 @@ import Simulation from "@/components/Simulation.vue";
 import DialogLancerTraitement from '@/components/Dialog/DialogLancerTraitement.vue';
 import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
 import RecapDemande from '@/components/RecapDemande.vue';
+import {useAuthStore} from '@/store/authStore'
 
 const emits = defineEmits(['backendError', 'backendSuccess', 'login-success'])
 const props = defineProps({id : {type: String}});

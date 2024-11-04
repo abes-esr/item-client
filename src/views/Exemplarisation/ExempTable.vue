@@ -134,6 +134,7 @@ import DialogCommentaire from '@/components/Dialog/DialogCommentaire.vue';
 import itemService from '@/service/ItemService';
 import MenuDownloadFile from '@/components/MenuDownloadFile.vue';
 import moment from 'moment';
+import {useAuthStore} from '@/store/authStore'
 //Emit
 const emit = defineEmits(['backendError', 'backendSuccess']);
 
@@ -258,6 +259,8 @@ const isDialogOpen = computed(() => {
 });
 //Actives or archives demands displayed
 const isActiveDemandesDisplayed = ref(false);
+
+const isAdmin = useAuthStore().isAdmin();
 
 //Data initialisation
 onMounted(() => {
