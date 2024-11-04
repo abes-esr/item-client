@@ -137,7 +137,7 @@ const headingsDemandes = ref([
     align: 'center'
   },
   {
-    title: 'Demande',
+    title: 'N° de Demande',
     key: 'id',
     align: 'center'
   },

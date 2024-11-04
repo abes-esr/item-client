@@ -102,8 +102,8 @@
           <v-chip color="error" variant="flat" v-else-if="item.etatDemande === 'En erreur'">En erreur</v-chip>
         </td>
         <td @click="onRowClick(item)" class="text-center">
-          <v-progress-linear v-model="item.pourcentageProgressionTraitement" :height="18" :striped="false"
-                             color="grey-lighten-1" style="border: 1px solid grey; font-weight: bolder">
+          <v-progress-linear v-model="item.pourcentageProgressionTraitement" height="18"
+                             :color="item.pourcentageProgressionTraitement === 100 ? 'success' : 'grey-lighten-1'" style="border: 1px solid grey; font-weight: bolder">
             {{ item.pourcentageProgressionTraitement }} %
           </v-progress-linear>
         </td>
@@ -144,7 +144,7 @@ const headingsDemandes = [
     align: 'center'
   },
   {
-    title: 'Demande',
+    title: 'N° de Demande',
     key: 'id',
     align: 'center'
   },
