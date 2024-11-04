@@ -1,9 +1,11 @@
 <template>
   <v-container fluid>
-    <v-chip :variant="isArchiveDemandesDisplayed ? 'plain' : 'tonal'" style="margin-right: 10px" @click="switchArchiveActiveDisplay(!isArchiveDemandesDisplayed)">
+    <v-chip :variant="isArchiveDemandesDisplayed ? 'plain' : 'tonal'" style="margin-right: 10px"
+            @click="switchArchiveActiveDisplay(!isArchiveDemandesDisplayed)">
       Suppression d'exemplaires
     </v-chip>
-    <v-chip :variant="!isArchiveDemandesDisplayed ? 'plain' : 'tonal'" @click="switchArchiveActiveDisplay(!isArchiveDemandesDisplayed)">
+    <v-chip :variant="!isArchiveDemandesDisplayed ? 'plain' : 'tonal'"
+            @click="switchArchiveActiveDisplay(!isArchiveDemandesDisplayed)">
       Demandes archivées
     </v-chip>
     <v-chip variant="text">
@@ -84,11 +86,13 @@
           <v-chip color="success" variant="flat" v-else-if="item.etatDemande === 'Terminé'">Terminé</v-chip>
           <v-chip color="archived" variant="flat" v-else-if="item.etatDemande === 'Archivé'">Archivé</v-chip>
           <v-chip color="error" variant="flat" v-else-if="item.etatDemande === 'En erreur'">En erreur</v-chip>
-          <v-chip color="info" variant="flat" v-else>{{item.etatDemande}}</v-chip> <!-- Cas : ne correspont à aucun cas -->
+          <v-chip color="info" variant="flat" v-else>{{ item.etatDemande }}</v-chip>
+          <!-- Cas : ne correspont à aucun cas -->
         </td>
         <td @click="onRowClick(item)" class="text-center">
           <v-progress-linear v-model="item.pourcentageProgressionTraitement" height="18"
-                             :color="item.pourcentageProgressionTraitement === 100 ? 'success' : 'grey-lighten-1'" style="border: 1px solid grey; font-weight: bolder">
+                             :color="colorProgressBar(item)"
+                             style="border: 1px solid grey; font-weight: bolder">
             {{ item.pourcentageProgressionTraitement }} %
           </v-progress-linear>
         </td>
@@ -330,7 +334,7 @@ async function archiverDemande(item) {
   try {
     await demandesService.archiverDemande('SUPP', item.id);
     // Mettre à jour les données après l'archivage réussi
-    await loadItems('SUPP',isArchiveDemandesDisplayed.value);
+    await loadItems('SUPP', isArchiveDemandesDisplayed.value);
     emit('backendSuccess');
   } catch (error) {
     console.error(error);
@@ -352,8 +356,20 @@ function saveComment() {
 }
 
 function throwError(error) {
-  emit('backendError',error);
+  emit('backendError', error);
 }
+
+function colorProgressBar(item) {
+  if (item.pourcentageProgressionTraitement === 100) {
+    if (item.etatDemande === 'Terminé') {
+      return 'success';
+    } else if (item.etatDemande === 'En erreur') {
+      return 'error';
+    }
+  }
+  return 'grey-lighten-1';
+}
+
 </script>
 
 <style scoped>
