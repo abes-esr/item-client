@@ -118,7 +118,6 @@ import Simulation from "@/components/Simulation.vue";
 import DialogLancerTraitement from '@/components/Dialog/DialogLancerTraitement.vue';
 import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
 import RecapDemande from '@/components/RecapDemande.vue';
-import {useAuthStore} from '@/store/authStore'
 
 const emits = defineEmits(['backendError', 'backendSuccess', 'login-success'])
 const props = defineProps({id : {type: String}});
