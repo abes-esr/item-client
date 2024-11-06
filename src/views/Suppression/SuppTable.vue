@@ -9,7 +9,7 @@
       Demandes archivées
     </v-chip>
     <v-chip variant="text">
-      <v-tooltip activator="parent" location="bottom">
+      <v-tooltip v-if="isAdmin" activator="parent" location="bottom">
         <template v-slot:activator="{ props }">
           <label>
             <input type="checkbox" v-model="extendedAllILN" style="margin-right: 5px"
