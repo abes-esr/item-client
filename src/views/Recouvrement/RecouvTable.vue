@@ -26,7 +26,7 @@
       </v-tooltip>
     </v-chip>
   </v-container>
-  <v-data-table :headers="headingsDemandes" :items="contentsDemandesFrontFiltered" :items-length="totalItemsFound"
+  <v-data-table :headers="filteredHeadingsDemandes" :items="contentsDemandesFrontFiltered" :items-length="totalItemsFound"
                 :loading="!isDataLoaded" show-expand :sort-by="sortBy"
                 item-key="id">
     <template v-slot:body.prepend>
@@ -125,27 +125,32 @@ import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
 import DialogCommentaire from '@/components/Dialog/DialogCommentaire.vue';
 import MenuDownloadFile from '@/components/MenuDownloadFile.vue';
 import moment from 'moment/moment';
+import {useAuthStore} from "@/store/authStore";
 
 //Emit
 const emit = defineEmits(['backendError', 'backendSuccess']);
 
 //Data
+const isAdmin = useAuthStore().isAdmin();
 const extendedAllILN = ref(false);
-const headingsDemandes = ref([
+const headingsDemandes = [
   {
     title: '',
     key: 'data-table-expand',
-    align: 'center'
+    align: 'center',
+    display: true,
   },
   {
     title: 'N° de Demande',
     key: 'id',
-    align: 'center'
+    align: 'center',
+    display: true,
   },
   {
     title: 'Crée le',
     key: 'dateCreation',
     align: 'center',
+    display: true,
     sort: (d1, d2) => {
       const date1 = moment(d1, 'DD/MM/yyyy HH:mm')
         .valueOf();
@@ -160,6 +165,7 @@ const headingsDemandes = ref([
     title: 'Mise à jour',
     key: 'dateModification',
     align: 'center',
+    display: true,
     sort: (d1, d2) => {
       const date1 = moment(d1, 'DD/MM/yyyy HH:mm')
         .valueOf();
@@ -173,42 +179,53 @@ const headingsDemandes = ref([
   {
     title: 'ILN',
     key: 'iln',
-    align: 'center'
+    align: 'center',
+    display: isAdmin,
   },
   {
     title: 'RCR',
     key: 'rcr',
-    align: 'center'
+    align: 'center',
+    display: true,
   },
   {
     title: 'Index',
     key: 'indexRecherche',
-    align: 'center'
+    align: 'center',
+    display: true,
   },
   {
     title: 'Statut',
     key: 'etatDemande',
-    align: 'center'
+    align: 'center',
+    display: true,
   },
   {
     title: 'Progression',
     key: 'pourcentageProgressionTraitement',
     value: 'pourcentageProgressionTraitement',
-    align: 'center'
+    align: 'center',
+    display: true,
   },
   {
     title: 'Fichiers',
     key: 'filesToDownload',
     value: 'filesToDownload',
-    align: 'center'
+    align: 'center',
+    display: true,
   },
   {
     title: 'Action',
     key: 'archiveOrCancel',
     value: 'archiveOrCancel',
-    align: 'center'
+    align: 'center',
+    display: true,
   }
-]);
+];
+const filteredHeadingsDemandes = computed(() =>
+  headingsDemandes.filter(heading => heading.display !== false)
+)
+
 const listStatut = [
   'En saisie',
   'En attente',
