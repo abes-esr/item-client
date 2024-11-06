@@ -6,11 +6,11 @@ export const useAuthStore = defineStore('auth', {
     token: sessionStorage.getItem('token'),
     authenticated: !!sessionStorage.getItem('token'),
   }),
-  
+
   getters: {
     getUser: (state) => state.user,
     isAuthenticated: (state) => state.authenticated,
-    getToken: (state) => state.token
+    getToken: (state) => state.token,
   },
   actions: {
     login(user, token) {
@@ -27,11 +27,11 @@ export const useAuthStore = defineStore('auth', {
       sessionStorage.setItem('user', JSON.stringify(this.user))
       sessionStorage.setItem('token', this.token);
     },
-    setToken(token) {
-      this.token = token;
-    },
     setUser(user){
       this.user = user;
+    },
+    isAdmin() {
+      return this.user.role === 'ADMIN';
     }
   },
 });
