@@ -163,14 +163,14 @@ router.beforeEach(async (to, from, next) => {
         if (valid.data) {
           next();
         } else {
-          console.error('Token invalide auprès du serveur');
+          console.error('Token invalide : vous ne pouvez pas accéder à l\'application');
           itemService.logout();
-          next('/identification');
+          next({ name: 'identification', query: { error: 'Token invalide : vous ne pouvez pas accéder à l\'application' } });
         }
       } catch (error) {
         console.error(error);
         itemService.logout();
-        next('/identification');
+        next({ name: 'identification', query: { error: 'Service indisponible : merci de réessayer ultérieurement' } });
       }
     } else {
       next('/identification');

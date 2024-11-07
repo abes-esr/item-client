@@ -4,11 +4,12 @@
     <v-chip :variant="isActiveDemandesDisplayed ? 'plain' : 'tonal'" style="margin-right: 10px"
             @click="switchArchiveActiveDisplay(!isActiveDemandesDisplayed)">Créations d'exemplaires
     </v-chip>
-    <v-chip :variant="!isActiveDemandesDisplayed ? 'plain' : 'tonal'" @click="switchArchiveActiveDisplay(!isActiveDemandesDisplayed)">Créations
+    <v-chip :variant="!isActiveDemandesDisplayed ? 'plain' : 'tonal'"
+            @click="switchArchiveActiveDisplay(!isActiveDemandesDisplayed)">Créations
       d'exemplaires archivées
     </v-chip>
     <v-chip variant="text">
-      <v-tooltip activator="parent" location="bottom">
+      <v-tooltip v-if="isAdmin" activator="parent" location="bottom">
         <template v-slot:activator="{ props }">
           <label>
             <input type="checkbox" v-model="extendedAllILN" style="margin-right: 5px"
@@ -26,7 +27,7 @@
       </v-tooltip>
     </v-chip>
   </v-container>
-  <v-data-table :headers="headingsDemandes" :items="contentsDemandesFrontFiltered" :items-length="totalItemsFound"
+  <v-data-table :headers="filteredHeadingsDemandes" :items="contentsDemandesFrontFiltered" :items-length="totalItemsFound"
                 :loading="!isDataLoaded" show-expand :sort-by="sortBy"
                 item-key="id"
   >
@@ -102,8 +103,9 @@
           <v-chip color="error" variant="flat" v-else-if="item.etatDemande === 'En erreur'">En erreur</v-chip>
         </td>
         <td @click="onRowClick(item)" class="text-center">
-          <v-progress-linear v-model="item.pourcentageProgressionTraitement" :height="18" :striped="false"
-                             color="grey-lighten-1" style="border: 1px solid grey; font-weight: bolder">
+          <v-progress-linear v-model="item.pourcentageProgressionTraitement" height="18"
+                             :color="colorProgressBar(item)"
+                             style="border: 1px solid grey; font-weight: bolder">
             {{ item.pourcentageProgressionTraitement }} %
           </v-progress-linear>
         </td>
@@ -128,33 +130,41 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import router from '@/router';
 import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
-import DialogCommentaire from "@/components/Dialog/DialogCommentaire.vue";
+import DialogCommentaire from '@/components/Dialog/DialogCommentaire.vue';
 import itemService from '@/service/ItemService';
-import MenuDownloadFile from "@/components/MenuDownloadFile.vue";
-import moment from "moment";
+import MenuDownloadFile from '@/components/MenuDownloadFile.vue';
+import moment from 'moment';
+import {useAuthStore} from '@/store/authStore'
 //Emit
 const emit = defineEmits(['backendError', 'backendSuccess']);
 
 //Data
+const isAdmin = useAuthStore().isAdmin();
 const extendedAllILN = ref(false);
+
 const headingsDemandes = [
   {
     title: '',
     key: 'data-table-expand',
-    align: 'center'
+    align: 'center',
+    display: true,
   },
   {
-    title: 'Demande',
+    title: 'N° de Demande',
     key: 'id',
-    align: 'center'
+    align: 'center',
+    display: true,
   },
   {
     title: 'Crée le',
     key: 'dateCreation',
     align: 'center',
-    sort:(d1,d2) => {
-      const date1 = moment(d1, "DD/MM/yyyy HH:mm").valueOf();
-      const date2 = moment(d2, "DD/MM/yyyy HH:mm").valueOf();
+    display: true,
+    sort: (d1, d2) => {
+      const date1 = moment(d1, 'DD/MM/yyyy HH:mm')
+        .valueOf();
+      const date2 = moment(d2, 'DD/MM/yyyy HH:mm')
+        .valueOf();
       if (date1 > date2) return 1;
       if (date1 < date2) return -1;
       return 0;
@@ -164,9 +174,12 @@ const headingsDemandes = [
     title: 'Mise à jour',
     key: 'dateModification',
     align: 'center',
-    sort:(d1,d2) => {
-      const date1 = moment(d1, "DD/MM/yyyy HH:mm").valueOf();
-      const date2 = moment(d2, "DD/MM/yyyy HH:mm").valueOf();
+    display: true,
+    sort: (d1, d2) => {
+      const date1 = moment(d1, 'DD/MM/yyyy HH:mm')
+        .valueOf();
+      const date2 = moment(d2, 'DD/MM/yyyy HH:mm')
+        .valueOf();
       if (date1 > date2) return 1;
       if (date1 < date2) return -1;
       return 0;
@@ -175,47 +188,59 @@ const headingsDemandes = [
   {
     title: 'ILN',
     key: 'iln',
-    align: 'center'
+    align: 'center',
+    display: isAdmin,
   },
   {
     title: 'RCR',
     key: 'rcr',
-    align: 'center'
+    align: 'center',
+    display: true,
   },
   {
     title: 'Type',
     key: 'typeExemp',
-    align: 'center'
+    align: 'center',
+    display: true,
   },
   {
     title: 'Index',
     key: 'indexRecherche',
-    align: 'center'
+    align: 'center',
+    display: true,
   },
   {
     title: 'Statut',
     key: 'etatDemande',
-    align: 'center'
+    align: 'center',
+    display: true,
   },
   {
     title: 'Progression',
     key: 'pourcentageProgressionTraitement',
     value: 'pourcentageProgressionTraitement',
-    align: 'center'
+    align: 'center',
+    display: true,
   },
   {
     title: 'Fichiers',
     key: 'filesToDownload',
     value: 'filesToDownload',
-    align: 'center'
+    align: 'center',
+    display: true,
   },
   {
     title: 'Action',
     key: 'archiveOrCancel',
     value: 'archiveOrCancel',
-    align: 'center'
+    align: 'center',
+    display: true,
   }
 ];
+const filteredHeadingsDemandes = computed(() =>
+  headingsDemandes.filter(heading => heading.display !== false)
+)
+
 const listStatut = [
   'En saisie',
   'En attente',
@@ -229,11 +254,14 @@ const contentsDemandesFrontFiltered = ref([]);
 const totalItemsFound = ref(0);
 const suppDialog = ref(false);
 const suppDemande = ref({});
-const sortBy = ref([{ key: 'dateModification', order: 'desc' }]);
 
+const sortBy = ref([{
+  key: 'dateModification',
+  order: 'desc'
+}]);
 //Progress bar displayed while fetching data
-const isDataLoaded = ref(false);
 
+const isDataLoaded = ref(false);
 //Search fields columns
 const numDemandeSearchField = ref('');
 const dateCreationSearchField = ref('');
@@ -245,9 +273,10 @@ const indexRechercheSearchField = ref('');
 const statutSearchField = ref();
 let polling;
 const isDialogOpen = computed(() => {
-  return !!contentsDemandesFrontFiltered.value.find(item => item.expanded === true)
+  return !!contentsDemandesFrontFiltered.value.find(item => item.expanded === true);
 });
 //Actives or archives demands displayed
+
 const isActiveDemandesDisplayed = ref(false);
 
 //Data initialisation
@@ -263,7 +292,7 @@ onMounted(() => {
       listTypeExemp.value.push('Non défini');
     });
   polling = setInterval(() => {
-    if(!isDialogOpen.value) {
+    if (!isDialogOpen.value) {
       loadItems('EXEMP', isActiveDemandesDisplayed.value)
         .then(() => {
           filterItems();
@@ -274,7 +303,8 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   clearInterval(polling);
-})
+});
+
 function switchArchiveActiveDisplay(value) {
   isActiveDemandesDisplayed.value = value;
   loadItems('EXEMP', isActiveDemandesDisplayed.value);
@@ -351,14 +381,26 @@ function onRowClick(item) {
   }
 }
 
-function saveComment(){
-  loadItems('EXEMP',isActiveDemandesDisplayed.value).then(()=>{
-    filterItems();
-  })
+function saveComment() {
+  loadItems('EXEMP', isActiveDemandesDisplayed.value)
+    .then(() => {
+      filterItems();
+    });
 }
 
 function throwError(error) {
-  emit('backendError',error);
+  emit('backendError', error);
+}
+
+function colorProgressBar(item) {
+  if (item.pourcentageProgressionTraitement === 100) {
+    if (item.etatDemande === 'Terminé') {
+      return 'success';
+    } else if (item.etatDemande === 'En erreur') {
+      return 'error';
+    }
+  }
+  return 'grey-lighten-1';
 }
 </script>
 

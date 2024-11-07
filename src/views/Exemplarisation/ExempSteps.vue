@@ -108,7 +108,7 @@
 
 <script setup>
 
-import { onMounted, ref } from 'vue';
+import {onMounted, ref} from 'vue'
 import itemService from '@/service/ItemService';
 import router from '@/router';
 import SelectFile from '@/components/SelectFile.vue';
