@@ -152,13 +152,7 @@ const headingsDemandes = [
     key: 'id',
     align: 'center',
     display: true,
-  },
-  {
-    title: 'Nb d\'exemplaires',
-    key: 'nbex',
-    align: 'center',
-    display: true,
-  },
+  },z
   {
     title: 'Crée le',
     key: 'dateCreation',
@@ -268,7 +262,6 @@ const isDataLoaded = ref(false);
 
 //Search fields columns
 const numDemandeSearchField = ref('');
-const nbExemplairesSearchField = ref('');
 const dateCreationSearchField = ref('');
 const dateModificationSearchField = ref('');
 const ilnSearchField = ref('');
@@ -337,8 +330,6 @@ function filterItems() {
   contentsDemandesFrontFiltered.value = contentsDemandesFromServer.value.filter(demande => {
     const matchesNumDemande = numDemandeSearchField.value === '' || demande.id.toString()
       .includes(numDemandeSearchField.value);
-    const matchesNbExemplaires = nbExemplairesSearchField.value === '' || demande.nbex.toString()
-      .includes(nbExemplairesSearchField.value);
     const matchesDateCreation = dateCreationSearchField.value === '' || demande.dateCreation.toString()
       .includes(dateCreationSearchField.value);
     const matchesDateModification = dateModificationSearchField.value === '' || demande.dateModification.toString()
@@ -351,7 +342,7 @@ function filterItems() {
     const matchesTraitement = traitementSearchField.value === undefined || traitementSearchField.value === null || traitementSearchField.value === '' || (demande.traitement && demande.traitement.includes(traitementSearchField.value)) || (!demande.traitement && traitementSearchField.value === 'Non défini');
     const matchesEtatDemande = statutSearchField.value === undefined || statutSearchField.value === null || statutSearchField.value === '' || demande.etatDemande.toString()
       .includes(statutSearchField.value) || ((statutSearchField.value === 'En saisie') && (demande.etatDemande === 'En simulation' || demande.etatDemande === 'En préparation' || demande.etatDemande === 'Préparée' || demande.etatDemande === 'A compléter'));
-    return matchesNumDemande && matchesNbExemplaires && matchesDateCreation && matchesDateModification && matchesRCR && matchesILN && matchesZone && matchesTraitement && matchesEtatDemande;
+    return matchesNumDemande && matchesDateCreation && matchesDateModification && matchesRCR && matchesILN && matchesZone && matchesTraitement && matchesEtatDemande;
   });
 }
 
