@@ -38,6 +38,10 @@
                         variant="underlined" append-inner-icon="mdi-magnify"></v-text-field>
         </td>
         <td>
+          <v-text-field v-model="nbExemplairesSearchField" hide-details @input="filterItems"
+                        variant="underlined" append-inner-icon="mdi-magnify"></v-text-field>
+        </td>
+        <td>
           <v-text-field v-model="dateCreationSearchField" hide-details @input="filterItems"
                         variant="underlined" append-inner-icon="mdi-magnify"></v-text-field>
         </td>
@@ -83,6 +87,7 @@
           </v-btn>
         </td>
         <td @click="onRowClick(item)" class="text-center">{{ item.id }}</td>
+        <td @click="onRowClick(item)" class="text-center">{{ item.nbExemplaires }}</td>
         <td @click="onRowClick(item)" class="text-center">{{ item.dateCreation }}</td>
         <td @click="onRowClick(item)" class="text-center">{{ item.dateModification }}</td>
         <td @click="onRowClick(item)" class="text-center">{{ item.iln }}</td>
@@ -155,7 +160,7 @@ const headingsDemandes = [
   },
   {
     title: 'Nb d\'exemplaires',
-    key: 'nbex',
+    key: 'nbExemplaires',
     align: 'center',
     display: true,
   },
@@ -337,7 +342,7 @@ function filterItems() {
   contentsDemandesFrontFiltered.value = contentsDemandesFromServer.value.filter(demande => {
     const matchesNumDemande = numDemandeSearchField.value === '' || demande.id.toString()
       .includes(numDemandeSearchField.value);
-    const matchesNbExemplaires = nbExemplairesSearchField.value === '' || demande.nbex.toString()
+    const matchesNbExemplaires = nbExemplairesSearchField.value === '' || demande.nbExemplaires.toString()
       .includes(nbExemplairesSearchField.value);
     const matchesDateCreation = dateCreationSearchField.value === '' || demande.dateCreation.toString()
       .includes(dateCreationSearchField.value);
