@@ -152,7 +152,7 @@ const headingsDemandes = [
     key: 'id',
     align: 'center',
     display: true,
-  },z
+  },
   {
     title: 'Crée le',
     key: 'dateCreation',
