@@ -24,7 +24,7 @@ export class ItemService {
 
   login(login, password) {
     const url = import.meta.env.VITE_API_URL + `signin`;
-    console.info('appel:' + url);
+    //console.info('appel:' + url);
 
     return this.client.post(`signin`, {username: login, password: password})
       .then((response) => {
@@ -56,27 +56,26 @@ export class ItemService {
   }
 
   fetchDemandes(type, archive, extensionIln) {
-    console.info('appel: ' + import.meta.env.VITE_API_URL + `demandes/${type}?archive=${archive}&extension=${extensionIln}`)
+    //console.info('appel: ' + import.meta.env.VITE_API_URL + `demandes/${type}?archive=${archive}&extension=${extensionIln}`)
     return this.client.get(`demandes/${type}?archive=${archive}&extension=${extensionIln}`)
   }
   archiverDemande(type, numDemande) {
     const url = `archiverDemande/${type}/${numDemande}`;
-    console.info('appel: ' + import.meta.env.VITE_API_URL + url);
+    //console.info('appel: ' + import.meta.env.VITE_API_URL + url);
     return this.client.get(url);
   }
 
   checkToken(){
     const url = `checkToken`;
-    console.info('appel: ' + import.meta.env.VITE_API_URL + url);
+    //console.info('appel: ' + import.meta.env.VITE_API_URL + url);
     return this.client.get(url)
   }
 
-  //TODO MAJ STORE
   modifierEmail(id, email){
     const config = { headers: {'Content-Type': 'text/plain'} };
     return this.client.patch(`utilisateurs/${id}`, email, config);
   }
-  //TODO MAJ STORE
+
   creerEmail(id, email){
     const config = { headers: {'Content-Type': 'text/plain'} };
     return this.client.post(`utilisateurs/${id}`, email, config);
@@ -165,7 +164,6 @@ export class ItemService {
 
   async getHealthOfServices(){
     return this.client.get('applicationStatutServices').then(response => {
-      console.log(response.data)
       return response.data
     })
   }
