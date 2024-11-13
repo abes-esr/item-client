@@ -39,6 +39,10 @@
                         variant="underlined" append-inner-icon="mdi-magnify"></v-text-field>
         </td>
         <td>
+          <v-text-field v-model="nbExemplairesSearchField" hide-details @input="filterItems"
+                        variant="underlined" append-inner-icon="mdi-magnify"></v-text-field>
+        </td>
+        <td>
           <v-text-field v-model="dateCreationSearchField" hide-details @input="filterItems"
                         variant="underlined" append-inner-icon="mdi-magnify"></v-text-field>
         </td>
@@ -83,6 +87,7 @@
           </v-btn>
         </td>
         <td @click="onRowClick(item)" class="text-center">{{ item.id }}</td>
+        <td @click="onRowClick(item)" class="text-center">{{ item.nbExemplaires }}</td>
         <td @click="onRowClick(item)" class="text-center">{{ item.dateCreation }}</td>
         <td @click="onRowClick(item)" class="text-center">{{ item.dateModification }}</td>
         <td @click="onRowClick(item)" class="text-center">{{ item.iln }}</td>
@@ -152,6 +157,12 @@ const headingsDemandes = [
   {
     title: 'N° de Demande',
     key: 'id',
+    align: 'center',
+    display: true,
+  },
+  {
+    title: 'Nb d\'exemplaires',
+    key: 'nbExemplaires',
     align: 'center',
     display: true,
   },
@@ -264,6 +275,7 @@ const sortBy = ref([{
 const isDataLoaded = ref(false);
 //Search fields columns
 const numDemandeSearchField = ref('');
+const nbExemplairesSearchField = ref('');
 const dateCreationSearchField = ref('');
 const dateModificationSearchField = ref('');
 const ilnSearchField = ref('');
@@ -318,7 +330,6 @@ async function loadItems(type, archive) {
       ...item,
       expanded: false
     }));
-
     isDataLoaded.value = true;
     emit('backendSuccess');
   } catch (error) {
@@ -331,6 +342,8 @@ function filterItems() {
   contentsDemandesFrontFiltered.value = contentsDemandesFromServer.value.filter(demande => {
     const matchesNumDemande = numDemandeSearchField.value === '' || demande.id.toString()
       .includes(numDemandeSearchField.value);
+    const matchesNbExemplaires = nbExemplairesSearchField.value === '' || demande.nbExemplaires.toString()
+      .includes(nbExemplairesSearchField.value);
     const matchesDateCreation = dateCreationSearchField.value === '' || demande.dateCreation.toString()
       .includes(dateCreationSearchField.value);
     const matchesDateModification = dateModificationSearchField.value === '' || demande.dateModification.toString()
@@ -343,7 +356,7 @@ function filterItems() {
     const matchesIndexSearch = indexRechercheSearchField.value === '' || demande.indexRecherche && demande.indexRecherche.includes(indexRechercheSearchField.value);
     const matchesEtatDemande = statutSearchField.value === undefined || statutSearchField.value === null || statutSearchField.value === '' || demande.etatDemande.toString()
       .includes(statutSearchField.value) || ((statutSearchField.value === 'En saisie') && (demande.etatDemande === 'En simulation' || demande.etatDemande === 'En préparation' || demande.etatDemande === 'A compléter'));
-    return matchesNumDemande && matchesDateCreation && matchesDateModification && matchesRCR && matchesILN && matchesTypeExemp && matchesIndexSearch && matchesEtatDemande;
+    return matchesNumDemande && matchesNbExemplaires && matchesDateCreation && matchesDateModification && matchesRCR && matchesILN && matchesTypeExemp && matchesIndexSearch && matchesEtatDemande;
   });
 }
 
