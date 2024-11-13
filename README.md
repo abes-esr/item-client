@@ -7,30 +7,52 @@
 - URL de production : https://item.sudoc.fr
 - Documentation utilisateur : http://documentation.abes.fr/aideitem/index.html
 
-Ce dépôt héberge le code source de l'interface utilisateur de item (développée en VueJS). 
-Cette interface utilisateur fonctionne avec son API développée en Java : https://github.com/abes-esr/item-api/  
-Et l'application item complète peut être déployée via Docker à l'aide de ce dépôt : https://github.com/abes-esr/item-docker/
-Les principaux plugins sont VueJs 3, Vite, Pinia, Vue-router, Vuetify et Axios.
+Ce dépôt héberge le code source de l'interface utilisateur de Item (développée en VueJS) codée en VueJs 3. 
+Cette interface utilisateur fonctionne en lien avec son API développée en Java : https://github.com/abes-esr/item-api/  
+L'application Item complète peut être déployée via Docker à l'aide de ce dépôt : https://github.com/abes-esr/item-docker/ . 
+Les principaux plugins installés dans ce projet sont : Vite, Pinia, Vue-router, Vuetify et Axios.
+
+Item nécessite de se logger. Vous devrez donc disposer d'un droit d'accès à l'application pour pouvoir l'utiliser.
+
+## Usage
+
+Item permet de :
+* Calculer ses taux de recouvrement
+* Gérer ses taux de recouvrement
+* Créer des exemplaires
+* Gérer ses créations d'exemplaires
+* Modifier des exemplaires
+* Gérer ses modifications d'exemplaires
+* Supprimer des exemplaires
+* Gérer ses suppressions d'exemplaires
+
+Chacune de ces demandes sera envoyée à item-back qui effectuera les traitements demandés.
+
+Des emails récapitulatifs seront envoyés durant les traitements afin d'informer sur l'état de leur réalisation. Un email valide est donc nécessaire.
+
 
 ## Project setup
 ```
 npm install
 ```
-une fois installer, il faut copier le ``.env-dist`` pour avoir un ``.env`` et completer les variables d'environement, tel que l'url du back.
+Une fois installée, il faut dupliquer le ``.env-dist`` puis renommer le duplicata en ``.env``. Completer ensuite les variables d'environnement dans le ``.env``.
 
 ### Compiles and hot-reloads for development
 ```
 npm run dev
 ```
-l'url est précisé dans le resultat de la ligne de commande si dessus.
+Une fois cette commande lancée, l'url de l'application sera affichée (dans le terminal ou dans les logs, selon l'environnement de déploiement).
+
 ### Compiles for build
 ```
 npm run build
 ```
+
 ### Compiles for preview
 ```
 npm run preview
 ```
+
 ### Compiles for prettier
 ```
 npm run prettier
