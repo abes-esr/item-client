@@ -63,7 +63,7 @@
 
     <v-list density="compact" nav>
       <v-list-item>
-        <v-list-item-title class="text-h6 pb-1">Creations</v-list-item-title>
+        <v-list-item-title class="text-h6 pb-1">Créations</v-list-item-title>
       </v-list-item>
 
       <v-list-item @click="navigateTo('exemplarisation')">
