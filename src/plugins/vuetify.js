@@ -146,5 +146,8 @@ export default createVuetify({
       itemDarkTheme,
       itemRngTheme
     },
+  },
+  icons: {
+    defaultSet: 'mdi',
   }
 })

@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer v-if="authStore.isAuthenticated && drawer" width="18em" temporary>
+  <v-navigation-drawer v-if="authStore.isAuthenticated" v-model="drawerInside">
     <v-list-item three-line>
       <v-list-item>
         <v-list-item-title class="text-h6 text-wrap">
@@ -128,11 +128,32 @@
 
     </v-list>
 
+    <v-divider></v-divider>
+
+    <v-list>
+      <v-list-item class="ma-0 pa-0">
+        <v-row class="pl-2">
+          <v-col class="d-flex flex-row ml-1 pl-0 pr-0" cols="3">
+            <v-switch
+              class="ml-3 mr-0 v-input--expand"
+              v-model="fixNavBarModel"
+              hide-details
+              color="primary"
+            >
+            </v-switch>
+          </v-col>
+          <v-col class="d-flex flex-column justify-center pl-1">
+            <span class="labelSwitchNavBar">Encrer le menu de navigation</span>
+          </v-col>
+        </v-row>
+      </v-list-item>
+    </v-list>
+
   </v-navigation-drawer>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import {computed, ref} from 'vue'
 import { useRouter } from 'vue-router'
 import { useTheme } from 'vuetify'
 import { useAuthStore } from '@/store/authStore'
@@ -144,6 +165,12 @@ const props = defineProps({
   },
 })
 
+const fixNavBarModel = ref(false)
+
+const drawerInside = computed(() => {
+  return props.drawer;
+})
+
 const router = useRouter()
 const theme = useTheme()
 const authStore = useAuthStore()
@@ -152,7 +179,7 @@ const emit = defineEmits(['close'])
 
 function navigateTo(routeName) {
   router.push({ name: routeName }).catch(err => {})
-  emit('close')
+  fixNavBarModel.value ? '' : emit('close')
 }
 
 function toggleTheme() {
@@ -191,5 +218,11 @@ de l'ILN ${user.iln}`
 <style scoped>
 p {
   white-space: pre-line;
+}
+
+.labelSwitchNavBar {
+  font-size: 0.8em;
+  font-weight: 500;
+  text-decoration-color: black;
 }
 </style>
