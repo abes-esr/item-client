@@ -16,7 +16,7 @@
               <span style="font-size: 1.3em; font-weight: 500; color: #326bb1">{{ type.message }}</span>
 						</v-row>
 						<v-row>
-							<v-col v-bind="props" :class="`btn-perso d-flex justify-center elevation-${isHovering ? 6 : 2} pa-5 ma-1 d-flex`" @click="onClick(type)">
+							<v-col v-bind="props" :class="`btn-perso d-flex justify-center elevation-${isHovering ? 6 : 2} pa-5 ma-1 d-flex`" @click="onClick(type.type)">
 								<v-row class="align-center">
 									<v-col cols="12" sm="3" class="d-flex justify-center">
 										<v-icon size="x-large" dark color="primary"> mdi-file-document-outline </v-icon>
