@@ -1,11 +1,10 @@
 <template>
   <v-container fluid>
     <v-chip :variant="isActiveDemandesDisplayed ? 'plain' : 'tonal'" style="margin-right: 10px"
-            @click="switchArchiveActiveDisplay(!isActiveDemandesDisplayed)">Calculs de taux de recouvrement
+            @click="switchArchiveActiveDisplay(!isActiveDemandesDisplayed)">Demandes de recouvrement
     </v-chip>
     <v-chip :variant="!isActiveDemandesDisplayed ? 'plain' : 'tonal'"
-            @click="switchArchiveActiveDisplay(!isActiveDemandesDisplayed)">Calculs de taux
-      de recouvrement archivés
+            @click="switchArchiveActiveDisplay(!isActiveDemandesDisplayed)">Demandes de recouvrement archivées
     </v-chip>
     <v-chip variant="text">
       <v-tooltip v-if="isAdmin" activator="parent" location="bottom">
