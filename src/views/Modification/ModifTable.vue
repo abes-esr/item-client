@@ -2,11 +2,10 @@
   <v-container fluid>
     <!--:variant="isActiveDemandesDisplayed ? 'plain' : 'tonal'" -->
     <v-chip :variant="isActiveDemandesDisplayed ? 'plain' : 'tonal'" style="margin-right: 10px"
-            @click="switchArchiveActiveDisplay(!isActiveDemandesDisplayed)">Modification d'exemplaires
+            @click="switchArchiveActiveDisplay(!isActiveDemandesDisplayed)">Demandes de modification
     </v-chip>
     <v-chip :variant="!isActiveDemandesDisplayed ? 'plain' : 'tonal'"
-            @click="switchArchiveActiveDisplay(!isActiveDemandesDisplayed)">Modification
-      d'exemplaires archivées
+            @click="switchArchiveActiveDisplay(!isActiveDemandesDisplayed)">Demandes de modification archivées
     </v-chip>
     <v-chip variant="text">
       <v-tooltip v-if="isAdmin" activator="parent" location="bottom">
