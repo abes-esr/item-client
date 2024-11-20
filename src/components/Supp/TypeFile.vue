@@ -9,8 +9,8 @@
 				<v-progress-circular color="info" indeterminate></v-progress-circular>
 			</v-overlay>
 			<v-row justify="space-between" class="mt-4 mb-4 ml-1 mr-1">
+        <!--    Création des boutons    -->
 				<v-hover v-slot="{isHovering, props}" v-for="type in types" :key="type">
-					<div v-if="type.type === 'EPN'" style="width: 10px; border-left: solid 2px #295494"></div>
 					<v-col>
 						<v-row class="pl-1">
               <span style="font-size: 1.3em; font-weight: 500; color: #326bb1">{{ type.message }}</span>
@@ -28,10 +28,11 @@
 							</v-col>
 						</v-row>
 					</v-col>
-					<div v-if="type.type === 'PPN'" style="width: 10px; border-right: solid 2px #295494"></div>
+          <!--     Placement d'une barre à droite de chaque bouton s'il ne sagit pas du dernier     -->
+          <div class="ml-3 mr-1" v-if="types.indexOf(type) < types.length-1" style="width: 10px; border-left: solid 4px #295494"></div>
 				</v-hover>
 			</v-row>
-		</v-card-text>
+    </v-card-text>
 	</v-card>
 </template>
 <script setup>
@@ -47,8 +48,8 @@ const props = defineProps({
 })
 const model = defineModel()
 const types = [
-	{type: 'PPN', message: 'Numéro de notice'},
-	{type: 'EPN', message: "Numéro d'exemplaire"}
+	{type: 'PPN', message: 'Numéro de notice :'},
+	{type: 'EPN', message: "Numéro d'exemplaire :"}
 ]
 const overlay = ref(true)
 
