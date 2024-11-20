@@ -1,37 +1,39 @@
 <template>
-  <v-app class="h-100 overflow-hidden">
-    <Header @logout-success="onLogout" @toggle-drawer="toggleDrawer"/>
-    <Navbar :drawer="drawer" @close="drawer = false"/>
-    <v-main class="d-flex flex-column overflow-auto">
-      <div class="error-stack">
-        <v-alert
-          v-for="(error, index) in errorStack"
-          :key="index"
-          color="error"
-          icon="$error"
-          :title="error.message"
-          variant="flat"
-          border="start"
-          class="mb-2 custom-alert"
-          closable
-          @click:close="closeAlert(index)"
-        >
-          {{ error.description }}
-        </v-alert>
-      </div>
-      <div style="flex-grow: 10;">
-        <router-view v-slot="{ Component }">
-          <component
-            :is="Component"
-            @backendError="addError"
-            @backendSuccess="clearErrors"
-          />
-        </router-view>
-      </div>
-      <InfoAppBanner v-if="!authenticated" />
-      <Footer style="flex-basis: 0;" />
-    </v-main>
-  </v-app>
+    <v-app class="h-100 overflow-hidden">
+      <nav>
+        <Header @logout-success="onLogout" @toggle-drawer="toggleDrawer"/>
+        <Navbar :drawer="drawer" @close="drawer = false" />
+      </nav>
+      <v-main class="d-flex flex-column overflow-auto">
+        <div class="error-stack">
+          <v-alert
+            v-for="(error, index) in errorStack"
+            :key="index"
+            color="error"
+            icon="$error"
+            :title="error.message"
+            variant="flat"
+            border="start"
+            class="mb-2 custom-alert"
+            closable
+            @click:close="closeAlert(index)"
+          >
+            {{ error.description }}
+          </v-alert>
+        </div>
+        <div style="flex-grow: 10;">
+          <router-view v-slot="{ Component }">
+            <component
+              :is="Component"
+              @backendError="addError"
+              @backendSuccess="clearErrors"
+            />
+          </router-view>
+        </div>
+        <InfoAppBanner v-if="!authenticated" />
+        <Footer style="flex-basis: 0;" />
+      </v-main>
+    </v-app>
 </template>
 
 <script setup>
