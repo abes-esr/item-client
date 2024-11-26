@@ -5,22 +5,19 @@
         <Navbar :drawer="drawer" @close="drawer = false" />
       </nav>
       <v-main class="d-flex flex-column overflow-auto">
-        <div class="error-stack">
-          <v-alert
-            v-for="(error, index) in errorStack"
-            :key="index"
-            color="error"
-            icon="$error"
-            :title="error.message"
-            variant="flat"
-            border="start"
-            class="mb-2 custom-alert"
-            closable
-            @click:close="closeAlert(index)"
+          <v-snackbar
+          v-for="(error, index) in errorStack"
+          :key="index"
+          v-model="snackbarIsActive"
+          vertical
+          timeout="9000"
+          color="#B71C1C"
+          elevation="24"
+          location="top"
           >
+            <div class="mb-2" style="font-weight: 800">{{ error.message }}</div>
             {{ error.description }}
-          </v-alert>
-        </div>
+          </v-snackbar>
         <div style="flex-grow: 10;">
           <router-view v-slot="{ Component }">
             <component
@@ -51,6 +48,8 @@ import {useRoute} from "vue-router";
 const errorStack = ref([])
 const drawer = ref(false)
 
+const snackbarIsActive = ref()
+
 const authStore = useAuthStore()
 
 const authenticated = computed(() => {
@@ -73,13 +72,15 @@ watch(
   { immediate: true } // Option pour exécuter le watcher dès le montage du composant
 );
 
-
 function addError(error) {
   let newError = {
     message: 'Erreur',
     description: ''
   }
   if(!error.response){
+    if (errorStack.value.indexOf('{"message":"Erreur réseau : ERR_NETWORK","description":"Service indisponible : merci de réessayer ultérieurement."}') != null) {
+      errorStack.value.splice(errorStack.value.indexOf('{"message":"Erreur réseau : ERR_NETWORK","description":"Service indisponible : merci de réessayer ultérieurement."}'), 1)
+    }
     newError.message = 'Erreur réseau : ' + error.code
     newError.description = 'Service indisponible : merci de réessayer ultérieurement.'
   }else{
@@ -114,6 +115,7 @@ function addError(error) {
     newError.description = 'Problème de disponibilité du fichier demandé'
   }
   errorStack.value.push(newError)
+  snackbarIsActive.value = true
 }
 
 function clearErrors() {
@@ -136,19 +138,9 @@ function toggleDrawer() {
 <style>
 /*Declaré en global*/
 
-
 .custom-card-title {
   background-color: v-bind('$vuetify.theme.current.colors.primary');
   color: v-bind('$vuetify.theme.current.colors.textColor');
-}
-
-.error-stack {
-  position: fixed;
-  top: 64px; /* Ajustez cette valeur en fonction de la hauteur de votre barre de navigation */
-  left: 0;
-  right: 0;
-  z-index: 100;
-  padding: 10px;
 }
 
 .custom-alert {
