@@ -2,11 +2,11 @@
   <v-container fluid>
     <v-chip :variant="isArchiveDemandesDisplayed ? 'plain' : 'tonal'" style="margin-right: 10px"
             @click="switchArchiveActiveDisplay(!isArchiveDemandesDisplayed)">
-      Suppression d'exemplaires
+      Demandes de suppression
     </v-chip>
     <v-chip :variant="!isArchiveDemandesDisplayed ? 'plain' : 'tonal'"
             @click="switchArchiveActiveDisplay(!isArchiveDemandesDisplayed)">
-      Demandes archivées
+      Demandes de suppression archivées
     </v-chip>
     <v-chip variant="text">
       <v-tooltip v-if="isAdmin" activator="parent" location="bottom">
