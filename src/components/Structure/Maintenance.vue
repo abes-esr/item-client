@@ -15,11 +15,12 @@
   </v-overlay>
 </template>
 <script setup>
-
-
 import { computed } from 'vue';
 
-const warningDialog = computed(() => import.meta.env.VITE_MAINTENANCE === 'true');
+let maintenance = import.meta.env.VITE_MAINTENANCE;
+const warningDialog = computed(() => {
+  return maintenance == true;
+});
 
 </script>
 <style>

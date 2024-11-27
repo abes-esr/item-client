@@ -53,6 +53,6 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 ## Maintenance
 
 Pour passer l'application en mode maintenance il suffit de passer la variable d'environement `VITE_MAINTENANCE` à
-`true`.  
-Sinon pour passer en mode maintenance sur les serveurs, il suffit de passer la varable `ITEM_FRONT_MAINTENANCE` à `true`
+`1`.  
+Sinon pour passer en mode maintenance sur les serveurs, il suffit de passer la variable `ITEM_FRONT_MAINTENANCE` à `1`
 du projet [Item-docker](https://github.com/abes-esr/item-docker).
