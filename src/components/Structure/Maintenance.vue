@@ -19,7 +19,7 @@
 
 import { computed } from 'vue';
 
-const warningDialog = computed(() => import.meta.env.VITE_API_MAINTENANCE === 'true');
+const warningDialog = computed(() => import.meta.env.VITE_MAINTENANCE === 'true');
 
 </script>
 <style>
