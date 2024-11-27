@@ -10,7 +10,7 @@
           :key="index"
           v-model="snackbarIsActive"
           vertical
-          timeout="9000"
+          :timeout=timeout
           color="#B71C1C"
           elevation="24"
           location="top"
@@ -56,6 +56,17 @@ const authenticated = computed(() => {
   return authStore.isAuthenticated
 })
 
+const errorType = ref(null)
+
+const timeout = computed(() => {
+  if (errorType.value === "ERR_NETWORK") {
+      errorType.value = null
+      return "9000"
+  } else {
+    return -1 // désactive le timeOut de la snackbar
+  }
+})
+
 const route = useRoute();
 
 watch(
@@ -78,9 +89,8 @@ function addError(error) {
     description: ''
   }
   if(!error.response){
-    if (errorStack.value.indexOf('{"message":"Erreur réseau : ERR_NETWORK","description":"Service indisponible : merci de réessayer ultérieurement."}') != null) {
-      errorStack.value.splice(errorStack.value.indexOf('{"message":"Erreur réseau : ERR_NETWORK","description":"Service indisponible : merci de réessayer ultérieurement."}'), 1)
-    }
+    deleteOldErrorNetworkMessage()
+    errorType.value = "ERR_NETWORK"
     newError.message = 'Erreur réseau : ' + error.code
     newError.description = 'Service indisponible : merci de réessayer ultérieurement.'
   }else{
@@ -133,6 +143,16 @@ function onLogout() {
 function toggleDrawer() {
   drawer.value = !drawer.value
 }
+
+// Permet de vérifier la présence d'un message de type ERR_NETWORK dans errorStack et de la supprimer afin d'éviter une surcharge du tableau
+function deleteOldErrorNetworkMessage() {
+  errorStack.value.forEach((error, index) => {
+    if (error.message === "Erreur réseau : ERR_NETWORK") {
+      errorStack.value.splice(index, 1)
+    }
+  })
+}
+
 </script>
 
 <style>
