@@ -1,40 +1,37 @@
 <template>
-  <v-app class="h-100 overflow-hidden">
-    <maintenance/>
-    <nav>
-      <Header @logout-success="onLogout" @toggle-drawer="toggleDrawer"/>
-      <Navbar :drawer="drawer" @close="drawer = false"/>
-    </nav>
-    <v-main class="d-flex flex-column overflow-auto">
-      <div class="error-stack">
-        <v-alert
+    <v-app class="h-100 overflow-hidden">
+      <maintenance/>
+      <nav>
+        <Header @logout-success="onLogout" @toggle-drawer="toggleDrawer"/>
+        <Navbar :drawer="drawer" @close="drawer = false" />
+      </nav>
+      <v-main class="d-flex flex-column overflow-auto">
+          <v-snackbar
           v-for="(error, index) in errorStack"
           :key="index"
-          color="error"
-          icon="$error"
-          :title="error.message"
-          variant="flat"
-          border="start"
-          class="mb-2 custom-alert"
-          closable
-          @click:close="closeAlert(index)"
-        >
-          {{ error.description }}
-        </v-alert>
-      </div>
-      <div style="flex-grow: 10;">
-        <router-view v-slot="{ Component }">
-          <component
-            :is="Component"
-            @backendError="addError"
-            @backendSuccess="clearErrors"
-          />
-        </router-view>
-      </div>
-      <InfoAppBanner v-if="!authenticated"/>
-      <Footer style="flex-basis: 0;"/>
-    </v-main>
-  </v-app>
+          v-model="snackbarIsActive"
+          vertical
+          :timeout=timeout
+          color="#B71C1C"
+          elevation="24"
+          location="top"
+          >
+            <div class="mb-2" style="font-weight: 800">{{ error.message }}</div>
+            {{ error.description }}
+          </v-snackbar>
+        <div style="flex-grow: 10;">
+          <router-view v-slot="{ Component }">
+            <component
+              :is="Component"
+              @backendError="addError"
+              @backendSuccess="clearErrors"
+            />
+          </router-view>
+        </div>
+        <InfoAppBanner v-if="!authenticated" />
+        <Footer style="flex-basis: 0;" />
+      </v-main>
+    </v-app>
 </template>
 
 <script setup>
@@ -49,14 +46,28 @@ import { useAuthStore } from '@/store/authStore';
 import { useRoute } from 'vue-router';
 import Maintenance from '@/components/Structure/Maintenance.vue';
 
+
 const errorStack = ref([]);
 const drawer = ref(false);
+
+const snackbarIsActive = ref();
 
 const authStore = useAuthStore();
 
 const authenticated = computed(() => {
   return authStore.isAuthenticated;
 });
+
+const errorType = ref(null)
+
+const timeout = computed(() => {
+  if (errorType.value === "ERR_NETWORK") {
+      errorType.value = null
+      return "9000"
+  } else {
+    return -1 // désactive le timeOut de la snackbar
+  }
+})
 
 const route = useRoute();
 
@@ -78,14 +89,16 @@ function addError(error) {
   let newError = {
     message: 'Erreur',
     description: ''
-  };
-  if (!error.response) {
-    newError.message = 'Erreur réseau : ' + error.code;
-    newError.description = 'Service indisponible : merci de réessayer ultérieurement.';
-  } else {
-    if (error.response.status === HttpStatusCode.NotFound) {
-      newError.message = 'Impossible de récupérer les données';
-      newError.description = 'Vérifiez que vos urls d\'appel au serveur sont correctes ainsi que vos clés d\'autorisation ' + '(' + error.config.url + ')';
+  }
+  if(!error.response){
+    deleteOldErrorNetworkMessage()
+    errorType.value = "ERR_NETWORK"
+    newError.message = 'Erreur réseau : ' + error.code
+    newError.description = 'Service indisponible : merci de réessayer ultérieurement.'
+  }else{
+    if (error.response.status === HttpStatusCode.NotFound){
+      newError.message = 'Impossible de récupérer les données'
+      newError.description = 'Vérifiez que vos urls d\'appel au serveur sont correctes ainsi que vos clés d\'autorisation ' + '(' + error.config.url + ')'
     }
     if (error.response.status === HttpStatusCode.Forbidden) {
       newError.message = 'Accès rejeté';
@@ -115,6 +128,7 @@ function addError(error) {
     newError.description = 'Problème de disponibilité du fichier demandé';
   }
   errorStack.value.push(newError);
+  snackbarIsActive.value = true;
 }
 
 function clearErrors() {
@@ -132,24 +146,24 @@ function onLogout() {
 function toggleDrawer() {
   drawer.value = !drawer.value;
 }
+
+// Permet de vérifier la présence d'un message de type ERR_NETWORK dans errorStack et de la supprimer afin d'éviter une surcharge du tableau
+function deleteOldErrorNetworkMessage() {
+  errorStack.value.forEach((error, index) => {
+    if (error.message === "Erreur réseau : ERR_NETWORK") {
+      errorStack.value.splice(index, 1)
+    }
+  })
+}
+
 </script>
 
 <style>
 /*Declaré en global*/
 
-
 .custom-card-title {
   background-color: v-bind('$vuetify.theme.current.colors.primary');
   color: v-bind('$vuetify.theme.current.colors.textColor');
-}
-
-.error-stack {
-  position: fixed;
-  top: 64px; /* Ajustez cette valeur en fonction de la hauteur de votre barre de navigation */
-  left: 0;
-  right: 0;
-  z-index: 100;
-  padding: 10px;
 }
 
 .custom-alert {
