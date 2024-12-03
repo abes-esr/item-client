@@ -106,6 +106,7 @@
         </td>
         <td class="text-center">
           <!-- Colonne Action -->
+          <btn-stop v-if="canStop(item)" :id="item.id" @stop="loadItems('SUPP', isArchiveDemandesDisplayed)"></btn-stop>
           <v-btn v-if="canArchive(item)" variant="plain" icon="mdi-archive" @click="archiverDemande(item)"></v-btn>
           <v-btn v-else-if="canCancel(item)" variant="plain" icon="mdi-delete" @click="supprimerDemande(item)"></v-btn>
         </td>
@@ -125,6 +126,7 @@ import DialogCommentaire from '@/components/Dialog/DialogCommentaire.vue';
 import MenuDownloadFile from '@/components/MenuDownloadFile.vue';
 import moment from 'moment/moment';
 import {useAuthStore} from "@/store/authStore";
+import BtnStop from "@/components/Supp/BtnStop.vue";
 
 //Emit
 const emit = defineEmits(['backendError', 'backendSuccess']);
@@ -350,6 +352,10 @@ function canArchive(item) {
 
 function canCancel(item) {
   return item.etatDemande !== 'Terminé' && item.etatDemande !== 'En cours de traitement' && item.etatDemande !== 'En attente';
+}
+
+function canStop(item) {
+  return item.etatDemande === 'En cours de traitement' || item.etatDemande === 'En attente'
 }
 
 //Suppression d'une demande

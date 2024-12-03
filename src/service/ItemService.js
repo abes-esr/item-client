@@ -167,6 +167,10 @@ export class ItemService {
       return response.data
     })
   }
+
+  stopDemande(id) {
+    return this.client.patch('stopDemandeSupp/' + id);
+  }
 }
 
 export default new ItemService()
