@@ -9,13 +9,13 @@
         <div class="notificationContainer">
           <v-slide-y-transition group>
             <v-alert
+              class="alertMessage"
               v-for="notification in errorsList"
-              :color=alertType
               :key="notification[0]"
             >
               <p class="mb-4">{{ notification[1].message }}</p>
               <p class="mb-4">{{ notification[1].description }}</p>
-              <div style="text-align: right"><v-btn @click="removeNotification(notification[0])">CLOSE</v-btn></div>
+              <div style="text-align: right"><v-btn @click="removeNotification(notification[0])" value="Fermer le message d'erreur">FERMER</v-btn></div>
             </v-alert>
           </v-slide-y-transition>
         </div>
@@ -52,8 +52,6 @@ const alertType = ref(null)
 
 const errorsList = ref(new Map())
 
-let idActualMessageErrNetwork = null;
-
 let errorType = null
 
 const authStore = useAuthStore();
@@ -87,8 +85,6 @@ function addError(error) {
     description: ''
   }
   if(!error.response){
-    removeNotification(idActualMessageErrNetwork)
-    idActualMessageErrNetwork = notificationId;
     errorType = "ERR_NETWORK"
     newError.message = 'Erreur réseau : ' + error.code
     newError.description = 'Service indisponible : merci de réessayer ultérieurement.'
@@ -156,11 +152,13 @@ function clearErrors() {
 <style>
 /*Declaré en global*/
 
+/* Style des card contenant les choix proposés aux utilisateurs et utilisatrices */
 .custom-card-title {
   background-color: v-bind('$vuetify.theme.current.colors.primary');
   color: v-bind('$vuetify.theme.current.colors.textColor');
 }
 
+/* Style du container comprenant les messages d'erreur */
 .notificationContainer {
   position: fixed;
   top: 80px;
@@ -169,4 +167,11 @@ function clearErrors() {
   grid-gap: 0.5em;
   z-index: 99;
 }
+
+/* Permet d'avoir le bon formatage du message d'erreur sur la page de connexion */
+.alertMessage {
+  background-color: #A32525;
+  color: white;
+}
+
 </style>
