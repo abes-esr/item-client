@@ -140,7 +140,12 @@
       </v-row>
     </v-col>
   </v-container>
-  <dialog-lancer-traitement v-model="dialog" :is-loading="isLoading" rubrique="Gérer mes suppressions" route="suppression-tableau" body="Le traitement de suppression  des exemplaires en base de production est irréversible." @launch="launchDemande()"></dialog-lancer-traitement>
+  <dialog-lancer-traitement v-model="dialog"
+                            :is-loading="isLoading"
+                            rubrique="Gérer mes suppressions"
+                            route="suppression-tableau"
+                            body="Le traitement de suppression  des exemplaires en base de production est irréversible."
+                            @launch="launchDemande()"></dialog-lancer-traitement>
   <dialog-suppression v-model="suppDialog" :demande="demande" return-to-accueil></dialog-suppression>
 </template>
 
