@@ -170,7 +170,7 @@ function clearErrors() {
 
 /* Permet d'avoir le bon formatage du message d'erreur sur la page de connexion */
 .alertMessage {
-  background-color: #A32525;
+  background-color: rgb(var(--v-theme-error));
   color: white;
 }
 
