@@ -349,11 +349,11 @@ function isAvailableFile(demandeNumber, filename) {
 
 //Action d'archivage ou suppression selon état de la demande dans le TDB
 function canArchive(item) {
-  return item.etatDemande === 'Terminé';
+  return item.etatDemande === 'Terminé' || item.etatDemande === 'Interrompue';
 }
 
 function canCancel(item) {
-  return item.etatDemande !== 'Terminé' && item.etatDemande !== 'En cours de traitement' && item.etatDemande !== 'En attente';
+  return item.etatDemande !== 'Terminé' && item.etatDemande !== 'En cours de traitement' && item.etatDemande !== 'En attente' && item.etatDemande !== 'Interrompue';
 }
 
 function canStop(item) {
