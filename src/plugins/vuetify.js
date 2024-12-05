@@ -44,7 +44,8 @@ const itemLightTheme = {
     disabled: '#808080',
     archived: '#795548',
     saisised: '#333333',
-    waited: '#EC6839'
+    waited: '#FFC400',
+    stopped: '#EC6839'
   },
   variables: {
     'border-color': '#000000',
@@ -86,7 +87,8 @@ const itemDarkTheme = {
     disabled: '#808080',
     archived: '#795548',
     saisised: '#333333',
-    waited: '#EC6839'
+    waited: '#FFC400',
+    stopped: '#EC6839'
   },
   variables: {
     'border-color': '#FFFFFF',
@@ -129,6 +131,7 @@ const itemRngTheme = {
     archived: generateRandomHexColor(),
     saisised: generateRandomHexColor(),
     waited: generateRandomHexColor(),
+    stopped: generateRandomHexColor()
   }
 }
 

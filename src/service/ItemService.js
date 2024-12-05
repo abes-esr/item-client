@@ -23,7 +23,6 @@ export class ItemService {
   }
 
   login(login, password) {
-    const url = import.meta.env.VITE_API_URL + `signin`;
     //console.info('appel:' + url);
 
     return this.client.post(`signin`, {username: login, password: password})
@@ -166,6 +165,10 @@ export class ItemService {
     return this.client.get('applicationStatutServices').then(response => {
       return response.data
     })
+  }
+
+  stopDemande(id) {
+    return this.client.patch('stopDemandeSupp/' + id);
   }
 }
 
