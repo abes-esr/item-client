@@ -91,7 +91,7 @@
           <v-chip color="success" variant="flat" v-else-if="item.etatDemande === 'Terminé'">Terminé</v-chip>
           <v-chip color="archived" variant="flat" v-else-if="item.etatDemande === 'Archivé'">Archivé</v-chip>
           <v-chip color="error" variant="flat" v-else-if="item.etatDemande === 'En erreur'">En erreur</v-chip>
-          <v-chip color="stopped" variant="flat" v-else-if="item.etatDemande === 'Interrompue'">Interrompue</v-chip>
+          <v-chip color="stopped" variant="flat" v-else-if="item.etatDemande === 'Annulé'">Annulé</v-chip>
           <v-chip color="info" variant="flat" v-else>{{ item.etatDemande }}</v-chip>
           <!-- Cas : ne correspont à aucun cas -->
         </td>
@@ -234,7 +234,7 @@ const listStatut = [
   'En cours de traitement',
   'Terminé',
   'En erreur',
-  'Interrompue'
+  'Annulé'
 ];
 const listTypeTraitement = ref([]);
 const contentsDemandesFromServer = ref([]);
@@ -349,11 +349,11 @@ function isAvailableFile(demandeNumber, filename) {
 
 //Action d'archivage ou suppression selon état de la demande dans le TDB
 function canArchive(item) {
-  return item.etatDemande === 'Terminé' || item.etatDemande === 'Interrompue';
+  return item.etatDemande === 'Terminé' || item.etatDemande === 'Annulé';
 }
 
 function canCancel(item) {
-  return item.etatDemande !== 'Terminé' && item.etatDemande !== 'En cours de traitement' && item.etatDemande !== 'En attente' && item.etatDemande !== 'Interrompue';
+  return item.etatDemande !== 'Terminé' && item.etatDemande !== 'En cours de traitement' && item.etatDemande !== 'En attente' && item.etatDemande !== 'Annulé';
 }
 
 function canStop(item) {
@@ -401,7 +401,7 @@ function colorProgressBar(item) {
     return 'success';
   } else if (item.etatDemande === 'En erreur') {
     return 'error';
-  } else if (item.etatDemande === 'Interrompue') {
+  } else if (item.etatDemande === 'Annulé') {
     return 'stopped';
   }
   return 'grey-lighten-1';
