@@ -10,6 +10,15 @@
           <v-slide-y-transition group>
             <v-alert
               class="alertMessage"
+              v-for="notification in errorsNetworkList"
+              :key="notification[0]"
+            >
+              <p class="mb-4">{{ notification[1].message }}</p>
+              <p class="mb-4">{{ notification[1].description }}</p>
+              <div style="text-align: right"><v-btn @click="removeNotification(notification[0])" value="Fermer le message d'erreur">FERMER</v-btn></div>
+            </v-alert>
+            <v-alert
+              class="alertMessage"
               v-for="notification in errorsList"
               :key="notification[0]"
             >
@@ -52,7 +61,9 @@ const alertType = ref(null)
 
 const errorsList = ref(new Map())
 
-let errorType = null
+const errorsNetworkList = ref(new Map())
+
+let isErrorNetwork = false
 
 const authStore = useAuthStore();
 
@@ -85,7 +96,7 @@ function addError(error) {
     description: ''
   }
   if(!error.response){
-    errorType = "ERR_NETWORK"
+    isErrorNetwork = true
     newError.message = 'Erreur réseau : ' + error.code
     newError.description = 'Service indisponible : merci de réessayer ultérieurement.'
   }else{
@@ -131,20 +142,24 @@ function toggleDrawer() {
 }
 
 function addNotification(notificationId, message) {
-  errorsList.value.set(notificationId, message)
-  if (errorType === "ERR_NETWORK") {
+  if (isErrorNetwork) {
+    errorsNetworkList.value.set(notificationId, message)
     setTimeout(() => removeNotification(notificationId), 9000) // impose un timeout au v-alert pour que les alertes de type ERR_NETWORK ne surchargent pas la Map errorsList
+    isErrorNetwork = false;
+  } else {
+    errorsList.value.set(notificationId, message)
   }
 }
 
 function removeNotification(notificationId) {
   if (notificationId != null) {
     errorsList.value.delete(notificationId)
+    errorsNetworkList.value.delete(notificationId)
   }
 }
 
 function clearErrors() {
-  errorsList.value = new Map()
+  errorsNetworkList.value.clear();
 }
 
 </script>
