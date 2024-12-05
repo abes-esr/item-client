@@ -170,6 +170,10 @@ export class ItemService {
   stopDemande(id) {
     return this.client.patch('stopDemandeSupp/' + id);
   }
+
+  restaurerDemande(id, typeDemande) {
+    return this.client.patch('restaurerDemande/' + typeDemande + '/' + id )
+  }
 }
 
 export default new ItemService()
