@@ -23,7 +23,6 @@ export class ItemService {
   }
 
   login(login, password) {
-    const url = import.meta.env.VITE_API_URL + `signin`;
     //console.info('appel:' + url);
 
     return this.client.post(`signin`, {username: login, password: password})

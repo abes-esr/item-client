@@ -91,6 +91,7 @@
           <v-chip color="success" variant="flat" v-else-if="item.etatDemande === 'Terminé'">Terminé</v-chip>
           <v-chip color="archived" variant="flat" v-else-if="item.etatDemande === 'Archivé'">Archivé</v-chip>
           <v-chip color="error" variant="flat" v-else-if="item.etatDemande === 'En erreur'">En erreur</v-chip>
+          <v-chip color="stopped" variant="flat" v-else-if="item.etatDemande === 'Interrompue'">Interrompue</v-chip>
           <v-chip color="info" variant="flat" v-else>{{ item.etatDemande }}</v-chip>
           <!-- Cas : ne correspont à aucun cas -->
         </td>
@@ -232,7 +233,8 @@ const listStatut = [
   'En attente',
   'En cours de traitement',
   'Terminé',
-  'En erreur'
+  'En erreur',
+  'Interrompue'
 ];
 const listTypeTraitement = ref([]);
 const contentsDemandesFromServer = ref([]);
@@ -395,12 +397,12 @@ function throwError(error) {
 }
 
 function colorProgressBar(item) {
-  if (item.pourcentageProgressionTraitement === 100) {
-    if (item.etatDemande === 'Terminé') {
-      return 'success';
-    } else if (item.etatDemande === 'En erreur') {
-      return 'error';
-    }
+  if (item.etatDemande === 'Terminé') {
+    return 'success';
+  } else if (item.etatDemande === 'En erreur') {
+    return 'error';
+  } else if (item.etatDemande === 'Interrompue') {
+    return 'stopped';
   }
   return 'grey-lighten-1';
 }
