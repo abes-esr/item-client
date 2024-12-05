@@ -6,19 +6,19 @@
         <Navbar :drawer="drawer" @close="drawer = false" />
       </nav>
       <v-main class="d-flex flex-column overflow-auto">
-          <v-snackbar
-          v-for="(error, index) in errorStack"
-          :key="index"
-          v-model="snackbarIsActive"
-          vertical
-          :timeout=timeout
-          color="#B71C1C"
-          elevation="24"
-          location="top"
-          >
-            <div class="mb-2" style="font-weight: 800">{{ error.message }}</div>
-            {{ error.description }}
-          </v-snackbar>
+        <div class="notificationContainer">
+          <v-slide-y-transition group>
+            <v-alert
+              class="alertMessage"
+              v-for="notification in errorsList"
+              :key="notification[0]"
+            >
+              <p class="mb-4">{{ notification[1].message }}</p>
+              <p class="mb-4">{{ notification[1].description }}</p>
+              <div style="text-align: right"><v-btn @click="removeNotification(notification[0])" value="Fermer le message d'erreur">FERMER</v-btn></div>
+            </v-alert>
+          </v-slide-y-transition>
+        </div>
         <div style="flex-grow: 10;">
           <router-view v-slot="{ Component }">
             <component
@@ -46,28 +46,19 @@ import { useAuthStore } from '@/store/authStore';
 import { useRoute } from 'vue-router';
 import Maintenance from '@/components/Structure/Maintenance.vue';
 
-
-const errorStack = ref([]);
 const drawer = ref(false);
 
-const snackbarIsActive = ref();
+const alertType = ref(null)
+
+const errorsList = ref(new Map())
+
+let errorType = null
 
 const authStore = useAuthStore();
 
 const authenticated = computed(() => {
   return authStore.isAuthenticated;
 });
-
-const errorType = ref(null)
-
-const timeout = computed(() => {
-  if (errorType.value === "ERR_NETWORK") {
-      errorType.value = null
-      return "9000"
-  } else {
-    return -1 // désactive le timeOut de la snackbar
-  }
-})
 
 const route = useRoute();
 
@@ -79,20 +70,22 @@ watch(
         message: 'Erreur réseau',
         description: 'Service indisponible : merci de réessayer ultérieurement.'
       };
-      errorStack.value.push(newError);
+      const notificationId = self.crypto.randomUUID()
+      errorsList.value.set(notificationId, newError)
     }
   },
   { immediate: true } // Option pour exécuter le watcher dès le montage du composant
 );
 
 function addError(error) {
+  const notificationId = self.crypto.randomUUID()
+  alertType.value = "error"
   let newError = {
     message: 'Erreur',
     description: ''
   }
   if(!error.response){
-    deleteOldErrorNetworkMessage()
-    errorType.value = "ERR_NETWORK"
+    errorType = "ERR_NETWORK"
     newError.message = 'Erreur réseau : ' + error.code
     newError.description = 'Service indisponible : merci de réessayer ultérieurement.'
   }else{
@@ -112,8 +105,7 @@ function addError(error) {
       newError.message = 'Accès rejeté';
       newError.description = 'Mauvaise requête : contrôlez les paramètres de votre requête et observez les logs du serveur pour plus d\'informations ' + '(' + error.config.url + ')';
     }
-    if (error.response.status.toString()
-      .startsWith('5')) {
+    if (error.response.status.toString().startsWith('5')) {
       newError.message = 'Problème de disponibilité du serveur';
       newError.description = 'Retentez plus tard. Vérifiez la disponibilité de la base de donnée (Etat des serveurs) en cliquant en bas à gauche sur l\'icone de paramètres. Si le problème perdure, contactez l\'assistance';
     }
@@ -127,16 +119,7 @@ function addError(error) {
   if (error.request.url) {
     newError.description = 'Problème de disponibilité du fichier demandé';
   }
-  errorStack.value.push(newError);
-  snackbarIsActive.value = true;
-}
-
-function clearErrors() {
-  errorStack.value = [];
-}
-
-function closeAlert(index) {
-  errorStack.value.splice(index, 1);
+  addNotification(notificationId, newError)
 }
 
 function onLogout() {
@@ -147,13 +130,21 @@ function toggleDrawer() {
   drawer.value = !drawer.value;
 }
 
-// Permet de vérifier la présence d'un message de type ERR_NETWORK dans errorStack et de la supprimer afin d'éviter une surcharge du tableau
-function deleteOldErrorNetworkMessage() {
-  errorStack.value.forEach((error, index) => {
-    if (error.message === "Erreur réseau : ERR_NETWORK") {
-      errorStack.value.splice(index, 1)
-    }
-  })
+function addNotification(notificationId, message) {
+  errorsList.value.set(notificationId, message)
+  if (errorType === "ERR_NETWORK") {
+    setTimeout(() => removeNotification(notificationId), 9000) // impose un timeout au v-alert pour que les alertes de type ERR_NETWORK ne surchargent pas la Map errorsList
+  }
+}
+
+function removeNotification(notificationId) {
+  if (notificationId != null) {
+    errorsList.value.delete(notificationId)
+  }
+}
+
+function clearErrors() {
+  errorsList.value = new Map()
 }
 
 </script>
@@ -161,18 +152,26 @@ function deleteOldErrorNetworkMessage() {
 <style>
 /*Declaré en global*/
 
+/* Style des card contenant les choix proposés aux utilisateurs et utilisatrices */
 .custom-card-title {
   background-color: v-bind('$vuetify.theme.current.colors.primary');
   color: v-bind('$vuetify.theme.current.colors.textColor');
 }
 
-.custom-alert {
-  background-color: #FFEBEE !important; /* Fond rouge clair */
-  color: #B71C1C !important; /* Texte rouge foncé */
-  opacity: 1 !important; /* Assurez-vous que l'alerte est complètement opaque */
+/* Style du container comprenant les messages d'erreur */
+.notificationContainer {
+  position: fixed;
+  top: 80px;
+  right: 10px;
+  display: grid;
+  grid-gap: 0.5em;
+  z-index: 99;
 }
 
-.custom-alert :deep(.v-alert__close) {
-  color: #B71C1C !important; /* Assure que le bouton de fermeture est de la même couleur que le texte */
+/* Permet d'avoir le bon formatage du message d'erreur sur la page de connexion */
+.alertMessage {
+  background-color: rgb(var(--v-theme-error));
+  color: white;
 }
+
 </style>
