@@ -142,7 +142,7 @@ function toggleDrawer() {
 }
 
 function addNotification(notificationId, message) {
-  if (isErrorNetwork === true) {
+  if (isErrorNetwork) {
     errorsNetworkList.value.set(notificationId, message)
     setTimeout(() => removeNotification(notificationId), 9000) // impose un timeout au v-alert pour que les alertes de type ERR_NETWORK ne surchargent pas la Map errorsList
     isErrorNetwork = false;
