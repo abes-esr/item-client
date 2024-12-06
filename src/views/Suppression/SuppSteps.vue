@@ -59,9 +59,15 @@
                 </v-container>
               </v-stepper-window-item>
               <v-stepper-window-item>
-                <type-file v-if="!typeFileSelected" v-model="typeFileSelected" @clicked="setTypeSelected()" @deleted="deleteDemande()"></type-file>
-                <select-file v-else-if="!isLoaded" :is-loading="isLoading" v-model="fileSelected" typeFile="PPN" @deleted="deleteDemande()">Selection du fichier PPN</select-file>
-                <download-file v-if="isLoaded" :file-link="fileLink" :file-name="fileName" @clicked="isDownloaded = true" @deleted="deleteDemande()">Téléchargement du fichier PPN/RCR/EPN</download-file>
+                <type-file v-if="!typeFileSelected" v-model="typeFileSelected" @clicked="setTypeSelected()"
+                           @deleted="deleteDemande()"></type-file>
+                <select-file v-else-if="!isLoaded" :is-loading="isLoading" v-model="fileSelected" typeFile="PPN"
+                             @deleted="deleteDemande()">Selection du fichier PPN
+                </select-file>
+                <download-file v-if="isLoaded" :file-link="fileLink" :file-name="fileName"
+                               @clicked="isDownloaded = true" @deleted="deleteDemande()">Téléchargement du fichier
+                  PPN/RCR/EPN
+                </download-file>
                 <v-alert
                   v-if="alertMessage"
                   :type="alertType"
@@ -98,10 +104,13 @@
               </v-stepper-window-item>
               <v-stepper-window-item>
                 <v-container>
-                  <select-file v-if="typeFileSelected==='PPN'" v-model="fileFinalSelected" :is-loading="isLoading" @deleted="deleteDemande()">Charger le
+                  <select-file v-if="typeFileSelected==='PPN'" v-model="fileFinalSelected" :is-loading="isLoading"
+                               @deleted="deleteDemande()">Charger le
                     fichier des exemplaires à supprimer
                   </select-file>
-                  <select-file v-else-if="typeFileSelected==='EPN'" v-model="fileSelected"  :is-loading="isLoading" typeFile="EPN" @deleted="deleteDemande()">Selection du fichier EPN</select-file>
+                  <select-file v-else-if="typeFileSelected==='EPN'" v-model="fileSelected" :is-loading="isLoading"
+                               typeFile="EPN" @deleted="deleteDemande()">Selection du fichier EPN
+                  </select-file>
                   <v-alert
                     v-if="alertMessage"
                     :type="alertType"
@@ -124,7 +133,8 @@
                 </v-container>
               </v-stepper-window-item>
               <v-stepper-window-item>
-                <simulation :demande="demande" label-before="Exemplaire(s) existant(s)" label-after="Exemplaire(s) restant(s)" @deleted="deleteDemande()"></simulation>
+                <simulation v-if="currentStep===3" :demande="demande" label-before="Exemplaire(s) existant(s)"
+                            label-after="Exemplaire(s) restant(s)" @deleted="deleteDemande()"></simulation>
                 <v-container class="d-flex justify-space-between">
                   <v-btn @click="prev">
                     précédent
@@ -154,10 +164,10 @@ import { onMounted, ref } from 'vue';
 import TypeFile from '@/components/Supp/TypeFile.vue';
 import SelectFile from '@/components/SelectFile.vue';
 import itemService from '@/service/ItemService';
-import DownloadFile from "@/components/DownloadFile.vue";
-import router from '@/router'
+import DownloadFile from '@/components/DownloadFile.vue';
+import router from '@/router';
 import Rcr from '@/components/Rcr.vue';
-import Simulation from "@/components/Simulation.vue";
+import Simulation from '@/components/Simulation.vue';
 import DialogLancerTraitement from '@/components/Dialog/DialogLancerTraitement.vue';
 import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
 import RecapDemande from '@/components/RecapDemande.vue';
@@ -166,7 +176,7 @@ const currentStep = ref(0);
 const demande = ref();
 
 const emits = defineEmits(['backendError']);
-const props = defineProps({id: {type: String}});
+const props = defineProps({ id: { type: String } });
 
 const rcrSelected = ref('');
 const typeFileSelected = ref('');
@@ -182,18 +192,18 @@ const alertType = ref('success');
 const dialog = ref(false);
 const suppDialog = ref(false);
 
-onMounted(()=>{
+onMounted(() => {
   if (props.id) {
-    itemService.getDemande(props.id, "SUPP")
+    itemService.getDemande(props.id, 'SUPP')
       .then(response => {
         demande.value = response.data;
         switch (demande.value.etatDemande) {
           case 'En préparation':
             currentStep.value = 1;
             rcrSelected.value = demande.value.rcr;
-            if (demande.value.typeSuppression){
+            if (demande.value.typeSuppression) {
               typeFileSelected.value = demande.value.typeSuppression;
-              if(demande.value.typeSuppression === "EPN"){
+              if (demande.value.typeSuppression === 'EPN') {
                 currentStep.value = 2;
               }
             }
@@ -214,12 +224,12 @@ onMounted(()=>{
             currentStep.value = 3;
             break;
         }
-      }).catch(() => {
-      router.replace("/suppression");
-    })
+      })
+      .catch(() => {
+        router.replace('/suppression');
+      });
   }
-})
-
+});
 
 function createDemande() {
   if (demande.value && (rcrSelected.value === demande.value.rcr)) {
@@ -230,23 +240,27 @@ function createDemande() {
       .then(response => {
         demande.value = response.data;
         next();
-      }).catch(err => {
-      emits('backendError', err);
-    }).finally(() => {
-      isLoading.value = false;
-    });
+      })
+      .catch(err => {
+        emits('backendError', err);
+      })
+      .finally(() => {
+        isLoading.value = false;
+      });
   } else {
     isLoading.value = true;
     itemService.creerDemande(rcrSelected.value, 'SUPP')
       .then(response => {
         demande.value = response.data;
-        router.replace(`/suppression/${demande.value.id}`)
+        router.replace(`/suppression/${demande.value.id}`);
         next();
-      }).catch(err => {
-      emits('backendError', err);
-    }).finally(() => {
-      isLoading.value = false;
-    });
+      })
+      .catch(err => {
+        emits('backendError', err);
+      })
+      .finally(() => {
+        isLoading.value = false;
+      });
   }
 }
 
@@ -256,14 +270,14 @@ function uploadFile() {
   isLoading.value = true;
   itemService.uploadDemande(demande.value.id, fileSelected.value, 'SUPP')
     .then(() => {
-      alertMessage.value = "Fichier envoyé";
-      itemService.getFile(demande.value.id, 'SUPP','fichier_correspondance', '.csv')
+      alertMessage.value = 'Fichier envoyé';
+      itemService.getFile(demande.value.id, 'SUPP', 'fichier_correspondance', '.csv')
         .then(response => {
-          let blob = new Blob([response.data], {type: 'application/csv'});
+          let blob = new Blob([response.data], { type: 'application/csv' });
           fileLink.value = window.URL.createObjectURL(blob);
           fileName.value = `fichier_demande_${demande.value.id}.csv`;
           isLoaded.value = true;
-        })
+        });
     })
     .catch(err => {
       alertMessage.value = err.response.data.message;
@@ -273,9 +287,10 @@ function uploadFile() {
       isLoading.value = false;
     });
 }
-function setTypeSelected(){
+
+function setTypeSelected() {
   itemService.modifierTypeFileDemande(demande.value.id, typeFileSelected.value);
-  if (typeFileSelected.value==='EPN'){
+  if (typeFileSelected.value === 'EPN') {
     next();
   }
 }
@@ -284,10 +299,14 @@ function uploadFileFinal() {
   alertMessage.value = '';
   alertType.value = 'success';
   isLoading.value = true;
-  if (typeFileSelected.value==='PPN'){
-    itemService.uploadDemande(demande.value.id, fileFinalSelected.value, 'SUPP')
+  if (typeFileSelected.value === 'PPN') {
+    itemService.uploadDemande(demande.value.id, fileFinalSelected.value, demande.value.type)
       .then(() => {
-        alertMessage.value = "Fichier envoyé";
+        alertMessage.value = 'Fichier envoyé';
+        itemService.getDemande(demande.value.id, demande.value.type)
+          .then(response => {
+            demande.value = response.data;
+          });
         next();
       })
       .catch(err => {
@@ -297,14 +316,14 @@ function uploadFileFinal() {
       .finally(() => {
         isLoading.value = false;
       });
-  } else if (typeFileSelected.value==='EPN') {
-    itemService.uploadDemande(demande.value.id, fileSelected.value, 'SUPP')
+  } else if (typeFileSelected.value === 'EPN') {
+    itemService.uploadDemande(demande.value.id, fileSelected.value, demande.value.type)
       .then(() => {
-        alertMessage.value = "Fichier envoyé, veuillez patienter quelques instants.";
-        itemService.getFile(demande.value.id, 'SUPP','fichier_correspondance', '.csv')
+        alertMessage.value = 'Fichier envoyé, veuillez patienter quelques instants.';
+        itemService.getFile(demande.value.id, 'SUPP', 'fichier_correspondance', '.csv')
           .then(response => {
-            let blob = new Blob([response.data], {type: 'application/csv'});
-            itemService.uploadDemande(demande.value.id, blob, 'SUPP')
+            let blob = new Blob([response.data], { type: 'application/csv' });
+            itemService.uploadDemande(demande.value.id, blob, demande.value.type)
               .then(() => {
                 goSimulation();
               })
@@ -343,14 +362,16 @@ function changeEtape() {
     typeFileSelected.value = null;
   }
   if ((currentStep.value + 1) === 2 && typeFileSelected.value) { //Changement d'etat pour le chargement du fichier car le back est perdu sinon
-    if(typeFileSelected.value==='EPN') {typeFileSelected.value=null;}
+    if (typeFileSelected.value === 'EPN') {
+      typeFileSelected.value = null;
+    }
     itemService.choixEtape(demande.value.id, 2, 'SUPP')
       .then(response => {
         demande.value = response.data;
       });
   }
-  if ((currentStep.value + 1) === 3 ) {
-    if(typeFileSelected.value==='EPN'){
+  if ((currentStep.value + 1) === 3) {
+    if (typeFileSelected.value === 'EPN') {
       itemService.choixEtape(demande.value.id, 2, 'SUPP')
         .then(response => {
           demande.value = response.data;
@@ -364,32 +385,34 @@ function changeEtape() {
   }
 }
 
-function prevSelectTypeFile(){
+function prevSelectTypeFile() {
   typeFileSelected.value = null;
-  changeEtape()
+  changeEtape();
   raz();
 }
-function prevSelectFile(){
-  changeEtape()
+
+function prevSelectFile() {
+  changeEtape();
   raz();
 }
+
 function next() {
   currentStep.value++;
   raz();
 }
 
-function goSimulation(){
+function goSimulation() {
   currentStep.value = 3;
   raz();
 }
 
 function prev() {
   currentStep.value--;
-  changeEtape()
+  changeEtape();
   raz();
 }
 
-function raz(){
+function raz() {
   isLoading.value = false;
   alertMessage.value = '';
   alertType.value = 'success';
@@ -397,14 +420,15 @@ function raz(){
   isDownloaded.value = false;
 }
 
-function launchDemande(){
+function launchDemande() {
   isLoading.value = true;
-  itemService.lancerDemande(demande.value.id,'SUPP')
+  itemService.lancerDemande(demande.value.id, 'SUPP')
     .then(response => {
       demande.value = response.data;
-    }).finally(() => {
-    isLoading.value = false;
-  })
+    })
+    .finally(() => {
+      isLoading.value = false;
+    });
 }
 
 function deleteDemande() {

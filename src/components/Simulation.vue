@@ -10,14 +10,16 @@
 
   <recap-demande :demande="demande"></recap-demande>
   <!-- CONTENU SIMULATION -->
-  <v-alert icon="mdi-alert" type="error" v-if="alertMessageError" class="my-3" border="left">Simulation impossible : {{ alertMessageError }}</v-alert>
+  <v-alert icon="mdi-alert" type="error" v-if="alertMessageError" class="my-3" border="left">Simulation impossible :
+    {{ alertMessageError }}
+  </v-alert>
   <v-card flat class="pb-2">
     <v-card-title class="d-flex justify-space-between custom-card-title">
       <span>Ecran de simulation</span>
       <v-btn depressed variant="text" @click="deleted()" prepend-icon="mdi-delete">Supprimer</v-btn>
     </v-card-title>
     <!--TEMPLATE DE SIMULATION-->
-    <v-alert type="warning"  class="my-3 pa-2" dense prominent border="left">
+    <v-alert type="warning" class="my-3 pa-2" dense prominent border="left">
       Cet écran est une <strong>prévisualisation</strong> du traitement.<br>
       Il s'agit de la <strong>dernière étape</strong> avant de lancer le traitement en <strong>base de
       production</strong>. Merci de <strong>vérifier vos données</strong>.
@@ -36,7 +38,7 @@
         </v-card>
       </v-col>
       <v-col cols="12" sm="12" md="2" class="pb-10">
-        <navigate-notice v-model="nbNotice" @clicked="refresh()"></navigate-notice>
+        <navigate-notice v-model="nbNotice" @clicked="refresh(nbNotice.nbNoticeEnCours)"></navigate-notice>
       </v-col>
       <v-col cols="12" sm="12" md="5"> <!--Exemplaire à créer-->
         <v-card class="pa-1 mr-1" outlined tile>
@@ -54,7 +56,7 @@
 
 import RecapDemande from '@/components/RecapDemande.vue';
 import NavigateNotice from '@/components/NavigateNotice.vue';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watchEffect } from 'vue';
 import itemService from '@/service/ItemService';
 
 const props = defineProps({
@@ -71,48 +73,44 @@ const props = defineProps({
     default: 'Après'
   }
 });
-const emits = defineEmits(['deleted'])
+const emits = defineEmits(['deleted']);
 
 const nbNotice = ref({
   nbNoticeEnCours: 0,
   nbTotalNotice: 0
 });
 const numeroPPNNotice = ref();
-const noticeAvant = ref("");
-const noticeApres = ref("");
+const noticeAvant = ref('');
+const noticeApres = ref('');
 const isLoading = ref(true);
 const alertMessageError = ref();
 
 onMounted(() => {
+  refresh(0);
+});
+
+watchEffect(() => {
+  if (props.demande.etatDemande === 'En simulation') {
+    refresh(0);
+  }
+});
+
+//nbNotice.value.nbNoticeEnCours
+function refresh(nbNoticeEnCours) {
+  isLoading.value = true;
+  alertMessageError.value = null;
   itemService.getNbLigneFichier(props.demande.id, props.demande.type)
     .then(response => {
       nbNotice.value.nbTotalNotice = response.data;
     });
-  itemService.simulerLigne(props.demande.id, 0, props.demande.type)
+  itemService.simulerLigne(props.demande.id, nbNoticeEnCours, props.demande.type)
     .then(response => {
       numeroPPNNotice.value = response.data[0];
       noticeAvant.value = response.data[1];
       noticeApres.value = response.data[2];
     })
     .catch(err => {
-      alertMessageError.value = err.response.data.message
-    })
-    .finally(() => {
-      isLoading.value = false;
-    });
-});
-
-function refresh() {
-  isLoading.value = true;
-  alertMessageError.value = null;
-  itemService.simulerLigne(props.demande.id, nbNotice.value.nbNoticeEnCours, props.demande.type)
-    .then(response => {
-      numeroPPNNotice.value = response.data[0];
-      noticeAvant.value = response.data[1];
-      noticeApres.value = response.data[2];
-    })
-    .catch(err => {
-      alertMessageError.value = err.response.data.message
+      alertMessageError.value = err.response.data.message;
     })
     .finally(() => {
       isLoading.value = false;
@@ -134,6 +132,7 @@ h4 {
   font-size: x-large;
   font-weight: normal;
 }
+
 h5 {
   font-size: x-large;
   font-weight: normal;
