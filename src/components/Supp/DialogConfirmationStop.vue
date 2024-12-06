@@ -3,7 +3,7 @@
     <v-card>
       <v-card-title>Confirmation</v-card-title>
       <v-card-text>
-        Voulez vous vraiment stopper le traitement sur la demande N°{{id}} ?
+        Voulez vous vraiment stopper le traitement sur la demande N°{{ id }} ?
       </v-card-text>
       <v-card-actions>
         <v-btn @click="dialog=false">Refuser</v-btn>
@@ -13,21 +13,25 @@
   </v-dialog>
 </template>
 <script setup>
-import itemService from "@/service/ItemService";
+import itemService from '@/service/ItemService';
 
-const emits = defineEmits(['stop'])
+const emits = defineEmits(['stop', 'onError']);
 const dialog = defineModel();
 const props = defineProps({
-  id:{
-    required:true,
-    type:Number
+  id: {
+    required: true,
+    type: Number
   }
-})
+});
 
-function stopDemande(){
-  itemService.stopDemande(props.id).finally(() => {
-    dialog.value = false;
-    emits('stop');
-  });
+function stopDemande() {
+  itemService.stopDemande(props.id)
+    .catch(err => {
+      emits('onError', err);
+    })
+    .finally(() => {
+      dialog.value = false;
+      emits('stop');
+    });
 }
 </script>
