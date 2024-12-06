@@ -134,7 +134,7 @@ const emit = defineEmits(['backendError', 'backendSuccess']);
 
 //Data
 const isAdmin = useAuthStore().isAdmin();
-const extendedAllILN = ref(true); // todo Pour les tests il faut laisser à true/ pour la prod faudra mettre à false
+const extendedAllILN = ref(false);
 const headingsDemandes = [
   {
     title: '',
