@@ -1,40 +1,46 @@
 <template>
-  <v-app class="h-100 overflow-hidden">
-    <maintenance/>
-    <nav>
-      <Header @logout-success="onLogout" @toggle-drawer="toggleDrawer"/>
-      <Navbar :drawer="drawer" @close="drawer = false"/>
-    </nav>
-    <v-main class="d-flex flex-column overflow-auto">
-      <div class="error-stack">
-        <v-alert
-          v-for="(error, index) in errorStack"
-          :key="index"
-          color="error"
-          icon="$error"
-          :title="error.message"
-          variant="flat"
-          border="start"
-          class="mb-2 custom-alert"
-          closable
-          @click:close="closeAlert(index)"
-        >
-          {{ error.description }}
-        </v-alert>
-      </div>
-      <div style="flex-grow: 10;">
-        <router-view v-slot="{ Component }">
-          <component
-            :is="Component"
-            @backendError="addError"
-            @backendSuccess="clearErrors"
-          />
-        </router-view>
-      </div>
-      <InfoAppBanner v-if="!authenticated"/>
-      <Footer style="flex-basis: 0;"/>
-    </v-main>
-  </v-app>
+    <v-app class="h-100 overflow-hidden">
+      <maintenance/>
+      <nav>
+        <Header @logout-success="onLogout" @toggle-drawer="toggleDrawer"/>
+        <Navbar :drawer="drawer" @close="drawer = false" />
+      </nav>
+      <v-main class="d-flex flex-column overflow-auto">
+        <div class="notificationContainer">
+          <v-slide-y-transition group>
+            <v-alert
+              class="alertMessage"
+              v-for="notification in errorsNetworkList"
+              :key="notification[0]"
+            >
+              <p class="mb-4">{{ notification[1].message }}</p>
+              <p class="mb-4">{{ notification[1].description }}</p>
+              <div style="text-align: right"><v-btn @click="removeNotification(notification[0])" value="Fermer le message d'erreur">FERMER</v-btn></div>
+            </v-alert>
+            <v-alert
+              class="alertMessage"
+              v-for="notification in errorsList"
+              :key="notification[0]"
+            >
+              <p class="mb-4">{{ notification[1].message }}</p>
+              <p class="mb-4">{{ notification[1].description }}</p>
+              <div style="text-align: right"><v-btn @click="removeNotification(notification[0])" value="Fermer le message d'erreur">FERMER</v-btn></div>
+            </v-alert>
+          </v-slide-y-transition>
+        </div>
+        <div style="flex-grow: 10;">
+          <router-view v-slot="{ Component }">
+            <component
+              :is="Component"
+              @backendError="addError"
+              @backendSuccess="clearErrors"
+            />
+          </router-view>
+        </div>
+        <InfoAppBanner v-if="!authenticated" />
+        <Footer style="flex-basis: 0;" />
+      </v-main>
+    </v-app>
 </template>
 
 <script setup>
@@ -49,8 +55,15 @@ import { useAuthStore } from '@/store/authStore';
 import { useRoute } from 'vue-router';
 import Maintenance from '@/components/Structure/Maintenance.vue';
 
-const errorStack = ref([]);
 const drawer = ref(false);
+
+const alertType = ref(null)
+
+const errorsList = ref(new Map())
+
+const errorsNetworkList = ref(new Map())
+
+let isErrorNetwork = false
 
 const authStore = useAuthStore();
 
@@ -68,24 +81,28 @@ watch(
         message: 'Erreur réseau',
         description: 'Service indisponible : merci de réessayer ultérieurement.'
       };
-      errorStack.value.push(newError);
+      const notificationId = self.crypto.randomUUID()
+      errorsList.value.set(notificationId, newError)
     }
   },
   { immediate: true } // Option pour exécuter le watcher dès le montage du composant
 );
 
 function addError(error) {
+  const notificationId = self.crypto.randomUUID()
+  alertType.value = "error"
   let newError = {
     message: 'Erreur',
     description: ''
-  };
-  if (!error.response) {
-    newError.message = 'Erreur réseau : ' + error.code;
-    newError.description = 'Service indisponible : merci de réessayer ultérieurement.';
-  } else {
-    if (error.response.status === HttpStatusCode.NotFound) {
-      newError.message = 'Impossible de récupérer les données';
-      newError.description = 'Vérifiez que vos urls d\'appel au serveur sont correctes ainsi que vos clés d\'autorisation ' + '(' + error.config.url + ')';
+  }
+  if(!error.response){
+    isErrorNetwork = true
+    newError.message = 'Erreur réseau : ' + error.code
+    newError.description = 'Service indisponible : merci de réessayer ultérieurement.'
+  }else{
+    if (error.response.status === HttpStatusCode.NotFound){
+      newError.message = 'Impossible de récupérer les données'
+      newError.description = 'Vérifiez que vos urls d\'appel au serveur sont correctes ainsi que vos clés d\'autorisation ' + '(' + error.config.url + ')'
     }
     if (error.response.status === HttpStatusCode.Forbidden) {
       newError.message = 'Accès rejeté';
@@ -99,8 +116,7 @@ function addError(error) {
       newError.message = 'Accès rejeté';
       newError.description = 'Mauvaise requête : contrôlez les paramètres de votre requête et observez les logs du serveur pour plus d\'informations ' + '(' + error.config.url + ')';
     }
-    if (error.response.status.toString()
-      .startsWith('5')) {
+    if (error.response.status.toString().startsWith('5')) {
       newError.message = 'Problème de disponibilité du serveur';
       newError.description = 'Retentez plus tard. Vérifiez la disponibilité de la base de donnée (Etat des serveurs) en cliquant en bas à gauche sur l\'icone de paramètres. Si le problème perdure, contactez l\'assistance';
     }
@@ -114,15 +130,7 @@ function addError(error) {
   if (error.request.url) {
     newError.description = 'Problème de disponibilité du fichier demandé';
   }
-  errorStack.value.push(newError);
-}
-
-function clearErrors() {
-  errorStack.value = [];
-}
-
-function closeAlert(index) {
-  errorStack.value.splice(index, 1);
+  addNotification(notificationId, newError)
 }
 
 function onLogout() {
@@ -132,33 +140,53 @@ function onLogout() {
 function toggleDrawer() {
   drawer.value = !drawer.value;
 }
+
+function addNotification(notificationId, message) {
+  if (isErrorNetwork) {
+    errorsNetworkList.value.set(notificationId, message)
+    setTimeout(() => removeNotification(notificationId), 9000) // impose un timeout au v-alert pour que les alertes de type ERR_NETWORK ne surchargent pas la Map errorsList
+    isErrorNetwork = false;
+  } else {
+    errorsList.value.set(notificationId, message)
+  }
+}
+
+function removeNotification(notificationId) {
+  if (notificationId != null) {
+    errorsList.value.delete(notificationId)
+    errorsNetworkList.value.delete(notificationId)
+  }
+}
+
+function clearErrors() {
+  errorsNetworkList.value.clear();
+}
+
 </script>
 
 <style>
 /*Declaré en global*/
 
-
+/* Style des card contenant les choix proposés aux utilisateurs et utilisatrices */
 .custom-card-title {
   background-color: v-bind('$vuetify.theme.current.colors.primary');
   color: v-bind('$vuetify.theme.current.colors.textColor');
 }
 
-.error-stack {
+/* Style du container comprenant les messages d'erreur */
+.notificationContainer {
   position: fixed;
-  top: 64px; /* Ajustez cette valeur en fonction de la hauteur de votre barre de navigation */
-  left: 0;
-  right: 0;
-  z-index: 100;
-  padding: 10px;
+  top: 80px;
+  right: 10px;
+  display: grid;
+  grid-gap: 0.5em;
+  z-index: 99;
 }
 
-.custom-alert {
-  background-color: #FFEBEE !important; /* Fond rouge clair */
-  color: #B71C1C !important; /* Texte rouge foncé */
-  opacity: 1 !important; /* Assurez-vous que l'alerte est complètement opaque */
+/* Permet d'avoir le bon formatage du message d'erreur sur la page de connexion */
+.alertMessage {
+  background-color: rgb(var(--v-theme-error));
+  color: white;
 }
 
-.custom-alert :deep(.v-alert__close) {
-  color: #B71C1C !important; /* Assure que le bouton de fermeture est de la même couleur que le texte */
-}
 </style>

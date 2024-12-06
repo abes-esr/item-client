@@ -101,8 +101,8 @@ const isEnrichiAvailable = computed(() =>
   (idEtatCurrentDemande.value >= 4 && props.demande.type === 'MODIF') ||
   (idEtatCurrentDemande.value >= 5 && props.demande.type === 'SUPP')
 )
-const isResultatAvailable = computed(() => idEtatCurrentDemande.value >= 7 && idEtatCurrentDemande.value !== 8)
-const isSauvegardeAvailable = computed(() => idEtatCurrentDemande.value >= 7)
+const isResultatAvailable = computed(() => idEtatCurrentDemande.value >= 7 && idEtatCurrentDemande.value !== 8 && props.demande.pourcentageProgressionTraitement > 0)
+const isSauvegardeAvailable = computed(() => idEtatCurrentDemande.value >= 7  && props.demande.pourcentageProgressionTraitement > 0)
 
 onMounted(() => {
   itemService.getEtatsDemande()

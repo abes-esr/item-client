@@ -91,6 +91,7 @@
           <v-chip color="success" variant="flat" v-else-if="item.etatDemande === 'Terminé'">Terminé</v-chip>
           <v-chip color="archived" variant="flat" v-else-if="item.etatDemande === 'Archivé'">Archivé</v-chip>
           <v-chip color="error" variant="flat" v-else-if="item.etatDemande === 'En erreur'">En erreur</v-chip>
+          <v-chip color="stopped" variant="flat" v-else-if="item.etatDemande === 'Annulé'">Annulé</v-chip>
           <v-chip color="info" variant="flat" v-else>{{ item.etatDemande }}</v-chip>
           <!-- Cas : ne correspont à aucun cas -->
         </td>
@@ -106,6 +107,7 @@
         </td>
         <td class="text-center">
           <!-- Colonne Action -->
+          <btn-stop v-if="canStop(item)" :id="item.id" @stop="loadItems('SUPP', isArchiveDemandesDisplayed)"></btn-stop>
           <v-btn v-if="canArchive(item)" variant="plain" icon="mdi-archive" @click="archiverDemande(item)"></v-btn>
           <v-btn v-else-if="canCancel(item)" variant="plain" icon="mdi-delete" @click="supprimerDemande(item)"></v-btn>
         </td>
@@ -125,6 +127,7 @@ import DialogCommentaire from '@/components/Dialog/DialogCommentaire.vue';
 import MenuDownloadFile from '@/components/MenuDownloadFile.vue';
 import moment from 'moment/moment';
 import {useAuthStore} from "@/store/authStore";
+import BtnStop from "@/components/Supp/BtnStop.vue";
 
 //Emit
 const emit = defineEmits(['backendError', 'backendSuccess']);
@@ -230,7 +233,8 @@ const listStatut = [
   'En attente',
   'En cours de traitement',
   'Terminé',
-  'En erreur'
+  'En erreur',
+  'Annulé'
 ];
 const listTypeTraitement = ref([]);
 const contentsDemandesFromServer = ref([]);
@@ -345,11 +349,15 @@ function isAvailableFile(demandeNumber, filename) {
 
 //Action d'archivage ou suppression selon état de la demande dans le TDB
 function canArchive(item) {
-  return item.etatDemande === 'Terminé';
+  return item.etatDemande === 'Terminé' || item.etatDemande === 'Annulé';
 }
 
 function canCancel(item) {
-  return item.etatDemande !== 'Terminé' && item.etatDemande !== 'En cours de traitement' && item.etatDemande !== 'En attente';
+  return item.etatDemande !== 'Terminé' && item.etatDemande !== 'En cours de traitement' && item.etatDemande !== 'En attente' && item.etatDemande !== 'Annulé';
+}
+
+function canStop(item) {
+  return item.etatDemande === 'En cours de traitement' || item.etatDemande === 'En attente'
 }
 
 //Suppression d'une demande
@@ -389,12 +397,12 @@ function throwError(error) {
 }
 
 function colorProgressBar(item) {
-  if (item.pourcentageProgressionTraitement === 100) {
-    if (item.etatDemande === 'Terminé') {
-      return 'success';
-    } else if (item.etatDemande === 'En erreur') {
-      return 'error';
-    }
+  if (item.etatDemande === 'Terminé') {
+    return 'success';
+  } else if (item.etatDemande === 'En erreur') {
+    return 'error';
+  } else if (item.etatDemande === 'Annulé') {
+    return 'stopped';
   }
   return 'grey-lighten-1';
 }

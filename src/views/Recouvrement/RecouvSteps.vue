@@ -63,28 +63,17 @@
               </v-stepper-window-item>
             </v-stepper-window>
           </v-stepper>
-          <v-dialog
-            v-model="dialog"
-            width="500"
-          >
-            <v-card>
-              <v-card-title class="headline" primary-title>Traitement validé</v-card-title>
-              <v-card-text>Votre demande est en cours de traitement.<br/>Un mail vous sera envoyé quand celui-ci sera
-                terminé.
-                <br>Vous pouvez retrouver l'ensemble de vos demandes sur votre tableau de bord ITEM. Rubrique "Gérer mes
-                taux de recouvrement".
-              </v-card-text>
-              <v-divider></v-divider>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="primary" @click="router.push('recouvrement-tableau')" aria-label="OK">OK</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
         </v-col>
       </v-row>
     </v-col>
   </v-container>
+  <dialog-lancer-traitement v-model="dialog"
+                            :is-loading="isLoading"
+                            rubrique="Gérer mes recouvrements"
+                            route="recouvrement-tableau"
+                            body="Voulez-vous démarrer le traitement de votre demande de recouvrement ?"
+                            @launch="isLoading = false">
+  </dialog-lancer-traitement>
   <dialog-suppression v-model="suppDialog" :demande="demande" return-to-accueil></dialog-suppression>
 </template>
 
@@ -96,6 +85,7 @@ import itemService from '@/service/ItemService';
 import router from '@/router';
 import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
 import RecapDemande from '@/components/RecapDemande.vue';
+import DialogLancerTraitement from '@/components/Dialog/DialogLancerTraitement.vue'
 
 const props = defineProps({id : {type: String}});
 const emits = defineEmits(['backendError']);
