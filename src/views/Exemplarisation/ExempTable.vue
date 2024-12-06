@@ -26,7 +26,8 @@
       </v-tooltip>
     </v-chip>
   </v-container>
-  <v-data-table :headers="filteredHeadingsDemandes" :items="contentsDemandesFrontFiltered" :items-length="totalItemsFound"
+  <v-data-table :headers="filteredHeadingsDemandes" :items="contentsDemandesFrontFiltered"
+                :items-length="totalItemsFound"
                 :loading="!isDataLoaded" show-expand :sort-by="sortBy"
                 item-key="id"
   >
@@ -119,9 +120,20 @@
         </td>
         <td class="text-center">
           <!-- Colonne Action -->
-          <v-btn v-if="canArchive(item)" variant="plain" icon="mdi-archive" @click="archiverDemande(item)"></v-btn>
-          <v-btn v-else-if="canCancel(item)" variant="plain" icon="mdi-delete" @click="supprimerDemande(item)"></v-btn>
-
+          <v-tooltip v-if="canArchive(item)" text="Archiver">
+            <template v-slot:activator="{ props }">
+              <v-btn v-bind="props" variant="plain" icon="mdi-archive"
+                     @click="archiverDemande(item)"
+                     aria-label="Archiver"></v-btn>
+            </template>
+          </v-tooltip>
+          <v-tooltip v-else-if="canCancel(item)" text="Supprimer">
+            <template v-slot:activator="{ props }">
+              <v-btn v-bind="props" variant="plain" icon="mdi-delete"
+                     @click="supprimerDemande(item)"
+                     aria-label="Supprimer"></v-btn>
+            </template>
+          </v-tooltip>
         </td>
       </tr>
     </template>
@@ -138,12 +150,13 @@ import DialogCommentaire from '@/components/Dialog/DialogCommentaire.vue';
 import itemService from '@/service/ItemService';
 import MenuDownloadFile from '@/components/MenuDownloadFile.vue';
 import moment from 'moment';
-import {useAuthStore} from '@/store/authStore'
+import { useAuthStore } from '@/store/authStore';
 //Emit
 const emit = defineEmits(['backendError', 'backendSuccess']);
 
 //Data
-const isAdmin = useAuthStore().isAdmin();
+const isAdmin = useAuthStore()
+  .isAdmin();
 const extendedAllILN = ref(false);
 
 const headingsDemandes = [
@@ -249,7 +262,7 @@ const headingsDemandes = [
 ];
 const filteredHeadingsDemandes = computed(() =>
   headingsDemandes.filter(heading => heading.display !== false)
-)
+);
 
 const listStatut = [
   'En saisie',
