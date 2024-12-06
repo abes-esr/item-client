@@ -1,17 +1,17 @@
 <template>
   <v-container fluid>
-    <v-chip :variant="isActiveDemandesDisplayed ? 'plain' : 'tonal'" style="margin-right: 10px"
-            @click="switchArchiveActiveDisplay(!isActiveDemandesDisplayed)">Demandes de recouvrement
+    <v-chip :variant="isArchiveDemandesDisplayed ? 'plain' : 'tonal'" style="margin-right: 10px"
+            @click="switchArchiveActiveDisplay(!isArchiveDemandesDisplayed)">Demandes de recouvrement
     </v-chip>
-    <v-chip :variant="!isActiveDemandesDisplayed ? 'plain' : 'tonal'"
-            @click="switchArchiveActiveDisplay(!isActiveDemandesDisplayed)">Demandes de recouvrement archivées
+    <v-chip :variant="!isArchiveDemandesDisplayed ? 'plain' : 'tonal'"
+            @click="switchArchiveActiveDisplay(!isArchiveDemandesDisplayed)">Demandes de recouvrement archivées
     </v-chip>
     <v-chip variant="text">
       <v-tooltip v-if="isAdmin" activator="parent" location="bottom">
         <template v-slot:activator="{ props }">
           <label>
             <input type="checkbox" v-model="extendedAllILN" style="margin-right: 5px"
-                   @change="loadItems('RECOUV', isActiveDemandesDisplayed)">
+                   @change="loadItems('RECOUV')">
             <span v-bind="props">Affichage étendu sur tous les ILN</span>
           </label>
         </template>
@@ -108,12 +108,13 @@
           <!-- Colonne Action -->
           <v-btn v-if="canArchive(item)" variant="plain" icon="mdi-archive" @click="archiverDemande(item)"></v-btn>
           <v-btn v-else-if="canCancel(item)" variant="plain" icon="mdi-delete" @click="supprimerDemande(item)"></v-btn>
+          <v-btn v-if="item.etatDemande === 'Archivé'" variant="plain"  icon="mdi-package-up" @click="restaurerDemande(item)"></v-btn>
         </td>
       </tr>
     </template>
   </v-data-table>
   <dialog-suppression v-model="suppDialog" :demande="suppDemande"
-                      @supp="loadItems('RECOUV', isActiveDemandesDisplayed)"></dialog-suppression>
+                      @supp="loadItems('RECOUV')"></dialog-suppression>
 </template>
 
 <script setup>
@@ -260,15 +261,15 @@ const isDialogOpen = computed(() => {
 });
 
 //Actives or archives demands displayed
-const isActiveDemandesDisplayed = ref(false);
+const isArchiveDemandesDisplayed = ref(false);
 
 //Data initialisation
 onMounted(() => {
-  loadItems('RECOUV', isActiveDemandesDisplayed.value);
+  loadItems('RECOUV');
   contentsDemandesFromServer.value = [...contentsDemandesFromServer.value];
   polling = setInterval(() => {
     if (!isDialogOpen.value) {
-      loadItems('RECOUV', isActiveDemandesDisplayed.value)
+      loadItems('RECOUV')
         .then(() => {
           filterItems();
         });
@@ -281,13 +282,13 @@ onBeforeUnmount(() => {
 });
 
 function switchArchiveActiveDisplay(value) {
-  isActiveDemandesDisplayed.value = value;
-  loadItems('RECOUV', isActiveDemandesDisplayed.value);
+  isArchiveDemandesDisplayed.value = value;
+  loadItems('RECOUV');
 }
 
-async function loadItems(type, archive) {
+async function loadItems(type) {
   try {
-    const response = await itemService.fetchDemandes(type, archive, extendedAllILN.value);
+    const response = await itemService.fetchDemandes(type, isArchiveDemandesDisplayed.value, extendedAllILN.value);
     contentsDemandesFromServer.value = response.data;
     contentsDemandesFrontFiltered.value = response.data.map((item) => ({
       ...item,
@@ -337,12 +338,21 @@ function supprimerDemande(item) {
   suppDemande.value = item;
 }
 
+function restaurerDemande(item) {
+  itemService.restaurerDemande(item.id, "RECOUV").then(() => {
+    loadItems('RECOUV')
+  }).catch(error => {
+    console.error(error);
+    emit('backendError', error);
+  });
+}
+
 //Archivage d'une demande
 async function archiverDemande(item) {
   try {
-    await itemService.archiverDemande('EXEMP', item.id);
+    await itemService.archiverDemande('RECOUV', item.id);
     // Mettre à jour les données après l'archivage réussi
-    await loadItems('EXEMP');
+    await loadItems('RECOUV');
     emit('backendSuccess');
   } catch (error) {
     console.error(error);
@@ -360,7 +370,7 @@ function saveAction() {
 }
 
 function saveComment() {
-  loadItems('RECOUV', isActiveDemandesDisplayed.value)
+  loadItems('RECOUV')
     .then(() => {
       filterItems();
     });

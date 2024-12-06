@@ -6,7 +6,7 @@
       </v-row>
       <v-row align="center" justify="center">
         <v-col :md="(currentStep === 3) ? '' : '7'">
-          <v-stepper  v-model="currentStep" @update:model-value="changeEtat()" alt-labels>
+          <v-stepper v-model="currentStep" @update:model-value="changeEtat()" alt-labels>
             <v-stepper-header>
               <v-stepper-item
                 :color="currentStep >= 0 ? 'primary' : ''"
@@ -58,7 +58,8 @@
                 </v-container>
               </v-stepper-window-item>
               <v-stepper-window-item>
-                <type-exemp v-model="typeDocumentSelected" :is-loading="isLoading" @deleted="deleteDemande()" @click="modifiTypeExemp"></type-exemp>
+                <type-exemp v-model="typeDocumentSelected" :is-loading="isLoading" @deleted="deleteDemande()"
+                            @click="modifiTypeExemp"></type-exemp>
                 <v-container class="d-flex justify-space-between">
                   <v-btn @click="prev">
                     précédent
@@ -66,7 +67,9 @@
                 </v-container>
               </v-stepper-window-item>
               <v-stepper-window-item>
-                <select-file v-model="fileSelected" :is-loading="isLoading" @deleted="deleteDemande()">Charger le fichier des exemplaires à traiter</select-file>
+                <select-file v-model="fileSelected" :is-loading="isLoading" @deleted="deleteDemande()">Charger le
+                  fichier des exemplaires à traiter
+                </select-file>
                 <v-alert
                   v-if="alertMessage"
                   :type="alertType"
@@ -86,7 +89,8 @@
                 </v-container>
               </v-stepper-window-item>
               <v-stepper-window-item>
-                <simulation :demande="demande" label-before="Exemplaire(s) existant(s)" label-after="Exemplaire à créer" @deleted="deleteDemande()"></simulation>
+                <simulation :demande="demande" label-before="Exemplaire(s) existant(s)" label-after="Exemplaire à créer"
+                            @deleted="deleteDemande()"></simulation>
                 <v-container class="d-flex justify-space-between">
                   <v-btn @click="prev">
                     précédent
@@ -102,30 +106,31 @@
       </v-row>
     </v-col>
   </v-container>
-  <dialog-lancer-traitement v-model="dialog" :is-loading="isLoading" rubrique="Gérer mes créations" route="exemplarisation-tableau" @launch="launchDemande()"></dialog-lancer-traitement>
-  <dialog-suppression  v-model="suppDialog" :demande="demande" return-to-accueil></dialog-suppression>
+  <dialog-lancer-traitement v-model="dialog" :is-loading="isLoading" rubrique="Gérer mes créations"
+                            route="exemplarisation-tableau" @launch="launchDemande()"></dialog-lancer-traitement>
+  <dialog-suppression v-model="suppDialog" :demande="demande" return-to-accueil></dialog-suppression>
 </template>
 
 <script setup>
 
-import {onMounted, ref} from 'vue'
+import { onMounted, ref } from 'vue';
 import itemService from '@/service/ItemService';
 import router from '@/router';
 import SelectFile from '@/components/SelectFile.vue';
 import Rcr from '@/components/Rcr.vue';
 import TypeExemp from '@/components/Exemp/TypeExemp.vue';
-import Simulation from "@/components/Simulation.vue";
+import Simulation from '@/components/Simulation.vue';
 import DialogLancerTraitement from '@/components/Dialog/DialogLancerTraitement.vue';
 import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
 import RecapDemande from '@/components/RecapDemande.vue';
 
-const emits = defineEmits(['backendError', 'backendSuccess', 'login-success'])
-const props = defineProps({id : {type: String}});
+const emits = defineEmits(['backendError', 'backendSuccess', 'login-success']);
+const props = defineProps({ id: { type: String } });
 
 const demande = ref();
 const currentStep = ref(0);
 const typeDocumentSelected = ref();
-const rcrSelected = ref()
+const rcrSelected = ref();
 const fileSelected = ref();
 const alertMessage = ref();
 const alertType = ref();
@@ -133,9 +138,9 @@ const isLoading = ref(false);
 const dialog = ref(false);
 const suppDialog = ref(false);
 
-onMounted(()=>{
-  if(props.id){
-    itemService.getDemande(props.id, "EXEMP")
+onMounted(() => {
+  if (props.id) {
+    itemService.getDemande(props.id, 'EXEMP')
       .then(response => {
         demande.value = response.data;
         switch (demande.value.etatDemande) {
@@ -160,11 +165,12 @@ onMounted(()=>{
             };
             break;
         }
-      }).catch(() => {
-      router.replace("/exemplarisation");
-    })
+      })
+      .catch(() => {
+        router.replace('/exemplarisation');
+      });
   }
-})
+});
 
 function createDemande() {
   if (demande.value && (rcrSelected.value === demande.value.rcr)) {
@@ -175,9 +181,11 @@ function createDemande() {
       .then(response => {
         demande.value = response.data;
         next();
-      }).catch(err => {
-        emits('backendError',err);
-      }).finally(() => {
+      })
+      .catch(err => {
+        emits('backendError', err);
+      })
+      .finally(() => {
         isLoading.value = false;
       });
   } else {
@@ -185,25 +193,27 @@ function createDemande() {
     itemService.creerDemande(rcrSelected.value, 'EXEMP')
       .then(response => {
         demande.value = response.data;
-        router.replace(`/exemplarisation/${demande.value.id}`)
+        router.replace(`/exemplarisation/${demande.value.id}`);
         next();
-      }).catch(err => {
-        emits('backendError',err);
-      }).finally(() => {
+      })
+      .catch(err => {
+        emits('backendError', err);
+      })
+      .finally(() => {
         isLoading.value = false;
       });
   }
 }
 
 function modifiTypeExemp() {
-  if(demande.value.typeExemp === typeDocumentSelected.value.libelle){
+  if (demande.value.typeExemp === typeDocumentSelected.value.libelle) {
     next();
   } else {
     isLoading.value = true;
     itemService.modifierTypeExempDemande(demande.value.id, typeDocumentSelected.value.id)
       .then(response => {
-        demande.value = response.data
-        next()
+        demande.value = response.data;
+        next();
       })
       .catch(err => {
         emits('backendError', err);
@@ -220,7 +230,11 @@ function uploadFile() {
   isLoading.value = true;
   itemService.uploadDemande(demande.value.id, fileSelected.value, 'EXEMP')
     .then(() => {
-      alertMessage.value = "Fichier envoyé";
+      alertMessage.value = 'Fichier envoyé';
+      itemService.getDemande(demande.value.id, demande.value.type)
+        .then(response => {
+          demande.value = response.data;
+        });
       next();
     })
     .catch(err => {
@@ -232,23 +246,25 @@ function uploadFile() {
     });
 }
 
-function launchDemande(){
+function launchDemande() {
   isLoading.value = true;
-  itemService.lancerDemande(demande.value.id,'EXEMP')
+  itemService.lancerDemande(demande.value.id, 'EXEMP')
     .then(response => {
       demande.value = response.data;
-    }).finally(() => {
+    })
+    .finally(() => {
       isLoading.value = false;
-  })
+    });
 }
 
-function deleteDemande(){
+function deleteDemande() {
   suppDialog.value = true;
 }
 
 function next() {
   currentStep.value++;
 }
+
 function prev() {
   currentStep.value--;
   changeEtat();
@@ -259,9 +275,9 @@ function changeEtat() {
     itemService.choixEtape(demande.value.id, 2, 'EXEMP')
       .then(response => {
         demande.value = response.data;
-      })
+      });
   }
-  if((currentStep.value + 1) === 3) { //Changement d'etat pour le chargement du fichier car le back est perdu sinon
+  if ((currentStep.value + 1) === 3) { //Changement d'etat pour le chargement du fichier car le back est perdu sinon
     itemService.choixEtape(demande.value.id, currentStep.value + 1, 'EXEMP')
       .then(response => {
         demande.value = response.data;
