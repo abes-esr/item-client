@@ -1,7 +1,10 @@
 <template>
   <v-tooltip v-if="canCancel(demande)" text="Supprimer">
     <template v-slot:activator="{ props }">
-      <v-btn v-bind="props" icon="mdi-delete" variant="plain" @click="dialog = true;">
+      <v-btn v-bind="props"
+             icon="mdi-delete"
+             variant="text"
+             @click="dialog = true">
       </v-btn>
     </template>
   </v-tooltip>

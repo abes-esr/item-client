@@ -1,7 +1,11 @@
 <template>
   <v-tooltip v-if="canStop(demande)" text="Annuler">
     <template v-slot:activator="{ props }">
-      <v-btn v-bind="props" icon="mdi-stop" variant="plain" @click="dialog.value = true;">
+      <v-btn v-bind="props"
+             icon="mdi-stop"
+             variant="text"
+             color="error"
+             @click="dialog = true">
       </v-btn>
     </template>
   </v-tooltip>

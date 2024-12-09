@@ -1,7 +1,10 @@
 <template>
   <v-tooltip v-if="demande.etatDemande === 'Archivé'" text="Restaurer">
     <template v-slot:activator="{ props }">
-      <v-btn v-bind="props" variant="plain" icon="mdi-package-up"
+      <v-btn v-bind="props"
+             variant="text"
+             color="success"
+             icon="mdi-package-up"
              @click="restaurerDemande(demande)"></v-btn>
     </template>
   </v-tooltip>

@@ -1,7 +1,10 @@
 <template>
   <v-tooltip v-if="canArchive(demande)" text="Archiver">
     <template v-slot:activator="{ props }">
-      <v-btn v-bind="props" variant="plain" icon="mdi-archive"
+      <v-btn v-bind="props"
+             variant="text"
+             icon="mdi-archive"
+             color="archived"
              @click="archiverDemande(demande)"
              aria-label="Archiver"></v-btn>
     </template>
