@@ -15,7 +15,7 @@
 <script setup>
 import itemService from '@/service/ItemService';
 
-const emits = defineEmits(['stop', 'onError']);
+const emits = defineEmits(['clicked', 'onError']);
 const dialog = defineModel();
 const props = defineProps({
   id: {
@@ -31,7 +31,7 @@ function stopDemande() {
     })
     .finally(() => {
       dialog.value = false;
-      emits('stop');
+      emits('clicked');
     });
 }
 </script>
