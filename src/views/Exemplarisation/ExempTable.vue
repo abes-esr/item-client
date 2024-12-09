@@ -1,18 +1,18 @@
 <template>
 
   <v-container fluid>
-    <v-chip :variant="isActiveDemandesDisplayed ? 'plain' : 'tonal'" style="margin-right: 10px"
-            @click="switchArchiveActiveDisplay(!isActiveDemandesDisplayed)">Demandes d'exemplarisation
+    <v-chip :variant="isArchiveDemandesDisplayed ? 'plain' : 'tonal'" style="margin-right: 10px"
+            @click="switchArchiveActiveDisplay(!isArchiveDemandesDisplayed)">Demandes d'exemplarisation
     </v-chip>
-    <v-chip :variant="!isActiveDemandesDisplayed ? 'plain' : 'tonal'"
-            @click="switchArchiveActiveDisplay(!isActiveDemandesDisplayed)">Demandes d'exemplarisation archivées
+    <v-chip :variant="!isArchiveDemandesDisplayed ? 'plain' : 'tonal'"
+            @click="switchArchiveActiveDisplay(!isArchiveDemandesDisplayed)">Demandes d'exemplarisation archivées
     </v-chip>
     <v-chip variant="text">
       <v-tooltip v-if="isAdmin" activator="parent" location="bottom">
         <template v-slot:activator="{ props }">
           <label>
             <input type="checkbox" v-model="extendedAllILN" style="margin-right: 5px"
-                   @change="loadItems('EXEMP', isActiveDemandesDisplayed)">
+                   @change="loadItems('EXEMP')">
             <span v-bind="props">Affichage étendu sur tous les ILN</span>
           </label>
         </template>
@@ -121,13 +121,13 @@
           <!-- Colonne Action -->
           <v-btn v-if="canArchive(item)" variant="plain" icon="mdi-archive" @click="archiverDemande(item)"></v-btn>
           <v-btn v-else-if="canCancel(item)" variant="plain" icon="mdi-delete" @click="supprimerDemande(item)"></v-btn>
-
+          <v-btn v-if="item.etatDemande === 'Archivé'" variant="plain"  icon="mdi-package-up" @click="restaurerDemande(item)"></v-btn>
         </td>
       </tr>
     </template>
   </v-data-table>
   <dialog-suppression v-model="suppDialog" :demande="suppDemande"
-                      @supp="loadItems('EXEMP', isActiveDemandesDisplayed)"></dialog-suppression>
+                      @supp="loadItems('EXEMP')"></dialog-suppression>
 </template>
 
 <script setup>
@@ -288,11 +288,11 @@ const isDialogOpen = computed(() => {
 });
 //Actives or archives demands displayed
 
-const isActiveDemandesDisplayed = ref(false);
+const isArchiveDemandesDisplayed = ref(false);
 
 //Data initialisation
 onMounted(() => {
-  loadItems('EXEMP', isActiveDemandesDisplayed.value);
+  loadItems('EXEMP');
   contentsDemandesFromServer.value = [...contentsDemandesFromServer.value];
   itemService.getTypeExemp()
     .then(response => {
@@ -304,7 +304,7 @@ onMounted(() => {
     });
   polling = setInterval(() => {
     if (!isDialogOpen.value) {
-      loadItems('EXEMP', isActiveDemandesDisplayed.value)
+      loadItems('EXEMP')
         .then(() => {
           filterItems();
         });
@@ -317,13 +317,13 @@ onBeforeUnmount(() => {
 });
 
 function switchArchiveActiveDisplay(value) {
-  isActiveDemandesDisplayed.value = value;
-  loadItems('EXEMP', isActiveDemandesDisplayed.value);
+  isArchiveDemandesDisplayed.value = value;
+  loadItems('EXEMP');
 }
 
-async function loadItems(type, archive) {
+async function loadItems(type) {
   try {
-    const response = await itemService.fetchDemandes(type, archive, extendedAllILN.value);
+    const response = await itemService.fetchDemandes(type, isArchiveDemandesDisplayed.value, extendedAllILN.value);
     contentsDemandesFromServer.value = response.data;
     contentsDemandesFrontFiltered.value = response.data.map((item) => ({
       ...item,
@@ -374,6 +374,15 @@ function supprimerDemande(item) {
   suppDemande.value = item;
 }
 
+function restaurerDemande(item) {
+  itemService.restaurerDemande(item.id, "EXEMP").then(() => {
+    loadItems('EXEMP');
+  }).catch(error => {
+    console.error(error);
+    emit('backendError', error);
+  });
+}
+
 //Archivage d'une demande
 async function archiverDemande(item) {
   try {
@@ -394,7 +403,7 @@ function onRowClick(item) {
 }
 
 function saveComment() {
-  loadItems('EXEMP', isActiveDemandesDisplayed.value)
+  loadItems('EXEMP')
     .then(() => {
       filterItems();
     });
