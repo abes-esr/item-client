@@ -109,7 +109,7 @@
         <td class="text-center">
           <!-- Colonne Action -->
           <btn-stop v-if="canStop(item)" :id="item.id" @stop="loadItems('SUPP', isArchiveDemandesDisplayed)"
-                    aria-label="Annuler"></btn-stop>
+                    @on-error="throwError" aria-label="Annuler"></btn-stop>
           <v-tooltip v-if="canArchive(item)" text="Archiver">
             <template v-slot:activator="{ props }">
               <v-btn v-bind="props" variant="plain" icon="mdi-archive"
@@ -124,6 +124,7 @@
                      aria-label="Supprimer"></v-btn>
             </template>
           </v-tooltip>
+          <v-btn v-if="item.etatDemande === 'Archivé'" variant="plain"  icon="mdi-package-up" @click="restaurerDemande(item)"></v-btn>
         </td>
       </tr>
     </template>
@@ -140,6 +141,9 @@ import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
 import DialogCommentaire from '@/components/Dialog/DialogCommentaire.vue';
 import MenuDownloadFile from '@/components/MenuDownloadFile.vue';
 import moment from 'moment/moment';
+import { useAuthStore } from '@/store/authStore';
+import BtnStop from '@/components/Supp/BtnStop.vue';
+import itemService from "@/service/ItemService";
 import { useAuthStore } from '@/store/authStore';
 import BtnStop from '@/components/Supp/BtnStop.vue';
 
@@ -285,7 +289,7 @@ const isArchiveDemandesDisplayed = ref(false);
 
 //Data initialisation
 onMounted(() => {
-  loadItems('SUPP', isArchiveDemandesDisplayed.value);
+  loadItems('SUPP');
   contentsDemandesFromServer.value = [...contentsDemandesFromServer.value];
   demandesService.getTypeTraitement()
     .then(response => {
@@ -297,7 +301,7 @@ onMounted(() => {
     });
   polling = setInterval(() => {
     if (!isDialogOpen.value) {
-      loadItems('SUPP', isArchiveDemandesDisplayed.value)
+      loadItems('SUPP')
         .then(() => {
           filterItems();
         });
@@ -311,12 +315,12 @@ onBeforeUnmount(() => {
 
 function switchArchiveActiveDisplay(value) {
   isArchiveDemandesDisplayed.value = value;
-  loadItems('SUPP', isArchiveDemandesDisplayed.value);
+  loadItems('SUPP');
 }
 
-async function loadItems(type, archive) {
+async function loadItems(type) {
   try {
-    const response = await demandesService.fetchDemandes(type, archive, extendedAllILN.value);
+    const response = await demandesService.fetchDemandes(type, isArchiveDemandesDisplayed.value, extendedAllILN.value);
     contentsDemandesFromServer.value = response.data;
     contentsDemandesFrontFiltered.value = response.data.map((item) => ({
       ...item,
@@ -381,12 +385,21 @@ function supprimerDemande(item) {
   suppDemande.value = item;
 }
 
+function restaurerDemande(item) {
+  itemService.restaurerDemande(item.id, "SUPP").then(() => {
+    loadItems('SUPP');
+  }).catch(error => {
+    console.error(error);
+    emit('backendError', error);
+  });
+}
+
 //Archivage d'une demande
 async function archiverDemande(item) {
   try {
     await demandesService.archiverDemande('SUPP', item.id);
     // Mettre à jour les données après l'archivage réussi
-    await loadItems('SUPP', isArchiveDemandesDisplayed.value);
+    await loadItems('SUPP');
     emit('backendSuccess');
   } catch (error) {
     console.error(error);
@@ -401,7 +414,7 @@ function onRowClick(item) {
 }
 
 function saveComment() {
-  loadItems('SUPP', isArchiveDemandesDisplayed.value)
+  loadItems('SUPP')
     .then(() => {
       filterItems();
     });

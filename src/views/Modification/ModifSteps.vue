@@ -151,23 +151,23 @@
       </v-row>
     </v-col>
   </v-container>
-  <dialog-lancer-traitement v-model="dialog" :is-loading="isLoading" rubrique="Gérer mes modifications" route="modification-tableau" @launch="launchDemande()"></dialog-lancer-traitement>
+  <dialog-lancer-traitement v-model="dialog" :is-loading="isLoading" rubrique="Gérer mes modifications"
+                            route="modification-tableau" @launch="launchDemande()"></dialog-lancer-traitement>
   <dialog-suppression v-model="suppDialog" :demande="demande" return-to-accueil></dialog-suppression>
 </template>
 
 <script setup>
-import {onMounted, ref} from 'vue';
+import { onMounted, ref } from 'vue';
 import router from '@/router';
 import itemService from '@/service/ItemService';
 import Rcr from '@/components/Rcr.vue';
 import SelectFile from '@/components/SelectFile.vue';
 import DownloadFile from '@/components/DownloadFile.vue';
 import TypeTraitement from '@/components/Modif/TypeTraitement.vue';
-import Simulation from "@/components/Simulation.vue";
+import Simulation from '@/components/Simulation.vue';
 import DialogLancerTraitement from '@/components/Dialog/DialogLancerTraitement.vue';
 import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
 import RecapDemande from '@/components/RecapDemande.vue';
-
 
 const currentStep = ref(0);
 const demande = ref();
@@ -186,12 +186,11 @@ const fileName = ref('');
 const typeTraitementSelected = ref();
 
 const emits = defineEmits(['backendError']);
-const props = defineProps({id: {type: String}});
-
+const props = defineProps({ id: { type: String } });
 
 onMounted(() => {
   if (props.id) {
-    itemService.getDemande(props.id, "MODIF")
+    itemService.getDemande(props.id, 'MODIF')
       .then(response => {
         demande.value = response.data;
         switch (demande.value.etatDemande) {
@@ -224,11 +223,12 @@ onMounted(() => {
             };
             break;
         }
-      }).catch(() => {
-      router.replace("/modification");
-    })
+      })
+      .catch(() => {
+        router.replace('/modification');
+      });
   }
-})
+});
 
 function createDemande() {
   if (demande.value && (rcrSelected.value === demande.value.rcr)) {
@@ -239,23 +239,27 @@ function createDemande() {
       .then(response => {
         demande.value = response.data;
         next();
-      }).catch(err => {
-      emits('backendError', err);
-    }).finally(() => {
-      isLoading.value = false;
-    });
+      })
+      .catch(err => {
+        emits('backendError', err);
+      })
+      .finally(() => {
+        isLoading.value = false;
+      });
   } else {
     isLoading.value = true;
     itemService.creerDemande(rcrSelected.value, 'MODIF')
       .then(response => {
         demande.value = response.data;
-        router.replace(`/modification/${demande.value.id}`)
+        router.replace(`/modification/${demande.value.id}`);
         next();
-      }).catch(err => {
-      emits('backendError', err);
-    }).finally(() => {
-      isLoading.value = false;
-    });
+      })
+      .catch(err => {
+        emits('backendError', err);
+      })
+      .finally(() => {
+        isLoading.value = false;
+      });
   }
 }
 
@@ -263,16 +267,16 @@ function uploadFileInit() {
   alertMessage.value = '';
   alertType.value = 'success';
   isLoading.value = true;
-  itemService.uploadDemande(demande.value.id, fileInitSelected.value, 'MODIF')
+  itemService.uploadDemande(demande.value.id, fileInitSelected.value, demande.value.type)
     .then(() => {
-      alertMessage.value = "Fichier envoyé";
-      itemService.getFile(demande.value.id, 'MODIF','fichier_prepare', '.csv')
+      alertMessage.value = 'Fichier envoyé';
+      itemService.getFile(demande.value.id, 'MODIF', 'fichier_prepare', '.csv')
         .then(response => {
-          let blob = new Blob([response.data], {type: 'application/csv'});
+          let blob = new Blob([response.data], { type: 'application/csv' });
           fileLink.value = window.URL.createObjectURL(blob);
           fileName.value = `fichier_demande_${demande.value.id}.csv`;
           isLoaded.value = true;
-        })
+        });
     })
     .catch(err => {
       alertMessage.value = err.response.data.message;
@@ -289,7 +293,11 @@ function uploadFileFinal() {
   isLoading.value = true;
   itemService.uploadDemande(demande.value.id, fileFinalSelected.value, 'MODIF')
     .then(() => {
-      alertMessage.value = "Fichier envoyé";
+      itemService.getDemande(demande.value.id, demande.value.type)
+        .then(response => {
+          demande.value = response.data;
+        });
+      alertMessage.value = 'Fichier envoyé';
       isLoaded.value = true;
       next();
     })
@@ -307,22 +315,25 @@ function modifierTypeTraitementModifDemande() {
   itemService.modifierTypeTraitementModifDemande(demande.value.id, typeTraitementSelected.value.id)
     .then(response => {
       demande.value = response.data;
-      next()
-    }).catch(err => {
-    emits('backendError', err);
-  }).finally(() => {
-    isLoading.value = false;
-  });
+      next();
+    })
+    .catch(err => {
+      emits('backendError', err);
+    })
+    .finally(() => {
+      isLoading.value = false;
+    });
 }
 
-function launchDemande(){
+function launchDemande() {
   isLoading.value = true;
-  itemService.lancerDemande(demande.value.id,'MODIF')
+  itemService.lancerDemande(demande.value.id, 'MODIF')
     .then(response => {
       demande.value = response.data;
-    }).finally(() => {
-    isLoading.value = false;
-  })
+    })
+    .finally(() => {
+      isLoading.value = false;
+    });
 }
 
 function downloaded() {
