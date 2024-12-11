@@ -4,7 +4,7 @@
       <v-btn v-bind="props"
              icon="mdi-stop"
              variant="text"
-             color="error"
+             color="red"
              @click="dialog = true">
       </v-btn>
     </template>

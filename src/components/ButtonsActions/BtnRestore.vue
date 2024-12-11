@@ -3,7 +3,7 @@
     <template v-slot:activator="{ props }">
       <v-btn v-bind="props"
              variant="text"
-             color="success"
+             color="green"
              icon="mdi-package-up"
              @click="restaurerDemande(demande)"></v-btn>
     </template>
