@@ -4,7 +4,7 @@
       <v-btn v-bind="props"
              variant="text"
              icon="mdi-archive"
-             color="archived"
+             color="primary"
              @click="archiverDemande(demande)"
              aria-label="Archiver"></v-btn>
     </template>
@@ -28,12 +28,12 @@ function canArchive(item) {
 //Archivage d'une demande
 function archiverDemande(item) {
   itemService.archiverDemande(item.type, item.id)
-      .then(() => {
-        emits('clicked');
-      })
-      .catch(error => {
-        emits('onError', error);
-      });
+    .then(() => {
+      emits('clicked');
+    })
+    .catch(error => {
+      emits('onError', error);
+    });
 }
 
 </script>
