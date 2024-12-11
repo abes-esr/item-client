@@ -10,7 +10,7 @@
       <v-card>
         <v-card-title>Suppression</v-card-title>
         <v-divider></v-divider>
-        <v-card-text>Êtes-vous certain de vouloir supprimer définitivement cette demande ?</v-card-text>
+        <v-card-text>Êtes-vous certain de vouloir supprimer définitivement la demande N°{{ demande.id }} ?</v-card-text>
         <v-card-actions>
 
           <v-container class="d-flex justify-space-between">
@@ -28,7 +28,7 @@ import router from '@/router';
 import { ref } from 'vue';
 
 const dialog = defineModel();
-const emits = defineEmits(['supp'])
+const emits = defineEmits(['supp']);
 const props = defineProps({
   returnToAccueil: {
     required: false,
@@ -38,21 +38,22 @@ const props = defineProps({
     required: true,
     type: Object
   }
-})
+});
 const isLoading = ref(false);
 
 function confirm() {
   isLoading.value = true;
   itemService.deleteDemande(props.demande.id, props.demande.type)
-    .then(()=>{
-      if(props.returnToAccueil){
+    .then(() => {
+      if (props.returnToAccueil) {
         router.push('/accueil');
       }
       emits('supp');
-    }).finally(() => {
-    isLoading.value = false;
-    dialog.value = false;
-  })
+    })
+    .finally(() => {
+      isLoading.value = false;
+      dialog.value = false;
+    });
 }
 
 function cancel() {
