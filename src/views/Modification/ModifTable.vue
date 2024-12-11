@@ -25,7 +25,8 @@
       </v-tooltip>
     </v-chip>
   </v-container>
-  <v-data-table :headers="filteredHeadingsDemandes" :items="contentsDemandesFrontFiltered" :items-length="totalItemsFound"
+  <v-data-table :headers="filteredHeadingsDemandes" :items="contentsDemandesFrontFiltered"
+                :items-length="totalItemsFound"
                 :loading="!isDataLoaded" show-expand :sort-by="sortBy"
                 item-key="id">
     <template v-slot:body.prepend>
@@ -117,32 +118,36 @@
         </td>
         <td class="text-center">
           <!-- Colonne Action -->
-          <v-btn v-if="canArchive(item)" variant="plain" icon="mdi-archive" @click="archiverDemande(item)"></v-btn>
-          <v-btn v-else-if="canCancel(item)" variant="plain" icon="mdi-delete" @click="supprimerDemande(item)"></v-btn>
-          <v-btn v-if="item.etatDemande === 'Archivé'" variant="plain"  icon="mdi-package-up" @click="restaurerDemande(item)"></v-btn>
+          <btn-archive :demande="item" @clicked="loadItems(item.type)"
+                       @on-error="throwError" aria-label="Archiver"></btn-archive>
+          <btn-suppression :demande="item" @clicked="loadItems(item.type)"
+                           @on-error="throwError" aria-label="Supprimer"></btn-suppression>
+          <btn-restore :demande="item" @clicked="loadItems(item.type)"
+                       @on-error="throwError" aria-label="Restaurer"></btn-restore>
         </td>
       </tr>
     </template>
   </v-data-table>
-  <dialog-suppression v-model="suppDialog" :demande="suppDemande"
-                      @supp="loadItems('MODIF')"></dialog-suppression>
 </template>
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import router from '@/router';
 import itemService from '@/service/ItemService';
-import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
 import DialogCommentaire from '@/components/Dialog/DialogCommentaire.vue';
 import MenuDownloadFile from '@/components/MenuDownloadFile.vue';
 import moment from 'moment/moment';
-import {useAuthStore} from "@/store/authStore";
+import { useAuthStore } from '@/store/authStore';
+import BtnRestore from '@/components/ButtonsActions/BtnRestore.vue';
+import BtnSuppression from '@/components/ButtonsActions/BtnSuppression.vue';
+import BtnArchive from '@/components/ButtonsActions/BtnArchive.vue';
 
 //Emit
 const emit = defineEmits(['backendError', 'backendSuccess']);
 
 //Data
-const isAdmin = useAuthStore().isAdmin();
+const isAdmin = useAuthStore()
+  .isAdmin();
 const extendedAllILN = ref(false);
 const headingsDemandes = [
   {
@@ -247,7 +252,7 @@ const headingsDemandes = [
 ];
 const filteredHeadingsDemandes = computed(() =>
   headingsDemandes.filter(heading => heading.display !== false)
-)
+);
 
 const listStatut = [
   'En saisie',
@@ -357,52 +362,6 @@ function filterItems() {
       .includes(statutSearchField.value) || ((statutSearchField.value === 'En saisie') && (demande.etatDemande === 'En simulation' || demande.etatDemande === 'En préparation' || demande.etatDemande === 'Préparée' || demande.etatDemande === 'A compléter'));
     return matchesNumDemande && matchesNbExemplaires && matchesDateCreation && matchesDateModification && matchesRCR && matchesILN && matchesZone && matchesTraitement && matchesEtatDemande;
   });
-}
-
-function isAvailableFile(demandeNumber, filename) {
-  return itemService.headFile(filename, demandeNumber, 'csv', 'MODIF')
-    .then((response) => response.status !== 500)
-    .catch((error) => {
-      console.error(error);
-      return false;
-    });
-}
-
-//Action d'archivage ou suppression selon état de la demande dans le TDB
-function canArchive(item) {
-  return item.etatDemande === 'Terminé';
-}
-
-function canCancel(item) {
-  return item.etatDemande !== 'Terminé' && item.etatDemande !== 'En cours de traitement' && item.etatDemande !== 'En attente';
-}
-
-//Suppression d'une demande
-function supprimerDemande(item) {
-  suppDialog.value = true;
-  suppDemande.value = item;
-}
-
-function restaurerDemande(item) {
-  itemService.restaurerDemande(item.id, "MODIF").then(() => {
-    loadItems('MODIF');
-  }).catch(error => {
-    console.error(error);
-    emit('backendError', error);
-  });
-}
-
-//Archivage d'une demande
-async function archiverDemande(item) {
-  try {
-    await itemService.archiverDemande('MODIF', item.id);
-    // Mettre à jour les données après l'archivage réussi
-    await loadItems('MODIF');
-    emit('backendSuccess');
-  } catch (error) {
-    console.error(error);
-    emit('backendError', error);
-  }
 }
 
 function onRowClick(item) {

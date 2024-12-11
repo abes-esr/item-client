@@ -108,30 +108,32 @@
         </td>
         <td class="text-center">
           <!-- Colonne Action -->
-          <btn-stop v-if="canStop(item)" :id="item.id" @stop="loadItems('SUPP', isArchiveDemandesDisplayed)"
-                    @on-error="throwError"></btn-stop>
-          <v-btn v-if="canArchive(item)" variant="plain" icon="mdi-archive" @click="archiverDemande(item)"></v-btn>
-          <v-btn v-else-if="canCancel(item)" variant="plain" icon="mdi-delete" @click="supprimerDemande(item)"></v-btn>
-          <v-btn v-if="item.etatDemande === 'Archivé'" variant="plain"  icon="mdi-package-up" @click="restaurerDemande(item)"></v-btn>
+          <btn-stop :demande="item" @clicked="loadItems(item.type)"
+                    @on-error="throwError" aria-label="Annuler"></btn-stop>
+          <btn-archive :demande="item" @clicked="loadItems(item.type)"
+                       @on-error="throwError" aria-label="Archiver"></btn-archive>
+          <btn-suppression :demande="item" @clicked="loadItems(item.type)"
+                           @on-error="throwError" aria-label="Supprimer"></btn-suppression>
+          <btn-restore :demande="item" @clicked="loadItems(item.type)"
+                       @on-error="throwError" aria-label="Restaurer"></btn-restore>
         </td>
       </tr>
     </template>
   </v-data-table>
-  <dialog-suppression v-model="suppDialog" :demande="suppDemande"
-                      @supp="loadItems('SUPP', isArchiveDemandesDisplayed)"></dialog-suppression>
 </template>
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import router from '@/router';
 import demandesService from '@/service/ItemService';
-import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
 import DialogCommentaire from '@/components/Dialog/DialogCommentaire.vue';
 import MenuDownloadFile from '@/components/MenuDownloadFile.vue';
 import moment from 'moment/moment';
+import BtnStop from '@/components/ButtonsActions/BtnStop.vue';
 import { useAuthStore } from '@/store/authStore';
-import BtnStop from '@/components/Supp/BtnStop.vue';
-import itemService from "@/service/ItemService";
+import BtnArchive from '@/components/ButtonsActions/BtnArchive.vue';
+import BtnSuppression from '@/components/ButtonsActions/BtnSuppression.vue';
+import BtnRestore from '@/components/ButtonsActions/BtnRestore.vue';
 
 //Emit
 const emit = defineEmits(['backendError', 'backendSuccess']);
@@ -140,6 +142,7 @@ const emit = defineEmits(['backendError', 'backendSuccess']);
 const isAdmin = useAuthStore()
   .isAdmin();
 const extendedAllILN = ref(false);
+const type = 'SUPP';
 const headingsDemandes = [
   {
     title: '',
@@ -245,8 +248,6 @@ const listTypeTraitement = ref([]);
 const contentsDemandesFromServer = ref([]);
 const contentsDemandesFrontFiltered = ref([]);
 const totalItemsFound = ref(0);
-const suppDialog = ref(false);
-const suppDemande = ref({});
 const sortBy = ref([{
   key: 'dateModification',
   order: 'desc'
@@ -316,7 +317,6 @@ async function loadItems(type) {
     isDataLoaded.value = true;
     emit('backendSuccess');
   } catch (error) {
-    console.error(error);
     emit('backendError', error);
   }
 }
@@ -341,56 +341,6 @@ function filterItems() {
       .includes(statutSearchField.value) || ((statutSearchField.value === 'En saisie') && (demande.etatDemande === 'En simulation' || demande.etatDemande === 'En préparation' || demande.etatDemande === 'Préparée' || demande.etatDemande === 'A compléter'));
     return matchesNumDemande && matchesNbExemplaires && matchesDateCreation && matchesDateModification && matchesRCR && matchesILN && matchesZone && matchesTraitement && matchesEtatDemande;
   });
-}
-
-function isAvailableFile(demandeNumber, filename) {
-  return demandesService.headFile(filename, demandeNumber, 'csv', 'SUPP')
-    .then((response) => response.status !== 500)
-    .catch((error) => {
-      console.error(error);
-      return false;
-    });
-}
-
-//Action d'archivage ou suppression selon état de la demande dans le TDB
-function canArchive(item) {
-  return item.etatDemande === 'Terminé' || item.etatDemande === 'Annulé';
-}
-
-function canCancel(item) {
-  return item.etatDemande !== 'Terminé' && item.etatDemande !== 'En cours de traitement' && item.etatDemande !== 'En attente' && item.etatDemande !== 'Annulé';
-}
-
-function canStop(item) {
-  return item.etatDemande === 'En cours de traitement' || item.etatDemande === 'En attente';
-}
-
-//Suppression d'une demande
-function supprimerDemande(item) {
-  suppDialog.value = true;
-  suppDemande.value = item;
-}
-
-function restaurerDemande(item) {
-  itemService.restaurerDemande(item.id, "SUPP").then(() => {
-    loadItems('SUPP');
-  }).catch(error => {
-    console.error(error);
-    emit('backendError', error);
-  });
-}
-
-//Archivage d'une demande
-async function archiverDemande(item) {
-  try {
-    await demandesService.archiverDemande('SUPP', item.id);
-    // Mettre à jour les données après l'archivage réussi
-    await loadItems('SUPP');
-    emit('backendSuccess');
-  } catch (error) {
-    console.error(error);
-    emit('backendError', error);
-  }
 }
 
 function onRowClick(item) {
@@ -420,7 +370,6 @@ function colorProgressBar(item) {
   }
   return 'grey-lighten-1';
 }
-
 </script>
 
 <style scoped>
