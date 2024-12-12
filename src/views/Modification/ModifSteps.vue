@@ -71,8 +71,8 @@
               </v-stepper-window-item>
               <v-stepper-window-item>
                 <select-file v-if="!isLoaded" v-model="fileInitSelected" :is-loading="isLoading"
-                             @deleted="deleteDemande()"></select-file>
-                <download-file v-else :file-link="fileLink" :file-name="fileName" @clicked="downloaded">Récupération du
+                             @deleted="deleteDemande()">Charger le fichier des exemplaires à traiter</select-file>
+                <download-file v-else :file-link="fileLink" :file-name="fileName" @clicked="downloaded" @deleted="deleteDemande()">Récupération du
                   fichier de correspondances PPN / EPN
                 </download-file>
                 <v-alert
@@ -104,7 +104,7 @@
               </v-stepper-window-item>
               <v-stepper-window-item>
                 <type-traitement v-model="typeTraitementSelected" :is-loading="isLoading"
-                                 @clicked="modifierTypeTraitementModifDemande()"></type-traitement>
+                                 @clicked="modifierTypeTraitementModifDemande()" @deleted="deleteDemande()"></type-traitement>
                 <v-container class="d-flex justify-space-between">
                   <v-btn @click="prev">
                     précédent
