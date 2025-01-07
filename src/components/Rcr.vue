@@ -1,4 +1,4 @@
-A<template>
+<template>
   <v-card elevation="0">
     <v-card-title class="custom-card-title">
       <span>Sélection du RCR</span>

@@ -9,7 +9,7 @@
               <v-stepper-item
                 :color="currentStep >= 0 ? 'primary' : ''"
                 :complete="currentStep > 0"
-                :editable="demande"
+                :editable="!!demande.id"
                 icon="mdi-numeric-1"
                 title="Sélection du RCR"
                 :subtitle="demande ? rcrSelected : 'Demande'"
@@ -18,7 +18,7 @@
               <v-divider></v-divider>
               <v-stepper-item
                 :color="currentStep >= 1 ? 'primary' : ''"
-                :editable="fileSelected"
+                :editable="!!fileSelected"
                 icon="mdi-numeric-2"
                 title="Chargement"
                 subtitle="du fichier"
@@ -88,8 +88,13 @@ import RecapDemande from '@/components/RecapDemande.vue';
 import DialogLancerTraitement from '@/components/Dialog/DialogLancerTraitement.vue'
 
 const props = defineProps({id : {type: String}});
-const emits = defineEmits(['backendError']);
-const demande = ref();
+const emits = defineEmits(['backendError', 'backendSuccess']);
+const demande = ref({
+  id: null,
+  rcr: '',
+  etatDemande: '',
+  type: 'RECOUV'
+});
 const rcrSelected = ref();
 const fileSelected = ref();
 const currentStep = ref(0);
@@ -98,8 +103,6 @@ const alertType = ref();
 const isLoading = ref(false);
 const dialog = ref(false);
 const suppDialog = ref(false);
-
-
 
 onMounted(() => {
   if(props.id){

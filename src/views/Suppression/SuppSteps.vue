@@ -173,9 +173,15 @@ import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
 import RecapDemande from '@/components/RecapDemande.vue';
 
 const currentStep = ref(0);
-const demande = ref();
+const demande = ref({
+  id: null,
+  rcr: '',
+  typeExemp: '',
+  etatDemande: '',
+  type: 'SUPP'
+});
 
-const emits = defineEmits(['backendError']);
+const emits = defineEmits(['backendError', 'backendSuccess']);
 const props = defineProps({ id: { type: String } });
 
 const rcrSelected = ref('');

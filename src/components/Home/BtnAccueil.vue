@@ -25,6 +25,7 @@
 import router from '@/router';
 
 const props = defineProps({
+  id: { type: String, required: true },
   icon: { type: String, required: true },
   route: { type: String, required: true }
 })
