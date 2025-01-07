@@ -113,7 +113,7 @@
 
 <script setup>
 
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import itemService from '@/service/ItemService';
 import router from '@/router';
 import SelectFile from '@/components/SelectFile.vue';
@@ -138,8 +138,17 @@ const isLoading = ref(false);
 const dialog = ref(false);
 const suppDialog = ref(false);
 
+watch(router.currentRoute, (newValue) => {
+  if (newValue.fullPath.includes("empty")) {
+    cleanPath()
+    raz();
+    currentStep.value = 1;
+    prev();
+  }
+})
+
 onMounted(() => {
-  if (props.id) {
+  if ((props.id !== 'empty') && (props.id != null)) {
     itemService.getDemande(props.id, 'EXEMP')
       .then(response => {
         demande.value = response.data;
@@ -169,8 +178,17 @@ onMounted(() => {
       .catch(() => {
         router.replace('/exemplarisation');
       });
+  } else {
+    cleanPath();
   }
 });
+
+function cleanPath() {
+  if (router.currentRoute.value.fullPath.includes("empty")) {
+    router.replace('/exemplarisation');
+    router.currentRoute.value.fullPath = "/exemplarisation";
+  }
+}
 
 function createDemande() {
   if (demande.value && (rcrSelected.value === demande.value.rcr)) {
@@ -268,6 +286,12 @@ function next() {
 function prev() {
   currentStep.value--;
   changeEtat();
+}
+
+function raz() {
+  isLoading.value = false;
+  alertMessage.value = '';
+  alertType.value = 'success';
 }
 
 function changeEtat() {

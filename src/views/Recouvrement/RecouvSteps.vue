@@ -80,7 +80,7 @@
 <script setup>
 import Rcr from '@/components/Rcr.vue';
 import SelectFile from '@/components/SelectFile.vue';
-import { onMounted, ref } from 'vue';
+import {onMounted, ref, watch} from 'vue'
 import itemService from '@/service/ItemService';
 import router from '@/router';
 import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
@@ -99,10 +99,17 @@ const isLoading = ref(false);
 const dialog = ref(false);
 const suppDialog = ref(false);
 
-
+watch(router.currentRoute, (newValue) => {
+  if (newValue.fullPath.includes("empty")) {
+    cleanPath()
+    raz();
+    currentStep.value = 1;
+    prev();
+  }
+})
 
 onMounted(() => {
-  if(props.id){
+  if((props.id !== 'empty') && (props.id != null)){
     itemService.getDemande(props.id, "RECOUV")
       .then(response => {
         demande.value = response.data;
@@ -113,8 +120,17 @@ onMounted(() => {
       }).catch(() => {
         router.replace("/recouvrement");
     })
+  } else {
+    cleanPath();
   }
 })
+
+function cleanPath() {
+  if (router.currentRoute.value.fullPath.includes("empty")) {
+    router.replace('/recouvrement');
+    router.currentRoute.value.fullPath = "/recouvrement";
+  }
+}
 
 function createDemande() {
   if (demande.value && (rcrSelected.value === demande.value.rcr)) {
@@ -167,5 +183,11 @@ function next() {
 
 function prev() {
   currentStep.value--;
+}
+
+function raz() {
+  isLoading.value = false;
+  alertMessage.value = '';
+  alertType.value = 'success';
 }
 </script>

@@ -160,7 +160,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import TypeFile from '@/components/Supp/TypeFile.vue';
 import SelectFile from '@/components/SelectFile.vue';
 import itemService from '@/service/ItemService';
@@ -192,8 +192,16 @@ const alertType = ref('success');
 const dialog = ref(false);
 const suppDialog = ref(false);
 
+watch(router.currentRoute, (newValue) => {
+  if (newValue.fullPath.includes("empty")) {
+    cleanPath()
+    currentStep.value = 1;
+    prev();
+  }
+})
+
 onMounted(() => {
-  if (props.id) {
+  if ((props.id !== 'empty') && (props.id != null)) {
     itemService.getDemande(props.id, 'SUPP')
       .then(response => {
         demande.value = response.data;
@@ -228,8 +236,17 @@ onMounted(() => {
       .catch(() => {
         router.replace('/suppression');
       });
+  } else {
+    cleanPath();
   }
 });
+
+function cleanPath() {
+  if (router.currentRoute.value.fullPath.includes("empty")) {
+    router.replace('/suppression');
+    router.currentRoute.value.fullPath = "/suppression";
+  }
+}
 
 function createDemande() {
   if (demande.value && (rcrSelected.value === demande.value.rcr)) {

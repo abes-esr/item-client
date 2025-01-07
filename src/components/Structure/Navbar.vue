@@ -178,7 +178,13 @@ const authStore = useAuthStore()
 const emit = defineEmits(['close'])
 
 function navigateTo(routeName) {
-  router.push({ name: routeName }).catch(err => {})
+  if ((routeName === 'suppression') || (routeName === "recouvrement") || (routeName === "exemplarisation") || (routeName === "modification")) {
+    let newRouteName = "/" + routeName + "/empty"
+    router.replace(newRouteName).catch(err => {});
+    router.currentRoute.value.fullPath = "/suppression/empty";
+  } else {
+    router.push({ name: routeName }).catch(err => {})
+  }
   fixNavBarModel.value ? '' : emit('close')
 }
 
