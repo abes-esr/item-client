@@ -157,7 +157,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import router from '@/router';
 import itemService from '@/service/ItemService';
 import Rcr from '@/components/Rcr.vue';
@@ -193,6 +193,14 @@ const typeTraitementSelected = ref();
 
 const emits = defineEmits(['backendError', 'backendSuccess']);
 const props = defineProps({ id: { type: String } });
+
+watch(router.currentRoute, (newValue) => {
+  if (newValue.fullPath.includes("empty")) {
+    cleanPath()
+    currentStep.value = 1;
+    prev();
+  }
+})
 
 onMounted(() => {
   if (props.id) {
@@ -233,8 +241,17 @@ onMounted(() => {
       .catch(() => {
         router.replace('/modification');
       });
+  } else {
+    cleanPath();
   }
 });
+
+function cleanPath() {
+  if (router.currentRoute.value.fullPath.includes("empty")) {
+    router.replace('/modification');
+    router.currentRoute.value.fullPath = "/modification";
+  }
+}
 
 function createDemande() {
   if (demande.value && (rcrSelected.value === demande.value.rcr)) {
