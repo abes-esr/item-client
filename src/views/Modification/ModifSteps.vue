@@ -203,7 +203,7 @@ watch(router.currentRoute, (newValue) => {
 })
 
 onMounted(() => {
-  if (props.id) {
+  if ((props.id !== 'empty') && (props.id != null)) {  // Modification ici
     itemService.getDemande(props.id, 'MODIF')
       .then(response => {
         demande.value = response.data;
@@ -254,9 +254,12 @@ function cleanPath() {
 }
 
 function createDemande() {
-  if (demande.value && (rcrSelected.value === demande.value.rcr)) {
+  // Si la demande existe déjà et le RCR est le même
+  if (demande.value?.id && rcrSelected.value === demande.value.rcr) {
     next();
-  } else if (demande.value) {
+  } 
+  // Si la demande existe et le RCR est différent
+  else if (demande.value?.id) {
     isLoading.value = true;
     itemService.modifierRcrDemande(demande.value.id, rcrSelected.value, 'MODIF')
       .then(response => {
@@ -269,7 +272,9 @@ function createDemande() {
       .finally(() => {
         isLoading.value = false;
       });
-  } else {
+  }
+  // Si c'est une nouvelle demande
+  else {
     isLoading.value = true;
     itemService.creerDemande(rcrSelected.value, 'MODIF')
       .then(response => {

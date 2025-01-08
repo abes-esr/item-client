@@ -1,15 +1,17 @@
 <template>
   <v-container class="fill-height" fluid>
     <v-col :class="(currentStep === 3) ? '' : 'fill-height'">
-      <recap-demande :demande="demande"></recap-demande>
+      <v-row>
+        <recap-demande v-if="currentStep !== 3" :demande="demande"></recap-demande>
+      </v-row>
       <v-row align="center" justify="center">
         <v-col md="7">
-          <v-stepper v-model="currentStep" alt-labels>
+          <v-stepper v-model="currentStep" @update:model-value="changeEtape()" alt-labels>
             <v-stepper-header>
               <v-stepper-item
                 :color="currentStep >= 0 ? 'primary' : ''"
                 :complete="currentStep > 0"
-                :editable="!!demande.id"
+                :editable="currentStep > 0"
                 icon="mdi-numeric-1"
                 title="Sélection du RCR"
                 :subtitle="demande ? rcrSelected : 'Demande'"
@@ -18,7 +20,8 @@
               <v-divider></v-divider>
               <v-stepper-item
                 :color="currentStep >= 1 ? 'primary' : ''"
-                :editable="!!fileSelected"
+                :complete="currentStep > 1"
+                :editable="currentStep > 1"
                 icon="mdi-numeric-2"
                 title="Chargement"
                 subtitle="du fichier"
@@ -28,7 +31,7 @@
 
             <v-stepper-window>
               <v-stepper-window-item>
-                <rcr v-model="rcrSelected"></rcr>
+                <rcr v-model="rcrSelected" :is-loading="isLoading"></rcr>
                 <v-container class="d-flex justify-space-between">
                   <v-spacer></v-spacer>
                   <v-btn
@@ -40,7 +43,9 @@
                 </v-container>
               </v-stepper-window-item>
               <v-stepper-window-item>
-                <select-file v-model="fileSelected" :is-loading="isLoading" @deleted="deleteDemande()">Charger le fichier du taux de recouvrement</select-file>
+                <select-file v-model="fileSelected" :is-loading="isLoading" @deleted="deleteDemande()">
+                  Charger le fichier du taux de recouvrement
+                </select-file>
                 <v-alert
                   v-if="alertMessage"
                   :type="alertType"
@@ -48,9 +53,7 @@
                   <span v-html="alertMessage"></span>
                 </v-alert>
                 <v-container class="d-flex justify-space-between">
-                  <v-btn
-                    @click="prev"
-                  >
+                  <v-btn @click="prev">
                     Retour
                   </v-btn>
                   <v-btn
@@ -67,28 +70,31 @@
       </v-row>
     </v-col>
   </v-container>
-  <dialog-lancer-traitement v-model="dialog"
-                            :is-loading="isLoading"
-                            rubrique="Gérer mes recouvrements"
-                            route="recouvrement-tableau"
-                            body="Voulez-vous démarrer le traitement de votre demande de recouvrement ?"
-                            @launch="isLoading = false">
+  <dialog-lancer-traitement 
+    v-model="dialog"
+    :is-loading="isLoading"
+    rubrique="Gérer mes recouvrements"
+    route="recouvrement-tableau"
+    body="Voulez-vous démarrer le traitement de votre demande de recouvrement ?"
+    @launch="launchDemande()">
   </dialog-lancer-traitement>
   <dialog-suppression v-model="suppDialog" :demande="demande" return-to-accueil></dialog-suppression>
 </template>
 
 <script setup>
+import { onMounted, ref, watch } from 'vue';
+import router from '@/router';
+import itemService from '@/service/ItemService';
 import Rcr from '@/components/Rcr.vue';
 import SelectFile from '@/components/SelectFile.vue';
-import {onMounted, ref, watch} from 'vue'
-import itemService from '@/service/ItemService';
-import router from '@/router';
+import DialogLancerTraitement from '@/components/Dialog/DialogLancerTraitement.vue';
 import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
 import RecapDemande from '@/components/RecapDemande.vue';
-import DialogLancerTraitement from '@/components/Dialog/DialogLancerTraitement.vue'
 
-const props = defineProps({id : {type: String}});
+const props = defineProps({ id: { type: String } });
 const emits = defineEmits(['backendError', 'backendSuccess']);
+
+const currentStep = ref(0);
 const demande = ref({
   id: null,
   rcr: '',
@@ -97,31 +103,44 @@ const demande = ref({
 });
 const rcrSelected = ref();
 const fileSelected = ref();
-const currentStep = ref(0);
 const alertMessage = ref();
 const alertType = ref();
 const isLoading = ref(false);
 const dialog = ref(false);
 const suppDialog = ref(false);
 
-
+watch(router.currentRoute, (newValue) => {
+  if (newValue.fullPath.includes("empty")) {
+    cleanPath();
+    raz();
+    currentStep.value = 1;
+    prev();
+  }
+});
 
 onMounted(() => {
-  if((props.id !== 'empty') && (props.id != null)){
-    itemService.getDemande(props.id, "RECOUV")
+  if ((props.id !== 'empty') && (props.id != null)) {
+    itemService.getDemande(props.id, 'RECOUV')
       .then(response => {
         demande.value = response.data;
-        if(demande.value.etatDemande === 'En préparation'){
-          currentStep.value = 1;
-          rcrSelected.value = demande.value.rcr;
+        switch (demande.value.etatDemande) {
+          case 'En préparation':
+            currentStep.value = 1;
+            rcrSelected.value = demande.value.rcr;
+            break;
+          case 'A compléter':
+            currentStep.value = 1;
+            rcrSelected.value = demande.value.rcr;
+            break;
         }
-      }).catch(() => {
-        router.replace("/recouvrement");
-    })
+      })
+      .catch(() => {
+        router.replace('/recouvrement');
+      });
   } else {
     cleanPath();
   }
-})
+});
 
 function cleanPath() {
   if (router.currentRoute.value.fullPath.includes("empty")) {
@@ -131,25 +150,40 @@ function cleanPath() {
 }
 
 function createDemande() {
-  if (demande.value && (rcrSelected.value === demande.value.rcr)) {
+  // Si la demande existe déjà et le RCR est le même
+  if (demande.value?.id && rcrSelected.value === demande.value.rcr) {
     next();
-  } else if (demande.value) {
+  } 
+  // Si la demande existe et le RCR est différent
+  else if (demande.value?.id) {
+    isLoading.value = true;
     itemService.modifierRcrDemande(demande.value.id, rcrSelected.value, 'RECOUV')
       .then(response => {
         demande.value = response.data;
         next();
-      }).catch(err => {
-        emits('backendError',err);
-    });
-  } else {
+      })
+      .catch(err => {
+        emits('backendError', err);
+      })
+      .finally(() => {
+        isLoading.value = false;
+      });
+  }
+  // Si c'est une nouvelle demande
+  else {
+    isLoading.value = true;
     itemService.creerDemande(rcrSelected.value, 'RECOUV')
       .then(response => {
         demande.value = response.data;
-        router.replace(`/recouvrement/${demande.value.id}`)
+        router.replace(`/recouvrement/${demande.value.id}`);
         next();
-      }).catch(err => {
-        emits('backendError',err);
-    });
+      })
+      .catch(err => {
+        emits('backendError', err);
+      })
+      .finally(() => {
+        isLoading.value = false;
+      });
   }
 }
 
@@ -171,16 +205,39 @@ function launchTraitement() {
     });
 }
 
-function deleteDemande(){
+function launchDemande() {
+  isLoading.value = true;
+  itemService.lancerDemande(demande.value.id, 'RECOUV')
+    .then(response => {
+      demande.value = response.data;
+    })
+    .finally(() => {
+      isLoading.value = false;
+    });
+}
+
+function deleteDemande() {
   suppDialog.value = true;
 }
 
 function next() {
   currentStep.value++;
+  raz();
 }
 
 function prev() {
   currentStep.value--;
+  raz();
+  changeEtape();
+}
+
+function changeEtape() {
+  if ((currentStep.value + 1) === 1) {
+    itemService.choixEtape(demande.value.id, 2, 'RECOUV')
+      .then(response => {
+        demande.value = response.data;
+      });
+  }
 }
 
 function raz() {

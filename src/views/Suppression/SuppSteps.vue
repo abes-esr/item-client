@@ -184,7 +184,7 @@ const demande = ref({
 const emits = defineEmits(['backendError', 'backendSuccess']);
 const props = defineProps({ id: { type: String } });
 
-const rcrSelected = ref('');
+const rcrSelected = ref();
 const typeFileSelected = ref('');
 const fileFinalSelected = ref();
 const fileSelected = ref();
@@ -200,11 +200,12 @@ const suppDialog = ref(false);
 
 watch(router.currentRoute, (newValue) => {
   if (newValue.fullPath.includes("empty")) {
-    cleanPath()
+    cleanPath();
+    raz();
     currentStep.value = 1;
     prev();
   }
-})
+});
 
 onMounted(() => {
   if ((props.id !== 'empty') && (props.id != null)) {
@@ -255,9 +256,12 @@ function cleanPath() {
 }
 
 function createDemande() {
-  if (demande.value && (rcrSelected.value === demande.value.rcr)) {
+  // Si la demande existe déjà et le RCR est le même
+  if (demande.value?.id && rcrSelected.value === demande.value.rcr) {
     next();
-  } else if (demande.value) {
+  } 
+  // Si la demande existe et le RCR est différent
+  else if (demande.value?.id) {
     isLoading.value = true;
     itemService.modifierRcrDemande(demande.value.id, rcrSelected.value, 'SUPP')
       .then(response => {
@@ -270,7 +274,9 @@ function createDemande() {
       .finally(() => {
         isLoading.value = false;
       });
-  } else {
+  }
+  // Si c'est une nouvelle demande
+  else {
     isLoading.value = true;
     itemService.creerDemande(rcrSelected.value, 'SUPP')
       .then(response => {
