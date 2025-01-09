@@ -1,4 +1,5 @@
 <template>
+  <div v-bind="$attrs">
   <v-tooltip v-if="canStop(demande)" text="Annuler">
     <template v-slot:activator="{ props }">
       <v-btn v-bind="props"
@@ -11,10 +12,15 @@
   </v-tooltip>
   <dialog-confirmation-stop v-model="dialog" :id="demande.id" @clicked="emits('clicked')" @on-error="throwError">
   </dialog-confirmation-stop>
+  </div>
 </template>
 <script setup>
 import DialogConfirmationStop from '@/components/Dialog/DialogConfirmationStop.vue';
 import { ref } from 'vue';
+
+defineOptions({
+  inheritAttrs: false
+});
 
 const emits = defineEmits(['clicked', 'onError']);
 const props = defineProps({

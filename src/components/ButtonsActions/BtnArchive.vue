@@ -1,4 +1,5 @@
 <template>
+  <div v-bind="$attrs">
   <v-tooltip v-if="canArchive(demande)" text="Archiver">
     <template v-slot:activator="{ props }">
       <v-btn v-bind="props"
@@ -9,6 +10,7 @@
              aria-label="Archiver"></v-btn>
     </template>
   </v-tooltip>
+  </div>
 </template>
 <script setup>
 import itemService from '@/service/ItemService';

@@ -17,5 +17,5 @@ const pinia = createPinia()
 
 registerPlugins(app)
 
-app.use(router).use(vuetify).use(pinia)
+app.use(router).use(pinia)
 app.mount('#app')
