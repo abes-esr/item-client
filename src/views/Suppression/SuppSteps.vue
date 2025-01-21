@@ -259,7 +259,7 @@ function createDemande() {
   // Si la demande existe déjà et le RCR est le même
   if (demande.value?.id && rcrSelected.value === demande.value.rcr) {
     next();
-  } 
+  }
   // Si la demande existe et le RCR est différent
   else if (demande.value?.id) {
     isLoading.value = true;
@@ -309,7 +309,7 @@ function uploadFile() {
         });
     })
     .catch(err => {
-      alertMessage.value = err.response.data.message;
+      alertMessage.value = err.response.data.debugMessage;
       alertType.value = 'error';
     })
     .finally(() => {
