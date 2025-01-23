@@ -309,7 +309,7 @@ function uploadFile() {
         });
     })
     .catch(err => {
-      alertMessage.value = err.response.data.debugMessage;
+      alertMessage.value = err.response.data.message;
       alertType.value = 'error';
     })
     .finally(() => {
