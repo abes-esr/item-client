@@ -107,12 +107,14 @@
         </td>
         <td class="text-center">
           <!-- Colonne Action -->
-          <btn-archive :demande="item" @clicked="loadItems(item.type)"
+          <v-btn-group>
+          <btn-archive v-bind="$attrs" :demande="item" @clicked="loadItems(item.type)"
                        @on-error="throwError" aria-label="Archiver"></btn-archive>
-          <btn-suppression :demande="item" @clicked="loadItems(item.type)"
+          <btn-suppression v-bind="$attrs" :demande="item" @clicked="loadItems(item.type)"
                            @on-error="throwError" aria-label="Supprimer"></btn-suppression>
-          <btn-restore :demande="item" @clicked="loadItems(item.type)"
+          <btn-restore v-bind="$attrs" :demande="item" @clicked="loadItems(item.type)"
                        @on-error="throwError" aria-label="Restaurer"></btn-restore>
+          </v-btn-group>
         </td>
       </tr>
     </template>

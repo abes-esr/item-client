@@ -1,19 +1,31 @@
 <template>
-  <v-tooltip v-if="canCancel(demande)" text="Supprimer">
-    <template v-slot:activator="{ props }">
-      <v-btn v-bind="props"
-             icon="mdi-delete"
-             variant="text"
-             @click="dialog = true">
-      </v-btn>
-    </template>
-  </v-tooltip>
-  <dialog-suppression v-model="dialog" :demande="demande" @supp="emits('clicked')" @on-error="throwError">
-  </dialog-suppression>
+  <!-- Wrapper div pour recevoir les attributs -->
+  <div v-bind="$attrs">
+    <v-tooltip v-if="canCancel(demande)" text="Supprimer">
+      <template v-slot:activator="{ props }">
+        <v-btn v-bind="props"
+               icon="mdi-delete"
+               variant="text"
+               @click="dialog = true">
+        </v-btn>
+      </template>
+    </v-tooltip>
+    <dialog-suppression 
+      v-model="dialog" 
+      :demande="demande" 
+      @supp="emits('clicked')" 
+      @on-error="throwError">
+    </dialog-suppression>
+  </div>
 </template>
+
 <script setup>
 import { ref } from 'vue';
 import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
+
+defineOptions({
+  inheritAttrs: false
+});
 
 const emits = defineEmits(['clicked', 'onError']);
 const props = defineProps({

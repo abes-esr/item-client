@@ -125,9 +125,17 @@ import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
 import RecapDemande from '@/components/RecapDemande.vue';
 
 const emits = defineEmits(['backendError', 'backendSuccess', 'login-success']);
-const props = defineProps({ id: { type: String } });
+const props = defineProps({ 
+  id: { type: String }
+});
 
-const demande = ref();
+const demande = ref({
+  id: null,
+  rcr: '',
+  typeExemp: '',
+  etatDemande: '',
+  type: 'EXEMP'
+});
 const currentStep = ref(0);
 const typeDocumentSelected = ref();
 const rcrSelected = ref();
@@ -191,9 +199,12 @@ function cleanPath() {
 }
 
 function createDemande() {
-  if (demande.value && (rcrSelected.value === demande.value.rcr)) {
+  // Si la demande existe déjà et le RCR est le même
+  if (demande.value?.id && rcrSelected.value === demande.value.rcr) {
     next();
-  } else if (demande.value) {
+  } 
+  // Si la demande existe et le RCR est différent
+  else if (demande.value?.id) {
     isLoading.value = true;
     itemService.modifierRcrDemande(demande.value.id, rcrSelected.value, 'EXEMP')
       .then(response => {
@@ -206,7 +217,9 @@ function createDemande() {
       .finally(() => {
         isLoading.value = false;
       });
-  } else {
+  }
+  // Si c'est une nouvelle demande
+  else {
     isLoading.value = true;
     itemService.creerDemande(rcrSelected.value, 'EXEMP')
       .then(response => {
