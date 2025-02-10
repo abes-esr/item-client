@@ -8,7 +8,6 @@
     <v-alert
         type="warning"
         prominent
-        border="left"
     >
       Service indisponible. Application en maintenance. Vous serez informé de la reprise du service.
     </v-alert>
