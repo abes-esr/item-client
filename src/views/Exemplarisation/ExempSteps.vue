@@ -125,7 +125,7 @@ import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
 import RecapDemande from '@/components/RecapDemande.vue';
 
 const emits = defineEmits(['backendError', 'backendSuccess', 'login-success']);
-const props = defineProps({ 
+const props = defineProps({
   id: { type: String }
 });
 
@@ -202,7 +202,7 @@ function createDemande() {
   // Si la demande existe déjà et le RCR est le même
   if (demande.value?.id && rcrSelected.value === demande.value.rcr) {
     next();
-  } 
+  }
   // Si la demande existe et le RCR est différent
   else if (demande.value?.id) {
     isLoading.value = true;
