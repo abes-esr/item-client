@@ -85,6 +85,10 @@ const noticeApres = ref('');
 const isLoading = ref(true);
 const alertMessageError = ref();
 
+onMounted(() => {
+  refresh(0);
+});
+
 watchEffect(() => {
   if (props.demande.etatDemande === 'En simulation') {
     refresh(0);
