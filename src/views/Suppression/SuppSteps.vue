@@ -71,7 +71,7 @@
                 <v-alert
                   v-if="alertMessage"
                   :type="alertType"
-                  closable
+                  :icon="alertType === 'error' ? 'mdi-alert' : null"
                 >
                   <span v-html="alertMessage"></span>
                 </v-alert>
@@ -114,7 +114,7 @@
                   <v-alert
                     v-if="alertMessage"
                     :type="alertType"
-                    closable
+                    :icon="alertType === 'error' ? 'mdi-alert' : null"
                   >
                     <span v-html="alertMessage"></span>
                   </v-alert>

@@ -49,6 +49,7 @@
                 <v-alert
                   v-if="alertMessage"
                   :type="alertType"
+                  :icon="alertType === 'error' ? 'mdi-alert' : null"
                 >
                   <span v-html="alertMessage"></span>
                 </v-alert>
@@ -70,7 +71,7 @@
       </v-row>
     </v-col>
   </v-container>
-  <dialog-lancer-traitement 
+  <dialog-lancer-traitement
     v-model="dialog"
     :is-loading="isLoading"
     rubrique="Gérer mes recouvrements"
@@ -110,7 +111,7 @@ const dialog = ref(false);
 const suppDialog = ref(false);
 
 watch(router.currentRoute, (newValue) => {
-  if (newValue.fullPath.includes("empty")) {
+  if (newValue.fullPath.includes('empty')) {
     cleanPath();
     raz();
     currentStep.value = 1;
@@ -143,9 +144,9 @@ onMounted(() => {
 });
 
 function cleanPath() {
-  if (router.currentRoute.value.fullPath.includes("empty")) {
+  if (router.currentRoute.value.fullPath.includes('empty')) {
     router.replace('/recouvrement');
-    router.currentRoute.value.fullPath = "/recouvrement";
+    router.currentRoute.value.fullPath = '/recouvrement';
   }
 }
 
@@ -153,7 +154,7 @@ function createDemande() {
   // Si la demande existe déjà et le RCR est le même
   if (demande.value?.id && rcrSelected.value === demande.value.rcr) {
     next();
-  } 
+  }
   // Si la demande existe et le RCR est différent
   else if (demande.value?.id) {
     isLoading.value = true;

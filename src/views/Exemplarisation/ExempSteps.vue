@@ -73,6 +73,7 @@
                 <v-alert
                   v-if="alertMessage"
                   :type="alertType"
+                  :icon="alertType === 'error' ? 'mdi-alert' : null"
                 >
                   <span v-html="alertMessage"></span>
                 </v-alert>
@@ -147,13 +148,13 @@ const dialog = ref(false);
 const suppDialog = ref(false);
 
 watch(router.currentRoute, (newValue) => {
-  if (newValue.fullPath.includes("empty")) {
-    cleanPath()
+  if (newValue.fullPath.includes('empty')) {
+    cleanPath();
     raz();
     currentStep.value = 1;
     prev();
   }
-})
+});
 
 onMounted(() => {
   if ((props.id !== 'empty') && (props.id != null)) {
@@ -192,9 +193,9 @@ onMounted(() => {
 });
 
 function cleanPath() {
-  if (router.currentRoute.value.fullPath.includes("empty")) {
+  if (router.currentRoute.value.fullPath.includes('empty')) {
     router.replace('/exemplarisation');
-    router.currentRoute.value.fullPath = "/exemplarisation";
+    router.currentRoute.value.fullPath = '/exemplarisation';
   }
 }
 
