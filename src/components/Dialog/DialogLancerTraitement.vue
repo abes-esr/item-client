@@ -31,7 +31,6 @@
 import { ref } from 'vue';
 import router from '@/router';
 
-
 const dialog = defineModel();
 const emits = defineEmits(['launch'])
 const props = defineProps({
@@ -39,10 +38,6 @@ const props = defineProps({
     required: false,
     type: Boolean,
     default: false
-  },
-  rubrique: {
-    required: true,
-    type: String,
   },
   route: {
     required: true,
@@ -57,6 +52,11 @@ const props = defineProps({
     required: false,
     type: String,
     default: '<p>Êtes-vous sûr de vouloir lancer le traitement en production ?<br/> Aucune annulation n\'est possible.</p>'
+  },
+  bodyComplement: {
+    required: false,
+    type: String,
+    default: '<p>Votre demande est en cours de traitement.<br/>Un mail vous informera du résultat.<br/>L\'ensemble de vos demandes est à retrouver dans votre tableau de bord.</p>'
   }
 })
 const title = ref(props.title);
@@ -66,17 +66,7 @@ const isFinished = ref(false);
 function confirm() {
   emits('launch');
   title.value = "Traitement validé";
-  if(props.rubrique === 'Gérer mes créations'){
-    body.value = `<p class="mb-4">Votre demande est en cours de traitement.<br/>Un mail vous informera du résultat.<br/>L'ensemble de vos demandes est à retrouver dans votre tableau de bord. Rubrique ${props.rubrique}.</p><p><b>Pour une requête de type Date / Auteur / Titre, les demandes sont traitées chaque soir à 20h00</b></p>`;
-  }else if(props.rubrique === 'Gérer mes modifications'){
-    body.value = `<p>Votre demande est en cours de traitement.<br/>Un mail vous informera du résultat.<br/>L'ensemble de vos demandes est à retrouver dans votre tableau de bord. Rubrique ${props.rubrique}.</p>`;
-  }else if(props.rubrique === 'Gérer mes recouvrements'){
-    body.value = `<p class="mb-4">Votre demande est en cours de traitement.<br/>Un mail vous informera du résultat.<br/>L'ensemble de vos demandes est à retrouver dans votre tableau de bord. Rubrique ${props.rubrique}.</p><p><b>Pour une requête de type Date / Auteur / Titre, les demandes sont traitées chaque soir à 20h00</b></p>`;
-  }else if(props.rubrique === 'Gérer mes suppressions'){
-    body.value = `<p>Votre demande est en cours de traitement.<br/>Un mail vous informera du résultat.<br/>L'ensemble de vos demandes est à retrouver dans votre tableau de bord. Rubrique ${props.rubrique}.</p>`;
-  }else{
-    body.value = `<p>Votre demande est en cours de traitement.<br/>Un mail vous informera du résultat.<br/>L'ensemble de vos demandes est à retrouver dans votre tableau de bord.</p>`;
-  }
+  body.value = props.bodyComplement;
   isFinished.value = true;
 }
 </script>

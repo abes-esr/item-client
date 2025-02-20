@@ -71,13 +71,12 @@
       </v-row>
     </v-col>
   </v-container>
-  <dialog-lancer-traitement
-    v-model="dialog"
-    :is-loading="isLoading"
-    rubrique="Gérer mes recouvrements"
-    route="recouvrement-tableau"
-    body="Voulez-vous démarrer le traitement de votre demande de recouvrement ?"
-    @launch="launchDemande()">
+  <dialog-lancer-traitement v-model="dialog"
+                            :is-loading="isLoading"
+                            route="recouvrement-tableau"
+                            body="Voulez-vous démarrer le traitement de votre demande de recouvrement ?"
+                            bodyComplement="<p class='mb-4'>Votre demande est en cours de traitement.<br/>Un mail vous informera du résultat.<br/>L'ensemble de vos demandes est à retrouver dans votre tableau de bord. Rubrique <b>Gérer mes recouvrements</b>.</p><p><b>Pour une requête de type Date / Auteur / Titre, les demandes sont traitées chaque soir à 20h00</b></p>"
+                            @launch="launchDemande()">
   </dialog-lancer-traitement>
   <dialog-suppression v-model="suppDialog" :demande="demande" return-to-accueil></dialog-suppression>
 </template>

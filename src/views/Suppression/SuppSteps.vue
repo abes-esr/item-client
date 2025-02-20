@@ -152,9 +152,9 @@
   </v-container>
   <dialog-lancer-traitement v-model="dialog"
                             :is-loading="isLoading"
-                            rubrique="Gérer mes suppressions"
                             route="suppression-tableau"
                             body="Le traitement de suppression  des exemplaires en base de production est irréversible."
+                            bodyComplement="<p>Votre demande est en cours de traitement.<br/>Un mail vous informera du résultat.<br/>L'ensemble de vos demandes est à retrouver dans votre tableau de bord. Rubrique <b>Gérer mes suppressions</b>.</p>"
                             @launch="launchDemande()"></dialog-lancer-traitement>
   <dialog-suppression v-model="suppDialog" :demande="demande" return-to-accueil></dialog-suppression>
 </template>
