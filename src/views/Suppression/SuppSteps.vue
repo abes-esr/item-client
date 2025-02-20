@@ -154,7 +154,7 @@
                             :is-loading="isLoading"
                             route="suppression-tableau"
                             body="Le traitement de suppression  des exemplaires en base de production est irréversible."
-                            bodyComplement="<p>Votre demande est en cours de traitement.<br/>Un mail vous informera du résultat.<br/>L'ensemble de vos demandes est à retrouver dans votre tableau de bord. Rubrique <b>Gérer mes suppressions</b>.</p>"
+                            rubrique="Gérer mes suppressions"
                             @launch="launchDemande()"></dialog-lancer-traitement>
   <dialog-suppression v-model="suppDialog" :demande="demande" return-to-accueil></dialog-suppression>
 </template>
