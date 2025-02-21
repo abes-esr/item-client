@@ -306,6 +306,7 @@ function uploadFile() {
           fileLink.value = window.URL.createObjectURL(blob);
           fileName.value = `fichier_demande_${demande.value.id}.csv`;
           isLoaded.value = true;
+          alertMessage.value = 'Fichier de correspondance PPN:RCR:EPN disponible';
         });
     })
     .catch(err => {
