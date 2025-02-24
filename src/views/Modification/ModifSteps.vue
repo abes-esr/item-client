@@ -154,8 +154,11 @@
       </v-row>
     </v-col>
   </v-container>
-  <dialog-lancer-traitement v-model="dialog" :is-loading="isLoading" rubrique="Gérer mes modifications"
-                            route="modification-tableau" @launch="launchDemande()"></dialog-lancer-traitement>
+  <dialog-lancer-traitement v-model="dialog"
+                            :is-loading="isLoading"
+                            route="modification-tableau"
+                            rubrique= "Gérer mes modifications"
+                            @launch="launchDemande()"></dialog-lancer-traitement>
   <dialog-suppression v-model="suppDialog" :demande="demande" return-to-accueil></dialog-suppression>
 </template>
 

@@ -71,13 +71,12 @@
       </v-row>
     </v-col>
   </v-container>
-  <dialog-lancer-traitement
-    v-model="dialog"
-    :is-loading="isLoading"
-    rubrique="Gérer mes recouvrements"
-    route="recouvrement-tableau"
-    body="Voulez-vous démarrer le traitement de votre demande de recouvrement ?"
-    @launch="launchDemande()">
+  <dialog-lancer-traitement v-model="dialog"
+                            :is-loading="isLoading"
+                            route="recouvrement-tableau"
+                            rubrique="Gérer mes recouvrements"
+                            isDat
+                            @launch="launchDemande()">
   </dialog-lancer-traitement>
   <dialog-suppression v-model="suppDialog" :demande="demande" return-to-accueil></dialog-suppression>
 </template>

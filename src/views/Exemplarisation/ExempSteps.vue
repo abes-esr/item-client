@@ -107,8 +107,12 @@
       </v-row>
     </v-col>
   </v-container>
-  <dialog-lancer-traitement v-model="dialog" :is-loading="isLoading" rubrique="Gérer mes créations"
-                            route="exemplarisation-tableau" @launch="launchDemande()"></dialog-lancer-traitement>
+  <dialog-lancer-traitement v-model="dialog"
+                            :is-loading="isLoading"
+                            route="exemplarisation-tableau"
+                            rubrique="Gérer mes créations"
+                            isDat
+                            @launch="launchDemande()"></dialog-lancer-traitement>
   <dialog-suppression v-model="suppDialog" :demande="demande" return-to-accueil></dialog-suppression>
 </template>
 
