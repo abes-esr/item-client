@@ -1,6 +1,6 @@
 {
 	"name": "Item",
-	"version": "3.3.1",
+	"version": "3.3.2",
 	"scripts": {
 		"dev": "vite",
 		"build": "vite build",
