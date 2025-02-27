@@ -297,6 +297,7 @@ const headingsDemandes = [
     value: 'pourcentageProgressionTraitement',
     align: 'center',
     display: true,
+    sortable: false
   },
   {
     title: 'Fichiers',
@@ -304,6 +305,7 @@ const headingsDemandes = [
     value: 'filesToDownload',
     align: 'center',
     display: true,
+    sortable: false
   },
   {
     title: 'Action',
@@ -311,6 +313,7 @@ const headingsDemandes = [
     value: 'archiveOrCancel',
     align: 'center',
     display: true,
+    sortable: false
   }
 ];
 const filteredHeadingsDemandes = computed(() =>
