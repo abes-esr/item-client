@@ -3,13 +3,14 @@
   <!--Conteneur bouton 1-->
   <v-row class="d-flex justify-center">
     <v-btn
+      icon="mdi-page-first"
       class="mt-3"
-      :disabled="nbNotice.nbNoticeEnCours === 0"
+      :disabled="isFirstPage"
+      :color="isFirstPage ? 'black' : 'success'"
       large
       dark
       @click="first"
       aria-label="Première ligne">
-      <v-icon>mdi-page-first</v-icon>
     </v-btn>
   </v-row>
   <v-row class="d-flex justify-center">
@@ -18,13 +19,14 @@
   <!--Conteneur bouton 2-->
   <v-row class="d-flex justify-center">
     <v-btn
+      icon="mdi-chevron-left"
       class="mt-3"
-      :disabled="nbNotice.nbNoticeEnCours === 0"
+      :disabled="isFirstPage"
+      :color="isFirstPage ? 'black' : 'success'"
       large
       dark
       @click="prev"
       aria-label="Ligne précédente">
-      <v-icon>mdi-chevron-left</v-icon>
     </v-btn>
   </v-row>
   <v-row class="d-flex justify-center">
@@ -33,13 +35,14 @@
   <!--Conteneur bouton 3-->
   <v-row class="d-flex justify-center">
     <v-btn
+      icon="mdi-chevron-right"
       class="mt-3"
-      :disabled="nbNotice.nbNoticeEnCours === nbNotice.nbTotalNotice - 1"
+      :disabled="isLastPage"
+      :color="isLastPage ? 'black' : 'success'"
       large
       dark
       @click="next"
       aria-label="Ligne suivante">
-      <v-icon>mdi-chevron-right</v-icon>
     </v-btn>
   </v-row>
   <v-row class="d-flex justify-center">
@@ -48,13 +51,14 @@
   <!--Conteneur bouton 4-->
   <v-row class="d-flex justify-center">
     <v-btn
+      icon="mdi-page-last"
       class="mt-3"
-      :disabled="nbNotice.nbNoticeEnCours === nbNotice.nbTotalNotice - 1"
+      :disabled="isLastPage"
+      :color="isLastPage ? 'black' : 'success'"
       large
       dark
       @click="last"
       aria-label="Dernière ligne">
-      <v-icon>mdi-page-last</v-icon>
     </v-btn>
   </v-row>
   <v-row class="d-flex justify-center">
@@ -62,8 +66,19 @@
   </v-row>
 </template>
 <script setup>
+import {computed} from "vue";
+
 const nbNotice = defineModel();
 const emits = defineEmits(['clicked']);
+
+const isFirstPage = computed(() => {
+  return nbNotice.value.nbNoticeEnCours === 0;
+});
+const isLastPage = computed(() => {
+  return nbNotice.value.nbNoticeEnCours === nbNotice.value.nbTotalNotice - 1;
+});
+
+
 function first(){
   nbNotice.value.nbNoticeEnCours = 0;
   emits('clicked');
