@@ -2,7 +2,7 @@
   <v-card elevation="0">
     <v-card-title class="d-flex justify-space-between custom-card-title">
       <span><slot></slot></span>
-      <v-btn depressed variant="text" @click="deleted()" prepend-icon="mdi-delete">Supprimer</v-btn>
+      <v-btn depressed variant="text" @click="deleted()" prepend-icon="mdi-delete">Supprimer cette demande</v-btn>
     </v-card-title>
     <v-card-actions class="py-6">
       <v-spacer></v-spacer>
@@ -24,7 +24,7 @@
 </template>
 <script setup>
 
-const emits = defineEmits(['deleted','clicked']);
+const emits = defineEmits(['deleted', 'clicked']);
 const props = defineProps({
   fileName: {
     required: true,
@@ -38,9 +38,9 @@ const props = defineProps({
     type: Boolean,
     default: false
   }
-})
+});
 
-function clicked(){
+function clicked() {
   emits('clicked');
 }
 
@@ -49,7 +49,7 @@ function deleted() {
 }
 </script>
 <style scoped>
-v-btn{
+v-btn {
   color: red !important;
 }
 
