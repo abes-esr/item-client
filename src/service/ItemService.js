@@ -5,7 +5,7 @@ export class ItemService {
   constructor() {
     this.client = axios.create({
       baseURL: import.meta.env.VITE_API_URL,
-      timeout: 60000
+      timeout: 300000
     });
 
     // Ajout de l'intercepteur
