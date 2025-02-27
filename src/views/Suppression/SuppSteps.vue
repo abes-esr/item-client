@@ -71,7 +71,7 @@
                 <v-alert
                   v-if="alertMessage"
                   :type="alertType"
-                  closable
+                  :icon="alertType === 'error' ? 'mdi-alert' : null"
                 >
                   <span v-html="alertMessage"></span>
                 </v-alert>
@@ -114,7 +114,7 @@
                   <v-alert
                     v-if="alertMessage"
                     :type="alertType"
-                    closable
+                    :icon="alertType === 'error' ? 'mdi-alert' : null"
                   >
                     <span v-html="alertMessage"></span>
                   </v-alert>
@@ -152,9 +152,9 @@
   </v-container>
   <dialog-lancer-traitement v-model="dialog"
                             :is-loading="isLoading"
-                            rubrique="Gérer mes suppressions"
                             route="suppression-tableau"
                             body="Le traitement de suppression  des exemplaires en base de production est irréversible."
+                            rubrique="Gérer mes suppressions"
                             @launch="launchDemande()"></dialog-lancer-traitement>
   <dialog-suppression v-model="suppDialog" :demande="demande" return-to-accueil></dialog-suppression>
 </template>
@@ -199,7 +199,7 @@ const dialog = ref(false);
 const suppDialog = ref(false);
 
 watch(router.currentRoute, (newValue) => {
-  if (newValue.fullPath.includes("empty")) {
+  if (newValue.fullPath.includes('empty')) {
     cleanPath();
     raz();
     currentStep.value = 1;
@@ -249,9 +249,9 @@ onMounted(() => {
 });
 
 function cleanPath() {
-  if (router.currentRoute.value.fullPath.includes("empty")) {
+  if (router.currentRoute.value.fullPath.includes('empty')) {
     router.replace('/suppression');
-    router.currentRoute.value.fullPath = "/suppression";
+    router.currentRoute.value.fullPath = '/suppression';
   }
 }
 
@@ -306,6 +306,7 @@ function uploadFile() {
           fileLink.value = window.URL.createObjectURL(blob);
           fileName.value = `fichier_demande_${demande.value.id}.csv`;
           isLoaded.value = true;
+          alertMessage.value = 'Fichier de correspondance PPN:RCR:EPN disponible';
         });
     })
     .catch(err => {
@@ -326,7 +327,7 @@ function setTypeSelected() {
 
 function uploadFileFinal() {
   alertMessage.value = '';
-  alertType.value = 'success';
+  alertType.value = 'info';
   isLoading.value = true;
   if (typeFileSelected.value === 'PPN') {
     itemService.uploadDemande(demande.value.id, fileFinalSelected.value, demande.value.type)
@@ -367,16 +368,12 @@ function uploadFileFinal() {
           .catch(err => {
             alertMessage.value = err.response.data.message;
             alertType.value = 'error';
-          })
-          .finally(() => {
             isLoading.value = false;
           });
       })
       .catch(err => {
         alertMessage.value = err.response.data.message;
         alertType.value = 'error';
-      })
-      .finally(() => {
         isLoading.value = false;
       });
   }

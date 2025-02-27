@@ -73,6 +73,7 @@
                 <v-alert
                   v-if="alertMessage"
                   :type="alertType"
+                  :icon="alertType === 'error' ? 'mdi-alert' : null"
                 >
                   <span v-html="alertMessage"></span>
                 </v-alert>
@@ -106,8 +107,12 @@
       </v-row>
     </v-col>
   </v-container>
-  <dialog-lancer-traitement v-model="dialog" :is-loading="isLoading" rubrique="Gérer mes créations"
-                            route="exemplarisation-tableau" @launch="launchDemande()"></dialog-lancer-traitement>
+  <dialog-lancer-traitement v-model="dialog"
+                            :is-loading="isLoading"
+                            route="exemplarisation-tableau"
+                            rubrique="Gérer mes créations"
+                            isDat
+                            @launch="launchDemande()"></dialog-lancer-traitement>
   <dialog-suppression v-model="suppDialog" :demande="demande" return-to-accueil></dialog-suppression>
 </template>
 
@@ -125,7 +130,7 @@ import DialogSuppression from '@/components/Dialog/DialogSuppression.vue';
 import RecapDemande from '@/components/RecapDemande.vue';
 
 const emits = defineEmits(['backendError', 'backendSuccess', 'login-success']);
-const props = defineProps({ 
+const props = defineProps({
   id: { type: String }
 });
 
@@ -147,13 +152,13 @@ const dialog = ref(false);
 const suppDialog = ref(false);
 
 watch(router.currentRoute, (newValue) => {
-  if (newValue.fullPath.includes("empty")) {
-    cleanPath()
+  if (newValue.fullPath.includes('empty')) {
+    cleanPath();
     raz();
     currentStep.value = 1;
     prev();
   }
-})
+});
 
 onMounted(() => {
   if ((props.id !== 'empty') && (props.id != null)) {
@@ -192,9 +197,9 @@ onMounted(() => {
 });
 
 function cleanPath() {
-  if (router.currentRoute.value.fullPath.includes("empty")) {
+  if (router.currentRoute.value.fullPath.includes('empty')) {
     router.replace('/exemplarisation');
-    router.currentRoute.value.fullPath = "/exemplarisation";
+    router.currentRoute.value.fullPath = '/exemplarisation';
   }
 }
 
@@ -202,7 +207,7 @@ function createDemande() {
   // Si la demande existe déjà et le RCR est le même
   if (demande.value?.id && rcrSelected.value === demande.value.rcr) {
     next();
-  } 
+  }
   // Si la demande existe et le RCR est différent
   else if (demande.value?.id) {
     isLoading.value = true;

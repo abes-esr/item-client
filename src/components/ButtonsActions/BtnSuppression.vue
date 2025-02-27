@@ -1,7 +1,7 @@
 <template>
   <!-- Wrapper div pour recevoir les attributs -->
   <div v-bind="$attrs">
-    <v-tooltip v-if="canCancel(demande)" text="Supprimer">
+    <v-tooltip v-if="canCancel(demande)" text="Supprimer cette demande">
       <template v-slot:activator="{ props }">
         <v-btn v-bind="props"
                icon="mdi-delete"
@@ -10,10 +10,10 @@
         </v-btn>
       </template>
     </v-tooltip>
-    <dialog-suppression 
-      v-model="dialog" 
-      :demande="demande" 
-      @supp="emits('clicked')" 
+    <dialog-suppression
+      v-model="dialog"
+      :demande="demande"
+      @supp="emits('clicked')"
       @on-error="throwError">
     </dialog-suppression>
   </div>

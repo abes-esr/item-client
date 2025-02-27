@@ -71,14 +71,15 @@
               </v-stepper-window-item>
               <v-stepper-window-item>
                 <select-file v-if="!isLoaded" v-model="fileInitSelected" :is-loading="isLoading"
-                             @deleted="deleteDemande()">Charger le fichier des exemplaires à traiter</select-file>
-                <download-file v-else :file-link="fileLink" :file-name="fileName" @clicked="downloaded" @deleted="deleteDemande()">Récupération du
-                  fichier de correspondances PPN / EPN
+                             @deleted="deleteDemande()">Charger le fichier des exemplaires à traiter
+                </select-file>
+                <download-file v-else :file-link="fileLink" :file-name="fileName" @clicked="downloaded"
+                               @deleted="deleteDemande()">Récupération du fichier de correspondances PPN / EPN
                 </download-file>
                 <v-alert
                   v-if="alertMessage"
                   :type="alertType"
-
+                  :icon="alertType === 'error' ? 'mdi-alert' : null"
                 >
                   <span v-html="alertMessage"></span>
                 </v-alert>
@@ -104,7 +105,8 @@
               </v-stepper-window-item>
               <v-stepper-window-item>
                 <type-traitement v-model="typeTraitementSelected" :is-loading="isLoading"
-                                 @clicked="modifierTypeTraitementModifDemande()" @deleted="deleteDemande()"></type-traitement>
+                                 @clicked="modifierTypeTraitementModifDemande()"
+                                 @deleted="deleteDemande()"></type-traitement>
                 <v-container class="d-flex justify-space-between">
                   <v-btn @click="prev">
                     précédent
@@ -118,6 +120,7 @@
                 <v-alert
                   v-if="alertMessage"
                   :type="alertType"
+                  :icon="alertType === 'error' ? 'mdi-alert' : null"
                 >
                   <span v-html="alertMessage"></span>
                 </v-alert>
@@ -151,8 +154,11 @@
       </v-row>
     </v-col>
   </v-container>
-  <dialog-lancer-traitement v-model="dialog" :is-loading="isLoading" rubrique="Gérer mes modifications"
-                            route="modification-tableau" @launch="launchDemande()"></dialog-lancer-traitement>
+  <dialog-lancer-traitement v-model="dialog"
+                            :is-loading="isLoading"
+                            route="modification-tableau"
+                            rubrique= "Gérer mes modifications"
+                            @launch="launchDemande()"></dialog-lancer-traitement>
   <dialog-suppression v-model="suppDialog" :demande="demande" return-to-accueil></dialog-suppression>
 </template>
 
@@ -195,12 +201,12 @@ const emits = defineEmits(['backendError', 'backendSuccess']);
 const props = defineProps({ id: { type: String } });
 
 watch(router.currentRoute, (newValue) => {
-  if (newValue.fullPath.includes("empty")) {
-    cleanPath()
+  if (newValue.fullPath.includes('empty')) {
+    cleanPath();
     currentStep.value = 1;
     prev();
   }
-})
+});
 
 onMounted(() => {
   if ((props.id !== 'empty') && (props.id != null)) {  // Modification ici
@@ -247,9 +253,9 @@ onMounted(() => {
 });
 
 function cleanPath() {
-  if (router.currentRoute.value.fullPath.includes("empty")) {
+  if (router.currentRoute.value.fullPath.includes('empty')) {
     router.replace('/modification');
-    router.currentRoute.value.fullPath = "/modification";
+    router.currentRoute.value.fullPath = '/modification';
   }
 }
 
@@ -257,7 +263,7 @@ function createDemande() {
   // Si la demande existe déjà et le RCR est le même
   if (demande.value?.id && rcrSelected.value === demande.value.rcr) {
     next();
-  } 
+  }
   // Si la demande existe et le RCR est différent
   else if (demande.value?.id) {
     isLoading.value = true;
@@ -304,6 +310,7 @@ function uploadFileInit() {
           fileLink.value = window.URL.createObjectURL(blob);
           fileName.value = `fichier_demande_${demande.value.id}.csv`;
           isLoaded.value = true;
+          alertMessage.value = 'Fichier de correspondance PPN:RCR:EPN disponible';
         });
     })
     .catch(err => {
