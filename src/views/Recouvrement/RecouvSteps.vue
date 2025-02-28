@@ -74,7 +74,7 @@
   <dialog-lancer-traitement v-model="dialog"
                             :is-loading="isLoading"
                             route="recouvrement-tableau"
-                            rubrique="Gérer mes recouvrements"
+                            rubrique="Tableau des recouvrements d'exemplaires"
                             isDat
                             @launch="launchDemande()">
   </dialog-lancer-traitement>
