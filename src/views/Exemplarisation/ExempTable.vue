@@ -31,111 +31,111 @@
                 :loading="!isDataLoaded" show-expand :sort-by="sortBy"
                 item-key="id"
   >
-  <template v-slot:body.prepend>
-  <tr>
-    <td></td>
-    <td>
-      <v-text-field
-        v-model="numDemandeSearchField"
-        id="search-num-demande"
-        hide-details
-        @input="filterItems"
-        variant="underlined"
-        append-inner-icon="mdi-magnify"
-      ></v-text-field>
-    </td>
-    <td>
-      <v-text-field
-        v-model="nbExemplairesSearchField"
-        id="search-nb-exemplaires"
-        hide-details
-        @input="filterItems"
-        variant="underlined"
-        append-inner-icon="mdi-magnify"
-      ></v-text-field>
-    </td>
-    <td>
-      <v-text-field
-        v-model="dateCreationSearchField"
-        id="search-date-creation"
-        hide-details
-        @input="filterItems"
-        variant="underlined"
-        append-inner-icon="mdi-magnify"
-      ></v-text-field>
-    </td>
-    <td>
-      <v-text-field
-        v-model="dateModificationSearchField"
-        id="search-date-modification"
-        hide-details
-        @input="filterItems"
-        variant="underlined"
-        append-inner-icon="mdi-magnify"
-      ></v-text-field>
-    </td>
-    <td>
-      <v-text-field
-        v-model="ilnSearchField"
-        id="search-iln"
-        hide-details
-        @input="filterItems"
-        variant="underlined"
-        append-inner-icon="mdi-magnify"
-      ></v-text-field>
-    </td>
-    <td>
-      <v-text-field
-        v-model="rcrSearchField"
-        id="search-rcr"
-        hide-details
-        @input="filterItems"
-        variant="underlined"
-        append-inner-icon="mdi-magnify"
-      ></v-text-field>
-    </td>
-    <td>
-      <v-select
-        v-model="typeExempSearchField"
-        id="search-type-exemp"
-        hide-details
-        variant="underlined"
-        :items="listTypeExemp"
-        @update:menu="filterItems"
-        @click:clear="filterItems"
-        clearable
-        clear-icon="mdi-close"
-        no-data-text="Aucun type d'exemplaire trouvé."
-        aria-label="Recherche par type d'exemplaire"
-      ></v-select>
-    </td>
-    <td>
-      <v-text-field
-        v-model="indexRechercheSearchField"
-        id="search-index"
-        hide-details
-        @input="filterItems"
-        variant="underlined"
-        append-inner-icon="mdi-magnify"
-      ></v-text-field>
-    </td>
-    <td>
-      <v-select
-        v-model="statutSearchField"
-        id="search-statut"
-        :items="listStatut"
-        variant="underlined"
-        hide-details
-        @update:menu="filterItems"
-        @click:clear="filterItems"
-        clearable
-        clear-icon="mdi-close"
-        no-data-text="Aucun statut trouvé."
-        aria-label="Recherche par statut"
-      ></v-select>
-    </td>
-  </tr>
-</template>
+    <template v-slot:body.prepend>
+      <tr>
+        <td></td>
+        <td>
+          <v-text-field
+            v-model="numDemandeSearchField"
+            id="search-num-demande"
+            hide-details
+            @input="filterItems"
+            variant="underlined"
+            append-inner-icon="mdi-magnify"
+          ></v-text-field>
+        </td>
+        <td>
+          <v-text-field
+            v-model="nbExemplairesSearchField"
+            id="search-nb-exemplaires"
+            hide-details
+            @input="filterItems"
+            variant="underlined"
+            append-inner-icon="mdi-magnify"
+          ></v-text-field>
+        </td>
+        <td>
+          <v-text-field
+            v-model="dateCreationSearchField"
+            id="search-date-creation"
+            hide-details
+            @input="filterItems"
+            variant="underlined"
+            append-inner-icon="mdi-magnify"
+          ></v-text-field>
+        </td>
+        <td>
+          <v-text-field
+            v-model="dateModificationSearchField"
+            id="search-date-modification"
+            hide-details
+            @input="filterItems"
+            variant="underlined"
+            append-inner-icon="mdi-magnify"
+          ></v-text-field>
+        </td>
+        <td>
+          <v-text-field
+            v-model="ilnSearchField"
+            id="search-iln"
+            hide-details
+            @input="filterItems"
+            variant="underlined"
+            append-inner-icon="mdi-magnify"
+          ></v-text-field>
+        </td>
+        <td>
+          <v-text-field
+            v-model="rcrSearchField"
+            id="search-rcr"
+            hide-details
+            @input="filterItems"
+            variant="underlined"
+            append-inner-icon="mdi-magnify"
+          ></v-text-field>
+        </td>
+        <td>
+          <v-select
+            v-model="typeExempSearchField"
+            id="search-type-exemp"
+            hide-details
+            variant="underlined"
+            :items="listTypeExemp"
+            @update:menu="filterItems"
+            @click:clear="filterItems"
+            clearable
+            clear-icon="mdi-close"
+            no-data-text="Aucun type d'exemplaire trouvé."
+            aria-label="Recherche par type d'exemplaire"
+          ></v-select>
+        </td>
+        <td>
+          <v-text-field
+            v-model="indexRechercheSearchField"
+            id="search-index"
+            hide-details
+            @input="filterItems"
+            variant="underlined"
+            append-inner-icon="mdi-magnify"
+          ></v-text-field>
+        </td>
+        <td>
+          <v-select
+            v-model="statutSearchField"
+            id="search-statut"
+            :items="listStatut"
+            variant="underlined"
+            hide-details
+            @update:menu="filterItems"
+            @click:clear="filterItems"
+            clearable
+            clear-icon="mdi-close"
+            no-data-text="Aucun statut trouvé."
+            aria-label="Recherche par statut"
+          ></v-select>
+        </td>
+      </tr>
+    </template>
 
     <template v-slot:item="{ item, expand }">
       <tr :class="{ 'highlighted-row': item.highlighted }" style="cursor: pointer;">
@@ -179,13 +179,13 @@
         </td>
         <td class="text-center">
           <!-- Colonne Action -->
-           <v-btn-group>
-          <btn-archive v-bind="$attrs" :demande="item" @clicked="loadItems(item.type)"
-                       @on-error="throwError" aria-label="Archiver"></btn-archive>
-          <btn-suppression v-bind="$attrs" :demande="item" @clicked="loadItems(item.type)"
-                           @on-error="throwError" aria-label="Supprimer"></btn-suppression>
-          <btn-restore v-bind="$attrs" :demande="item" @clicked="loadItems(item.type)"
-                       @on-error="throwError" aria-label="Restaurer"></btn-restore>
+          <v-btn-group>
+            <btn-archive v-bind="$attrs" :demande="item" @clicked="loadItems(item.type)"
+                         @on-error="throwError" aria-label="Archiver"></btn-archive>
+            <btn-suppression v-bind="$attrs" :demande="item" @clicked="loadItems(item.type)"
+                             @on-error="throwError" aria-label="Supprimer"></btn-suppression>
+            <btn-restore v-bind="$attrs" :demande="item" @clicked="loadItems(item.type)"
+                         @on-error="throwError" aria-label="Restaurer"></btn-restore>
           </v-btn-group>
         </td>
       </tr>
@@ -232,7 +232,7 @@ const headingsDemandes = [
     display: true,
   },
   {
-    title: 'Crée le',
+    title: 'Créée le',
     key: 'dateCreation',
     align: 'center',
     display: true,
@@ -297,6 +297,7 @@ const headingsDemandes = [
     value: 'pourcentageProgressionTraitement',
     align: 'center',
     display: true,
+    sortable: false
   },
   {
     title: 'Fichiers',
@@ -304,6 +305,7 @@ const headingsDemandes = [
     value: 'filesToDownload',
     align: 'center',
     display: true,
+    sortable: false
   },
   {
     title: 'Action',
@@ -311,6 +313,7 @@ const headingsDemandes = [
     value: 'archiveOrCancel',
     align: 'center',
     display: true,
+    sortable: false
   }
 ];
 const filteredHeadingsDemandes = computed(() =>

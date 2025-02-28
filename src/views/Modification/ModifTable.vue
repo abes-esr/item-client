@@ -119,12 +119,12 @@
         <td class="text-center">
           <!-- Colonne Action -->
           <v-btn-group>
-          <btn-archive v-bind="$attrs" :demande="item" @clicked="loadItems(item.type)"
-                       @on-error="throwError" aria-label="Archiver"></btn-archive>
-          <btn-suppression v-bind="$attrs" :demande="item" @clicked="loadItems(item.type)"
-                           @on-error="throwError" aria-label="Supprimer"></btn-suppression>
-          <btn-restore v-bind="$attrs" :demande="item" @clicked="loadItems(item.type)"
-                       @on-error="throwError" aria-label="Restaurer"></btn-restore>
+            <btn-archive v-bind="$attrs" :demande="item" @clicked="loadItems(item.type)"
+                         @on-error="throwError" aria-label="Archiver"></btn-archive>
+            <btn-suppression v-bind="$attrs" :demande="item" @clicked="loadItems(item.type)"
+                             @on-error="throwError" aria-label="Supprimer"></btn-suppression>
+            <btn-restore v-bind="$attrs" :demande="item" @clicked="loadItems(item.type)"
+                         @on-error="throwError" aria-label="Restaurer"></btn-restore>
           </v-btn-group>
         </td>
       </tr>
@@ -171,7 +171,7 @@ const headingsDemandes = [
     display: true,
   },
   {
-    title: 'Crée le',
+    title: 'Créée le',
     key: 'dateCreation',
     align: 'center',
     display: true,
@@ -236,6 +236,7 @@ const headingsDemandes = [
     value: 'pourcentageProgressionTraitement',
     align: 'center',
     display: true,
+    sortable: false
   },
   {
     title: 'Fichiers',
@@ -243,6 +244,7 @@ const headingsDemandes = [
     value: 'filesToDownload',
     align: 'center',
     display: true,
+    sortable: false
   },
   {
     title: 'Action',
@@ -250,6 +252,7 @@ const headingsDemandes = [
     value: 'archiveOrCancel',
     align: 'center',
     display: true,
+    sortable: false
   }
 ];
 const filteredHeadingsDemandes = computed(() =>
