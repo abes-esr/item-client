@@ -10,7 +10,7 @@
       <v-card>
         <v-card-title>Suppression</v-card-title>
         <v-divider></v-divider>
-        <v-card-text>Êtes-vous certain de vouloir supprimer définitivement la demande N°{{ demande.id }} ?</v-card-text>
+        <v-card-text>Êtes-vous certain de vouloir supprimer définitivement la demande N°{{ demande.id }}&#8239;?</v-card-text>
         <v-card-actions>
 
           <v-container class="d-flex justify-space-between">
