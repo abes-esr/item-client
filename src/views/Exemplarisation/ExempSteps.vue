@@ -110,7 +110,7 @@
   <dialog-lancer-traitement v-model="dialog"
                             :is-loading="isLoading"
                             route="exemplarisation-tableau"
-                            rubrique="Gérer mes créations"
+                            rubrique="Tableau des créations d'exemplaires"
                             isDat
                             @launch="launchDemande()"></dialog-lancer-traitement>
   <dialog-suppression v-model="suppDialog" :demande="demande" return-to-accueil></dialog-suppression>
