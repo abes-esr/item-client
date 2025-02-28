@@ -217,6 +217,7 @@ const headingsDemandes = [
     value: 'pourcentageProgressionTraitement',
     align: 'center',
     display: true,
+    sortable: false
   },
   {
     title: 'Fichiers',
