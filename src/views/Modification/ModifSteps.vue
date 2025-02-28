@@ -157,7 +157,7 @@
   <dialog-lancer-traitement v-model="dialog"
                             :is-loading="isLoading"
                             route="modification-tableau"
-                            rubrique= "Gérer mes modifications"
+                            rubrique="Tableau des modifications d'exemplaires"
                             @launch="launchDemande()"></dialog-lancer-traitement>
   <dialog-suppression v-model="suppDialog" :demande="demande" return-to-accueil></dialog-suppression>
 </template>
