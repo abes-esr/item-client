@@ -4,7 +4,7 @@
   <v-row class="d-flex justify-center">
     <v-btn
       class="mt-3"
-      :disabled="nbNotice.nbNoticeEnCours === 0"
+      :disabled="isFirstPage"
       large
       dark
       @click="first"
@@ -19,7 +19,7 @@
   <v-row class="d-flex justify-center">
     <v-btn
       class="mt-3"
-      :disabled="nbNotice.nbNoticeEnCours === 0"
+      :disabled="isFirstPage"
       large
       dark
       @click="prev"
@@ -34,7 +34,7 @@
   <v-row class="d-flex justify-center">
     <v-btn
       class="mt-3"
-      :disabled="nbNotice.nbNoticeEnCours === nbNotice.nbTotalNotice - 1"
+      :disabled="isLastPage"
       large
       dark
       @click="next"
@@ -49,7 +49,7 @@
   <v-row class="d-flex justify-center">
     <v-btn
       class="mt-3"
-      :disabled="nbNotice.nbNoticeEnCours === nbNotice.nbTotalNotice - 1"
+      :disabled="isLastPage"
       large
       dark
       @click="last"
@@ -62,21 +62,34 @@
   </v-row>
 </template>
 <script setup>
+import { computed } from 'vue';
+
 const nbNotice = defineModel();
 const emits = defineEmits(['clicked']);
-function first(){
+
+const isFirstPage = computed(() => {
+  return nbNotice.value.nbNoticeEnCours === 0;
+});
+const isLastPage = computed(() => {
+  return nbNotice.value.nbNoticeEnCours === nbNotice.value.nbTotalNotice - 1;
+});
+
+function first() {
   nbNotice.value.nbNoticeEnCours = 0;
   emits('clicked');
 }
-function last(){
+
+function last() {
   nbNotice.value.nbNoticeEnCours = nbNotice.value.nbTotalNotice - 1;
   emits('clicked');
 }
-function next(){
+
+function next() {
   nbNotice.value.nbNoticeEnCours++;
   emits('clicked');
 }
-function prev(){
+
+function prev() {
   nbNotice.value.nbNoticeEnCours--;
   emits('clicked');
 }
