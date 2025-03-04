@@ -48,7 +48,7 @@
           <v-text-field v-model="dateModificationSearchField" hide-details @input="filterItems"
                         variant="underlined" append-inner-icon="mdi-magnify"></v-text-field>
         </td>
-        <td>
+        <td v-if="isAdmin">
           <v-text-field v-model="ilnSearchField" hide-details @input="filterItems" variant="underlined"
                         append-inner-icon="mdi-magnify"></v-text-field>
         </td>
@@ -89,7 +89,7 @@
         <td @click="onRowClick(item)" class="text-center">{{ item.nbExemplaires }}</td>
         <td @click="onRowClick(item)" class="text-center">{{ item.dateCreation }}</td>
         <td @click="onRowClick(item)" class="text-center">{{ item.dateModification }}</td>
-        <td @click="onRowClick(item)" class="text-center">{{ item.iln }}</td>
+        <td v-if="isAdmin" @click="onRowClick(item)" class="text-center">{{ item.iln }}</td>
         <td @click="onRowClick(item)" class="text-center">{{ item.rcr }}</td>
         <td @click="onRowClick(item)" class="text-center">{{ item.zone }}</td>
         <td @click="onRowClick(item)" class="text-center">{{ item.traitement ? item.traitement : 'Non défini' }}</td>
