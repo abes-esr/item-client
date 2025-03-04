@@ -74,7 +74,7 @@
             append-inner-icon="mdi-magnify"
           ></v-text-field>
         </td>
-        <td v-if="isAdmin">
+        <td>
           <v-text-field
             v-model="ilnSearchField"
             id="search-iln"
@@ -149,7 +149,7 @@
         <td @click="onRowClick(item)" class="text-center">{{ item.nbExemplaires }}</td>
         <td @click="onRowClick(item)" class="text-center">{{ item.dateCreation }}</td>
         <td @click="onRowClick(item)" class="text-center">{{ item.dateModification }}</td>
-        <td v-if="isAdmin" @click="onRowClick(item)" class="text-center">{{ item.iln }}</td>
+        <td @click="onRowClick(item)" class="text-center">{{ item.iln }}</td>
         <td @click="onRowClick(item)" class="text-center">{{ item.rcr }}</td>
         <td @click="onRowClick(item)" class="text-center">{{ item.typeExemp ? item.typeExemp : 'Non défini' }}</td>
         <td @click="onRowClick(item)" class="text-center">{{ item.indexRecherche }}</td>
