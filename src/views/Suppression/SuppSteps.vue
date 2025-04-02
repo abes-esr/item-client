@@ -21,7 +21,7 @@
                 :complete="currentStep > 1"
                 :editable="currentStep > 1"
                 icon="mdi-numeric-2"
-                title="PPN/RCR/EPN"
+                title="PPN:RCR:EPN"
                 :subtitle="typeFileSelected ? 'Fichier '+ typeFileSelected : 'fichier envoyé'"
               >
               </v-stepper-item>
@@ -66,7 +66,7 @@
                 </select-file>
                 <download-file v-if="isLoaded" :file-link="fileLink" :file-name="fileName"
                                @clicked="isDownloaded = true" @deleted="deleteDemande()">Téléchargement du fichier
-                  PPN/RCR/EPN
+                  PPN:RCR:EPN
                 </download-file>
                 <v-alert
                   v-if="alertMessage"
@@ -306,7 +306,7 @@ function uploadFile() {
           fileLink.value = window.URL.createObjectURL(blob);
           fileName.value = `fichier_demande_${demande.value.id}.csv`;
           isLoaded.value = true;
-          alertMessage.value = 'Fichier de correspondance PPN/EPN disponible';
+          alertMessage.value = 'Fichier de correspondance PPN:RCR:EPN disponible';
         });
     })
     .catch(err => {

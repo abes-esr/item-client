@@ -23,7 +23,7 @@
                 :complete="currentStep > 1"
                 :editable="currentStep > 1"
                 icon="mdi-numeric-2"
-                title="PPN/RCR/EPN"
+                title="PPN:RCR:EPN"
                 subtitle="fichier à récupérer"
               >
               </v-stepper-item>
@@ -74,7 +74,7 @@
                              @deleted="deleteDemande()">Charger le fichier des exemplaires à traiter
                 </select-file>
                 <download-file v-else :file-link="fileLink" :file-name="fileName" @clicked="downloaded"
-                               @deleted="deleteDemande()">Récupération du fichier de correspondances PPN / EPN
+                               @deleted="deleteDemande()">Récupération du fichier de correspondances PPN:RCR:EPN
                 </download-file>
                 <v-alert
                   v-if="alertMessage"
@@ -310,7 +310,7 @@ function uploadFileInit() {
           fileLink.value = window.URL.createObjectURL(blob);
           fileName.value = `fichier_demande_${demande.value.id}.csv`;
           isLoaded.value = true;
-          alertMessage.value = 'Fichier de correspondance PPN/EPN disponible';
+          alertMessage.value = 'Fichier de correspondance PPN:RCR:EPN disponible';
         });
     })
     .catch(err => {
