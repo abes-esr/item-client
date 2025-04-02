@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer v-if="authStore.isAuthenticated" v-model="drawerInside">
+  <v-navigation-drawer v-if="authStore.isAuthenticated" v-model="drawerInside" width="300">
     <v-list-item three-line>
       <v-list-item>
         <v-list-item-title class="text-h6 text-wrap">
@@ -128,8 +128,6 @@
 
     </v-list>
 
-    <v-divider></v-divider>
-
     <v-list>
       <v-list-item class="ma-0 pa-0">
         <v-row class="pl-2">
@@ -143,7 +141,7 @@
             </v-switch>
           </v-col>
           <v-col class="d-flex flex-column justify-center pl-1">
-            <span class="labelSwitchNavBar">Encrer le menu de navigation</span>
+            <span class="labelSwitchNavBar">Ancrer le menu de navigation</span>
           </v-col>
         </v-row>
       </v-list-item>

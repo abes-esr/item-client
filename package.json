@@ -1,6 +1,6 @@
 {
   "name": "Item",
-  "version": "3.3.4",
+  "version": "3.3.5-SNAPSHOT",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -9,13 +9,14 @@
   },
   "dependencies": {
     "@mdi/font": "7.0.96",
+    "axios": "^1.8.3",
     "esbuild": "^0.25.0",
     "moment": "^2.30.1",
     "pinia": "^2.1.7",
     "roboto-fontface": "*",
     "vue": "^3.5.13",
     "vue-breakpoints": "^1.1.0",
-    "vue-i18n": "^9.13.1",
+    "vue-i18n": "^9.14.2",
     "vue-matomo": "^4.2.0",
     "vue-router": "^4.3.2",
     "vuetify": "^3.7.11"
@@ -23,12 +24,11 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",
     "autoprefixer": "^10.4.19",
-    "axios": "1.7.4",
     "prettier": "^3.2.5",
     "sass": "^1.71.1",
     "unplugin-fonts": "^1.1.1",
     "unplugin-vue-components": "^0.26.0",
-    "vite": "^5.4.14",
+    "vite": "^6.2.2",
     "vite-plugin-vuetify": "^2.0.3"
   }
 }

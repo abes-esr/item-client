@@ -8,7 +8,7 @@ COPY ./package*.json /build/
 # si on a un node_modules/ local on peut décommenter la ligne suivante pour
 # éviter que npm retélécharge toutes les dépendances
 #COPY ./node_modules/ /build/node_modules/
-RUN npm install
+RUN npm ci
 
 # Compilation du TS en JS compilé
 # en injectant des placeholders dans les variables .env de vuejs

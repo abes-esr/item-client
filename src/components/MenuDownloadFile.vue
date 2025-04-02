@@ -32,7 +32,7 @@
         </v-list-item>
         <v-list-item @click="downloadFile('fichier_prepare', '.csv')">
           <!--          FICHIER PREPARE MODIF         -->
-          <v-list-item-title>Télécharger le fichier de correspondance PPN/RCR/EPN</v-list-item-title>
+          <v-list-item-title>Télécharger le fichier de correspondance PPN:RCR:EPN</v-list-item-title>
         </v-list-item>
         <v-list-item v-if="isEnrichiAvailable" @click="downloadFile('fichier_enrichi', '.csv')">
           <!--          FICHIER ENRICHI MODIF         -->
@@ -52,7 +52,7 @@
         <v-list-item @click="downloadFile('fichier_correspondance', '.csv')">
           <!--          FICHIER PREPARE SUPP         -->
           <v-list-item-title>
-            Télécharger le fichier de correspondance PPN/RCR/EPN
+            Télécharger le fichier de correspondance PPN:RCR:EPN
           </v-list-item-title>
         </v-list-item>
         <v-list-item v-if="demande.typeSuppression === 'PPN' && isEnrichiAvailable" @click="downloadFile('fichier_valide', '.csv')">
