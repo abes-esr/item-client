@@ -2,7 +2,7 @@
   <v-card elevation="0">
     <v-card-title class="d-flex justify-space-between custom-card-title">
       <span><slot></slot></span>
-      <v-btn depressed variant="text" @click="deleted()" prepend-icon="mdi-delete">Supprimer cette demande</v-btn>
+      <v-btn depressed variant="text" @click="deleted()" prepend-icon="mdi-delete">Supprimer</v-btn>
     </v-card-title>
     <v-card-actions class="py-6">
       <v-spacer></v-spacer>
