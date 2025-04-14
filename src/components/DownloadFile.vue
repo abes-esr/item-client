@@ -16,7 +16,7 @@
         :disabled="isDisabled"
         @click="clicked()"
         append-icon="mdi-cloud-download"
-        :download="fileName">Télécharger le fichier de correspondances PPN:RCR:EPN
+        :download="fileName">Télécharger le fichier PPN:RCR:EPN
       </v-btn>
       <v-spacer></v-spacer>
     </v-card-actions>

@@ -74,7 +74,7 @@
                              @deleted="deleteDemande()">Charger le fichier des exemplaires à traiter
                 </select-file>
                 <download-file v-else :file-link="fileLink" :file-name="fileName" @clicked="downloaded"
-                               @deleted="deleteDemande()">Récupération du fichier de correspondances PPN:RCR:EPN
+                               @deleted="deleteDemande()">Récupération du fichier PPN:RCR:EPN
                 </download-file>
                 <v-alert
                   v-if="alertMessage"
@@ -310,7 +310,7 @@ function uploadFileInit() {
           fileLink.value = window.URL.createObjectURL(blob);
           fileName.value = `fichier_demande_${demande.value.id}.csv`;
           isLoaded.value = true;
-          alertMessage.value = 'Fichier de correspondance PPN:RCR:EPN disponible';
+          alertMessage.value = 'Fichier PPN:RCR:EPN disponible';
         });
     })
     .catch(err => {
