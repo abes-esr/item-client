@@ -16,7 +16,7 @@
   <v-card flat class="pb-2">
     <v-card-title class="d-flex justify-space-between custom-card-title">
       <span>Ecran de simulation</span>
-      <v-btn depressed variant="text" @click="deleted()" prepend-icon="mdi-delete">Supprimer cette demande</v-btn>
+      <v-btn depressed variant="text" @click="deleted()" prepend-icon="mdi-delete">Supprimer</v-btn>
     </v-card-title>
     <!--TEMPLATE DE SIMULATION-->
     <v-alert type="warning" class="my-3 pa-2" dense prominent>

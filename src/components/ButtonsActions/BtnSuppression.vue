@@ -1,7 +1,7 @@
 <template>
   <!-- Wrapper div pour recevoir les attributs -->
   <div v-bind="$attrs">
-    <v-tooltip v-if="canCancel(demande)" text="Supprimer cette demande">
+    <v-tooltip v-if="canCancel(demande)" text="Supprimer">
       <template v-slot:activator="{ props }">
         <v-btn v-bind="props"
                icon="mdi-delete"
