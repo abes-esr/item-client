@@ -51,7 +51,7 @@
 								<type-file v-if="!typeFileSelected" v-model="typeFileSelected" @clicked="setTypeSelected()" @deleted="deleteDemande()"></type-file>
 								<select-file v-else-if="!isLoaded" :is-loading="isLoading" v-model="fileSelected" typeFile="PPN" @deleted="deleteDemande()">Selection du fichier PPN </select-file>
 								<download-file v-if="isLoaded" :file-link="fileLink" :file-name="fileName" @clicked="isDownloaded = true" @deleted="deleteDemande()"
-									>Téléchargement du fichier PPN:RCR:EPN
+									>Récupération du fichier PPN:RCR:EPN
 								</download-file>
 								<v-alert v-if="alertMessage" :type="alertType" :icon="alertType === 'error' ? 'mdi-alert' : null">
 									<span v-html="alertMessage"></span>
