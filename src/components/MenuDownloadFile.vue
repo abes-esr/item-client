@@ -32,7 +32,7 @@
         </v-list-item>
         <v-list-item @click="downloadFile('fichier_prepare', '.csv')">
           <!--          FICHIER PREPARE MODIF         -->
-          <v-list-item-title>Télécharger le fichier PPN:RCR:EPN</v-list-item-title>
+          <v-list-item-title>Télécharger le fichier</v-list-item-title>
         </v-list-item>
         <v-list-item v-if="isEnrichiAvailable" @click="downloadFile('fichier_enrichi', '.csv')">
           <!--          FICHIER ENRICHI MODIF         -->
