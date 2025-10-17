@@ -27,6 +27,7 @@
     <h3 class="d-flex justify-center" style="border: 1px solid lightgrey">Ligne de votre fichier :
       {{ nbNotice.nbNoticeEnCours + 1 }} sur {{ nbNotice.nbTotalNotice }}</h3>
     <h4 class="d-flex justify-center py-4" v-if="numeroPPNNotice">PPN n° {{ numeroPPNNotice }}</h4>
+    <h4 class="d-flex justify-center py-4" v-else>Aucun PPN</h4>
     <v-row class="pt-5">
       <v-col cols="12" sm="12" md="5"> <!--Exemplaires existants-->
         <!--Carte activée si présence exemplaires pour cette notice-->
@@ -105,11 +106,15 @@ function refresh(nbNoticeEnCours) {
     });
   itemService.simulerLigne(props.demande.id, nbNoticeEnCours, props.demande.type)
     .then(response => {
+      if (response.data[0] === numeroPPNNotice.value) {
+        numeroPPNNotice.value = null;
+      }
       numeroPPNNotice.value = response.data[0];
       noticeAvant.value = response.data[1];
       noticeApres.value = response.data[2];
     })
     .catch(err => {
+      numeroPPNNotice.value = null;
       alertMessageError.value = err.response.data.message;
     })
     .finally(() => {
