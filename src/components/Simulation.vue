@@ -27,8 +27,9 @@
     <h3 class="d-flex justify-center" style="border: 1px solid lightgrey">Ligne de votre fichier :
       {{ nbNotice.nbNoticeEnCours + 1 }} sur {{ nbNotice.nbTotalNotice }}</h3>
     <h4 class="d-flex justify-center py-4" v-if="numeroPPNNotice">PPN n° {{ numeroPPNNotice }}</h4>
-    <v-row class="pt-5">
-      <v-col cols="12" sm="12" md="5"> <!--Exemplaires existants-->
+    <h4 class="d-flex justify-center py-4" v-else>Aucun PPN</h4>
+    <v-row class="pt-5 d-flex justify-center">
+      <v-col cols="12" sm="12" md="5" v-if="numeroPPNNotice"> <!--Exemplaires existants-->
         <!--Carte activée si présence exemplaires pour cette notice-->
         <v-card class="pa-1 ml-1" outlined tile>
           <h5 class="d-flex justify-center border-b-md">{{ labelBefore }}</h5>
@@ -37,10 +38,10 @@
           </v-container>
         </v-card>
       </v-col>
-      <v-col cols="12" sm="12" md="2" class="pb-10">
+      <v-col cols="12" sm="12" md="2" class="pb-10" > <!-- mettre en place une mise page centrée pour ce composant-->
         <navigate-notice v-model="nbNotice" @clicked="refresh(nbNotice.nbNoticeEnCours)"></navigate-notice>
       </v-col>
-      <v-col cols="12" sm="12" md="5"> <!--Exemplaire à créer-->
+      <v-col cols="12" sm="12" md="5" v-if="numeroPPNNotice"> <!--Exemplaire à créer-->
         <v-card class="pa-1 mr-1" outlined tile>
           <h5 class="d-flex justify-center border-b-md">{{ labelAfter }}</h5>
           <v-container id="scroll-target" style="max-height: 400px" class="overflow-auto">
@@ -110,6 +111,7 @@ function refresh(nbNoticeEnCours) {
       noticeApres.value = response.data[2];
     })
     .catch(err => {
+      numeroPPNNotice.value = null;
       alertMessageError.value = err.response.data.message;
     })
     .finally(() => {
