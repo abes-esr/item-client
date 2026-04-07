@@ -1,6 +1,7 @@
 {
   "name": "Item",
   "version": "3.3.8-SNAPSHOT",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
