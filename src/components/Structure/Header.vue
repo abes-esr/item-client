@@ -14,11 +14,11 @@
 		<div class="item-margin-around-single-icon">
 			<v-btn class="mx-2 item-margin-around-single-icon" fab dark small color="primary">
 				<span
-					><a href="https://stp.abes.fr/node/3?origine=sudocpro" title="Assistance" rel="noopener" target="_blank"
+					><a href="https://assistance.stp.abes.fr/" title="Guichet d'assistance" rel="noopener" target="_blank"
 						><img
 							alt="icone assistance"
 							height="41px"
-							href="https://stp.abes.fr/node/3?origine=sudocpro"
+							href="https://assistance.stp.abes.fr/"
 							src="../../assets/item_assistance.svg"
 							target="_blank"
 							width="41px"
