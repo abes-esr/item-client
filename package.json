@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@mdi/font": "7.0.96",
-    "axios": "^1.13.5",
+    "axios": "^1.15.0",
     "esbuild": "^0.25.0",
     "moment": "^2.30.1",
     "pinia": "^2.1.7",
