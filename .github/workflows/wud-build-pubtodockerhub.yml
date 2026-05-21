@@ -33,7 +33,6 @@ jobs:
           images: ${{ env.DOCKERHUB_IMAGE_PREFIX }}
           flavor: |
             latest=auto
-            suffix=-front
 
       - name: "Login to DockerHub"
         uses: docker/login-action@v3
@@ -42,8 +41,9 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: "Buildx and push"
+        id: push
         uses: docker/build-push-action@v6
         with:
           push: true
           target: front-image
-          tags: ${{ steps.docker_tag_meta.outputs.tags }}
+          tags: ${{ steps.docker_tag_meta.outputs.tags }}-front
