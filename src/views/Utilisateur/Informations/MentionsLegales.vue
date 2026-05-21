@@ -1,3 +1,5 @@
+<script setup>
+</script>
 <template>
   <v-container fluid>
     <v-row align="center" justify="center">
@@ -32,12 +34,12 @@
               tout signalement de contenu ou d'activités illicites, l'utilisateur peut
               contacter :
             </p>
-        <p> <a href="https://stp.abes.fr/node/3?origine=sudocpro">Guichet d'assistance</a></p>
+        <p> <a href="https://assistance.stp.abes.fr/">Guichet d'assistance</a></p>
 
         <p>Le secrétariat de l'ABES au +33 4 67 54 84 10</p>
 
         <br>
-            <h2 class="display-1">6. Propriété intellectuelle</h2>
+            <h2 class="display-1">6. Propriété intellectuelle</h2>,
             <p>
               La structuration du site mais aussi les textes, graphiques, images,
               photographies, sons, vidéos et applications informatiques qui le

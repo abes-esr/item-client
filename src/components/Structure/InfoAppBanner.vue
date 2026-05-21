@@ -14,8 +14,8 @@
             <v-list-item>
               <v-list-item-title class="text-h6 mb-1">Assistance</v-list-item-title>
               <v-list-item-subtitle>
-                <a class="text-white" href="https://stp.abes.fr/node/3?origine=sudocpro" target="_blank" rel="noopener">
-                  Guichet ABESstp
+                <a class="text-white" href="https://assistance.stp.abes.fr/" target="_blank" rel="noopener">
+                  Guichet d'assistance
                 </a>
               </v-list-item-subtitle>
             </v-list-item>
