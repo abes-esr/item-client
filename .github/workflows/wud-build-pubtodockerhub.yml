@@ -46,4 +46,4 @@ jobs:
         with:
           push: true
           target: front-image
-          tags: ${{ steps.docker_tag_meta.outputs.tags }}-front
+          tags: ${{ steps.docker_tag_meta.outputs.tags }}
