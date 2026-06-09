@@ -18,7 +18,7 @@ import { computed } from 'vue';
 
 let maintenance = import.meta.env.VITE_MAINTENANCE;
 const warningDialog = computed(() => {
-  return maintenance == true;
+  return maintenance === true;
 });
 
 </script>
