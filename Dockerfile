@@ -40,7 +40,7 @@ RUN npm run build
 
 ###
 # Serveur web (nginx) pour exec l'appli vuejs
-FROM nginx:1.20.2 as front-image
+FROM nginx:1.27-alpine as front-image
 COPY --from=build-image /build/dist/ /usr/share/nginx/html.orig/
 COPY ./docker/nginx-default.conf /etc/nginx/conf.d/default.conf
 COPY ./docker/docker-entrypoint.sh /docker-entrypoint.sh
